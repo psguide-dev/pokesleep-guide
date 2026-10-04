@@ -9,7 +9,7 @@
  let sleepFound=readSleepFound();
  function renderSleepStyles(m){
    sleep.replaceChildren();
-   const styles=(m.detailPreviewOnly?m.sleepStyles:V.sleepStyles?.[m.no]||[]).filter(x=>x&&x.id&&Number.isInteger(Number(x.stars))&&Number(x.stars)>=1&&Number(x.stars)<=5)
+   const styles=(m.detailPreviewOnly?(m.sleepStyles||[]):V.sleepStyles?.[m.no]||[]).filter(x=>x&&x.id&&Number.isInteger(Number(x.stars))&&Number(x.stars)>=1&&Number(x.stars)<=5)
      .slice().sort((a,b)=>Number(a.stars)-Number(b.stars)||Number(a.order||0)-Number(b.order||0)||String(a.id).localeCompare(String(b.id)));
    const registered=styles.filter(x=>sleepFound[x.id]).length;
    const sleepTab=tabs.querySelector('[data-v12tab="sleep"]');
@@ -72,7 +72,7 @@
    field.replaceChildren();
    const title=document.createElement('h3');title.textContent='寝顔別のフィールド・最低ランク';field.append(title);
    if(m.dataStatus==='preview_pending_abilities'){
-     const note=document.createElement('p');note.className='note';note.textContent='2026年10月5日 15:00登場予定。寝顔別の最低ランク・ねむけパワーは確認待ちです。';field.append(note);
+     const note=document.createElement('p');note.className='note';note.textContent='寝顔別の最低ランク・ねむけパワーは確認待ちです。';field.append(note);
      for(const name of m.appearanceFields||[]){const line=document.createElement('p');line.textContent=name;field.append(line)}return;
    }
    if(m.detailPreviewOnly){const pending=document.createElement('p');pending.className='note';pending.textContent='この姿のフィールド出現条件は未登録です。通常の姿の条件は流用しません。';field.append(pending);return}

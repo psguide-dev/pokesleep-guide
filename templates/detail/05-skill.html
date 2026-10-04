@@ -1,5 +1,6 @@
  // Mark effect values in the source description, leaving target counts and conditions plain.
- function skillDescription(s,x){
+ function skillDescription(s,x={}){
+  x=x||{};
   const text=x?.description||(s.effectType==='random_ingredients'&&x?.amount!=null?`ランダムな食材を${x.amount}個ゲットする。`:s.effectType==='fixed_energy'&&x?.energy!=null?`カビゴンのエナジーを${x.energy.toLocaleString()}増やす。`:s.effectType==='variable_energy'&&x?.min!=null?`カビゴンのエナジーを${x.min.toLocaleString()}～${x.max.toLocaleString()}増やす。`:s.effectType==='team_energy_recovery'&&x?.recovery!=null?`チーム全員のげんきを${x.recovery}回復する。`:'効果未確認');
   const number='[+＋−-]?[0-9]+(?:,[0-9]{3})*(?:\\.[0-9]+)?';
   const values=`${number}(?:[／/～〜]${number})*`;
@@ -22,7 +23,7 @@
   mark('(?:おてつだい|各)','help','回');
   mark('スキルを','skill','回');
   if(s.effectType==='conditional_ingredient_select'&&x.bonusAmount!=null)mark('さらに','food','個');
-  if(s.effectType.startsWith('helper_boost_'))mark('各','help','回');
+  if(s.effectType?.startsWith('helper_boost_'))mark('各','help','回');
   if(s.id==='healing_pulse_energy_cheer_s')mark('さらに','help','回');
   if(s.effectType==='berry_burst'||['disguise_berry_burst','draco_meteor_berry_burst','lunar_blessing_energy_for_everyone_s'].includes(s.id)){
    mark('(?:きのみを(?:各)?|きのみ：自分\\s*|他の各匹\\s*)','berry','個');
@@ -35,8 +36,9 @@
   return result+detailEsc(text.slice(cursor));
  }
  function skillVariables(s,x,lv){
+  if(!x)return '効果未確認';
   const value=(v,kind,unit='')=>`<span class="skill-var effect-${kind}">${detailEsc(typeof v==='number'?v.toLocaleString():v)}${unit}</span>`;
-  const type=s.effectType;
+  const type=s.effectType||'';
   if(type==='reference_only')return skillDescription(s,x);
   if(type==='conditional_ingredient_select')return value(x.amount,'food','個')+(x.shardsSmall!=null?' ／ '+value(x.shardsSmall+'／'+x.shardsLarge,'shards','個'):' ／ 追加 '+value(x.bonusAmount,'food','個'));
 
@@ -61,14 +63,17 @@
  function renderSkill(m){
    const s=skillOf(m);if(!s){
      document.querySelector('#v12Ability .skill-icon')?.replaceChildren();
-     document.getElementById('detailSkill').textContent='スキル未確認';
-     document.getElementById('detailSkillEffect').textContent='能力データは確認後に追加します。';
+     const name=document.getElementById('detailSkill'),effect=document.getElementById('detailSkillEffect');
+     if(name)name.textContent='スキル未確認';
+     if(effect)effect.textContent='能力データは確認後に追加します。';
      const rate=document.getElementById('skillRateInline');
      if(rate)rate.textContent='発動確率 未確認';
-     document.getElementById('skillLevels').replaceChildren();
-     document.getElementById('skillDetailToggle').hidden=true;return;
+     const levels=document.getElementById('skillLevels'),toggle=document.getElementById('skillDetailToggle');
+     if(levels){levels.replaceChildren();levels.classList.remove('open')}
+     if(toggle){toggle.hidden=true;toggle.textContent='詳細を見る ▼'}return;
    }
-   document.getElementById('skillDetailToggle').hidden=false;
+   const toggle=document.getElementById('skillDetailToggle');
+   if(toggle)toggle.hidden=!Object.entries(s.levels||{}).some(([lv,x])=>Number(lv)>1&&x);
    const skillIcon=document.querySelector('#v12Ability .skill-icon');
    if(skillIcon){
      skillIcon.replaceChildren();
@@ -94,10 +99,10 @@
    if(ctl)ctl.remove();
    const levels=document.getElementById("skillLevels");
    if(levels){
-     const detail=Object.entries(s.levels||{}).filter(([lv])=>Number(lv)>1).sort((a,b)=>Number(a[0])-Number(b[0]));
+     const detail=Object.entries(s.levels||{}).filter(([lv,x])=>Number(lv)>1&&x).sort((a,b)=>Number(a[0])-Number(b[0]));
      const compact=detail.length<=6&&detail.every(([lv,x])=>skillVariables(s,x,lv).replace(/<[^>]*>/g,'').length<=10);
      const layoutClass=compact&&detail.length===6?'v43-compact-3':detail.length<=6?'v43-compact-2':'v43-detail-long';
-     const note=s.displayNote|| (s.effectType==='random_main_skill'?'選ばれたメインスキルは、ゆびをふると同じレベルで発動します（対象スキルの上限まで）。':s.effectType.startsWith('helper_boost_')?'追加回数は同じタイプの異なるポケモンが3／4／5種類いる場合。':s.effectType==='fixed_dream_shards_energy'?'ゆめのかけら ／ エナジー':s.effectType==='cooking_assist'?'食材数 ／ 大成功確率':s.effectType==='moonlight_energy_recovery'?'追加は大成功時にチーム内の1匹へ。':'');
+     const note=s.displayNote|| (s.effectType==='random_main_skill'?'選ばれたメインスキルは、ゆびをふると同じレベルで発動します（対象スキルの上限まで）。':s.effectType?.startsWith('helper_boost_')?'追加回数は同じタイプの異なるポケモンが3／4／5種類いる場合。':s.effectType==='fixed_dream_shards_energy'?'ゆめのかけら ／ エナジー':s.effectType==='cooking_assist'?'食材数 ／ 大成功確率':s.effectType==='moonlight_energy_recovery'?'追加は大成功時にチーム内の1匹へ。':'');
      levels.innerHTML=(note?`<p class="psg-skill-variable-note">${detailEsc(note)}</p>`:'')+`<div class="v32-skill-grid ${layoutClass}">${detail.map(([lv,x])=>`<div class="v32-skill-cell"><b>Lv.${lv}</b><strong class="psg-skill-values">${skillVariables(s,x,lv)}</strong></div>`).join('')}</div>`;
      if(s.ruleNotes?.length)levels.insertAdjacentHTML('beforeend',`<div class="psg-skill-conditions"><h4>発動条件・持続</h4>${s.ruleNotes.map(row=>`<p><b>${detailEsc(row.label)}</b>：${detailEsc(row.text)}</p>`).join('')}<p class="note">資料確認。独自のゲーム内実測ではありません。</p></div>`);
 

@@ -45,6 +45,10 @@ jobs:
           python-version: '3.12'
       - name: Build review from master folders
         run: python3 PSG_build_master.py
+      - name: Check image-first species and received artwork
+        run: |
+          node tests/check_image_first.cjs
+          node tests/check_biblo_assets.cjs
       - name: Assemble site, keeping the current main page
         run: |
           mkdir -p public

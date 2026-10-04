@@ -7,7 +7,7 @@
    header(m);renderStats(m);
    let notice=document.getElementById('dexPreviewNotice');
    if(!notice){notice=document.createElement('p');notice.id='dexPreviewNotice';notice.className='note';ability.prepend(notice)}
-   notice.hidden=m.dataStatus!=='preview_pending_abilities';notice.textContent='10月5日 15:00登場予定。能力データは確認待ちです。';
+   notice.hidden=m.dataStatus!=='preview_pending_abilities';notice.textContent='能力データは確認待ちです。画像は各タブで確認できます。';
    renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);renderPokemonFields(m);switchTab(currentTab||"ability");
    updateDexStickyTop();
    if(opts.keepScroll)window.scrollTo(0,scroll);

@@ -3,18 +3,24 @@
 // a normal form when an explicit, unknown identity is stored.
 (()=>{
  const catalog=window.PS_CATALOG,data=catalog.forms;if(!data)return;
- const records=new Map(data.species.map(raw=>{
-  const rows=new Map();for(const slot of raw.ingredientSlots||[])for(const c of slot.candidates){
+ const records=new Map((data.species||[]).map(raw=>{
+  // Image-first imports may omit every ability and collection. Keep unknowns
+  // unknown and exclude incomplete species from Box/calculations by default.
+  const pending=raw.dataStatus==='preview_pending_abilities'||
+   ['specialty','berry','help','carry','foodRate','skillRate','mainSkillId'].some(key=>raw[key]==null);
+  const rows=new Map();for(const slot of raw.ingredientSlots||[])for(const c of slot.candidates||[]){
    if(!rows.has(c.name))rows.set(c.name,[null,null,null]);rows.get(c.name)[[1,30,60].indexOf(slot.unlock)]=c.qty;
   }
-  return [raw.speciesId,{...raw,dexVisible:true,detailPreviewOnly:true,image:window.PS_IMAGE_FILES.pokemonBySpecies?.[raw.speciesId]||null,faceImage:window.PS_IMAGE_FILES.pokemonFacesBySpecies?.[raw.speciesId]||null,
+  return [raw.speciesId,{...raw,dataStatus:pending?'preview_pending_abilities':raw.dataStatus,boxEligible:pending?false:raw.boxEligible,
+   ingredientSlots:raw.ingredientSlots||[],evolutionTransitions:raw.evolutionTransitions||[],appearanceFields:raw.appearanceFields||[],
+   dexVisible:true,detailPreviewOnly:true,image:window.PS_IMAGE_FILES.pokemonBySpecies?.[raw.speciesId]||raw.image||null,faceImage:window.PS_IMAGE_FILES.pokemonFacesBySpecies?.[raw.speciesId]||raw.faceImage||null,
    berryImage:window.PS_IMAGE_FILES.berries[raw.berry]||null,
    ingredients:[...rows].map(([name,qty],i)=>({slot:raw.mythicalSettings?'候補':['A','B','C'][i],name,qty})),
-   sleepStyles:(data.sleepStyleGroups[raw.sleepStyleGroupId]?.styles||[]).map(style=>({...style,image:window.PS_IMAGE_FILES.sleepStylesBySpecies[raw.speciesId]?.[style.id]||null}))}];
+   sleepStyles:(data.sleepStyleGroups?.[raw.sleepStyleGroupId]?.styles||[]).map(style=>({...style,image:window.PS_IMAGE_FILES.sleepStylesBySpecies?.[raw.speciesId]?.[style.id]||style.image||null}))}];
  }));
- const groupFor=id=>data.detailFormGroups.find(g=>g.choices.some(c=>c.speciesId===id));
+ const groupFor=id=>(data.detailFormGroups||[]).find(g=>g.choices.some(c=>c.speciesId===id));
  const resolve=id=>records.get(String(id))||(/^\d{4}_default$/.test(String(id))?catalog.pokemon[Number(String(id).split('_')[0])]:null)||null;
- const dexEntries=[...data.detailFormGroups.filter(g=>g.kind==='size').map(g=>({...resolve(g.choices[0].speciesId),name:g.name})),
+ const dexEntries=[...(data.detailFormGroups||[]).filter(g=>g.kind==='size').map(g=>({...resolve(g.choices[0].speciesId),name:g.name})),
   ...(data.independentDexEntries||[]).map(id=>records.get(typeof id==='string'?id:id.speciesId)).filter(Boolean)];
  window.PS_FORMS={data,records,groupFor,resolve,dexEntries};
  window.PS_SPECIES=(item,source=catalog)=>{
