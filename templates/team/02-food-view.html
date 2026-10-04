@@ -40,14 +40,14 @@ function renderTeamFood(){
    const name=document.createElement('strong');name.textContent=recipe.name;
    const meta=document.createElement('span');meta.className='psg-team-recipe-meta';const verified=recipe.energy?.max,shown=verified||[...(recipe.energy?.observed||[])].sort((a,b)=>b.level-a.level)[0];if(Number.isFinite(shown?.value)){
     const level=document.createElement('span');level.className='psg-team-recipe-level';
-    const lv=document.createElement('small');lv.textContent='Lv.';const n=document.createElement('strong');n.textContent=String(shown.level);level.append(lv,n);nameLine.append(level);
-    const energy=document.createElement('strong');energy.textContent=`${Math.round(shown.value*areaFactor).toLocaleString()} エナジー`;meta.append(energy);
+    const lv=document.createElement('small');lv.textContent='Lv.';const n=document.createElement('strong');n.textContent=String(shown.level);level.append(lv,n);
+    const energy=document.createElement('strong');energy.textContent=`${Math.round(shown.value*areaFactor).toLocaleString()} エナジー`;meta.append(level,energy);
    }else meta.textContent='エナジー未確認';meta.title='選択中フィールドのFBを反映。追加食材・大成功の効果は含みません。';
    const base=document.createElement('span');base.className='psg-team-recipe-base-energy';base.textContent=Number.isFinite(shown?.value)?`（基礎 ${Math.round(shown.value).toLocaleString()} エナジー）`:'';
    const status=document.createElement('span');status.className=`psg-team-recipe-status ${missing.length?'is-unconfirmed':'is-covered'}`;
    status.textContent=!team.some(Boolean)?'チーム未設定':missing.length?`未確認：${missing.map(item=>item.name).join('・')}`:'食材の種類が揃う';
    const required=recipe.ingredients.reduce((sum,item)=>sum+item.qty,0),potStatus=document.createElement('span');potStatus.className='psg-team-recipe-pot';
-   potStatus.textContent=`（${required}個）`;potStatus.setAttribute('aria-label',`必要鍋容量 ${required}`);
+   const potNumber=document.createElement('span');potNumber.className='psg-team-recipe-pot-number';potNumber.textContent=String(required);potStatus.append('（',potNumber,'個）');potStatus.setAttribute('aria-label',`必要鍋容量 ${required}`);
    potStatus.title=pot.capacity===null?'容量未設定':required<=pot.capacity?'容量内':`容量不足：あと${required-pot.capacity}`;
    potStatus.classList.toggle('is-over-capacity',pot.capacity!==null&&required>pot.capacity);
    const ingredients=document.createElement('span');ingredients.className='psg-team-recipe-ingredients';
