@@ -47,8 +47,9 @@
 #dexDetail .hero{--box-fact-row-height:var(--box-unit-height);--box-facts-height:calc(3 * var(--box-fact-row-height) + 4px);--box-portrait-column:min(37%,var(--box-facts-height));padding:2px!important}
 #dexDetail .hero-top{grid-template-columns:var(--box-portrait-column) minmax(0,1fr)!important;gap:3px!important;align-items:start!important}
 #dexDetail .psg-v106-media{height:var(--box-facts-height);gap:0}
-#dexDetail .hero-art{position:relative;min-height:0!important;height:100%!important;aspect-ratio:auto!important;display:grid;place-items:start;margin:0!important}
-#dexDetail .hero-art>img{width:100%!important;height:100%!important;max-width:100%;max-height:100%;object-fit:contain!important;object-position:left top!important}
+#dexDetail .hero-art{position:relative;min-height:0!important;height:100%!important;aspect-ratio:auto!important;display:grid!important;place-items:center;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);margin:0!important}
+/* Match the Box frame without stretching or cropping the artwork. */
+#dexDetail .hero-art>img{display:block;min-width:0;min-height:0;width:calc(100% - 8px)!important;height:calc(100% - 8px)!important;max-width:100%;max-height:100%;object-fit:contain!important;object-position:center!important}
 #dexDetail .v51-type-badge{right:0!important;bottom:0!important}
 #dexDetail .psg-fact-blank{min-width:0;height:100%;background:transparent}
 #dexDetail .psg-detail-friend{flex-direction:row;gap:2px}

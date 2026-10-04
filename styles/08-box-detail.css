@@ -25,7 +25,7 @@
 #boxDetail .psg-box-art-badge .filter-pictogram{font-size:12px;font-weight:900}
 #boxDetail .psg-box-hero{border-color:color-mix(in srgb,var(--box-type-accent,#55a66b) 22%,#dfe8e2)}
 #boxDetail .psg-box-identity{display:grid;}
-#boxDetail .psg-box-artwork{border:0;position:relative;overflow:hidden;display:grid;place-items:start}
+#boxDetail .psg-box-artwork{border:0;position:relative;overflow:hidden;display:grid;place-items:center}
 #boxDetail .psg-box-artwork img{max-width:100%;max-height:100%;object-fit:contain}
 #boxDetail .psg-box-facts{min-width:0;display:flex;flex-direction:column;}
 #boxDetail #boxIdentity{font-weight:900;font-size:14px}
@@ -49,8 +49,9 @@
 #boxDetail .psg-box-hero{--box-fact-row-height:var(--box-unit-height);--box-facts-height:calc(3 * var(--box-fact-row-height) + 4px);--box-portrait-column:min(37%,var(--box-facts-height));padding:2px;background:var(--box-type-bg,#eef8f0);border-radius:18px}
 #boxDetail .psg-box-identity{grid-template-columns:var(--box-portrait-column) minmax(0,1fr);gap:3px;align-items:start}
 #boxDetail .psg-v106-media{min-width:0;height:var(--box-facts-height)}
-#boxDetail .psg-box-artwork{width:100%;height:100%;min-height:0;aspect-ratio:auto;background:transparent;border-radius:0;margin:0;place-items:start}
-#boxDetail .psg-box-artwork>img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;object-position:left top}
+#boxDetail .psg-box-artwork{width:100%;height:100%;min-height:0;aspect-ratio:auto;background:transparent;border-radius:0;margin:0;place-items:center;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+/* Fit the unchanged image canvas inside a centered frame with a 4px inset. */
+#boxDetail .psg-box-artwork>img{display:block;min-width:0;min-height:0;max-width:100%;max-height:100%;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain;object-position:center}
 #boxDetail .psg-box-facts{justify-content:space-between;gap:4px;align-self:stretch}
 #boxDetail .psg-box-traits{display:grid;grid-template-columns:31fr 38fr 31fr;gap:3px;min-width:0}
 #boxDetail .psg-box-trait{display:flex;align-items:center;justify-content:center;gap:2px;min-width:0;min-height:31px;padding:3px 2px;border-radius:9px;background:#fff;font-size:11px;font-weight:850;white-space:nowrap;overflow:hidden;color:#111}
