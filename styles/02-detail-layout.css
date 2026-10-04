@@ -85,9 +85,9 @@
 }
 
 /* Team ingredient coverage is based on the selected individual and unlocked slots. */
-.psg-home-heading{--home-row-height:clamp(27px,7.5vw,31.5px);position:sticky;top:var(--psg-header-height);z-index:67;background:var(--bg);padding:0;display:grid;grid-template-columns:minmax(60px,.65fr) minmax(0,1.2fr) minmax(0,1.2fr);grid-template-rows:repeat(2,var(--home-row-height));column-gap:4px;row-gap:2px;margin-top:-12px;margin-bottom:6px;align-items:stretch}
-.psg-home-heading h2{margin:0;min-width:0;display:flex;align-items:center;font-size:18px;line-height:1}
-.psg-home-heading select{min-width:0;width:100%;max-width:none;height:100%;min-height:0;padding:0 2px;border:1px solid #d7e0da;border-radius:8px;background:#fff;color:#111;font:inherit;font-size:12px;font-weight:700}
+.psg-home-heading{--home-row-height:calc(var(--psg-ui-unit) * .75);position:sticky;top:var(--psg-header-height);z-index:67;background:var(--bg);padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,var(--home-row-height));column-gap:4px;row-gap:2px;margin-top:-12px;margin-bottom:6px;align-items:stretch}
+.psg-home-heading h2{margin:0;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;line-height:1}
+.psg-home-heading select{min-width:0;width:100%;max-width:none;height:100%;min-height:0;padding:0 2px;border:1px solid #d7e0da;border-radius:8px;background:#fff;color:#111;font:inherit;font-size:12px;font-weight:700;text-align:center;text-align-last:center}
 .psg-home-fb{grid-column:1 / 3;display:flex;align-items:center;justify-content:space-evenly;gap:4px;min-width:0;min-height:0;padding:0 4px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;font-size:12px;font-weight:800;width:100%}
 .psg-home-fb #teamFieldSummary{flex:0 0 auto;gap:0;white-space:nowrap}
 .psg-home-berries{display:flex;justify-content:center;align-items:center;gap:4px;min-width:0;font-size:11px}
@@ -124,7 +124,7 @@
 .psg-team-option strong{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .psg-team-option:disabled{opacity:.5;cursor:default}
 .psg-team-option[hidden]{display:none}
-.psg-team-toolbar{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:5px}
+.psg-team-toolbar{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:nowrap;height:calc(var(--psg-ui-unit) * .75);margin-bottom:5px}
 .psg-team-toolbar>.section-title{margin:0;font-size:16px;white-space:nowrap}
 .psg-team-composition{display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
 .psg-team-composition>span{display:flex;align-items:center;gap:2px;font-size:12px;white-space:nowrap}
@@ -168,11 +168,11 @@
 @media(max-width:355px){.psg-team-choose{gap:5px;padding:5px}.psg-team-face{flex-basis:40px;width:40px;height:40px}.psg-team-actions button{min-width:31px}.psg-team-actions .psg-team-remove{min-width:37px}}
 .psg-team-food-card,.psg-team-recipe-card{margin-top:12px}
 .psg-day-card{margin-top:12px}
-.psg-day-header{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.psg-day-header .section-title{margin:0;min-width:0}
+.psg-day-header{display:flex;align-items:center;justify-content:space-between;gap:6px;height:calc(var(--psg-ui-unit) * .5)}
+.psg-day-header .section-title{margin:0;min-width:0;font-size:14px;line-height:1}
 .psg-day-setting{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;font-size:12px;font-weight:700}
-.psg-day-setting select{font:inherit;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:9px;padding:6px 3px;min-width:0;max-width:76px}
-.psg-day-toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.psg-day-setting select{font:inherit;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:9px;padding:0 3px;height:calc(var(--psg-ui-unit) * .5);min-height:0;min-width:0;max-width:76px}
+.psg-day-toggles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:4px;align-items:end}
 .psg-day-camp{font:inherit;font-weight:700;color:#285843;background:#fff;border:1px solid #b8d3c0;border-radius:12px;padding:9px 12px;min-height:42px}
 .psg-day-camp[aria-pressed="true"]{background:#dff2e6;border-color:#61a878;color:#174b30}
 .psg-day-energy{border:0;padding:0;margin:12px 0 0;min-width:0}
@@ -453,11 +453,19 @@
 
 .psg-team-toolbar #teamReorder{min-height:34px;padding:5px 7px;font-size:10px}.psg-team-toolbar #whistleToggle{display:inline-flex;align-items:center;justify-content:center;min-height:34px;width:34px;padding:2px;flex:none}.psg-team-toolbar #whistleToggle img{display:block;width:28px;height:28px;object-fit:contain}
 
-/* Current field state survives team changes and is entered beside the team. */
-.psg-team-zone{margin-top:0}
-.psg-team-zone label{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;font-size:13px;font-weight:800;color:#111}
-.psg-team-zone-value{display:flex;align-items:center;gap:3px;flex:none}
-.psg-team-zone input{width:4em;min-width:0;box-sizing:border-box;padding:5px 6px;font:inherit;text-align:right}
-.psg-team-zone small{display:block;margin-top:4px;color:#52645b;font-size:11px;line-height:1.4}
-.psg-team-zone .note:empty{display:none}
+/* Manual zone controls live beside the meal toggle. */
+.psg-team-zone{min-width:0}
+.psg-zone-heading{display:flex;align-items:center;height:calc(var(--psg-ui-unit) * .5);font-size:12px;line-height:1;font-weight:800;color:#111}
+.psg-zone-controls{display:flex;align-items:center;gap:3px;min-width:0;height:calc(var(--psg-ui-unit) * .5)}
+.psg-zone-controls select{min-width:0;flex:1;max-width:110px;height:100%;min-height:0;padding:0 2px;font-size:11px;text-align:center;text-align-last:center;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111}
+.psg-team-zone-value{display:flex;align-items:center;gap:2px;font-size:11px;flex:none}
+.psg-team-zone input{width:var(--psg-ui-unit);height:calc(var(--psg-ui-unit) * .5);min-height:0;min-width:0;box-sizing:border-box;padding:0 2px;font-size:12px;text-align:center;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111}
+.psg-day-toggles #teamMeals{height:calc(var(--psg-ui-unit) * .5);min-height:0;padding:0 4px;border-radius:6px;font-size:11px;line-height:1}
+#teamZoneSaveStatus:empty,#nightcapSaveStatus:empty{display:none}
 
+:root{--psg-ui-unit:clamp(36px,6vw,42px)}
+.psg-screen-toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-items:center}
+.psg-screen-title,.psg-list-sticky .toolbar .psg-screen-title{display:flex;align-items:center;justify-content:center;text-align:center;min-width:0;height:calc(var(--psg-ui-unit) * .75);margin:0;font-size:clamp(12px,3.6vw,18px);line-height:1;white-space:nowrap}
+.psg-screen-toolbar input,.psg-dex-toolbar.psg-screen-toolbar #dexSearch{width:100%;max-width:none;min-width:0}
+.psg-screen-toolbar #dexCount{text-align:center;font-size:10px}
+#info>.psg-screen-title{width:calc((100% - 8px) / 3);margin-bottom:8px}
