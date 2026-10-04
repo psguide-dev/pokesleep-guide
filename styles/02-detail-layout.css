@@ -444,3 +444,11 @@
 
 
 .psg-team-toolbar #teamReorder{min-height:34px;padding:5px 7px;font-size:10px}.psg-team-toolbar #whistleToggle{display:inline-flex;align-items:center;justify-content:center;min-height:34px;width:34px;padding:2px;flex:none}.psg-team-toolbar #whistleToggle img{display:block;width:28px;height:28px;object-fit:contain}
+
+/* Current field state survives team changes and is entered beside the team. */
+.psg-team-zone{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.psg-team-zone label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:800;color:#111}
+.psg-team-zone-value{display:flex;align-items:center;gap:3px;flex:none}
+.psg-team-zone input{width:5em;min-width:0;box-sizing:border-box;padding:5px 6px;font:inherit;text-align:right}
+.psg-team-zone small{display:block;margin-top:4px;color:#52645b;font-size:11px;line-height:1.4}
+.psg-team-zone .note:empty{display:none}

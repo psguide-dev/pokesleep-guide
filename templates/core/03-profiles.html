@@ -30,13 +30,20 @@ function normalizeFieldProfile(raw){
  }
  const categories=['カレー・シチュー','サラダ','デザート・ドリンク'];
  const meal=raw?.meal&&typeof raw.meal.weekKey==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(raw.meal.weekKey)&&categories.includes(raw.meal.category)?{weekKey:raw.meal.weekKey,category:raw.meal.category}:null;
- return {selectedFieldId,areaBonuses,weekly,meal};
+ const value=Number(raw?.berryZone?.values?.['マゴのみ']);
+ const berryZone=raw?.berryZone?.fieldId===selectedFieldId&&raw.berryZone.weekKey===currentFieldWeek()
+  ?{fieldId:selectedFieldId,weekKey:currentFieldWeek(),values:{'マゴのみ':Number.isFinite(value)?Math.round(Math.max(0,Math.min(24,value))*10)/10:0}}:null;
+ return {selectedFieldId,areaBonuses,weekly,meal,berryZone};
 }
 function readFieldProfile(){
  try{return normalizeFieldProfile(JSON.parse(localStorage.getItem(FIELD_STORAGE_KEY)||'{}'))}
  catch{return normalizeFieldProfile({})}
 }
 let fieldProfile=readFieldProfile();
+function activeBerryZones(){
+ const zone=fieldProfile.berryZone;
+ return zone?.fieldId===fieldProfile.selectedFieldId&&zone.weekKey===currentFieldWeek()?zone.values:{};
+}
 function saveFieldProfile(){
  try{localStorage.setItem(FIELD_STORAGE_KEY,JSON.stringify(fieldProfile));renderFieldControls();renderTeamDay();renderTeamFood();return true}
  catch{fieldProfile=readFieldProfile();renderFieldControls();renderTeamFood();alert('フィールド設定を保存できませんでした。');return false}

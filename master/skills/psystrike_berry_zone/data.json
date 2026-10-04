@@ -10,7 +10,7 @@
   "calculationStatus": "not_implemented",
   "levels": {
     "1": {
-      "description": "エナジー 1,408／マゴのみゾーン＋0.6%",
+      "description": "エナジー 1,408／ゾーン＋0.6%",
       "referenceValues": [
         "1408",
         "0.6"
@@ -27,7 +27,7 @@
       }
     },
     "2": {
-      "description": "エナジー 2,002／マゴのみゾーン＋0.8%",
+      "description": "エナジー 2,002／ゾーン＋0.8%",
       "referenceValues": [
         "2002",
         "0.8"
@@ -44,7 +44,7 @@
       }
     },
     "3": {
-      "description": "エナジー 2,762／マゴのみゾーン＋1.0%",
+      "description": "エナジー 2,762／ゾーン＋1.0%",
       "referenceValues": [
         "2762",
         "1.0"
@@ -61,7 +61,7 @@
       }
     },
     "4": {
-      "description": "エナジー 3,813／マゴのみゾーン＋1.2%",
+      "description": "エナジー 3,813／ゾーン＋1.2%",
       "referenceValues": [
         "3813",
         "1.2"
@@ -78,7 +78,7 @@
       }
     },
     "5": {
-      "description": "エナジー 5,264／マゴのみゾーン＋1.6%",
+      "description": "エナジー 5,264／ゾーン＋1.6%",
       "referenceValues": [
         "5264",
         "1.6"
@@ -95,7 +95,7 @@
       }
     },
     "6": {
-      "description": "エナジー 7,274／マゴのみゾーン＋2.0%",
+      "description": "エナジー 7,274／ゾーン＋2.0%",
       "referenceValues": [
         "7274",
         "2.0"
@@ -112,7 +112,7 @@
       }
     }
   },
-  "displayNote": "ゾーンは累積24%まで。フィールド移動でリセットし、発動者を外しても残ります。 日産予想への効果反映は未対応です。",
+  "displayNote": "ゾーンは累積24%まで。フィールド移動でリセットし、発動者を外しても残ります。 現在のゾーン補正はチーム欄で入力できます。発動による自動加算・直接エナジーの日産予想は未対応です。",
   "nativeSpecies": [
     {
       "speciesId": "0150_default",
@@ -225,7 +225,7 @@
         ]
       },
       "berryBoxAtActivation": {
-        "value": "発動時に箱内の全きのみを即消費。今回増えたゾーンの効果はその即消費分に適用しない。",
+        "value": "発動時に箱内の全きのみを即消費したのち、ゾーン効果を付与。",
         "status": "community_documented",
         "sources": [
           "psystrike_berry_zone"
@@ -304,7 +304,7 @@
     },
     {
       "label": "発動時のきのみ",
-      "text": "発動時に箱内の全きのみを即消費。今回増えたゾーンの効果はその即消費分に適用しない。",
+      "text": "発動時に箱内の全きのみを即消費したのち、ゾーン効果を付与。",
       "status": "community_documented",
       "sourceRule": "berryBoxAtActivation",
       "sources": [

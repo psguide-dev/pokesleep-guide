@@ -2,7 +2,7 @@ function renderTeamWhistle(){
  const host=document.getElementById('teamWhistleEstimate');if(!host)return;
  host.replaceChildren();
  const catalog=window.PS_CATALOG,field=catalog.fields[fieldProfile.selectedFieldId],favorites=activeFieldBerries();
- const options={fieldMode:field?.mode,favoriteBerries:favorites,favoritesKnown:field?.favoriteMode==='fixed'||favorites.filter(Boolean).length===3&&new Set(favorites).size===3,areaBonus:fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,assumeNeutral:document.getElementById('whistleAssumeNeutral').checked};
+ const options={berryZones:activeBerryZones(),fieldMode:field?.mode,favoriteBerries:favorites,favoritesKnown:field?.favoriteMode==='fixed'||favorites.filter(Boolean).length===3&&new Set(favorites).size===3,areaBonus:fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,assumeNeutral:document.getElementById('whistleAssumeNeutral').checked};
  renderWhistleRecommendation(catalog,options);
  const result=whistleEstimate(team,state.box,catalog,options);
  const note=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;host.append(p)};

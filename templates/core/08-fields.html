@@ -102,6 +102,7 @@ function renderFieldGallery(){
  }
 }
 function renderFieldControls(){
+ document.getElementById('teamBerryZone').value=String(activeBerryZones()['マゴのみ']||0);
  renderFieldSpawn();
  renderFieldGallery();
  fieldSelect.value=fieldProfile.selectedFieldId;
@@ -171,7 +172,7 @@ function renderFieldEncounters(field){
  }
  if(!visible.length){const p=document.createElement('p');p.className='note';p.textContent='このランクまでに収録済みの寝顔はありません。';host.append(p)}
 }
-function selectField(id){fieldProfile.selectedFieldId=id;document.getElementById('fieldRankFilter').value='';saveFieldProfile()}
+function selectField(id){if(id!==fieldProfile.selectedFieldId){fieldProfile.berryZone=null;document.getElementById('teamZoneSaveStatus').textContent='フィールド変更によりゾーンを0％に戻しました。'}fieldProfile.selectedFieldId=id;document.getElementById('fieldRankFilter').value='';saveFieldProfile()}
 fieldSelect.onchange=()=>selectField(fieldSelect.value);
 homeFieldSelect.onchange=()=>selectField(homeFieldSelect.value);
 document.getElementById('fieldFavoriteReset').onclick=()=>{delete fieldProfile.weekly[fieldProfile.selectedFieldId];saveFieldProfile()};
@@ -181,3 +182,12 @@ areaBonusInput.onchange=()=>{
 };
 document.getElementById('teamFieldLink').onclick=()=>{renderFieldControls();go('fieldPage')};
 renderFieldControls();
+
+document.getElementById('teamBerryZone').onchange=event=>{
+ const input=event.currentTarget,value=Number(input.value);
+ if(input.value.trim()===''||!Number.isFinite(value)){input.value=String(activeBerryZones()['マゴのみ']||0);return}
+ const percentage=Math.round(Math.max(0,Math.min(24,value))*10)/10;
+ fieldProfile.berryZone={fieldId:fieldProfile.selectedFieldId,weekKey:currentFieldWeek(),values:{'マゴのみ':percentage}};
+ const saved=saveFieldProfile();
+ document.getElementById('teamZoneSaveStatus').textContent=saved?`マゴのみゾーン＋${percentage}％を保存しました。`:'ゾーンを保存できませんでした。';
+};

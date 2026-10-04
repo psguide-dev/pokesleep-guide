@@ -1,7 +1,7 @@
 function boxDailyEstimate(item){
  const ids=[item.id];
  const interval=Number(document.getElementById('teamCollectionInterval').value);
- const result=dailyBaseline(ids,state.box,window.PS_CATALOG,interval,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0);
+ const result=dailyBaseline(ids,state.box,window.PS_CATALOG,interval,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones());
  return {result,member:result.members.find(m=>m.id===item.id)};
 }
 function renderBoxDayFood(estimate){

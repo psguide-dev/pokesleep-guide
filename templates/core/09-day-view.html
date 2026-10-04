@@ -4,7 +4,7 @@ function renderTeamDay(){
  const host=document.getElementById('teamDayEstimate');if(!host)return;
  const interval=document.getElementById('teamCollectionInterval').value;
  renderFieldControls();
- const result=dailyBaseline(team,state.box,window.PS_CATALOG,interval,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0);
+ const result=dailyBaseline(team,state.box,window.PS_CATALOG,interval,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones());
  host.replaceChildren();
  if(!result.members.length){const p=document.createElement('p');p.className='note';p.textContent='チームを選ぶと獲得予想を表示します。';host.append(p);return}
  if(result.pendingReason){const note=document.createElement('p');note.className='note';note.textContent=result.pendingReason;host.append(note)}
