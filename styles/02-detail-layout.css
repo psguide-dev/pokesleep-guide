@@ -503,8 +503,8 @@
 .psg-day-member-berries{display:flex;align-items:center;justify-content:center;gap:3px;min-width:0}
 .psg-day-row .psg-day-member-berries span{font-size:11px;line-height:1.1}
 .psg-day-member-berries img{width:22px;height:22px;object-fit:contain;flex:none}
-.psg-day-member-metric{margin-left:calc(100% / 3);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;text-align:center;height:calc(var(--psg-ui-unit) * .75);font-size:12px}
-.psg-day-member-effect{margin-left:calc(100% / 3);display:flex;align-items:center;justify-content:center;text-align:center;min-height:calc(var(--psg-ui-unit) * .75);font-size:11px;line-height:1.2}
+.psg-day-member-metric{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;text-align:center;height:calc(var(--psg-ui-unit) * .75);font-size:12px}
+.psg-day-member-effect{display:flex;align-items:center;justify-content:center;text-align:center;min-height:calc(var(--psg-ui-unit) * .75);font-size:11px;line-height:1.2}
 .psg-day-member-note{margin:0;min-height:calc(var(--psg-ui-unit) * .75);display:flex;align-items:center;font-size:11px;line-height:1.25;color:#66716c}
 .psg-day-member-details .psg-day-food-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin:0}
 .psg-day-member-details .psg-day-food-tile{height:var(--psg-ui-unit);padding:2px;justify-content:center;gap:3px;background:#fff}
