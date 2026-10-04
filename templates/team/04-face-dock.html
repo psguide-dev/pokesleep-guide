@@ -12,8 +12,13 @@ function renderTeamFaceDock(){
 function updateTeamFaceDock(){
  const dock=document.getElementById('teamFaceDock');
  const teamCard=document.querySelector('#home .psg-team-card');
- dock.hidden=!document.getElementById('home').classList.contains('active')||teamCard.getBoundingClientRect().bottom>document.querySelector('.psg-app-header').getBoundingClientRect().bottom+8;
+ dock.hidden=!document.getElementById('home').classList.contains('active')||teamCard.getBoundingClientRect().bottom>document.getElementById('homeStickyHeading').getBoundingClientRect().bottom+8;
 }
 window.addEventListener('scroll',updateTeamFaceDock,{passive:true});
 window.addEventListener('resize',updateTeamFaceDock,{passive:true});
 document.getElementById('teamReorder').onclick=()=>{teamReorderMode=!teamReorderMode;teamReorderFrom=null;renderTeam()};
+
+const homeStickyHeading=document.getElementById('homeStickyHeading');
+function updateHomeStickyHeight(){if(document.getElementById('home').classList.contains('active'))document.getElementById('home').style.setProperty('--psg-home-heading-height',`${homeStickyHeading.getBoundingClientRect().height}px`);updateTeamFaceDock()}
+if(window.ResizeObserver)new ResizeObserver(updateHomeStickyHeight).observe(homeStickyHeading);
+updateHomeStickyHeight();

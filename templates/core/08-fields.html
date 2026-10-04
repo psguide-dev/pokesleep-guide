@@ -116,7 +116,7 @@ function renderFieldControls(){
  document.getElementById('fieldFavoriteReset').hidden=fieldProfile.weekly[fieldProfile.selectedFieldId]?.weekKey!==currentFieldWeek();
  const fieldName=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.name||'フィールド未設定';
  const summary=document.getElementById('teamFieldSummary');
- const heading=document.createElement('span');heading.textContent=`${fieldName}・ＦＢ＋${areaBonusInput.value}%`;
+ const heading=document.createElement('span');heading.textContent=`FB＋${areaBonusInput.value}%`;
  const berryRow=document.createElement('span');berryRow.className='psg-day-field-berries';
  for(const berry of berries.filter(Boolean)){const icon=berryIcon(berry);if(icon)berryRow.append(icon);else berryRow.append(document.createTextNode(berry+' '))}
  if(!berries.filter(Boolean).length)berryRow.textContent='未設定';
