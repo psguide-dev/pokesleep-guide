@@ -168,7 +168,7 @@
 @media(max-width:355px){.psg-team-choose{gap:5px;padding:5px}.psg-team-face{flex-basis:40px;width:40px;height:40px}.psg-team-actions button{min-width:31px}.psg-team-actions .psg-team-remove{min-width:37px}}
 .psg-team-food-card,.psg-team-recipe-card{margin-top:12px}
 .psg-day-card{margin-top:12px}
-.psg-day-header{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:4px;height:calc(var(--psg-ui-unit) * .5)}
+.psg-day-header{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:4px;height:calc(var(--psg-ui-unit) * .75)}
 .psg-day-header .section-title{grid-column:span 2;margin:0;min-width:0;font-size:14px;line-height:1}
 .psg-day-ex-setting{grid-column:span 2;width:100%;max-width:none;min-width:0;min-height:0;height:100%;padding:0 3px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111;font-size:12px;font-weight:700;text-align:center;text-align-last:center}
 .psg-day-setting{grid-column:span 2;display:grid;grid-template-rows:calc(var(--psg-ui-unit) * .5) calc(var(--psg-ui-unit) * .75);align-items:stretch;min-width:0;white-space:nowrap;font-size:12px;font-weight:700;text-align:center}
@@ -178,10 +178,12 @@
 .psg-day-camp{font:inherit;font-weight:700;color:#285843;background:#fff;border:1px solid #b8d3c0;border-radius:12px;padding:9px 12px;min-height:42px}
 .psg-day-camp[aria-pressed="true"]{background:#dff2e6;border-color:#61a878;color:#174b30}
 .psg-day-energy{border:0;padding:0;margin:12px 0 0;min-width:0}
-.psg-day-energy-heading{display:flex;align-items:center;height:calc(var(--psg-ui-unit) * .5);gap:6px;margin-bottom:2px;font-weight:700;color:#111;font-size:14px}
-.psg-day-energy-heading input{height:100%;padding:0 3px;width:4.5em;min-width:0;margin:0 0 0 auto;font:inherit;box-sizing:border-box}
+.psg-day-energy-heading{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;height:calc(var(--psg-ui-unit) * .75);gap:4px;margin-bottom:2px;font-weight:700;color:#111;font-size:12px;text-align:center}
+.psg-day-energy-heading label{display:flex;align-items:center;justify-content:center;height:100%;min-width:0}
+.psg-day-energy-heading input{height:100%;width:100%;padding:0 3px;min-width:0;margin:0;font:inherit;box-sizing:border-box;text-align:center}
+.psg-day-energy-heading input[type="range"]{grid-column:span 2;padding:0;accent-color:#3888d8;cursor:pointer}
 .psg-day-energy-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-.psg-day-energy-options button{font:inherit;font-weight:700;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:12px;min-height:0;height:var(--psg-ui-unit);padding:0 6px}
+.psg-day-energy-options button{font:inherit;font-weight:700;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:12px;min-height:0;height:calc(var(--psg-ui-unit) * .75);padding:0 6px}
 .psg-day-energy-options button[aria-pressed="true"]{background:#e8f2fc;border-color:#3888d8;color:#145c9e}
 .psg-day-field{border:1px solid #dce4df;border-radius:12px;padding:8px 10px 10px;margin:12px 0;min-width:0}
 .psg-day-field legend{font-weight:700;padding:0 5px;color:#111}

@@ -36,12 +36,18 @@ function saveCookingSettings(value){
  try{localStorage.setItem(COOKING_SETTINGS_KEY,JSON.stringify(cookingSettings))}catch{}
  renderTeamFood();window.dispatchEvent(new Event('psg-cooking-settings-change'));
 }
+function syncExEffectControls(){
+ const isEx=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.mode==='expert';
+ const select=document.getElementById('teamExEffect');select.value=daySettings.exWeeklyEffect;select.disabled=!isEx;
+ select.title=isEx?'EX効果（計算は未反映）':'EXフィールドで選択できます';
+ document.getElementById('teamExEffectNote').hidden=!isEx||!daySettings.exWeeklyEffect;
+}
 function syncDayControls(){
  document.getElementById('teamCollectionInterval').value=String(daySettings.collectionHours);
  document.getElementById('teamInitialEnergy').value=String(teamInitialEnergy);
  document.getElementById('teamMeals').value=String(teamMeals);
- document.getElementById('teamExEffect').value=daySettings.exWeeklyEffect;
- document.getElementById('teamExEffectNote').hidden=!daySettings.exWeeklyEffect;
+ document.getElementById('teamInitialEnergyRange').value=String(teamInitialEnergy);
+ syncExEffectControls();
  const camp=document.getElementById('teamGoodCamp'),campText=`いいキャンプ：${teamGoodCamp?'ON':'OFF'}`;
  camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;
  document.querySelectorAll('.psg-day-energy-options button').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.energy)===teamInitialEnergy)));
@@ -105,6 +111,7 @@ function renderFieldGallery(){
  }
 }
 function renderFieldControls(){
+ syncExEffectControls();
  document.getElementById('teamBerryZone').value=String(activeBerryZones()['マゴのみ']||0);
  renderFieldSpawn();
  renderFieldGallery();
