@@ -1,0 +1,70 @@
+{
+  "sourceLibraryFileId": "libfile_e2fbcbe6d8f88191b7895dee1a0a093f",
+  "sourcePackage": "PSN_Biblo_sleep_star2_patch_20261004.zip",
+  "images": [
+    {
+      "dexNumber": 459,
+      "species": "ユキカブリ",
+      "category": "sleep",
+      "form": "default",
+      "color": "default",
+      "stars": 2,
+      "variant": "variant02",
+      "sleepStyleName": null,
+      "sleepStyleId": null,
+      "originalName": "pokemon_459_drowse.png",
+      "file": "sleep/0459_ユキカブリ/default/default/0459_sleep_default_default_variant02.png",
+      "action": "replace_star2_image",
+      "verificationStatus": "ユーザー確認：★2の不足画像。寝顔名・実sleepStyleIdは未確定。",
+      "size": [
+        320,
+        240
+      ],
+      "alphaCrop": [
+        212,
+        211,
+        773,
+        685
+      ],
+      "sourceSha256": "46ff39ffd771ae2658bfbb5639488c11696e2979bf8da7dbfc0514e268da06ad",
+      "processedSha256": "4e26b98877795e9f20f98e86aa4c2897b0ee264f4339780c5a46c438ba85a10b",
+      "appPath": "assets/sleep/biblo-v349/0459_02.webp",
+      "appSpeciesId": "0459_default",
+      "appSleepStyleId": "0459_02",
+      "webpSha256": "88f57014c744c7a5d7e4ba5110eb261d294012eb0f4b89ff734f4a422fffded1",
+      "rgbaSha256": "fa582606c55b00d272e314d71d201736918bb99301c594976c1941f37752825b"
+    },
+    {
+      "dexNumber": 460,
+      "species": "ユキノオー",
+      "category": "sleep",
+      "form": "default",
+      "color": "default",
+      "stars": 2,
+      "variant": "variant02",
+      "sleepStyleName": null,
+      "sleepStyleId": null,
+      "originalName": "pokemon_460_drowse.png",
+      "file": "sleep/0460_ユキノオー/default/default/0460_sleep_default_default_variant02.png",
+      "action": "replace_star2_image",
+      "verificationStatus": "ユーザー確認：★2の不足画像。寝顔名・実sleepStyleIdは未確定。",
+      "size": [
+        320,
+        240
+      ],
+      "alphaCrop": [
+        140,
+        202,
+        863,
+        735
+      ],
+      "sourceSha256": "d6e1c059817ae583fdbf1dedf670fd7b07371e2b92526263fbb9f5228de50bbc",
+      "processedSha256": "7e9333508dbc0c75d705bab28e6c918721291aaa34b64746e207ece7f1382b38",
+      "appPath": "assets/sleep/biblo-v349/0460_02.webp",
+      "appSpeciesId": "0460_default",
+      "appSleepStyleId": "0460_02",
+      "webpSha256": "50afb93e308245aedf242229369ca8f9468a78f6e56350b2c3064b14a802497b",
+      "rgbaSha256": "40ad22c3e936a9252fad609328070d8b85a3ac8d80b430ad15f29a45b0c52066"
+    }
+  ]
+}

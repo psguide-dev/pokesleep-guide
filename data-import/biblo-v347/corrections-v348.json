@@ -269,34 +269,21 @@
     {
       "speciesId": "0459_default",
       "sleepStyleId": "0459_02",
-      "path": "assets/sleep/picasso-v281/0691.webp",
-      "sha256": "4e57bf1dd0c6438fb1243be37e8018752c65b0ab7eb2502c2a6d6ac5570aad24",
-      "reason": "新処理済み★2が★3と同じ姿のため旧★2画像へ戻す。新★2画像は不足",
+      "path": "assets/sleep/biblo-v349/0459_02.webp",
+      "sha256": "88f57014c744c7a5d7e4ba5110eb261d294012eb0f4b89ff734f4a422fffded1",
+      "reason": "2026-10-04ビブロ追加パック：不足していた新しい★2画像へ差し替え",
       "status": "confirmed"
     },
     {
       "speciesId": "0460_default",
       "sleepStyleId": "0460_02",
-      "path": "assets/sleep/picasso-v281/0695.webp",
-      "sha256": "ea6b02d2eee194cdb4d46b0f6bdca727e3dafe79715776e824f296a7755abfbb",
-      "reason": "新処理済み★2が★3と同じ姿のため旧★2画像へ戻す。新★2画像は不足",
+      "path": "assets/sleep/biblo-v349/0460_02.webp",
+      "sha256": "50afb93e308245aedf242229369ca8f9468a78f6e56350b2c3064b14a802497b",
+      "reason": "2026-10-04ビブロ追加パック：不足していた新しい★2画像へ差し替え",
       "status": "confirmed"
     }
   ],
-  "missingProcessedImages": [
-    {
-      "no": 459,
-      "name": "ユキカブリ",
-      "stars": 2,
-      "sleepStyleName": "ぼうだち寝"
-    },
-    {
-      "no": 460,
-      "name": "ユキノオー",
-      "stars": 2,
-      "sleepStyleName": "いかく寝"
-    }
-  ],
+  "missingProcessedImages": [],
   "rejectedImages": [
     "assets/sleep/biblo-v347/0786.webp",
     "assets/sleep/biblo-v347/0790.webp"

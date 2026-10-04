@@ -45,7 +45,11 @@ assert.equal(last[0].id,'0150_default_04');assert.equal(last[1].id,'0150_default
 for(const no of [459,460]){
  const two=files.sleepStylesBySpecies[`${no.toString().padStart(4,'0')}_default`][`${no.toString().padStart(4,'0')}_02`];
  const three=files.sleepStylesBySpecies[`${no.toString().padStart(4,'0')}_default`][`${no.toString().padStart(4,'0')}_03`];
- assert(two.includes('picasso-v281'));assert.notEqual(two,three);
+ assert(two.includes('biblo-v349'));assert.equal(corrections.missingProcessedImages.length,0);assert.notEqual(two,three);
+ assert.equal(files.sleepStylesBySpecies[`${no.toString().padStart(4,'0')}_default`][`${no.toString().padStart(4,'0')}_01`],`assets/sleep/biblo-v347/${no===459?'0785':'0789'}.webp`);
+ assert.equal(three,`assets/sleep/biblo-v347/${no===459?'0787':'0791'}.webp`);
+ assert.equal(catalog.sleepStyles[no].filter(s=>s.stars===2).length,1);
+ assert.equal(catalog.sleepStyles[no].find(s=>s.stars===2).name,no===459?'ぼうだち寝':'いかく寝');
 }
 assert.equal(files.sleepStylesBySpecies['0006_default']['0006_01'],'assets/sleep/biblo-v347/0037.webp');
 assert.deepEqual(Array.from(Object.entries(catalog.pendingSleepArtwork).filter(([,rows])=>rows.length),([sid,rows])=>[sid,rows.length]),[['0590_default',4],['0591_default',4]]);
