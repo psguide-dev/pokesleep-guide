@@ -1,0 +1,64 @@
+function selectedSavedTeam(){return savedTeams.teams.find(x=>x.id===savedTeams.selectedId)||null}
+function savedTeamChanged(){const selected=selectedSavedTeam();return !!selected&&JSON.stringify(selected.members)!==JSON.stringify(normalizeTeam(team,state.box))}
+function renderSavedTeamControls(){
+ const select=document.getElementById('savedTeamSelect');select.replaceChildren();
+ const draft=document.createElement('option');draft.value='';draft.textContent='未保存のチーム';select.append(draft);
+ savedTeams.teams.forEach(item=>{const option=document.createElement('option');option.value=item.id;option.textContent=item.name+(item.id===savedTeams.selectedId&&savedTeamChanged()?'（変更あり）':'');select.append(option)});
+ select.value=savedTeams.selectedId||'';
+ const selected=selectedSavedTeam();
+ const name=document.getElementById('savedTeamName');
+ if(name.dataset.teamId!==(selected?.id||'')){name.value=selected?.name||'';name.dataset.teamId=selected?.id||''}
+ document.getElementById('savedTeamCreate').disabled=savedTeams.teams.length>=SAVED_TEAM_LIMIT;
+ for(const id of ['savedTeamOverwrite','savedTeamRename','savedTeamDelete'])document.getElementById(id).disabled=!selected;
+ document.getElementById('savedTeamOverwrite').disabled=!selected||!savedTeamChanged();
+}
+function savedTeamMessage(text){const node=document.getElementById('savedTeamStatus');node.textContent=text;node.hidden=!text}
+function runSavedTeamAction(action,message){
+ try{action();teamReorderFrom=null;renderTeam();savedTeamMessage(message)}
+ catch{renderSavedTeamControls();savedTeamMessage('チームを保存できませんでした。端末の保存設定を確認してください。')}
+}
+function switchSavedTeam(id){
+ const selected=savedTeams.teams.find(x=>x.id===id);
+ if(id&&!selected)return;
+ const next={...savedTeams,selectedId:selected?.id||null,...(!savedTeams.selectedId?{draft:[...team]}:{})};
+ writeSavedTeams(next,selected?selected.members:next.draft);
+}
+function createSavedTeam(name){
+ const title=String(name||'').trim().slice(0,40);if(!title)throw Error('name');
+ if(savedTeams.teams.length>=SAVED_TEAM_LIMIT)throw Error('limit');
+ const id=globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
+ const item={id,name:title,members:normalizeTeam(team,state.box)};
+ writeSavedTeams({...savedTeams,teams:[...savedTeams.teams,item],selectedId:id,...(!savedTeams.selectedId?{draft:[...team]}:{})});
+}
+function overwriteSavedTeam(){
+ const selected=selectedSavedTeam();if(!selected)return;
+ writeSavedTeams({...savedTeams,teams:savedTeams.teams.map(x=>x.id===selected.id?{...x,members:[...team]}:x)});
+}
+function renameSavedTeam(name){
+ const selected=selectedSavedTeam(),title=String(name||'').trim().slice(0,40);if(!selected||!title)throw Error('name');
+ writeSavedTeams({...savedTeams,teams:savedTeams.teams.map(x=>x.id===selected.id?{...x,name:title}:x)});
+}
+function deleteSavedTeam(){
+ const selected=selectedSavedTeam();if(!selected)return;
+ writeSavedTeams({...savedTeams,teams:savedTeams.teams.filter(x=>x.id!==selected.id),selectedId:null,draft:[...team]});
+}
+document.getElementById('savedTeamSelect').onchange=e=>{
+ const id=e.target.value;
+ if(id===(savedTeams.selectedId||''))return;
+ if(savedTeamChanged()&&!confirm('編成の変更はまだ上書き保存されていません。変更を破棄してチームを切り替えますか？')){renderSavedTeamControls();return}
+ runSavedTeamAction(()=>switchSavedTeam(id),'');
+};
+document.getElementById('savedTeamCreate').onclick=()=>{
+ const name=document.getElementById('savedTeamName').value.trim();
+ if(!name){savedTeamMessage('チーム名を入力してください。');document.getElementById('savedTeamName').focus();return}
+ runSavedTeamAction(()=>createSavedTeam(name),'チームを保存しました。');
+};
+document.getElementById('savedTeamOverwrite').onclick=()=>runSavedTeamAction(overwriteSavedTeam,'編成を上書き保存しました。');
+document.getElementById('savedTeamRename').onclick=()=>{
+ const name=document.getElementById('savedTeamName').value.trim();if(!name){savedTeamMessage('チーム名を入力してください。');return}
+ runSavedTeamAction(()=>renameSavedTeam(name),'チーム名を変更しました。');
+};
+document.getElementById('savedTeamDelete').onclick=()=>{
+ const selected=selectedSavedTeam();if(!selected||!confirm(`「${selected.name}」を削除しますか？ ボックスのポケモンは削除されません。`))return;
+ runSavedTeamAction(deleteSavedTeam,'保存チームを削除しました。現在のメンバーは維持しています。');
+};

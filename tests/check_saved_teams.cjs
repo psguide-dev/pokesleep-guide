@@ -1,0 +1,42 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.join(__dirname,'..');
+const core=fs.readFileSync(path.join(root,'templates/core/02-team.html'),'utf8');
+const ui=fs.readFileSync(path.join(root,'templates/team/01-saved-teams.html'),'utf8');
+const selection=fs.readFileSync(path.join(root,'templates/team/03-cards.html'),'utf8').split('function teamFace')[0];
+function fixture(storage=new Map()){
+ const nodes=new Map(),box=['a','b','c','d','e','f'].map(id=>({id}));let failKey=null;
+ const localStorage={getItem:k=>storage.get(k)??null,setItem:(k,v)=>{if(k===failKey){failKey=null;throw Error('quota')}storage.set(k,v)},removeItem:k=>storage.delete(k)};
+ const context=vm.createContext({localStorage,document:{getElementById:id=>{if(!nodes.has(id))nodes.set(id,{});return nodes.get(id)}},state:{box},speciesFor:()=>({}),TEAM_STORAGE_KEY:'primary',renderTeam(){},globalThis:{crypto:{randomUUID:()=>`test-${storage.get('serial')||'0'}`}},console});
+ const api=vm.runInContext(core+'\n'+selection+'\n'+ui+`\n({get:()=>({team,savedTeams}),create:createSavedTeam,switch:switchSavedTeam,edit:saveTeamSelection,overwrite:overwriteSavedTeam,rename:renameSavedTeam,remove:deleteSavedTeam,prune:pruneSavedTeams,changed:savedTeamChanged,box:value=>state.box=value})`,context);
+ return {api,storage,fail:key=>failKey=key};
+}
+const copy=v=>JSON.parse(JSON.stringify(v));
+const storage=new Map([['primary',JSON.stringify(['a',null,'c','d','e'])],['fields','field-settings'],['zone','24'],['meal','salad']]);
+const {api,fail}=fixture(storage);
+assert.deepEqual(copy(api.get().team),['a',null,'c','d','e'],'legacy team retained');
+api.create('主力');const first=api.get().savedTeams.selectedId;
+api.edit(['f','b',null,'d','e']);assert.equal(api.changed(),true);
+assert.deepEqual(copy(api.get().savedTeams.teams[0].members),['a',null,'c','d','e'],'saved lineup unchanged before overwrite');
+api.overwrite();assert.equal(api.changed(),false);
+api.rename('食材班');assert.equal(api.get().savedTeams.teams[0].name,'食材班');
+storage.set('serial','1');api.create('きのみ班');const second=api.get().savedTeams.selectedId;
+api.edit(['a','b','c',null,'e']);api.overwrite();api.switch(first);
+assert.deepEqual(copy(api.get().team),['f','b',null,'d','e']);
+for(const [key,value] of [['fields','field-settings'],['zone','24'],['meal','salad']])assert.equal(storage.get(key),value,'switch only changes members');
+api.box(['a','c','d','e','f'].map(id=>({id})));api.prune();
+assert.deepEqual(copy(api.get().team),['f',null,null,'d','e'],'removed record leaves same slot empty');
+assert.deepEqual(copy(api.get().savedTeams.teams.find(x=>x.id===second).members),['a',null,'c',null,'e'],'all saved teams pruned');
+const reload=fixture(storage).api;assert.equal(reload.get().savedTeams.selectedId,first);
+assert.deepEqual(copy(reload.get().team),['f',null,null,'d','e']);
+const before=copy(api.get()),beforeSaved=storage.get('psg.team.saved.v1'),beforeTeam=storage.get('primary');
+fail('primary');assert.throws(()=>api.rename('失敗'));assert.deepEqual(copy(api.get()),before);
+assert.equal(storage.get('psg.team.saved.v1'),beforeSaved);assert.equal(storage.get('primary'),beforeTeam,'quota failure rolls back both keys');
+api.remove();assert.equal(api.get().savedTeams.teams.length,1);assert.equal(api.get().savedTeams.selectedId,null);
+assert.deepEqual(copy(api.get().team),before.team,'delete saved team keeps working lineup');
+for(let i=2;i<=10;i++){storage.set('serial',String(i));api.create('team '+i)}
+assert.equal(api.get().savedTeams.teams.length,10);assert.throws(()=>api.create('11th'));
+api.switch('');assert.deepEqual(copy(api.get().team),before.team,'unsaved draft remains available');
+const html=fs.readFileSync(path.join(root,'templates/02-home.html'),'utf8');
+assert.ok(html.indexOf('id="teamSlots"')<html.indexOf('id="savedTeamSelect"'),'switch below cards');
+const backup=fs.readFileSync(path.join(root,'templates/core/04-backup.html'),'utf8');assert.match(backup,/version:7,savedTeams:/);assert.match(backup,/savedTeams=readSavedTeams\(\)/);
+console.log('Saved teams: legacy migration, explicit overwrite, switching, conditions retained, deletion holes, reload, quota rollback, 10-team limit and backup coverage passed.');

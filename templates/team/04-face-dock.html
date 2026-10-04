@@ -11,8 +11,8 @@ function renderTeamFaceDock(){
 }
 function updateTeamFaceDock(){
  const dock=document.getElementById('teamFaceDock');
- const teamCard=document.querySelector('#home .psg-team-card');
- dock.hidden=!document.getElementById('home').classList.contains('active')||teamCard.getBoundingClientRect().bottom>document.getElementById('homeStickyHeading').getBoundingClientRect().bottom+8;
+ const face=document.querySelector('#teamSlots .psg-team-card-art');
+ dock.hidden=!document.getElementById('home').classList.contains('active')||!face||face.getBoundingClientRect().top>document.getElementById('homeStickyHeading').getBoundingClientRect().bottom;
 }
 window.addEventListener('scroll',updateTeamFaceDock,{passive:true});
 window.addEventListener('resize',updateTeamFaceDock,{passive:true});

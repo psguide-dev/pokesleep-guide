@@ -1,7 +1,7 @@
 let teamBoxSlot=null;
 let teamReorderMode=false,teamReorderFrom=null;
 function saveTeamSelection(next){
- try{team=normalizeTeam(next,state.box);localStorage.setItem(TEAM_STORAGE_KEY,JSON.stringify(team));teamReorderFrom=null;renderTeam()}
+ try{const members=normalizeTeam(next,state.box);writeSavedTeams({...savedTeams,...(!savedTeams.selectedId?{draft:members}:{})},members);teamReorderFrom=null;renderTeam()}
  catch{document.getElementById('teamSummary').textContent='チームを保存できませんでした。端末の設定を確認してください。'}
 }
 function teamFace(individual){
@@ -24,7 +24,9 @@ function subskillCardBadges(individual){
 }
 function renderTeam(){
  const panel=document.getElementById('teamSlots');panel.replaceChildren();
+ try{pruneSavedTeams()}catch{savedTeamMessage('チームの保存に失敗しました。端末の保存設定を確認してください。')}
  team=normalizeTeam(team,state.box);
+ renderSavedTeamControls();
  const reorder=document.getElementById('teamReorder'),hint=document.getElementById('teamHint');
  reorder.disabled=team.filter(Boolean).length<2;
  if(reorder.disabled)teamReorderMode=false;

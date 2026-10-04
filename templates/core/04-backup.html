@@ -4,11 +4,11 @@ const backupImport=document.getElementById('backupImport');
 let pendingBackup=null;
 document.getElementById('backupExport').onclick=()=>{
  try{
-  const payload={format:'psg-user-data',version:6,nightcap:normalizeNightcap(nightcapSettings),exportedAt:new Date().toISOString(),box:state.box.map(backupBoxFields),sleepFound:readSleepBackup(),team:normalizeTeam(team,state.box),fields:normalizeFieldProfile(fieldProfile)};
+  const payload={format:'psg-user-data',version:7,savedTeams:normalizeSavedTeams(savedTeams,state.box),nightcap:normalizeNightcap(nightcapSettings),exportedAt:new Date().toISOString(),box:state.box.map(backupBoxFields),sleepFound:readSleepBackup(),team:normalizeTeam(team,state.box),fields:normalizeFieldProfile(fieldProfile)};
   const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
   const link=document.createElement('a');link.href=url;link.download=`PSG_backup_${new Date().toISOString().slice(0,10)}.json`;
   document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
-  backupPreview.textContent=`ボックス ${payload.box.length}件・寝顔 ${Object.keys(payload.sleepFound).length}件を書き出しました。`;
+  backupPreview.textContent=`ボックス ${payload.box.length}件・保存チーム ${payload.savedTeams.teams.length}件・寝顔 ${Object.keys(payload.sleepFound).length}件を書き出しました。`;
  }catch{backupPreview.textContent='書き出せませんでした。端末の設定を確認してください。'}
 };
 backupFile.onchange=async()=>{
@@ -17,40 +17,44 @@ backupFile.onchange=async()=>{
  if(file.size>5*1024*1024){backupPreview.textContent='ファイルが大きすぎます（上限5MB）。';return}
  try{
   const parsed=JSON.parse(await file.text());
-  if(parsed?.format!=='psg-user-data'||![1,2,3,4,5,6].includes(parsed.version)||!Array.isArray(parsed.box)||!parsed.sleepFound||typeof parsed.sleepFound!=='object'||Array.isArray(parsed.sleepFound)||parsed.version>=2&&!Array.isArray(parsed.team)||parsed.version>=3&&(!parsed.fields||typeof parsed.fields!=='object'||Array.isArray(parsed.fields)))throw Error('形式');
+  if(parsed?.format!=='psg-user-data'||![1,2,3,4,5,6,7].includes(parsed.version)||!Array.isArray(parsed.box)||!parsed.sleepFound||typeof parsed.sleepFound!=='object'||Array.isArray(parsed.sleepFound)||parsed.version>=2&&!Array.isArray(parsed.team)||parsed.version>=3&&(!parsed.fields||typeof parsed.fields!=='object'||Array.isArray(parsed.fields)))throw Error('形式');
   const box=normalizeBox(parsed.box),sleepFound=normalizeSleepFound(parsed.sleepFound);
   const importedTeam=normalizeTeam(parsed.team,box);
+  if(parsed.version>=7&&(!parsed.savedTeams||!Array.isArray(parsed.savedTeams.teams)))throw Error('チーム形式');
+  const importedSavedTeams=parsed.version>=7?normalizeSavedTeams(parsed.savedTeams,box):{teams:[],selectedId:null,draft:importedTeam};
   if(parsed.box.length>0&&box.length===0)throw Error('ポケモンのデータが一致しません');
   const skipped=parsed.box.length-box.length+Object.keys(parsed.sleepFound).length-Object.keys(sleepFound).length;
-  pendingBackup={box,sleepFound,nightcap:parsed.version>=6?normalizeNightcap(parsed.nightcap):null,team:importedTeam,fields:parsed.version>=3?normalizeFieldProfile(parsed.fields):null};
-  backupPreview.textContent=`ボックス ${box.length}件・チーム ${importedTeam.filter(Boolean).length}匹・寝顔 ${Object.keys(sleepFound).length}件を確認しました。${skipped?`未対応の記録 ${skipped}件を除外します。`:''}復元すると現在の記録を置き換えます。`;
+  pendingBackup={box,sleepFound,savedTeams:importedSavedTeams,nightcap:parsed.version>=6?normalizeNightcap(parsed.nightcap):null,team:importedTeam,fields:parsed.version>=3?normalizeFieldProfile(parsed.fields):null};
+  backupPreview.textContent=`ボックス ${box.length}件・チーム ${importedTeam.filter(Boolean).length}匹・保存チーム ${importedSavedTeams.teams.length}件・寝顔 ${Object.keys(sleepFound).length}件を確認しました。${skipped?`未対応の記録 ${skipped}件を除外します。`:''}復元すると現在の記録を置き換えます。`;
   backupImport.hidden=false;
  }catch{backupPreview.textContent='読み込めませんでした。P Sleep NexusのバックアップJSONを選んでください。'}
 };
 backupImport.onclick=()=>{
  if(!pendingBackup)return;
- if(!confirm(`現在のボックス ${state.box.length}件・寝顔 ${Object.keys(readSleepBackup()).length}件を、選択したバックアップに置き換えます。復元しますか？`))return;
- const oldBox=localStorage.getItem(BOX_STORAGE_KEY),oldSleep=localStorage.getItem(SLEEP_STORAGE_KEY),oldTeam=localStorage.getItem(TEAM_STORAGE_KEY),oldFields=localStorage.getItem(FIELD_STORAGE_KEY),oldNightcap=localStorage.getItem(NIGHTCAP_STORAGE_KEY);
+ if(!confirm(`現在のボックス ${state.box.length}件・保存チーム ${savedTeams.teams.length}件・寝顔 ${Object.keys(readSleepBackup()).length}件を、選択したバックアップに置き換えます。復元しますか？`))return;
+ const oldSavedTeams=localStorage.getItem(SAVED_TEAMS_STORAGE_KEY),oldBox=localStorage.getItem(BOX_STORAGE_KEY),oldSleep=localStorage.getItem(SLEEP_STORAGE_KEY),oldTeam=localStorage.getItem(TEAM_STORAGE_KEY),oldFields=localStorage.getItem(FIELD_STORAGE_KEY),oldNightcap=localStorage.getItem(NIGHTCAP_STORAGE_KEY);
  try{
   localStorage.setItem(BOX_STORAGE_KEY,JSON.stringify(pendingBackup.box.map(backupBoxFields)));
   localStorage.setItem(SLEEP_STORAGE_KEY,JSON.stringify(pendingBackup.sleepFound));
   localStorage.setItem(TEAM_STORAGE_KEY,JSON.stringify(pendingBackup.team));
+  localStorage.setItem(SAVED_TEAMS_STORAGE_KEY,JSON.stringify(pendingBackup.savedTeams));
   if(pendingBackup.fields)localStorage.setItem(FIELD_STORAGE_KEY,JSON.stringify(pendingBackup.fields));
   if(pendingBackup.nightcap){localStorage.setItem(NIGHTCAP_STORAGE_KEY,JSON.stringify(pendingBackup.nightcap));nightcapSettings=readNightcap();renderNightcap()}
   fieldProfile=readFieldProfile();renderFieldControls();
-  state.box=readBox();team=readTeam();renderBox();renderTeam();
+  state.box=readBox();team=readTeam();savedTeams=readSavedTeams();renderBox();renderTeam();
   window.PSG_REFRESH_SLEEP_FOUND?.();
-  backupPreview.textContent=`復元しました。ボックス ${state.box.length}件・寝顔 ${Object.keys(pendingBackup.sleepFound).length}件。`;
+  backupPreview.textContent=`復元しました。ボックス ${state.box.length}件・保存チーム ${savedTeams.teams.length}件・寝顔 ${Object.keys(pendingBackup.sleepFound).length}件。`;
   pendingBackup=null;backupImport.hidden=true;backupFile.value='';
  }catch{
   try{
    if(oldBox===null)localStorage.removeItem(BOX_STORAGE_KEY);else localStorage.setItem(BOX_STORAGE_KEY,oldBox);
    if(oldSleep===null)localStorage.removeItem(SLEEP_STORAGE_KEY);else localStorage.setItem(SLEEP_STORAGE_KEY,oldSleep);
+   if(oldSavedTeams===null)localStorage.removeItem(SAVED_TEAMS_STORAGE_KEY);else localStorage.setItem(SAVED_TEAMS_STORAGE_KEY,oldSavedTeams);
    if(oldTeam===null)localStorage.removeItem(TEAM_STORAGE_KEY);else localStorage.setItem(TEAM_STORAGE_KEY,oldTeam);
    if(oldNightcap===null)localStorage.removeItem(NIGHTCAP_STORAGE_KEY);else localStorage.setItem(NIGHTCAP_STORAGE_KEY,oldNightcap);
    nightcapSettings=readNightcap();renderNightcap();
    if(oldFields===null)localStorage.removeItem(FIELD_STORAGE_KEY);else localStorage.setItem(FIELD_STORAGE_KEY,oldFields);
   }catch{}
-  fieldProfile=readFieldProfile();renderFieldControls();state.box=readBox();backupPreview.textContent='復元できませんでした。端末の保存設定を確認してください。';
+  fieldProfile=readFieldProfile();renderFieldControls();state.box=readBox();team=readTeam();savedTeams=readSavedTeams();renderBox();backupPreview.textContent='復元できませんでした。端末の保存設定を確認してください。';
  }
 };

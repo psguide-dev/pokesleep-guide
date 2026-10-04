@@ -16,6 +16,47 @@ function readTeam(){
  try{return normalizeTeam(JSON.parse(localStorage.getItem(TEAM_STORAGE_KEY)||'[]'),state.box)}catch{return [null,null,null,null,null]}
 }
 let team=readTeam();
+const SAVED_TEAMS_STORAGE_KEY='psg.team.saved.v1';
+const SAVED_TEAM_LIMIT=10;
+function normalizeSavedTeams(raw,box){
+ const seen=new Set(),teams=[];
+ for(const item of Array.isArray(raw?.teams)?raw.teams:[]){
+  if(teams.length>=SAVED_TEAM_LIMIT)break;
+  if(!item||typeof item.id!=='string'||!/^[a-zA-Z0-9-]{1,100}$/.test(item.id)||seen.has(item.id))continue;
+  const name=String(item.name||'').trim().slice(0,40);if(!name)continue;
+  seen.add(item.id);teams.push({id:item.id,name,members:normalizeTeam(item.members,box)});
+ }
+ return {teams,selectedId:teams.some(x=>x.id===raw?.selectedId)?raw.selectedId:null,draft:normalizeTeam(raw?.draft,box)};
+}
+function readSavedTeams(){
+ try{
+  const raw=localStorage.getItem(SAVED_TEAMS_STORAGE_KEY);
+  return raw?normalizeSavedTeams(JSON.parse(raw),state.box):{teams:[],selectedId:null,draft:[...team]};
+ }catch{return {teams:[],selectedId:null,draft:[...team]}}
+}
+let savedTeams=readSavedTeams();
+function writeSavedTeams(next,members=team){
+ const normalized=normalizeSavedTeams(next,state.box),selection=normalizeTeam(members,state.box);
+ const oldSaved=localStorage.getItem(SAVED_TEAMS_STORAGE_KEY),oldTeam=localStorage.getItem(TEAM_STORAGE_KEY);
+ try{
+  localStorage.setItem(SAVED_TEAMS_STORAGE_KEY,JSON.stringify(normalized));
+  localStorage.setItem(TEAM_STORAGE_KEY,JSON.stringify(selection));
+ }catch(error){
+  try{
+   if(oldSaved===null)localStorage.removeItem(SAVED_TEAMS_STORAGE_KEY);else localStorage.setItem(SAVED_TEAMS_STORAGE_KEY,oldSaved);
+   if(oldTeam===null)localStorage.removeItem(TEAM_STORAGE_KEY);else localStorage.setItem(TEAM_STORAGE_KEY,oldTeam);
+  }catch{}
+  throw error;
+ }
+ savedTeams=normalized;team=selection;
+}
+function pruneSavedTeams(){
+ const next=normalizeSavedTeams(savedTeams,state.box),members=normalizeTeam(team,state.box);
+ if(JSON.stringify(next)!==JSON.stringify(savedTeams)||JSON.stringify(members)!==JSON.stringify(team)){
+  writeSavedTeams(next,members);
+ }
+}
+
 // Team composition for skill-specific rules. IDs are individual records;
 // species/type/skill grouping is computed only when an effect asks for it.
 function teamContext(){

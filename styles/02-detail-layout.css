@@ -125,7 +125,7 @@
 .psg-team-option strong{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .psg-team-option:disabled{opacity:.5;cursor:default}
 .psg-team-option[hidden]{display:none}
-.psg-team-toolbar{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:nowrap;height:calc(var(--psg-ui-unit) * .75);margin-bottom:5px}
+.psg-team-toolbar{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:nowrap;min-height:calc(var(--psg-ui-unit) * .75);margin-top:6px;margin-bottom:5px}
 .psg-team-toolbar>.section-title{margin:0;font-size:16px;white-space:nowrap}
 .psg-team-composition{display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
 .psg-team-composition>span{display:flex;align-items:center;gap:2px;font-size:12px;white-space:nowrap}
@@ -556,3 +556,14 @@
 .psg-team-recipe-more>summary::-webkit-details-marker{display:none}
 .psg-team-recipe-more>summary::before{content:"▶"}
 .psg-team-recipe-more[open]>summary::before{content:"▼"}
+
+.psg-team-toolbar #savedTeamSelect{flex:0 1 42%;min-width:0;min-height:calc(var(--psg-ui-unit) * .75);max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;padding:3px;font-size:12px;font-weight:700}
+.psg-saved-team-manager{font-size:12px;color:#111;margin:6px 0}
+.psg-saved-team-manager>summary{cursor:pointer;text-align:right}
+.psg-saved-team-name{display:flex;align-items:center;gap:8px;margin:8px 0}
+.psg-saved-team-name label{flex:none}
+.psg-saved-team-name input{min-width:0;flex:1;border:1px solid var(--line);border-radius:8px;padding:7px;background:#fff;color:#111}
+.psg-saved-team-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.psg-saved-team-actions button{min-height:36px;border:1px solid var(--line);border-radius:8px;padding:3px;background:#fff;color:#111;font-size:11px}
+.psg-saved-team-actions button:disabled{opacity:.4}
+#savedTeamStatus[hidden]{display:none}
