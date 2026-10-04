@@ -37,7 +37,7 @@ function renderTeamFood(){
    if(recipe.image){const img=document.createElement('img');img.src=recipe.image;img.alt='';img.loading='lazy';image.append(img)}else image.textContent='No image';
    const copy=document.createElement('span');copy.className='psg-team-recipe-copy';
    const nameLine=document.createElement('span');nameLine.className='psg-team-recipe-name-line';
-   const name=document.createElement('strong');name.textContent=recipe.name;
+   const name=document.createElement('strong');name.textContent=recipe.name;name.style.setProperty('--recipe-name-length',String(Array.from(recipe.name).length));
    const meta=document.createElement('span');meta.className='psg-team-recipe-meta';const verified=recipe.energy?.max,shown=verified||[...(recipe.energy?.observed||[])].sort((a,b)=>b.level-a.level)[0];if(Number.isFinite(shown?.value)){
     const level=document.createElement('span');level.className='psg-team-recipe-level';
     const lv=document.createElement('small');lv.textContent='Lv.';const n=document.createElement('strong');n.textContent=String(shown.level);level.append(lv,n);
