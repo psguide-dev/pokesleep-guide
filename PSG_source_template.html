@@ -241,7 +241,7 @@ window.PS_UI_ART={
   // Image-first imports may omit every ability and collection. Keep unknowns
   // unknown and exclude incomplete species from Box/calculations by default.
   const pending=raw.dataStatus==='preview_pending_abilities'||
-   ['specialty','berry','help','carry','foodRate','skillRate','mainSkillId'].some(key=>raw[key]==null);
+   (raw.boxEligible!==true&&['specialty','berry','help','carry','foodRate','skillRate','mainSkillId'].some(key=>raw[key]==null));
   const rows=new Map();for(const slot of raw.ingredientSlots||[])for(const c of slot.candidates||[]){
    if(!rows.has(c.name))rows.set(c.name,[null,null,null]);rows.get(c.name)[[1,30,60].indexOf(slot.unlock)]=c.qty;
   }

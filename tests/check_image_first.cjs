@@ -4,7 +4,11 @@ const speciesScript=read('templates/01-species-catalog.html').replace(/<\/?scrip
 const builtScripts=[...read('review.html').matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 const real={window:{},console};vm.createContext(real);
 for(const marker of ['window.PS_IMAGE_FILES = {','window.PS_CATALOG=','// Resolve form identity'])vm.runInContext(builtScripts.find(s=>s.includes(marker)),real);
-assert.equal(real.window.PS_SPECIES_CATALOG.box().length,248); // Existing complete species stay registerable.
+// Explicitly approved existing species remain eligible even when a rate is unknown.
+for(const raw of real.window.PS_CATALOG.forms.species.filter(p=>p.boxEligible===true)){
+ assert.equal(real.window.PS_FORMS.resolve(raw.speciesId).boxEligible,true,raw.speciesId);
+ assert(real.window.PS_SPECIES_CATALOG.box().some(p=>p.speciesId===raw.speciesId),raw.speciesId);
+}
 // Only identity is required at import; abilities, groups and artwork may arrive later.
 for(const image of [null,'assets/pokemon/preview.webp']){
  const c={window:{PS_CATALOG:{pokemon:{},forms:{species:[{no:9999,speciesId:'9999_default',name:'画像先行',image}],independentDexEntries:['9999_default']}},PS_IMAGE_FILES:{berries:{}}}};
