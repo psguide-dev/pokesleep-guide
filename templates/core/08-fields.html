@@ -55,7 +55,7 @@ function syncDayControls(){
 function saveDaySettings(){
  const next=normalizeDaySettings({collectionHours:document.getElementById('teamCollectionInterval').value,initialEnergy:teamInitialEnergy,goodCamp:teamGoodCamp,meals:teamMeals,exWeeklyEffect:document.getElementById('teamExEffect').value});
  Object.assign(daySettings,next);syncDayControls();
- try{localStorage.setItem(DAY_SETTINGS_KEY,JSON.stringify(next));document.getElementById('teamDaySaveStatus').textContent='条件をこの端末に保存しました。'}
+ try{localStorage.setItem(DAY_SETTINGS_KEY,JSON.stringify(next));document.getElementById('teamDaySaveStatus').textContent=''}
  catch{document.getElementById('teamDaySaveStatus').textContent='条件を保存できませんでした。今回の表示には反映しています。'}
  renderTeamDay();
  renderTeamFood();window.dispatchEvent(new Event('psg-cooking-settings-change'));

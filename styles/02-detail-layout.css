@@ -470,7 +470,7 @@
 .psg-team-zone-value>span:last-child{right:3px}
 .psg-zone-berry input{width:100%;flex:1;height:100%;min-height:0;min-width:0;box-sizing:border-box;padding:0 12px;font-size:12px;text-align:center;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111}
 
-#teamZoneSaveStatus:empty,#nightcapSaveStatus:empty{display:none}
+#teamDaySaveStatus:empty,#teamZoneSaveStatus:empty,#nightcapSaveStatus:empty{display:none}
 
 :root{--psg-ui-unit:clamp(36px,6vw,42px)}
 .psg-screen-toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;align-items:center}
