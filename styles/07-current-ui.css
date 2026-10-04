@@ -60,7 +60,7 @@
 #detailFoods .psg-food-recipe-tile img{width:34px;height:34px}
 #detailFoods .psg-food-pending{color:#111;font-size:10px}
 /* Section frames match the Box detail cards. */
-#dexDetail .v12-panel .card{background:#f3f7ff!important;border:1px solid var(--line)!important;border-radius:18px!important;box-shadow:none!important}
+#dexDetail :is(#v12Ability,#v12Sleep,#v12Field) .card{background:#f3f7ff!important;border:1px solid var(--line)!important;border-radius:18px!important;box-shadow:none!important}
 #v12Ability .ability-card:has(#detailSkill){padding:10px 9px!important;margin-bottom:8px!important;box-sizing:border-box;min-height:calc(var(--box-unit-height) * 3);display:flex;flex-direction:column;justify-content:center}
 #evolutionCard .v31-evo-node{border-radius:16px!important}
 #dexDetail .v31-big-arrow{color:#39453d!important;font-size:27px!important;font-weight:500!important;line-height:1!important}
