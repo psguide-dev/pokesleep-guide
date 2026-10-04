@@ -1,6 +1,7 @@
 """Verified standardized assets, with provisional photo identity kept explicit."""
 import hashlib
 import json
+import unicodedata
 from pathlib import PurePosixPath
 from zipfile import ZipFile
 
@@ -51,4 +52,45 @@ def restore_biblo_assets(root, catalog, images):
         images['sleepStylesBySpecies'].setdefault(sid, {}).update(bindings)
         if sid.endswith('_default') and str(int(sid.split('_')[0])) in catalog['pokemon']:
             images['sleepStyles'].update(bindings)
-    print(f'Biblo v347: 944 sleep / 11 portraits / 6 normal bodies restored; 2 species previews; provisional identities retained')
+    apply_sleep_corrections(root, catalog, images, manifest)
+    print('Biblo: 944 sleep / 11 portraits / 6 normal bodies restored; v348 user corrections applied')
+
+
+def apply_sleep_corrections(root, catalog, images, manifest):
+    forms = {p['speciesId']: p for p in catalog['forms']['species']}
+
+    def styles_for(sid):
+        if sid in forms:
+            return catalog['forms']['sleepStyleGroups'].get(forms[sid]['sleepStyleGroupId'], {}).get('styles', [])
+        return [{'id': s[2], 'name': s[0], 'stars': s[1]}
+                for s in catalog['sleepStyles'].get(str(int(sid.split('_')[0])), [])]
+
+    def bind(sid, style_id, path, status):
+        assert style_id in {s['id'] for s in styles_for(sid)}, (sid, style_id)
+        images['sleepStylesBySpecies'].setdefault(sid, {})[style_id] = path
+        if sid.endswith('_default') and str(int(sid.split('_')[0])) in catalog['pokemon']:
+            images['sleepStyles'][style_id] = path
+        catalog['sleepArtworkStatus'].setdefault(sid, {})[style_id] = status
+        catalog['pendingSleepArtwork'][sid] = [r for r in catalog['pendingSleepArtwork'].get(sid, []) if r['image'] != path]
+
+    # Combining and precomposed kana must not leave received pictures disconnected.
+    normalize = lambda name: unicodedata.normalize('NFC', name or '')
+    for row in manifest['images']:
+        if row['role'] != 'sleep' or row['bindings']:
+            continue
+        name = row['sleepStyleName'] or row['proposedSleepStyleName']
+        stars = row['stars'] if row['sleepStyleName'] else row['proposedStars']
+        if not name:
+            continue
+        for sid in row['speciesIds']:
+            matches = [s for s in styles_for(sid) if normalize(s['name']) == normalize(name) and s['stars'] == stars]
+            if len(matches) == 1:
+                bind(sid, matches[0]['id'], row['path'], 'confirmed' if row['sleepStyleName'] else 'provisional')
+    corrections = json.loads((root / 'data-import/biblo-v347/corrections-v348.json').read_text())
+    for row in corrections['bindings']:
+        assert hashlib.sha256((root / row['path']).read_bytes()).hexdigest() == row['sha256']
+        bind(row['speciesId'], row['sleepStyleId'], row['path'], 'confirmed')
+    # Rejected duplicate artwork never returns through the pending gallery.
+    rejected = set(corrections['rejectedImages'])
+    for sid, pending in catalog['pendingSleepArtwork'].items():
+        catalog['pendingSleepArtwork'][sid] = [r for r in pending if r['image'] not in rejected]

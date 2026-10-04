@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "confirmationSource": "ユーザー全件確認・修正指示 2026-10-04",
+  "bindings": [
+    {
+      "speciesId": "0003_default",
+      "sleepStyleId": "0003_02",
+      "path": "assets/sleep/biblo-v347/0026.webp",
+      "sha256": "661d8d8e5f7702c6755c74cfaa34227af7b0211a910749bd2ce42d451f86b9e3",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0076_default",
+      "sleepStyleId": "0076_02",
+      "path": "assets/sleep/biblo-v347/0191.webp",
+      "sha256": "c5c9eb41951d3bae15542a4dd030f6d9b2c7477e6756d24b294cd64afb4e268c",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0094_default",
+      "sleepStyleId": "0094_01",
+      "path": "assets/sleep/biblo-v347/0218.webp",
+      "sha256": "f2028ad4848ecf6f3b1fc8379cebc2a3d4960898ef3b8397c63d1005b56c486d",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0135_default",
+      "sleepStyleId": "0135_03",
+      "path": "assets/sleep/biblo-v347/0275.webp",
+      "sha256": "e8383d2a3763ca8a8ef058accd3d66796f90af76b0177c12cf8bc0d147d6c78a",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0175_default",
+      "sleepStyleId": "0175_02",
+      "path": "assets/sleep/biblo-v347/0346.webp",
+      "sha256": "970279d3e647dd5107802802a096aa07152c9b6dbd72aac839e0e232161511cc",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0289_default",
+      "sleepStyleId": "0289_02",
+      "path": "assets/sleep/biblo-v347/0522.webp",
+      "sha256": "773a6445fe6d22fd84f33c1523e71651dcca1f2a9ac65be0743803ee5bbbdd92",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0304_default",
+      "sleepStyleId": "0304_03",
+      "path": "assets/sleep/biblo-v347/0535.webp",
+      "sha256": "2b23a436e6b7736aa96d72e3d5b0ae0e2837e51d9b4bffe8677fb1d7ea3baeff",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0354_default",
+      "sleepStyleId": "0354_02",
+      "path": "assets/sleep/biblo-v347/0585.webp",
+      "sha256": "14da4908a06d73a7bc0cf99dac776c72fb7bd8f0a29be740c5ee40dcfc1936ec",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0959_default",
+      "sleepStyleId": "0959_02",
+      "path": "assets/sleep/biblo-v347/0927.webp",
+      "sha256": "b2403d4e89f051c84a36dcee50680d4fa74f296371ec4c991a3a3e125dc97e13",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0038_default",
+      "sleepStyleId": "0038_01",
+      "path": "assets/sleep/biblo-v347/0944.webp",
+      "sha256": "a2861b6b2f461db871a4673eb558fdd7181fdf45675009d6afa61b4045cf9fca",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0038_default",
+      "sleepStyleId": "0038_02",
+      "path": "assets/sleep/biblo-v347/0945.webp",
+      "sha256": "246bd754bf820bed15fc04a53eff0c0efea6fc77edbe44dabe78dad574690c1b",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0038_default",
+      "sleepStyleId": "0038_03",
+      "path": "assets/sleep/biblo-v347/0946.webp",
+      "sha256": "a0c22355499c6b375277e0291fa6fb3a64bb2e65e2c86ee1e084bcd39e8d9473",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0084_default",
+      "sleepStyleId": "0084_01",
+      "path": "assets/sleep/biblo-v347/0936.webp",
+      "sha256": "71db287cf3fcea44bf43e3d9ae521c31efe7ece78299fbcaa2f2af1f832efdba",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0084_default",
+      "sleepStyleId": "0084_02",
+      "path": "assets/sleep/biblo-v347/0937.webp",
+      "sha256": "69068efca1f049ce3856f3d01cd0393c2baf9aec736be8f20754286433d547aa",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0084_default",
+      "sleepStyleId": "0084_03",
+      "path": "assets/sleep/biblo-v347/0938.webp",
+      "sha256": "c2f9ce7b67e2ff10d423a95e43fbdc107d7e39c1e3dd2e2620d978d9146fd9c0",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0085_default",
+      "sleepStyleId": "0085_01",
+      "path": "assets/sleep/biblo-v347/0940.webp",
+      "sha256": "7348677b682311acece0238da53b1517d4cfccfe587ad75c85a99c12a1d00d44",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0085_default",
+      "sleepStyleId": "0085_02",
+      "path": "assets/sleep/biblo-v347/0941.webp",
+      "sha256": "76496d4de06131a5a25f6d74e9ba5ce4f38ff2a27dc2c43d9456d7ac778051cd",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0085_default",
+      "sleepStyleId": "0085_03",
+      "path": "assets/sleep/biblo-v347/0942.webp",
+      "sha256": "d86ec82e9008f7f3f2738484d38c2b0badb143253cdd04ca8143603849dedcce",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0440_default",
+      "sleepStyleId": "0440_01",
+      "path": "assets/sleep/biblo-v347/0948.webp",
+      "sha256": "7734f851cf6fb4c6d1d12b583824ddba6af4d644c9eab193c48f5aa7fafdd69e",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0440_default",
+      "sleepStyleId": "0440_02",
+      "path": "assets/sleep/biblo-v347/0949.webp",
+      "sha256": "381e3e0cd17b01334c5ecda7ec8b93a7dc33dada9998aaff95580336284d453c",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0440_default",
+      "sleepStyleId": "0440_03",
+      "path": "assets/sleep/biblo-v347/0950.webp",
+      "sha256": "f5b3764f527626f246df1ae35e809405e3e5458b753c86654f661af000269f21",
+      "reason": "新しい処理済み画像へ差し替え",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0025_holiday",
+      "sleepStyleId": "0025_holiday_02",
+      "path": "assets/sleep/biblo-v347/0088.webp",
+      "sha256": "e4e1e76fe2ede12911221b0f985540de2f7cfde8d5b22b325e6e8ab5b9ced703",
+      "reason": "プレゼント寝★2に接続、旧画像と照合待ち重複を表示から除外",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0133_holiday",
+      "sleepStyleId": "0133_holiday_02",
+      "path": "assets/sleep/biblo-v347/0394.webp",
+      "sha256": "7dcb2d5c7fb166371fe326264b4298684832c43f9b09a93c2cb7f792b62f4f3e",
+      "reason": "プレゼント寝★2に接続、旧画像と照合待ち重複を表示から除外",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0363_holiday",
+      "sleepStyleId": "0363_holiday_02",
+      "path": "assets/sleep/biblo-v347/0601.webp",
+      "sha256": "1c434915c9f9f4572d66db8b5d026efefeb43e09be7693433087bc8b60844be5",
+      "reason": "他ホリデー2種と同じ寝顔マスターのプレゼント寝★2へ接続",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0038_alola",
+      "sleepStyleId": "0038_alola_03",
+      "path": "assets/sleep/biblo-v347/0122.webp",
+      "sha256": "5637836d4e53b593e6172d43fb7bbd869c7110ef3dbbc6466e7b96b6fc3a9f5a",
+      "reason": "通常の寝顔名への誤分類を修正",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0194_paldea",
+      "sleepStyleId": "0194_paldea_03",
+      "path": "assets/sleep/biblo-v347/0383.webp",
+      "sha256": "12c5f363567b2e1a9b766681e9dd047e207848358400bb03bb7065b2fc8a475e",
+      "reason": "通常の寝顔名への誤分類を修正",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0150_default",
+      "sleepStyleId": "0150_default_04",
+      "path": "assets/sleep/biblo-v347/0292.webp",
+      "sha256": "044185814bc9b5289059d8d5ed411cbabee9ee9c7dd9ac5a4ee5bf456824b7e3",
+      "reason": "うっとうしい寝を★5に訂正、こころやすらぎ寝より先のIDを維持",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0426_default",
+      "sleepStyleId": "0426_default_01",
+      "path": "assets/sleep/biblo-v347/0685.webp",
+      "sha256": "c71ef7a6a308b05abcfb2bf3fe2f60bce8054f179a6916ef5e0e4d5117b9c0bd",
+      "reason": "★1と★2の画像を交換",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0426_default",
+      "sleepStyleId": "0426_default_02",
+      "path": "assets/sleep/biblo-v347/0684.webp",
+      "sha256": "7586ec522fa759a9bbfd3c24dfe24e4cfb084bd1062a732cce37a9f30bc1d687",
+      "reason": "★1と★2の画像を交換",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0252_default",
+      "sleepStyleId": "0252_01",
+      "path": "assets/sleep/biblo-v347/0465.webp",
+      "sha256": "3396af6d2f8fc4dedc3e0a46626f0e88339d09097777d60f10979939b5c281a4",
+      "reason": "指定された星同士の画像を交換",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0252_default",
+      "sleepStyleId": "0252_02",
+      "path": "assets/sleep/biblo-v347/0466.webp",
+      "sha256": "e191832d3bb341eb11423372f87c20e9d9993376e333d68ac2bce3fdb032cbcf",
+      "reason": "指定された星同士の画像を交換",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0696_default",
+      "sleepStyleId": "0696_02",
+      "path": "assets/sleep/biblo-v347/0837.webp",
+      "sha256": "657cf128698ecc9fcebc05dff5376b465cd7e645446de91037da1da9db654f96",
+      "reason": "指定された星同士の画像を交換",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0696_default",
+      "sleepStyleId": "0696_03",
+      "path": "assets/sleep/biblo-v347/0836.webp",
+      "sha256": "7751381479ca690a2bc986286b83271381638b982811ce283d89a7280748a7c8",
+      "reason": "指定された星同士の画像を交換",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0459_default",
+      "sleepStyleId": "0459_02",
+      "path": "assets/sleep/picasso-v281/0691.webp",
+      "sha256": "4e57bf1dd0c6438fb1243be37e8018752c65b0ab7eb2502c2a6d6ac5570aad24",
+      "reason": "新処理済み★2が★3と同じ姿のため旧★2画像へ戻す。新★2画像は不足",
+      "status": "confirmed"
+    },
+    {
+      "speciesId": "0460_default",
+      "sleepStyleId": "0460_02",
+      "path": "assets/sleep/picasso-v281/0695.webp",
+      "sha256": "ea6b02d2eee194cdb4d46b0f6bdca727e3dafe79715776e824f296a7755abfbb",
+      "reason": "新処理済み★2が★3と同じ姿のため旧★2画像へ戻す。新★2画像は不足",
+      "status": "confirmed"
+    }
+  ],
+  "missingProcessedImages": [
+    {
+      "no": 459,
+      "name": "ユキカブリ",
+      "stars": 2,
+      "sleepStyleName": "ぼうだち寝"
+    },
+    {
+      "no": 460,
+      "name": "ユキノオー",
+      "stars": 2,
+      "sleepStyleName": "いかく寝"
+    }
+  ],
+  "rejectedImages": [
+    "assets/sleep/biblo-v347/0786.webp",
+    "assets/sleep/biblo-v347/0790.webp"
+  ]
+}

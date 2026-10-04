@@ -1,5 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.resolve(__dirname,'..'),manifest=JSON.parse(fs.readFileSync(path.join(root,'data-import/biblo-v347/manifest.json')));
+const corrections=JSON.parse(fs.readFileSync(path.join(root,'data-import/biblo-v347/corrections-v348.json')));
 const html=fs.readFileSync(path.join(root,'review.html'),'utf8');
 const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 for(const s of scripts)new vm.Script(s);
@@ -9,7 +10,7 @@ const catalog=c.window.PS_CATALOG,forms=c.window.PS_FORMS,files=c.window.PS_IMAG
 assert.equal(forms.records.size,34);assert.equal(manifest.images.filter(r=>r.role==='sleep').length,944);
 for(const row of manifest.images)assert(fs.existsSync(path.join(root,row.path)),row.path);
 for(const [sid,bindings] of Object.entries(manifest.sleepBindings))for(const [id,image] of Object.entries(bindings)){
- assert.equal(files.sleepStylesBySpecies[sid][id],image);
+ const override=corrections.bindings.find(r=>r.speciesId===sid&&r.sleepStyleId===id);assert.equal(files.sleepStylesBySpecies[sid][id],override?.path||image);
  const p=forms.resolve(sid);const styles=p.detailPreviewOnly?p.sleepStyles:catalog.sleepStyles[p.no];
  assert(styles.some(s=>s.id===id),`${sid} ${id}`);
  assert(['confirmed','provisional'].includes(catalog.sleepArtworkStatus[sid][id]));
@@ -26,6 +27,28 @@ for(const no of [590,591]){
 }
 const old=JSON.parse(fs.readFileSync(path.join(root,'data-import/picasso-sleep-v281/manifest.json')));
 for(const row of old.images.filter(r=>r.status==='matched'))assert(files.sleepStylesBySpecies[row.speciesId][row.sleepStyleId]);
+for(const row of corrections.bindings){
+ assert.equal(files.sleepStylesBySpecies[row.speciesId][row.sleepStyleId],row.path,`${row.speciesId}:${row.sleepStyleId}`);
+ assert.equal(catalog.sleepArtworkStatus[row.speciesId][row.sleepStyleId],'confirmed');
+ assert(!(catalog.pendingSleepArtwork[row.speciesId]||[]).some(r=>r.image===row.path));
+}
+for(const sid of ['0025_holiday','0133_holiday','0363_holiday']){
+ const p=forms.resolve(sid);assert.equal(p.sleepStyles.length,2);
+ assert.equal(p.sleepStyles.filter(s=>s.stars===2).length,1);assert.equal(p.sleepStyles.find(s=>s.stars===2).name,'プレゼント寝');
+ assert.equal((catalog.pendingSleepArtwork[sid]||[]).length,0);
+}
+const mewtwo=forms.resolve('0150_default').sleepStyles;
+assert.equal(mewtwo.filter(s=>s.name==='うっとうしい寝').length,1);
+const last=mewtwo.filter(s=>s.stars===5).sort((a,b)=>a.id.localeCompare(b.id));
+assert.deepEqual(Array.from(last,s=>s.name),['うっとうしい寝','こころやすらぎ寝']);
+assert.equal(last[0].id,'0150_default_04');assert.equal(last[1].id,'0150_default_05');
+for(const no of [459,460]){
+ const two=files.sleepStylesBySpecies[`${no.toString().padStart(4,'0')}_default`][`${no.toString().padStart(4,'0')}_02`];
+ const three=files.sleepStylesBySpecies[`${no.toString().padStart(4,'0')}_default`][`${no.toString().padStart(4,'0')}_03`];
+ assert(two.includes('picasso-v281'));assert.notEqual(two,three);
+}
+assert.equal(files.sleepStylesBySpecies['0006_default']['0006_01'],'assets/sleep/biblo-v347/0037.webp');
+assert.deepEqual(Array.from(Object.entries(catalog.pendingSleepArtwork).filter(([,rows])=>rows.length),([sid,rows])=>[sid,rows.length]),[['0590_default',4],['0591_default',4]]);
 const nodes=new Map(['detailSkill','detailSkillEffect','skillRateInline','skillLevels','skillDetailToggle'].map(id=>[id,{textContent:'old',hidden:false,replaceChildren(){this.textContent=''}}]));
 const icon={replaceChildren(){this.cleared=true}};
 const ui={document:{getElementById:id=>nodes.get(id),querySelector:()=>icon},skillOf:()=>null};vm.createContext(ui);
