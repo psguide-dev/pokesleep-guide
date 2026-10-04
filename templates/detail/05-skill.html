@@ -1,11 +1,47 @@
+ // Mark effect values in the source description, leaving target counts and conditions plain.
+ function skillDescription(s,x){
+  const text=x?.description||(s.effectType==='random_ingredients'&&x?.amount!=null?`ランダムな食材を${x.amount}個ゲットする。`:s.effectType==='fixed_energy'&&x?.energy!=null?`カビゴンのエナジーを${x.energy.toLocaleString()}増やす。`:s.effectType==='variable_energy'&&x?.min!=null?`カビゴンのエナジーを${x.min.toLocaleString()}～${x.max.toLocaleString()}増やす。`:s.effectType==='team_energy_recovery'&&x?.recovery!=null?`チーム全員のげんきを${x.recovery}回復する。`:'効果未確認');
+  const number='[+＋−-]?[0-9]+(?:,[0-9]{3})*(?:\\.[0-9]+)?';
+  const values=`${number}(?:[／/～〜]${number})*`;
+  const marks=[];
+  const mark=(prefix,kind,suffix='',valuePattern=values)=>{
+   const pattern=new RegExp(`(${prefix})(${valuePattern})${suffix}`,'g');
+   for(const match of text.matchAll(pattern)){
+    const start=match.index+match[1].length,end=start+match[2].length;
+    if(!marks.some(m=>start<m.end&&end>m.start))marks.push({start,end,kind});
+   }
+  };
+  mark('エナジー(?:を|\\s+)','energy');
+  mark('げんき(?:を|[＋+−-])\\s*','energy-recovery');
+  mark('(?:食材を|食材\\s+|種類を|コーヒー[＋+]|ミルク[＋+])','food','個');
+  mark('アメ(?:を)?','skill','個');
+  mark('ゆめのかけら(?:を|\\s+)','shards','個',`${values}(?:個か${number})?`);
+  mark('(?:容量を|鍋[＋+])','zone','個');
+  mark('確率を','skill','%');
+  mark('ゾーン[＋+]','zone','%');
+  mark('(?:おてつだい|各)','help','回');
+  mark('スキルを','skill','回');
+  if(s.effectType==='conditional_ingredient_select'&&x.bonusAmount!=null)mark('さらに','food','個');
+  if(s.effectType.startsWith('helper_boost_'))mark('各','help','回');
+  if(s.id==='healing_pulse_energy_cheer_s')mark('さらに','help','回');
+  if(s.effectType==='berry_burst'||['disguise_berry_burst','draco_meteor_berry_burst','lunar_blessing_energy_for_everyone_s'].includes(s.id)){
+   mark('(?:きのみを(?:各)?|きのみ：自分\\s*|他の各匹\\s*)','berry','個');
+   mark('自分[＋+]','berry','個');
+  }
+  if(s.id==='stockpile_energy_charge_s')mark('はきだすエナジー（0〜10回）：','energy');
+  marks.sort((a,b)=>a.start-b.start);
+  let result='',cursor=0;
+  for(const m of marks){result+=detailEsc(text.slice(cursor,m.start))+`<span class="skill-var effect-${m.kind}">${detailEsc(text.slice(m.start,m.end))}</span>`;cursor=m.end}
+  return result+detailEsc(text.slice(cursor));
+ }
  function skillVariables(s,x,lv){
   const value=(v,kind,unit='')=>`<span class="skill-var effect-${kind}">${detailEsc(typeof v==='number'?v.toLocaleString():v)}${unit}</span>`;
   const type=s.effectType;
-  if(type==='reference_only')return detailEsc(x.description||'資料未確認');
+  if(type==='reference_only')return skillDescription(s,x);
   if(type==='conditional_ingredient_select')return value(x.amount,'food','個')+(x.shardsSmall!=null?' ／ '+value(x.shardsSmall+'／'+x.shardsLarge,'shards','個'):' ／ 追加 '+value(x.bonusAmount,'food','個'));
 
   if(x.bonusCandy!=null)return value(x.amount,'food','個')+' ／ 追加 '+value(x.bonusCandy,'skill','個');
-  if(type==='random_main_skill')return `抽選スキル ${value('Lv.'+lv,'skill')}<small>（対象スキルの上限まで）</small>`;
+  if(type==='random_main_skill')return `抽選スキル <span class="psg-skill-level">Lv.${detailEsc(lv)}</span><small>（対象スキルの上限まで）</small>`;
   if(type==='team_skill_copy')return 'ランダムな1種類';
   if(type==='variable_energy'||type==='variable_dream_shards')return value(x.min+'～'+x.max,type==='variable_energy'?'energy':'shards',type==='variable_energy'?'':'個');
   if(type==='fixed_dream_shards_energy')return value(x.shards,'shards','個')+' ／ '+value(x.energy,'energy');
@@ -40,7 +76,7 @@
    const lv1=s.levels?.[1];
    const effect=document.getElementById("detailSkillEffect");
    if(effect){
-     const effectCopy=s.displayNote&&lv1?.description?detailEsc(lv1.description):s.effectType==='random_ingredients'&&lv1?.amount!=null?`ランダムな食材を <strong class="skill-var effect-food">${lv1.amount}個</strong> ゲットする。`:s.effectType==='fixed_energy'&&lv1?.energy!=null?`カビゴンのエナジーを <strong class="skill-var effect-energy">${lv1.energy.toLocaleString()}</strong> 増やす。`:s.effectType==='variable_energy'&&lv1?.min!=null&&lv1?.max!=null?`カビゴンのエナジーを <strong class="skill-var effect-energy">${lv1.min.toLocaleString()}～${lv1.max.toLocaleString()}</strong> 増やす。`:s.effectType==='team_energy_recovery'&&lv1?.recovery!=null?`チーム全員のげんきを <strong class="skill-var effect-energy-recovery">${lv1.recovery}</strong> 回復する。`:lv1?.description?detailEsc(lv1.description):'効果未確認';
+     const effectCopy=skillDescription(s,lv1);
      effect.innerHTML=`<b class="v35-effect-level">Lv.1</b><span class="v35-effect-copy">${effectCopy}</span>`;
      effect.classList.add("skill-desc");
    }

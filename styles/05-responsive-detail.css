@@ -14,7 +14,7 @@
 #detailFoods .v24-placeholder{flex:0 0 auto!important}
 
 /* 3: semantic variable colors + compact 2-column x 3-row level detail. */
-:root{--skill-effect-food:#d82f67;--skill-effect-energy:#d56b16;--skill-effect-berry:#c64a43;--skill-effect-energy-recovery:#4f9a58;--skill-effect-help:#287fc0;--skill-effect-skill:#7557b4;--skill-effect-zone:#405aa8}
+:root{--skill-effect-food:#d82f67;--skill-effect-energy:#d56b16;--skill-effect-berry:#c64a43;--skill-effect-energy-recovery:#4f9a58;--skill-effect-help:#287fc0;--skill-effect-skill:#7557b4;--skill-effect-zone:#405aa8;--skill-effect-shards:#9b7610}
 #v12Ability .skill-var{font-weight:1000!important}
 #v12Ability .effect-food{color:var(--skill-effect-food)!important}
 #v12Ability .effect-energy{color:var(--skill-effect-energy)!important}
@@ -23,6 +23,8 @@
 #v12Ability .effect-help{color:var(--skill-effect-help)!important}
 #v12Ability .effect-skill{color:var(--skill-effect-skill)!important}
 #v12Ability .effect-zone{color:var(--skill-effect-zone)!important}
+#v12Ability .effect-shards{color:var(--skill-effect-shards)!important}
+#v12Ability .psg-skill-level{color:#111!important}
 #v12Ability .skill-levels.open{padding:9px 0 0!important;border-top:0!important;margin-top:8px!important}
 #v12Ability .v32-skill-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:0 18px!important;max-width:430px!important;margin:0 auto!important}
 #v12Ability .v32-skill-cell{display:grid!important;grid-template-columns:52px 1fr!important;align-items:center!important;gap:8px!important;min-height:42px!important;padding:6px 8px!important;border-bottom:1px solid rgba(55,83,112,.09)!important;font-size:14px!important}
@@ -141,7 +143,7 @@
   min-width:0!important;max-width:100%!important;
   font-size:15px!important;line-height:1.55!important;
 }
-#v12Ability .v35-effect-level{white-space:nowrap!important;font-size:15px!important;}
+#v12Ability .v35-effect-level{white-space:nowrap!important;font-size:15px!important;color:#111!important;}
 #v12Ability .v35-effect-copy{min-width:0!important;color:#111!important;font-size:15px!important;}
 #v12Ability .v33-skill-effect-row .skill-detail-toggle{
   justify-self:start!important;align-self:start!important;
