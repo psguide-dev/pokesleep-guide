@@ -56,32 +56,3 @@
   });
  }
  input.addEventListener('input',render);render();
- const reference=document.getElementById('friendshipReferenceContent'),friendship=catalog.friendship;
- if(reference&&friendship){
-  const medals=friendship.medals,rules=friendship.subskillRules;
-  const paragraph=(text)=>{const p=document.createElement('p');p.textContent=text;reference.append(p)};
-  paragraph('資料確認・'+medals['確認日']+'。必要フレンドポイント（FP）とフレンドレベル（FL）は別です。');
-  const search=document.createElement('input');search.type='search';search.placeholder='名前でメダルを検索';search.setAttribute('aria-label','フレンドメダルの名前検索');search.style.cssText='width:100%;box-sizing:border-box';reference.append(search);
-  const results=document.createElement('div');results.id='friendshipMedalResults';reference.append(results);
-  function renderMedals(){
-   results.replaceChildren();const query=search.value.trim();if(!query){const hint=document.createElement('p');hint.textContent='名前を入力すると獲得FLを表示します（資料248件）。';results.append(hint);return}const matches=medals['ポケモン'].filter(r=>r['名前'].includes(query));
-   const status=document.createElement('p');status.textContent=`${matches.length}件（資料収録数。アプリの図鑑件数とは別）`;results.append(status);
-   for(const row of matches){const p=document.createElement('p');const title=document.createElement('strong');title.textContent=row['名前'];p.append(title,document.createElement('br'));p.append(row['銅獲得FL']==null?'対象外：フレンドレベルなし':`銅 FL${row['銅獲得FL']} ／ 銀 FL${row['銀獲得FL']} ／ 金 FL${row['金獲得FL']}`);results.append(p)}
-  }
-  search.addEventListener('input',renderMedals);renderMedals();
-  for(const rank of ['銅','銀','金']){const rule=medals['保証仕様'][rank];paragraph(`${rank}メダル：Lv.${rule['解放Lv'].join('・')}枠が金色確定。${rule['色違い']}。${rule['ON_OFF']||''}`)}
-  paragraph('金確定枠間：'+medals['保証仕様']['金確定枠間']);
-  medals['管理仕様'].forEach(paragraph);
-  paragraph('金スキルの選択重み・色違い確率と倍率は未確認。確率計算には使いません。');
-  const heading=document.createElement('h3');heading.textContent='サブスキルの解放・たね';reference.append(heading);
-  paragraph('解放Lv：'+rules['解放レベル'].join('・')+'。'+rules['解放レベル状態']+'。資料上の現在Lv上限：'+rules['現在Lv上限']+'。');
-  paragraph('同名同ランクは重複不可。同系統の別ランクは併用可能。'+rules['重複']['効果の合成']+'。時間短縮率の上限は'+rules['重複']['時間短縮率上限pct']+'%（'+rules['重複']['短縮率上限対象']+'）。'+rules['重複']['性格']+'。');
-  paragraph('サブスキルのたね：'+rules['たね']['対象']+'。'+rules['たね']['対象の選択']+'。対象間の正確な重みは未確認。');
-  paragraph('手元での進化：'+rules['直接入手した進化個体']['手元で進化させる場合']);
-  paragraph(rules['特殊個体']);
-  paragraph('通常個体の正確な抽選重み・各枠の独立性・再抽選順序は未確認。参考観測は2023年の資料で、現行の確率として固定しません。');
-  const sources=document.createElement('details');const summary=document.createElement('summary');summary.textContent='出典';sources.append(summary);
-  for(const url of new Set([...medals['出典'],...rules['出典']])){const p=document.createElement('p'),a=document.createElement('a');a.href=url;a.textContent=url;a.target='_blank';a.rel='noopener noreferrer';a.style.overflowWrap='anywhere';p.append(a);sources.append(p)}reference.append(sources);
- }
-})();
-</script>

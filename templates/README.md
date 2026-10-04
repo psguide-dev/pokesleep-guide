@@ -121,3 +121,10 @@ v268：Boxは受領248レコードに対応。ミュウ/ダークライのmythic
 - 入力順：リボン → 食材 → サブスキル → スキルLv・役割 → 性格。
 - favorite/training は編集フォームで上書きせず、詳細内の専用トグルで変更する。
 - `review.html` / `PSG_source_template.html` / `PSG_styles.css` は生成物。直接編集しない。
+
+## v355 スキル・育成資料を編集するとき
+
+- `17-skill-controller.html`：スキル検索・レベル効果・所有種リンク。
+- `skills/02-friendship-reference.html`：フレンドメダルの名前検索、保証仕様、サブスキルの育成資料・出典。
+- 2ファイルは同じクロージャの断片として順に連結する。スクリプトを個別に開閉しない。
+- v354の笛計算は `whistle/01-calculator.html`（収量）、`02-additive-recommendation.html`（加算型編成）、`03-balanced-recommendation.html`（割合バランス編成）を編集する。
