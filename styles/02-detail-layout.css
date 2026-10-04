@@ -172,14 +172,14 @@
 .psg-day-header .section-title{margin:0;min-width:0;font-size:14px;line-height:1}
 .psg-day-setting{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap;font-size:12px;font-weight:700}
 .psg-day-setting select{font:inherit;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:9px;padding:0 3px;height:calc(var(--psg-ui-unit) * .5);min-height:0;min-width:0;max-width:76px}
-.psg-day-toggles{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;margin-top:4px;align-items:end}
+.psg-day-toggles{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;margin-top:4px;align-items:stretch}
 .psg-day-camp{font:inherit;font-weight:700;color:#285843;background:#fff;border:1px solid #b8d3c0;border-radius:12px;padding:9px 12px;min-height:42px}
 .psg-day-camp[aria-pressed="true"]{background:#dff2e6;border-color:#61a878;color:#174b30}
 .psg-day-energy{border:0;padding:0;margin:12px 0 0;min-width:0}
-.psg-day-energy-heading{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-weight:700;color:#111;font-size:14px}
-.psg-day-energy-heading input{width:4.5em;min-width:0;margin:0 0 0 auto;padding:4px 6px;font:inherit;box-sizing:border-box}
+.psg-day-energy-heading{display:flex;align-items:center;height:calc(var(--psg-ui-unit) * .5);gap:6px;margin-bottom:2px;font-weight:700;color:#111;font-size:14px}
+.psg-day-energy-heading input{height:100%;padding:0 3px;width:4.5em;min-width:0;margin:0 0 0 auto;font:inherit;box-sizing:border-box}
 .psg-day-energy-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-.psg-day-energy-options button{font:inherit;font-weight:700;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:12px;min-height:42px;padding:6px}
+.psg-day-energy-options button{font:inherit;font-weight:700;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:12px;min-height:0;height:var(--psg-ui-unit);padding:0 6px}
 .psg-day-energy-options button[aria-pressed="true"]{background:#e8f2fc;border-color:#3888d8;color:#145c9e}
 .psg-day-field{border:1px solid #dce4df;border-radius:12px;padding:8px 10px 10px;margin:12px 0;min-width:0}
 .psg-day-field legend{font-weight:700;padding:0 5px;color:#111}
@@ -454,16 +454,17 @@
 .psg-team-toolbar #teamReorder{min-height:34px;padding:5px 7px;font-size:10px}.psg-team-toolbar #whistleToggle{display:inline-flex;align-items:center;justify-content:center;min-height:34px;width:34px;padding:2px;flex:none}.psg-team-toolbar #whistleToggle img{display:block;width:28px;height:28px;object-fit:contain}
 
 /* Manual zone controls live beside the meal toggle. */
-.psg-team-zone{grid-column:span 6;min-width:0}
+.psg-team-zone{grid-column:span 2;min-width:0}
 .psg-zone-heading{display:flex;align-items:center;height:calc(var(--psg-ui-unit) * .5);font-size:12px;line-height:1;font-weight:800;color:#111}
-.psg-zone-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,3fr);align-items:center;gap:3px;min-width:0;height:calc(var(--psg-ui-unit) * .5)}
-.psg-zone-controls select{min-width:0;width:100%;max-width:none;height:100%;min-height:0;padding:0 2px;font-size:11px;text-align:center;text-align-last:center;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111}
+.psg-zone-controls{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;gap:3px;min-width:0;height:calc(var(--psg-ui-unit) * .5)}
+.psg-zone-berry{grid-column:span 2;align-self:end;height:calc(var(--psg-ui-unit) * .5);min-width:0}
+.psg-zone-berry select{min-width:0;width:100%;max-width:none;height:100%;min-height:0;padding:0 2px;font-size:11px;text-align:center;text-align-last:center;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111}
 .psg-team-zone-value{position:relative;display:flex;align-items:center;font-size:11px;min-width:0}
 .psg-team-zone-value>span{position:absolute;pointer-events:none}
 .psg-team-zone-value>span:first-child{left:3px}
 .psg-team-zone-value>span:last-child{right:3px}
 .psg-team-zone input{width:100%;flex:1;height:calc(var(--psg-ui-unit) * .5);min-height:0;min-width:0;box-sizing:border-box;padding:0 12px;font-size:12px;text-align:center;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111}
-.psg-day-toggles #teamMeals{grid-column:span 2;height:calc(var(--psg-ui-unit) * .5);min-height:0;padding:0 4px;border-radius:6px;font-size:11px;line-height:1}
+.psg-day-toggles #teamMeals{grid-column:span 4;height:var(--psg-ui-unit);min-height:0;padding:0 4px;border-radius:6px;font-size:11px;line-height:1}
 #teamZoneSaveStatus:empty,#nightcapSaveStatus:empty{display:none}
 
 :root{--psg-ui-unit:clamp(36px,6vw,42px)}
@@ -472,3 +473,15 @@
 .psg-screen-toolbar input,.psg-dex-toolbar.psg-screen-toolbar #dexSearch{grid-column:span 2;width:100%;max-width:none;min-width:0}
 .psg-screen-toolbar #dexCount{text-align:center;font-size:10px}
 #info>.psg-screen-title{width:calc((100% - 12px) / 4);margin-bottom:8px}
+
+#teamDayEstimate .psg-day-energy-total{height:var(--psg-ui-unit);display:flex;flex-direction:column;justify-content:center;margin:6px 0}
+#teamDayEstimate .psg-day-energy-amount{font-size:16px;line-height:1.2}
+#teamDayEstimate .psg-day-energy-breakdown{font-size:11px;line-height:1.2;margin-top:2px}
+#teamDayEstimate .psg-day-food-total{margin:4px 0}
+#teamDayEstimate .psg-day-food-total>strong{display:flex;align-items:center;height:calc(var(--psg-ui-unit) * .5);font-size:13px;line-height:1}
+#teamDayEstimate .psg-day-food-summary{margin-top:2px;gap:3px}
+#teamDayEstimate .psg-day-food-summary .psg-day-food-tile{height:calc(var(--psg-ui-unit) * 1.25);min-height:0;padding:2px;gap:2px;justify-content:center}
+#teamDayEstimate .psg-day-food-summary .psg-day-food-tile>img,#teamDayEstimate .psg-day-food-summary .psg-day-food-tile>span:first-child{width:calc(var(--psg-ui-unit) * .65);height:calc(var(--psg-ui-unit) * .65)}
+#teamDayEstimate .psg-day-food-summary .psg-day-food-tile>span:last-child{gap:0;line-height:1.1}
+#teamDayEstimate .psg-day-food-summary .psg-day-food-tile strong{font-size:11px;line-height:1.1}
+#teamDayEstimate .psg-day-random-total{height:calc(var(--psg-ui-unit) * .75);display:flex;align-items:center;margin:4px 0;font-size:11px;line-height:1.2}
