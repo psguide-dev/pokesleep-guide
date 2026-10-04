@@ -91,6 +91,9 @@
 /* Duplicate rates are omitted only while the complete identity panel is sticky. */
 @media(max-width:620px) and (orientation:portrait){
   #dexDetail>.psg-dex-sticky,#boxDetail>.psg-box-hero{position:sticky!important;top:calc(83px + env(safe-area-inset-top))!important;z-index:55!important}
+  /* Opaque backing also covers the header gap and rounded card corners. */
+  #dexDetail>.psg-dex-sticky{isolation:isolate}
+  #dexDetail>.psg-dex-sticky::before{content:"";position:absolute;inset:-12px -10px 0;background:var(--pane-bg,#f1f7ff);z-index:-1;pointer-events:none}
   #detailFoods .psg-food-rate strong,#v12Ability .skill-rate-inline{display:none!important}
 }
 @media(max-width:620px) and (orientation:landscape){

@@ -5,8 +5,8 @@
 #boxDetail .detail-head{
   position:sticky;top:56px;z-index:69;display:flex;align-items:center;
   gap:6px;min-height:48px;margin:0 -12px 10px;padding:5px 12px;
-  background:rgba(255,255,255,.97);border-bottom:1px solid #e1e8e4;
-  backdrop-filter:blur(12px);
+  background:#fff;border-bottom:1px solid #e1e8e4;
+  backdrop-filter:none;
 }
 #boxDetail .detail-head>[data-back]{flex:0 0 auto;padding:7px 9px;white-space:nowrap;font-size:13px}
 #boxDetail #boxTitle{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px;margin:0;font-weight:950}
