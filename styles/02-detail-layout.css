@@ -86,7 +86,8 @@
 
 /* Team ingredient coverage is based on the selected individual and unlocked slots. */
 .psg-home-heading{--home-row-height:calc(var(--psg-ui-unit) * .75);position:sticky;top:var(--psg-header-height);z-index:67;background:var(--bg);padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:var(--psg-ui-unit) var(--home-row-height);column-gap:4px;row-gap:2px;margin-top:-12px;margin-bottom:6px;align-items:stretch}
-.psg-home-heading h2{grid-column:span 2;margin:0;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:18px;line-height:1}
+.psg-home-heading::before{content:"";position:absolute;inset:0 -12px -6px;background:var(--bg);z-index:-1;pointer-events:none}
+.psg-home-heading h2{grid-column:span 2;margin:0;min-width:0;display:flex;align-items:center;justify-content:center;background:var(--bg);text-align:center;font-size:18px;line-height:1}
 .psg-home-heading select{grid-column:span 3;min-width:0;width:100%;max-width:none;height:100%;min-height:0;padding:0 2px;border:1px solid #d7e0da;border-radius:8px;background:#fff;color:#111;font:inherit;font-size:12px;font-weight:700;text-align:center;text-align-last:center}
 .psg-home-fb{grid-column:1 / 6;display:flex;align-items:center;justify-content:space-evenly;gap:4px;min-width:0;min-height:0;padding:0 4px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;font-size:12px;font-weight:800;width:100%}
 .psg-home-fb #teamFieldSummary{flex:0 0 auto;gap:0;white-space:nowrap}
@@ -550,3 +551,8 @@
 .psg-account-settings select{min-height:var(--psg-ui-unit);font:inherit;color:#000;background:#fff;border:1px solid #d7e0da;border-radius:10px;padding:4px 10px}
 
 #teamRecipeList .psg-team-recipe-pot.is-over-capacity .psg-team-recipe-pot-number{color:#d32f2f}
+
+.psg-team-recipe-more>summary{display:flex;align-items:center;justify-content:flex-end;gap:4px;text-align:right;list-style:none;cursor:pointer}
+.psg-team-recipe-more>summary::-webkit-details-marker{display:none}
+.psg-team-recipe-more>summary::before{content:"▶"}
+.psg-team-recipe-more[open]>summary::before{content:"▼"}
