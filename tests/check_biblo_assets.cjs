@@ -53,9 +53,12 @@ for(const no of [459,460]){
 }
 assert.equal(files.sleepStylesBySpecies['0006_default']['0006_01'],'assets/sleep/biblo-v347/0037.webp');
 assert.deepEqual(Array.from(Object.entries(catalog.pendingSleepArtwork).filter(([,rows])=>rows.length),([sid,rows])=>[sid,rows.length]),[['0590_default',4],['0591_default',4]]);
-const nodes=new Map(['detailSkill','detailSkillEffect','skillRateInline','skillLevels','skillDetailToggle'].map(id=>[id,{textContent:'old',hidden:false,replaceChildren(){this.textContent=''}}]));
+// Match the actual detail markup: the removed inline rate element is absent.
+const detailMarkup=fs.readFileSync(path.join(root,'templates/09-dex-detail.html'),'utf8');
+assert(!detailMarkup.includes('id="skillRateInline"'));
+const nodes=new Map(['detailSkill','detailSkillEffect','skillLevels','skillDetailToggle'].map(id=>[id,{textContent:'old',hidden:false,replaceChildren(){this.textContent=''}}]));
 const icon={replaceChildren(){this.cleared=true}};
-const ui={document:{getElementById:id=>nodes.get(id),querySelector:()=>icon},skillOf:()=>null};vm.createContext(ui);
+const ui={document:{getElementById:id=>nodes.get(id)||null,querySelector:()=>icon},skillOf:()=>null};vm.createContext(ui);
 vm.runInContext(fs.readFileSync(path.join(root,'templates/detail/05-skill.html'),'utf8'),ui);vm.runInContext('renderSkill({mainSkillId:null})',ui);
 assert.equal(nodes.get('detailSkill').textContent,'スキル未確認');assert.equal(nodes.get('skillLevels').textContent,'');assert(nodes.get('skillDetailToggle').hidden);assert(icon.cleared);
 console.log('All scripts parse; 944 received sleep images, original discovery IDs, tentative image statuses, 9 missing faces / 4 bodies, and 2 non-calculating previews verified');

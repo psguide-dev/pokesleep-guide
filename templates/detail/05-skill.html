@@ -63,7 +63,8 @@
      document.querySelector('#v12Ability .skill-icon')?.replaceChildren();
      document.getElementById('detailSkill').textContent='スキル未確認';
      document.getElementById('detailSkillEffect').textContent='能力データは確認後に追加します。';
-     document.getElementById('skillRateInline').textContent='発動確率 未確認';
+     const rate=document.getElementById('skillRateInline');
+     if(rate)rate.textContent='発動確率 未確認';
      document.getElementById('skillLevels').replaceChildren();
      document.getElementById('skillDetailToggle').hidden=true;return;
    }
