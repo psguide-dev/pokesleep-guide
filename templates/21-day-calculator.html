@@ -1,6 +1,8 @@
 // Shared daily estimate: collection timeline and team totals.
 function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={}){
  const interval=[1,2,4,8].includes(Number(collectionHours))?Number(collectionHours):4;
+ const mealCount=threeMeals===true?3:threeMeals===false?0:Number.isInteger(threeMeals)&&threeMeals>=0&&threeMeals<=3?threeMeals:3;
+ const mealTicks=[[],[0],[0,72],[0,36,72]][mealCount];
  const startingEnergy=Math.max(0,Math.min(150,Math.round(Number(initialEnergy)||0)));
  const favorites=new Set(favoriteBerries.filter(name=>Object.hasOwn(catalog?.berries||{},name)));
  const areaFactor=1+Math.max(0,Math.min(200,Number(areaBonus)||0))/100;
@@ -13,7 +15,7 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
   pendingReason:'特殊スキルを含むチームの日産計算は未対応です。個体情報は保存できます。',
   members:items.map(item=>({id:item.id,name:item.name,missing:true,reasons:['特殊スキルを含むチームの日産計算は未対応']})),
   foods:new Map(),randomIngredients:null,dreamShards:null,berryEnergy:null,skillEnergy:null,skillEnergyBase:null,
-  periods,interval,startingEnergy,goodCamp,threeMeals,favorites,areaFactor
+  periods,interval,startingEnergy,goodCamp,threeMeals,mealCount,favorites,areaFactor
  };
  const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,startingEnergy));
  const valid=members.filter(m=>!m.missing);
@@ -23,7 +25,7 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
   for(const member of valid){
    let helps=0;
    for(let tick=0;tick<hours*6;tick++){
-    if(threeMeals&&[0,36,72].includes(elapsedTicks+tick))member.energy=Math.min(150,member.energy+mealRecoveryAtEnergy(member.energy));
+    if(mealTicks.includes(elapsedTicks+tick))member.energy=Math.min(150,member.energy+mealRecoveryAtEnergy(member.energy));
     helps+=600*(goodCamp?1.2:1)/(member.stats.speed*energyIntervalFactor(member.energy));
     member.energy=Math.max(0,member.energy-1);
    }
@@ -64,5 +66,5 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  const skillEnergy=skillEnergyBase*areaFactor;
  const dreamShards=valid.reduce((sum,member)=>sum+(Number.isFinite(member.skillShards)?member.skillTriggers*member.skillShards:0),0);
  const randomIngredients=valid.reduce((sum,member)=>sum+member.randomIngredients,0);
- return {members,foods,randomIngredients,dreamShards,berryEnergy,skillEnergy,skillEnergyBase,periods,interval,startingEnergy,goodCamp,threeMeals,favorites,areaFactor,berryZones};
+ return {members,foods,randomIngredients,dreamShards,berryEnergy,skillEnergy,skillEnergyBase,periods,interval,startingEnergy,goodCamp,threeMeals,mealCount,favorites,areaFactor,berryZones};
 }

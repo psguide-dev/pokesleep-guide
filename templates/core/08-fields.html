@@ -4,7 +4,7 @@ function normalizeDaySettings(value){
  const energy=Number(input.initialEnergy);
  return {collectionHours:[1,2,4,8].includes(Number(input.collectionHours))?Number(input.collectionHours):4,
  initialEnergy:input.initialEnergy!==null&&input.initialEnergy!==''&&Number.isFinite(energy)?Math.max(0,Math.min(150,Math.round(energy))):100,
- goodCamp:input.goodCamp===true,meals:input.meals!==false};
+ goodCamp:input.goodCamp===true,meals:input.meals===false?0:input.meals===true?3:Number.isInteger(input.meals)&&input.meals>=0&&input.meals<=3?input.meals:3};
 }
 function readDaySettings(){try{return normalizeDaySettings(JSON.parse(localStorage.getItem(DAY_SETTINGS_KEY)||'{}'))}catch{return normalizeDaySettings({})}}
 const daySettings=readDaySettings();
@@ -38,9 +38,9 @@ function saveCookingSettings(value){
 function syncDayControls(){
  document.getElementById('teamCollectionInterval').value=String(daySettings.collectionHours);
  document.getElementById('teamInitialEnergy').value=String(teamInitialEnergy);
- for(const [id,label,active] of [['teamGoodCamp','いいキャンプ',teamGoodCamp],['teamMeals','食事3回',teamMeals]]){
-  const button=document.getElementById(id);button.setAttribute('aria-pressed',String(active));const text=`${label}：${active?'ON':'OFF'}`;if(id==='teamGoodCamp'){button.setAttribute('aria-label',text);button.title=text}else button.textContent=text;
- }
+ document.getElementById('teamMeals').value=String(teamMeals);
+ const camp=document.getElementById('teamGoodCamp'),campText=`いいキャンプ：${teamGoodCamp?'ON':'OFF'}`;
+ camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;
  document.querySelectorAll('.psg-day-energy-options button').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.energy)===teamInitialEnergy)));
 }
 function saveDaySettings(){

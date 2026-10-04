@@ -73,3 +73,25 @@ for(const id of ['super_luck_ingredient_select_s','hyper_cutter_ingredient_selec
  assert(uncertain.members[0].skillTriggers>0);assert(uncertain.members[0].skillCalculationNote.includes('未確定'));
 }
 console.log('Uncertain ingredient/shard draws are excluded; trigger estimate and explicit note retained.');
+
+// Meal-count migration and timing must preserve existing ON/OFF forecasts.
+for(const [value,expected] of [[true,3],[false,0],[0,0],[1,1],[2,2],[3,3],[9,3]]){
+ assert.equal(vm.runInContext(`normalizeDaySettings({meals:${value}}).meals`,ctx),expected);
+}
+ctx.team=['one'];ctx.state.box=[{id:'one',no:1,name:'meal test',level:30}];
+ctx.window.PS_CATALOG.skills.s={maxLevel:1,name:'s',effectType:'random_ingredients',levels:{1:{amount:6}}};
+ctx.teamSpeedContext=()=>({members:new Map([['one',{speed:3600,carry:10000,food:50,berryQty:1,skill:0,energyFactor:1}]])});
+let recoveryCalls=[];ctx.mealRecoveryAtEnergy=energy=>{recoveryCalls.push(energy);return 5};
+for(let count=0;count<=3;count++){
+ recoveryCalls=[];
+ const result=vm.runInContext(`dailyBaseline(team,state.box,window.PS_CATALOG,4,100,false,${count})`,ctx);
+ assert.equal(result.mealCount,count);assert.equal(recoveryCalls.length,count);
+ // With this fixture, the later meals are at 12h (2 meals) or 6h and 12h (3 meals).
+ assert.deepEqual(recoveryCalls,[[],[100],[100,33],[100,69,38]][count]);
+}
+for(const [legacy,count] of [[true,3],[false,0]]){
+ const old=vm.runInContext(`dailyBaseline(team,state.box,window.PS_CATALOG,4,100,false,${legacy})`,ctx);
+ const next=vm.runInContext(`dailyBaseline(team,state.box,window.PS_CATALOG,4,100,false,${count})`,ctx);
+ assert.equal(old.berryEnergy,next.berryEnergy);
+}
+console.log('Meal counts 0–3: saved boolean migration, recovery timing and legacy forecast equivalence passed.');
