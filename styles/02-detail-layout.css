@@ -255,7 +255,9 @@
 .psg-team-recipe-image{display:flex;align-items:center;justify-content:center;flex:none;width:52px;height:52px;font-size:10px}
 .psg-team-recipe-image img{width:100%;height:100%;object-fit:contain}
 .psg-team-recipe-copy{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
-.psg-team-recipe-copy>strong{overflow-wrap:anywhere}
+.psg-team-recipe-name-line{display:flex;align-items:flex-end;justify-content:space-between;gap:6px}
+.psg-team-recipe-name-line>strong{min-width:0;overflow-wrap:anywhere}
+.psg-team-recipe-name-line>.psg-team-recipe-pot{flex:none;margin-left:auto;text-align:right;line-height:1}
 .psg-team-recipe-pot{font-size:.78em;color:#276747}
 .psg-team-recipe-pot.is-over-capacity{color:#8b5d26}
 .psg-skill-conditions{margin-top:12px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
@@ -501,12 +503,15 @@
 .psg-day-member-heading{display:flex;align-items:center;height:calc(var(--psg-ui-unit) * .75)}
 .psg-day-member-heading>strong{font-size:12px;line-height:1.15}
 .psg-day-member-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-.psg-day-member-column{min-width:0}
+.psg-day-member-column{min-width:0;display:grid;grid-template-columns:30px minmax(0,1fr);column-gap:4px;align-content:start}
+.psg-day-member-icon{grid-column:1;grid-row:1 / span 2;align-self:center;width:30px;height:30px;object-fit:contain}
+.psg-day-member-column>.psg-day-member-berries,.psg-day-member-column>.psg-day-member-metric,.psg-day-member-column>.psg-day-member-effect{grid-column:2}
 .psg-day-member-column+.psg-day-member-column{border-left:1px solid #e6ebe8;padding-left:6px}
 .psg-day-member-berries{display:flex;align-items:center;justify-content:center;gap:3px;min-width:0;height:calc(var(--psg-ui-unit) * .75)}
-.psg-day-row .psg-day-member-berries span{font-size:11px;line-height:1.1}
+.psg-day-row .psg-day-member-berries span{font-size:11px;line-height:1.1;text-align:center}
+.psg-day-member-berries small{display:block;font-size:9px;line-height:1.15}
 .psg-day-member-berries img{width:22px;height:22px;object-fit:contain;flex:none}
-.psg-day-member-metric{display:flex;justify-content:space-between;gap:3px;align-items:center;text-align:center;height:calc(var(--psg-ui-unit) * .75);font-size:11px}
+.psg-day-member-metric{display:flex;justify-content:center;gap:5px;align-items:center;text-align:center;height:calc(var(--psg-ui-unit) * .75);font-size:11px}
 .psg-day-member-effect{display:flex;align-items:center;justify-content:center;text-align:center;min-height:calc(var(--psg-ui-unit) * .75);font-size:11px;line-height:1.2}
 .psg-day-member-note{margin:0;min-height:calc(var(--psg-ui-unit) * .75);display:flex;align-items:center;font-size:11px;line-height:1.25;color:#66716c}
 .psg-day-member-details .psg-day-food-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin:0}
@@ -514,3 +519,6 @@
 .psg-day-member-details .psg-day-food-tile small{display:none}
 .psg-day-member-details .psg-day-food-tile strong{font-size:11px}
 .psg-day-member-details .psg-day-food-tile>img,.psg-day-member-details .psg-day-food-tile>span:first-child{width:26px;height:26px}
+
+#teamDayEstimate .psg-day-member-details,#teamDayEstimate .psg-day-member-details *,#teamRecipeList,#teamRecipeList *{color:#000}
+.psg-team-recipe-base-energy{font-size:.75em;line-height:1.2}

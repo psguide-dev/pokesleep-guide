@@ -30,8 +30,9 @@ function renderTeamDay(){
   const skillColumn=document.createElement('div');skillColumn.className='psg-day-member-column';
   columns.append(berryColumn,skillColumn);row.append(columns);
   const berries=document.createElement('span');berries.className='psg-day-member-berries';
-  const berry=berryIcon(member.berryName);if(berry)berries.append(berry);
-  const berryAmount=document.createElement('span');berryAmount.textContent=member.missing?'未確認':`約${member.berries.toFixed(1)}個（満杯後 約${member.overflow.toFixed(1)}個）`;
+  const berry=berryIcon(member.berryName);if(berry){berry.className+=' psg-day-member-icon';berryColumn.append(berry)}
+  const berryAmount=document.createElement('span');berryAmount.textContent=member.missing?'未確認':`約${member.berries.toFixed(1)}個`;
+  if(!member.missing){const overflow=document.createElement('small');overflow.textContent=`（満杯後 約${member.overflow.toFixed(1)}個）`;berryAmount.append(overflow)}
   berries.append(berryAmount);berryColumn.append(berries);
   const metric=(column,name,value)=>{
    const line=document.createElement('div');line.className='psg-day-member-metric';
@@ -44,6 +45,10 @@ function renderTeamDay(){
   }else{
    metric(berryColumn,'エナジー',`約${Math.round(member.berryEnergy).toLocaleString()}`);
    if(member.skillName){
+    const individual=state.box.find(item=>item.id===member.id),species=individual?speciesFor(individual,window.PS_CATALOG):null;
+    const skill=window.PS_CATALOG.skills?.[species?.mainSkillId];
+    const source=window.PS_IMAGE_FILES?.skills?.[skill?.id]||skill?.image;
+    if(source){const icon=document.createElement('img');icon.className='psg-day-member-icon';icon.src=source;icon.alt=member.skillName;skillColumn.append(icon)}
     metric(skillColumn,'スキル',`約${member.skillTriggers.toFixed(1)}回`);
     const effect=document.createElement('div');effect.className='psg-day-member-effect';
     const effectText=member.skillEffectType==='random_ingredients'&&Number.isFinite(member.skillAmount)?`（ランダム食材 約${(member.skillTriggers*member.skillAmount).toFixed(1)}個）`:['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy)?`（エナジー期待値 約${Math.round(member.skillTriggers*member.skillEnergy*result.areaFactor).toLocaleString()}）`:member.skillEffectType==='team_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（チーム各匹＋${member.skillRecovery}）`:member.skillEffectType==='self_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（自分のげんき＋${member.skillRecovery}）`:member.skillEffectType==='ally_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（1匹のげんき＋${member.skillRecovery}・対象は仮配分）`:member.boost&&Number.isFinite(member.skillHelps)?`（同タイプ${member.boost.unique}種・各${member.skillHelps}回／発動・日産に反映）`:member.skillEffectType==='extra_help'&&Number.isFinite(member.skillHelps)?`（即時おてつだい約${(member.skillTriggers*member.skillHelps).toFixed(1)}回・均等配分して日産に反映）`:'';
