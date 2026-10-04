@@ -10,6 +10,9 @@
    if(!h){h=document.createElement("div");h.id="v12Header";info.prepend(h)}
    const prev=neighborOf(m,-1),next=neighborOf(m,1);
    const berryQty=m.berryQtyOverride??m.berryQty;
+   const expStars=({600:1,900:2,1080:3,1320:4})[m.expType];
+   const expMultiplier=window.PS_CATALOG?.growth?.expTypeMultipliers?.[String(m.expType)];
+   const expNote=expStars&&expMultiplier!=null?`必要経験値：通常の${expMultiplier}倍。★が多いほど必要経験値が多くなります。`:'必要経験値の分類は未確認です。';
 
    // v51: 1-2 + previous/next move into the sticky detail header.
    const head=document.querySelector("#dexDetail .detail-head");
@@ -35,11 +38,14 @@
    h.innerHTML=`<div class="psg-detail-traits">
      <span class="psg-detail-trait psg-detail-berry"><span class="psg-detail-berry-visual" title="${m.berry||'きのみ'}">${m.berryImage?window.PS_DEV_ASSETS.image(m.berryImage,'berry',m.berry,'full',m.berry):'<small class="psg-mini-missing" aria-label="No image">No<br>image</small>'}</span><b>${berryQty==null?"未確認":`×${berryQty}`}</b></span>
      <span class="psg-detail-trait">${window.PS_SLEEP_ICON(m.sleepType)} ${m.sleepType}</span>
-     <span class="psg-detail-trait psg-fact-empty" aria-hidden="true"></span><span class="psg-detail-trait psg-detail-exp"><small>経験値タイプ</small><b>${m.expType??'未確認'}</b></span>
+     <span class="psg-detail-trait psg-fact-empty" aria-hidden="true"></span><span class="psg-detail-trait psg-detail-exp"><button type="button" id="dexExpToggle" aria-expanded="false" aria-controls="dexExpNote" aria-label="必要EXP ${expStars?`星${expStars}個`:'未確認'}。倍率の説明を表示"><small>必要EXP</small><b aria-hidden="true">${expStars?'★'.repeat(expStars):'未確認'}</b></button><span id="dexExpNote" class="psg-exp-note" hidden>${expNote}</span></span>
      <span class="psg-detail-trait psg-detail-specialty" title="得意：${m.specialty}" aria-label="得意：${m.specialty}">${window.PS_SPECIALTY_IMAGES?.[({"きのみ":"berry","食材":"ingredient","スキル":"skill","オール":"all"})[m.specialty]]?`<img class="psg-specialty-icon" src="${window.PS_SPECIALTY_IMAGES[({"きのみ":"berry","食材":"ingredient","スキル":"skill","オール":"all"})[m.specialty]]}" alt="">`:m.specialty}</span>
      <span class="psg-detail-trait psg-detail-friend" title="フレンドポイント（資料確認）" aria-label="フレンドポイント ${m.friendPoints??'未確定'}">${window.PS_UI_ART.icon('items','ポケサブレ')}<b>${m.friendPoints??'未確定'}</b></span>
      <span id="dexSpeed" class="psg-fact-speed"></span>
    </div>`;
+   const expToggle=document.getElementById('dexExpToggle'),expHelp=document.getElementById('dexExpNote');
+   expToggle.onclick=()=>{const open=expToggle.getAttribute('aria-expanded')!=='true';expToggle.setAttribute('aria-expanded',String(open));expHelp.hidden=!open};
+   expToggle.onblur=()=>{expToggle.setAttribute('aria-expanded','false');expHelp.hidden=true};
 
    // Keep artwork square and place the compact trait row beneath it.
    const heroTop=document.querySelector('#dexDetail .hero-top');
