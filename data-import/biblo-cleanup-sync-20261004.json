@@ -1,0 +1,40 @@
+{
+  "syncedAt": "2026-10-04T17:17:28+09:00",
+  "siteVersion": 353,
+  "scope": "documentation and asset retention status only",
+  "imageCleanup": {
+    "trashSuccessCount": 20,
+    "previousFridayTrashSuccessCount": 7,
+    "bibloTrashSuccessCount": 13,
+    "handoffOldImageCopiesRemoved": 14,
+    "mixedArchivesChecked": 3,
+    "removedMixedArchiveItems": 752
+  },
+  "legacyCleanup": {
+    "trashSuccessCount": 57,
+    "failedCount": 0,
+    "retainedUniqueCount": 355,
+    "permanentPurge": false
+  },
+  "pending": [
+    {
+      "name": "PSG_pokemon_faces_rounded(1).zip",
+      "status": "location_unconfirmed_deletion_not_confirmed",
+      "lastCheckedAt": "2026-10-04T16:47+09:00"
+    }
+  ],
+  "currentAssets": "Current raw artwork, mappings and pending Foongus/Amoonguss images retained",
+  "verification": [
+    "Both received ZIP CRCs passed",
+    "355 retained contents match SHA-256",
+    "13 image file deletion results succeeded",
+    "57 legacy ZIP deletion results succeeded"
+  ],
+  "rules": [
+    "Do not restore superseded Pokemon artwork or historical code into current main",
+    "Keep current raw artwork and Foongus/Amoonguss pending images",
+    "Former 403 item remains location_unconfirmed, not deletion_confirmed",
+    "No permission workaround or deletion retry",
+    "Git history and old Library versions were not purged"
+  ]
+}
