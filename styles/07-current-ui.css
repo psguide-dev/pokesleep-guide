@@ -320,6 +320,6 @@
 #dexDetail #detailFoods .psg-food-recipe-tile small{position:absolute;right:1px;bottom:1px;font-size:9px}
 
 /* Evolution starts at two units; larger families expand in normal flow. */
-#dexDetail #v12Ability #evolutionCard{box-sizing:border-box;min-height:calc(var(--box-unit-height) * 2);padding:3px 7px!important;display:flex;flex-direction:column;justify-content:center}
+#dexDetail #v12Ability #evolutionCard{box-sizing:border-box;min-height:calc(var(--box-unit-height) * 2);padding:2px 7px!important;display:flex;flex-direction:column;justify-content:center}
 #dexDetail #evolutionCard .v31-evo-line{padding:0!important}
 #dexDetail #evolutionCard .v31-evo-line>.v31-evo-node{padding:2px 3px!important;gap:2px!important}

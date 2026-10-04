@@ -248,7 +248,7 @@
 #v12Ability .skill-rate-inline strong{font-size:20px!important;}
 #v12Ability #v12SkillLv{display:none!important}
 #v12Ability .skill-desc{grid-column:1!important;grid-row:2!important;margin:0!important;padding:2px 0 0!important;border:0!important;font-size:14px!important;line-height:1.45!important}
-#v12Ability .skill-detail-toggle{width:100%!important;min-width:0!important;box-sizing:border-box;border:0!important;background:transparent!important;padding:4px 0!important;font-size:11px!important;font-weight:900!important;color:#000!important;opacity:1!important;white-space:nowrap!important;text-align:center;line-height:1.2;touch-action:manipulation}
+#v12Ability .skill-detail-toggle{width:100%!important;min-width:0!important;box-sizing:border-box;border:0!important;background:transparent!important;padding:2px 0!important;font-size:11px!important;font-weight:900!important;color:#000!important;opacity:1!important;white-space:nowrap!important;text-align:center;line-height:1.2;touch-action:manipulation}
 #v12Ability .skill-levels{grid-column:1 / -1!important;grid-row:3!important}
 
 /* 4: full known evolution family. Current Pokémon is larger. Type icon overlays image bottom-right. */
