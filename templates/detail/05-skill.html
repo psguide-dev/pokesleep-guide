@@ -70,7 +70,7 @@
      if(rate)rate.textContent='発動確率 未確認';
      const levels=document.getElementById('skillLevels'),toggle=document.getElementById('skillDetailToggle');
      if(levels){levels.replaceChildren();levels.classList.remove('open')}
-     if(toggle){toggle.hidden=true;toggle.textContent='詳細を見る ▼'}return;
+     if(toggle){toggle.hidden=true;toggle.textContent='詳細 ▼'}return;
    }
    const toggle=document.getElementById('skillDetailToggle');
    if(toggle)toggle.hidden=!Object.entries(s.levels||{}).some(([lv,x])=>Number(lv)>1&&x);

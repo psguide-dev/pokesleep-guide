@@ -59,9 +59,9 @@
 #detailFoods .psg-food-recipe-tile{height:55px;flex:0 0 clamp(43px,11vw,60px);border-radius:12px}
 #detailFoods .psg-food-recipe-tile img{width:34px;height:34px}
 #detailFoods .psg-food-pending{color:#111;font-size:10px}
-#v12Ability .ability-card:has(#detailSkill),#evolutionCard{border-radius:18px!important;box-shadow:none!important}
-/* The skill block needs one quiet surface to balance the food and evolution sections. */
-#v12Ability .ability-card:has(#detailSkill){background:rgba(255,255,255,.78)!important;border:1px solid #e1e9e6!important;border-radius:18px!important;padding:10px 9px!important;margin-bottom:8px!important;box-sizing:border-box;min-height:calc(var(--box-unit-height) * 3);display:flex;flex-direction:column;justify-content:center}
+/* Section frames match the Box detail cards. */
+#dexDetail .v12-panel .card{background:#f3f7ff!important;border:1px solid var(--line)!important;border-radius:18px!important;box-shadow:none!important}
+#v12Ability .ability-card:has(#detailSkill){padding:10px 9px!important;margin-bottom:8px!important;box-sizing:border-box;min-height:calc(var(--box-unit-height) * 3);display:flex;flex-direction:column;justify-content:center}
 #evolutionCard .v31-evo-node{border-radius:16px!important}
 #dexDetail .v31-big-arrow{color:#39453d!important;font-size:27px!important;font-weight:500!important;line-height:1!important}
 #dexDetail .v106-evo-conditions{order:2!important;font-weight:850;color:#111;}
@@ -110,7 +110,7 @@
   #v12Ability>.ability-card:has(#detailFoods){padding-inline:0!important;padding-top:4px!important;padding-bottom:4px!important}
   #detailFoods .psg-food-stack{margin-inline:0!important;margin-bottom:5px!important}
   #v12Ability .ability-card:has(#detailSkill){margin-inline:0!important;margin-bottom:5px!important}
-  #v12Ability #evolutionCard{margin-inline:0!important;margin-top:0!important;padding:9px 7px!important;background:rgba(255,255,255,.78)!important;border:1px solid #e1e9e6!important;border-radius:18px!important}
+  #v12Ability #evolutionCard{margin-inline:0!important;margin-top:0!important;padding:9px 7px!important;border-radius:18px!important}
   #detailFoods .psg-food-head{padding-top:3px;padding-bottom:5px}
   #detailFoods .psg-food-row,#detailFoods .psg-food-recipes,#detailFoods .psg-food-recipes.is-pending{min-height:68px}
   #detailFoods .psg-food-id{padding-block:3px}
@@ -281,10 +281,11 @@
 .psg-ribbon-preview{display:inline-block;margin-left:4px;min-height:30px;vertical-align:middle}
 .psg-mint-mark .psg-ui-icon{width:24px;height:24px;margin:0}
 
-/* Skill summary owns the icon + two text rows; level details stay below. */
+/* The icon column owns its compact toggle; expanded levels stay below. */
 #v12Ability .skill-box:has(.psg-skill-summary){display:block!important}
 #v12Ability .psg-skill-summary{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:10px}
 #v12Ability .psg-skill-summary .skill-icon{width:44px!important;height:44px!important;margin:0!important}
+#v12Ability .psg-skill-icon-column{width:44px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
 #v12Ability .psg-skill-copy{min-width:0}
 #v12Ability .psg-skill-copy .skill-name{display:block!important;font-size:17px!important;line-height:1.3!important;white-space:normal!important}
 #v12Ability .psg-skill-copy .skill-desc{display:block!important;margin:4px 0 0!important;padding:0!important;line-height:1.45!important;font-size:13px!important;border:0!important}

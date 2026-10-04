@@ -139,14 +139,12 @@
 }
 
 /* source: stable-v26-layout-refine */
-/* Keep the Pokémon type color inside the identity block; the page follows its active tab. */
+/* Keep the Pokémon type color inside the identity block on a white page. */
 #dexDetail{
-  --pane-bg:#f1f7ff;
-  background:#f1f7ff!important;
+  --pane-bg:#fff;
+  background:#fff!important;
   border-radius:18px!important;
 }
-#dexDetail:has(#v12Sleep.active){--pane-bg:#f6f1fb;background:#f6f1fb!important}
-#dexDetail:has(#v12Field.active){--pane-bg:#f0f6f1;background:#f0f6f1!important}
 #dexDetail .hero{
   background:color-mix(in srgb,var(--type-bg) 76%, white 24%)!important;
   border:1px solid color-mix(in srgb,var(--type-accent) 22%, transparent)!important;
