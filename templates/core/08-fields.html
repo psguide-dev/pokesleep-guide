@@ -4,6 +4,7 @@ function normalizeDaySettings(value){
  const energy=Number(input.initialEnergy);
  return {collectionHours:[1,2,4,8].includes(Number(input.collectionHours))?Number(input.collectionHours):4,
  initialEnergy:input.initialEnergy!==null&&input.initialEnergy!==''&&Number.isFinite(energy)?Math.max(0,Math.min(150,Math.round(energy))):100,
+ exWeeklyEffect:['berry','ingredients','skill'].includes(input.exWeeklyEffect)?input.exWeeklyEffect:'',
  goodCamp:input.goodCamp===true,meals:input.meals===false?0:input.meals===true?3:Number.isInteger(input.meals)&&input.meals>=0&&input.meals<=3?input.meals:3};
 }
 function readDaySettings(){try{return normalizeDaySettings(JSON.parse(localStorage.getItem(DAY_SETTINGS_KEY)||'{}'))}catch{return normalizeDaySettings({})}}
@@ -39,12 +40,14 @@ function syncDayControls(){
  document.getElementById('teamCollectionInterval').value=String(daySettings.collectionHours);
  document.getElementById('teamInitialEnergy').value=String(teamInitialEnergy);
  document.getElementById('teamMeals').value=String(teamMeals);
+ document.getElementById('teamExEffect').value=daySettings.exWeeklyEffect;
+ document.getElementById('teamExEffectNote').hidden=!daySettings.exWeeklyEffect;
  const camp=document.getElementById('teamGoodCamp'),campText=`いいキャンプ：${teamGoodCamp?'ON':'OFF'}`;
  camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;
  document.querySelectorAll('.psg-day-energy-options button').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.energy)===teamInitialEnergy)));
 }
 function saveDaySettings(){
- const next=normalizeDaySettings({collectionHours:document.getElementById('teamCollectionInterval').value,initialEnergy:teamInitialEnergy,goodCamp:teamGoodCamp,meals:teamMeals});
+ const next=normalizeDaySettings({collectionHours:document.getElementById('teamCollectionInterval').value,initialEnergy:teamInitialEnergy,goodCamp:teamGoodCamp,meals:teamMeals,exWeeklyEffect:document.getElementById('teamExEffect').value});
  Object.assign(daySettings,next);syncDayControls();
  try{localStorage.setItem(DAY_SETTINGS_KEY,JSON.stringify(next));document.getElementById('teamDaySaveStatus').textContent='条件をこの端末に保存しました。'}
  catch{document.getElementById('teamDaySaveStatus').textContent='条件を保存できませんでした。今回の表示には反映しています。'}

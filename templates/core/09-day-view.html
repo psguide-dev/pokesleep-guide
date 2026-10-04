@@ -37,6 +37,7 @@ function renderTeamDay(){
  const details=document.createElement('details');details.className='psg-day-member-details';const summary=document.createElement('summary');summary.textContent='個別の詳細';details.append(summary,list);host.append(details);
 }
 document.getElementById('teamCollectionInterval').onchange=saveDaySettings;
+document.getElementById('teamExEffect').onchange=saveDaySettings;
 document.getElementById('teamGoodCamp').onclick=()=>{teamGoodCamp=!teamGoodCamp;saveDaySettings()};
 document.getElementById('teamMeals').onchange=event=>{teamMeals=Number(event.currentTarget.value);saveDaySettings()};
 document.getElementById('teamInitialEnergy').onchange=event=>{

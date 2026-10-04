@@ -12,7 +12,7 @@ h2{margin:8px 0 12px;font-size:19px}.card{background:#fff;border:1px solid var(-
 .psg-recipe-entry{border:1px solid var(--line);border-radius:14px;margin:10px 0;background:var(--recipe-category-bg,#fff)}.psg-recipe-heading,.psg-recipe-energy{display:flex;align-items:center;justify-content:space-between;gap:8px}.psg-recipe-energy small{color:var(--muted)}.psg-recipe-ingredients{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.psg-recipe-chip{display:flex;align-items:center;gap:5px;border-radius:10px;background:#f3f7f3;font-weight:700}.psg-recipe-chip img{width:26px;height:26px;object-fit:contain}.psg-recipe-energy strong{font-size:14px}.psg-recipe-entry>.note{margin:8px 0}.psg-recipe-providers{border-top:1px solid var(--line);padding-top:8px;font-size:13px}.psg-recipe-providers summary{color:#3679c2;font-weight:700;cursor:pointer}.psg-recipe-providers p{margin:8px 0 0;line-height:1.5}
 .toolbar{display:flex;gap:7px;margin-bottom:10px}.toolbar input{min-width:0;flex:1;border:1px solid var(--line);border-radius:11px;padding:10px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.poke{background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px;min-height:112px;cursor:pointer;font:inherit;color:inherit;text-align:left}.poke b{display:block;font-size:13px}.poke small{color:var(--muted)}.poke .icons{margin-top:24px;font-size:15px;display:flex;gap:5px}
-nav{position:fixed;bottom:0;left:0;right:0;height:68px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+nav{position:fixed;bottom:0;left:0;right:0;height:68px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));z-index:30;padding-bottom:env(safe-area-inset-bottom)}
 nav button{border:0;background:#fff;color:#718079;font-weight:800;font-size:11px}nav button.active{color:var(--green)}
 .detail-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}.detail-head h2{margin:0;flex:1}.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}.stat small{display:block;color:var(--muted);font-size:10px}.section-title{font-weight:900;margin-bottom:8px}
 .pills{display:flex;gap:6px;flex-wrap:wrap}.pill{background:#f1f5f3;border-radius:999px;padding:6px 9px;font-size:12px}
@@ -258,3 +258,12 @@ nav button{border:0;background:#fff;color:#718079;font-weight:800;font-size:11px
 .psg-dex-title h2{font-size:clamp(15px,4.4vw,19px)}
 .psg-dex-title #dexCount{font-size:10px;line-height:1.2}
 .psg-dex-toolbar #dexSearch{flex:0 1 150px;width:clamp(80px,27vw,150px);min-width:0}
+
+nav button{display:flex;align-items:center;justify-content:center;min-width:0;padding:4px;border-radius:12px}
+nav button img{display:block;width:40px;height:40px;object-fit:contain}
+nav button.active{background:#e7f6ef}
+nav button:focus-visible{outline:2px solid var(--green);outline-offset:-3px}
+.psg-start-intro{text-align:center;margin-top:12px}.psg-start-intro h3{margin:12px 0;font-size:24px}
+.psg-start-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.psg-start-link{display:flex;align-items:center;justify-content:center;gap:10px;min-height:100px;font:inherit;color:#111}
+.psg-start-link img{width:56px;height:56px;object-fit:contain}

@@ -1,6 +1,6 @@
 <script id="psg-swipe-navigation">
 (()=>{
-  const screens=["home","box","dex","info"];
+  const screens=["startPage","home","box","dex","info"];
   const minDistance=64,boxMinDistance=48,edgeWidth=56;
   let start=null;
   const interactive="button,a,input,select,textarea,[contenteditable='true']";
@@ -49,10 +49,3 @@
   document.addEventListener("touchcancel",()=>{start=null},{passive:true});
 })();
 </script>
-
-
-
-
-
-
-

@@ -14,8 +14,9 @@ function go(id,push=true){
  window.scrollTo(0,0);
  requestAnimationFrame(updateTeamFaceDock);
 }
+document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>go(b.dataset.screen));
 tabs.forEach(b=>b.onclick=()=>{state.history=[];go(b.dataset.tab,false)});
-document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>go(state.history.pop()||'home',false));
+document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>go(state.history.pop()||'startPage',false));
 document.querySelectorAll('[data-info-page]').forEach(b=>b.onclick=()=>go(b.dataset.infoPage));
 
 const typeClass=t=>({'くさ':'grass','ほのお':'fire','みず':'water','でんき':'electric','むし':'bug','ノーマル':'normal','どく':'poison','じめん':'ground','ひこう':'flying','ゴースト':'ghost','エスパー':'psychic','こおり':'ice','はがね':'steel','かくとう':'fighting','いわ':'rock','あく':'dark','ドラゴン':'dragon','フェアリー':'fairy'}[t]||'normal');

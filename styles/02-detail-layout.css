@@ -170,8 +170,7 @@
 .psg-day-card{margin-top:12px}
 .psg-day-header{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:4px;height:calc(var(--psg-ui-unit) * .5)}
 .psg-day-header .section-title{grid-column:span 2;margin:0;min-width:0;font-size:14px;line-height:1}
-.psg-day-ex-setting{grid-column:span 2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;height:100%;gap:4px;min-width:0;font-size:12px;font-weight:700;text-align:center}
-.psg-day-ex-setting select{width:100%;max-width:none;min-width:0;min-height:0;height:100%;padding:0 3px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#666;font:inherit;text-align:center;text-align-last:center;opacity:1}
+.psg-day-ex-setting{grid-column:span 2;width:100%;max-width:none;min-width:0;min-height:0;height:100%;padding:0 3px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111;font-size:12px;font-weight:700;text-align:center;text-align-last:center}
 .psg-day-setting{grid-column:span 2;display:grid;grid-template-rows:calc(var(--psg-ui-unit) * .5) calc(var(--psg-ui-unit) * .75);align-items:stretch;min-width:0;white-space:nowrap;font-size:12px;font-weight:700;text-align:center}
 .psg-day-setting>span{display:flex;align-items:center;justify-content:center}
 .psg-day-setting select{width:100%;font:inherit;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:9px;padding:0 3px;height:100%;min-height:0;min-width:0;max-width:none;text-align:center;text-align-last:center}
