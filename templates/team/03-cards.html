@@ -23,6 +23,7 @@ function subskillCardBadges(individual){
  }).join('')}</span>`;
 }
 function renderTeam(){
+ teamViewDirty=false;
  const panel=document.getElementById('teamSlots');panel.replaceChildren();
  try{pruneSavedTeams()}catch{savedTeamMessage('チームの保存に失敗しました。端末の保存設定を確認してください。')}
  team=normalizeTeam(team,state.box);

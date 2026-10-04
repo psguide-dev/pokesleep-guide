@@ -1,16 +1,23 @@
 function updateLevel(level){
  if(!state.selected||!Number.isInteger(level)||level<1||level>MAX_POKEMON_LEVEL)return;
+ if(level===state.selected.level){lv.textContent='Lv.'+level;lvRange.value=level;return}
+ lv.textContent='Lv.'+level;lvRange.value=level;
  const changed={...state.selected,level};
- if(commitBox(state.box.map(x=>x.id===changed.id?changed:x))){state.selected=changed;syncLevel()}
+ if(commitBox(state.box.map(x=>x.id===changed.id?changed:x))){state.selected=changed;syncLevel({refreshEditor:document.getElementById('boxEditor').open})}
+ else{lv.textContent='Lv.'+state.selected.level;lvRange.value=state.selected.level}
 }
 minus.onclick=()=>updateLevel(Math.max(1,(state.selected?.level||1)-1));
 plus.onclick=()=>updateLevel(Math.min(MAX_POKEMON_LEVEL,(state.selected?.level||1)+1));
-lvRange.oninput=()=>updateLevel(+lvRange.value);
+lvRange.oninput=()=>{lv.textContent='Lv.'+lvRange.value};
+lvRange.onchange=()=>updateLevel(+lvRange.value);
+lvRange.onpointerup=()=>updateLevel(+lvRange.value);
+lvRange.onpointercancel=()=>updateLevel(+lvRange.value);
+lvRange.onblur=()=>updateLevel(+lvRange.value);
 function showBoxEditor(){document.getElementById('boxHeaderMenu').open=false;const details=document.getElementById('boxEditor');details.open=true;details.scrollIntoView({behavior:'smooth',block:'start'})}
  document.getElementById('boxEditShortcut').onclick=showBoxEditor;
  for(const [id,field] of [['boxFavorite','favorite'],['boxTraining','training']])document.getElementById(id).onclick=()=>{
   if(!state.selected)return;const changed={...state.selected,[field]:!state.selected[field]};
-  if(commitBox(state.box.map(x=>x.id===changed.id?changed:x))){state.selected=changed;syncLevel()}
+  if(commitBox(state.box.map(x=>x.id===changed.id?changed:x),{recalculate:false})){state.selected=changed;syncBoxFlags()}
  };
 document.getElementById('boxEditForm').onsubmit=e=>{
  e.preventDefault();const item=state.selected;if(!item)return;

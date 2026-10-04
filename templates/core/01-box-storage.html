@@ -29,11 +29,16 @@ function readBox(){
  try{return normalizeBox(JSON.parse(localStorage.getItem(BOX_STORAGE_KEY)||'[]'))}
  catch{return []}
 }
-function commitBox(next){
+let boxListDirty=true,teamViewDirty=true;
+function commitBox(next,{recalculate=true}={}){
  try{
   localStorage.setItem(BOX_STORAGE_KEY,JSON.stringify(next.map(backupBoxFields)));
   state.box=next;
-  renderBox();
+  boxListDirty=true;
+  if(recalculate)teamViewDirty=true;
+  pruneSavedTeams();
+  if(state.screen==='box')renderBox();
+  else if(state.screen==='home'&&teamViewDirty)renderTeam();
   return true;
  }catch{alert('保存できませんでした。ブラウザーの保存設定を確認してください。');return false}
 }

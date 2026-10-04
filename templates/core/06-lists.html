@@ -23,6 +23,7 @@ function val(v,suffix=''){return v===null||v===undefined?'未確認':`${v}${suff
 document.querySelectorAll('.detail-tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.detail-tabs button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.detail-pane').forEach(x=>x.classList.toggle('on',x.id==='pane-'+b.dataset.pane))});
 
 function renderBox(){
+ boxListDirty=false;
  renderSelectedFilters('box');
  const q=searchKey(boxSearch.value.trim()),a=state.box.filter(x=>{
  const text=!q||searchKey(x.name).includes(q);
@@ -62,7 +63,6 @@ function renderBox(){
   }
   openBox(c.dataset.id);
  });
- renderTeam();
 }
 function renderBoxTeamMode(){
  const bar=document.getElementById('boxTeamMode');bar.hidden=teamBoxSlot===null;

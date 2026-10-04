@@ -1,16 +1,24 @@
-function syncLevel(){
+let boxEditorDirty=false;
+function syncBoxFlags(item=state.selected){
+ if(!item)return;
+ for(const [id,field,labels] of [['boxFavorite','favorite',['お気に入り','favorite']],['boxTraining','training',['育成対象','training']]]){
+  const button=document.getElementById(id),on=!!item[field];
+  button.setAttribute('aria-pressed',String(on));
+  button.innerHTML=window.PS_UI_ART.icon('ui',labels[1]+(on?'_on':'_off'));
+  button.setAttribute('aria-label',`${labels[0]} ${on?'ON':'OFF'}`);
+ }
+}
+document.getElementById('boxEditor').addEventListener('toggle',()=>{
+ if(document.getElementById('boxEditor').open&&boxEditorDirty&&state.selected){fillBoxEditor(state.selected,selectedSpecies());boxEditorDirty=false}
+});
+function syncLevel({refreshEditor=true}={}){
  const item=state.selected;if(!item)return;
  const p=selectedSpecies();
  const calc=individualCorrections(item,p);
  lv.textContent='Lv.'+item.level;lvRange.value=item.level;
  boxTitle.textContent=item.name;
  document.getElementById('boxHeaderNo').textContent=`No.${String(item.no).padStart(3,'0')}`;
- document.getElementById('boxFavorite').setAttribute('aria-pressed',String(!!item.favorite));
- document.getElementById('boxFavorite').innerHTML=window.PS_UI_ART.icon('ui',item.favorite?'favorite_on':'favorite_off');
- document.getElementById('boxFavorite').setAttribute('aria-label',`お気に入り ${item.favorite?'ON':'OFF'}`);
- document.getElementById('boxTraining').setAttribute('aria-pressed',String(!!item.training));
- document.getElementById('boxTraining').innerHTML=window.PS_UI_ART.icon('ui',item.training?'training_on':'training_off');
- document.getElementById('boxTraining').setAttribute('aria-label',`育成対象 ${item.training?'ON':'OFF'}`);
+ syncBoxFlags(item);
  const berryImage=p?.berryImage?window.PS_DEV_ASSETS.image(p.berryImage,'berry',p.berry,'full',p.berry):'<small aria-label="No image">◌</small>';
  document.getElementById('boxBerry').innerHTML=`${berryImage}<b>${calc.berryQty==null?'未確認':'×'+calc.berryQty}</b>`;
  document.getElementById('boxSleep').innerHTML=`${window.PS_SLEEP_ICON(p?.sleepType)} ${boxEsc(p?.sleepType||'未確認')}`;
@@ -82,5 +90,5 @@ function syncLevel(){
  document.getElementById('boxGrowth').innerHTML=renderBoxGrowth(item,p,milestones);
  const parent=p?.evolution;
  if(parent&&!Array.isArray(parent))document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${boxEsc(parent.to||'未確認')}　${parent.level?'Lv.'+parent.level:''}${parent.candy?'・アメ'+parent.candy+'個':''}</p>`);
- fillBoxEditor(item,p);
+ if(refreshEditor){fillBoxEditor(item,p);boxEditorDirty=false}else boxEditorDirty=true;
 }

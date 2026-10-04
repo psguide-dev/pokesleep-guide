@@ -9,6 +9,8 @@ function go(id,push=true){
  state.screen=id;
  if(id==='fieldPage')renderFieldControls();
  screens.forEach(s=>s.classList.toggle('active',s.id===id));
+ if(id==='box'&&boxListDirty)renderBox();
+ if(id==='home'&&teamViewDirty)renderTeam();
  const activeTab=['recipePage','ingredientPage','skillPage','fieldPage','nightcapPage','accountPage'].includes(id)?'info':id;
  tabs.forEach(b=>b.classList.toggle('active',b.dataset.tab===activeTab));
  window.scrollTo(0,0);

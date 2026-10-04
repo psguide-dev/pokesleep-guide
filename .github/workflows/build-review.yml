@@ -51,6 +51,7 @@ jobs:
       - name: Check saved teams and daily forecasts
         run: |
           node tests/check_saved_teams.cjs
+          node tests/check_box_update_paths.cjs
           node tests/check_fragment_assembly.cjs
           node tests/check_daily_calculator.cjs
       - name: Check image-first species and received artwork
