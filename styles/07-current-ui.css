@@ -61,7 +61,7 @@
 #detailFoods .psg-food-pending{color:#111;font-size:10px}
 /* Section frames match the Box detail cards. */
 #dexDetail :is(#v12Ability,#v12Sleep,#v12Field) .card{background:#f3f7ff!important;border:1px solid var(--line)!important;border-radius:18px!important;box-shadow:none!important}
-#v12Ability .ability-card:has(#detailSkill){padding:10px 9px!important;margin-bottom:8px!important;box-sizing:border-box;min-height:calc(var(--box-unit-height) * 3);display:flex;flex-direction:column;justify-content:center}
+#v12Ability .ability-card:has(#detailSkill){padding:3px 9px!important;margin-bottom:8px!important;box-sizing:border-box;min-height:var(--skill-block-height,calc(var(--box-unit-height) * 2));display:flex;flex-direction:column;justify-content:flex-start}
 #evolutionCard .v31-evo-node{border-radius:16px!important}
 #dexDetail .v31-big-arrow{color:#39453d!important;font-size:27px!important;font-weight:500!important;line-height:1!important}
 #dexDetail .v106-evo-conditions{order:2!important;font-weight:850;color:#111;}
@@ -129,7 +129,7 @@
 #dexDetail .v31-evo-line>.v31-evo-node{flex:1 1 0!important;width:0!important;min-width:0!important;max-width:none!important}
 #dexDetail .v31-evo-node{min-width:0!important;gap:6px!important;justify-content:flex-start!important;overflow:visible!important}
 #dexDetail .v31-evo-node .v31-evo-name{max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;line-height:1.2!important;font-size:clamp(10px,2.7vw,13px)!important}
-#dexDetail .v111-evo-body{display:grid;grid-template-columns:minmax(0,56px) minmax(0,1fr);align-items:center;gap:3px;width:100%;min-width:0}
+#dexDetail .v111-evo-body{display:grid;grid-template-columns:clamp(44px,13vw,56px) minmax(0,1fr);align-items:center;gap:3px;width:auto;max-width:100%;min-width:0}
 #dexDetail .v31-evo-node:not(:has(.v106-evo-conditions)) .v111-evo-body{display:flex;justify-content:center}
 #dexDetail .v31-evo-line .v31-evo-image{width:clamp(44px,13vw,56px)!important;height:clamp(44px,13vw,56px)!important;transform:none!important;min-width:0!important;overflow:visible!important}
 #dexDetail .v31-evo-node.is-current .v31-evo-image{transform:none!important}
@@ -283,14 +283,15 @@
 
 /* The icon column owns its compact toggle; expanded levels stay below. */
 #v12Ability .skill-box:has(.psg-skill-summary){display:block!important}
-#v12Ability .psg-skill-summary{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:10px}
+#v12Ability .psg-skill-summary{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:start;gap:10px}
 #v12Ability .psg-skill-summary .skill-icon{width:44px!important;height:44px!important;margin:0!important}
 #v12Ability .psg-skill-icon-column{width:44px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
 #v12Ability .psg-skill-copy{min-width:0}
 #v12Ability .psg-skill-copy .skill-name{display:block!important;font-size:17px!important;line-height:1.3!important;white-space:normal!important}
-#v12Ability .psg-skill-copy .skill-desc{display:block!important;margin:4px 0 0!important;padding:0!important;line-height:1.45!important;font-size:13px!important;border:0!important}
-#v12Ability .psg-skill-copy .v35-effect-level{font-size:13px!important;margin-right:6px}
-#v12Ability .psg-skill-copy .v35-effect-copy{font-size:13px!important}
+#v12Ability .psg-skill-copy .skill-desc{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:baseline;column-gap:6px;margin:4px 0 0!important;padding:0!important;line-height:1.45!important;font-size:13px!important;border:0!important}
+#v12Ability .psg-skill-copy .v35-effect-level{font-size:13px!important;margin-right:0}
+#v12Ability .psg-skill-copy .v35-effect-copy{font-size:13px!important;min-width:0;overflow-wrap:anywhere}
+#v12Ability .psg-skill-level-number{font-size:18px;line-height:1;font-weight:950;color:#111}
 #dexDetail .psg-dex-costume{flex:none;width:75px;min-height:28px;padding:2px;font:inherit;font-size:11px;color:#52645b;background:#fff;border:1px solid #dce4df;border-radius:7px;opacity:1}
 #dexDetail .psg-form-no-image{font-size:14px;color:#718078;align-self:center}
 .psg-skill-level>span{min-width:0;overflow-wrap:anywhere;line-height:1.6}
@@ -318,8 +319,7 @@
 #dexDetail #detailFoods .psg-food-recipe-tile img{width:calc(100% - 2px);height:calc(100% - 2px);min-height:0;object-fit:contain}
 #dexDetail #detailFoods .psg-food-recipe-tile small{position:absolute;right:1px;bottom:1px;font-size:9px}
 
-/* Evolution uses the same three-unit base height as the skill block. */
-#dexDetail #v12Ability #evolutionCard{box-sizing:border-box;min-height:calc(var(--box-unit-height) * 3);padding:6px 7px!important;display:flex;flex-direction:column;justify-content:center}
-#dexDetail #v12Ability #evolutionCard>.section-title{margin:0 0 2px!important}
+/* Evolution starts at two units; larger families expand in normal flow. */
+#dexDetail #v12Ability #evolutionCard{box-sizing:border-box;min-height:calc(var(--box-unit-height) * 2);padding:3px 7px!important;display:flex;flex-direction:column;justify-content:center}
 #dexDetail #evolutionCard .v31-evo-line{padding:0!important}
 #dexDetail #evolutionCard .v31-evo-line>.v31-evo-node{padding:2px 3px!important;gap:2px!important}

@@ -57,6 +57,22 @@
  const toggle=document.getElementById("skillDetailToggle"),levels=document.getElementById("skillLevels");
  if(toggle&&levels)toggle.onclick=()=>{const o=levels.classList.toggle("open");toggle.textContent=o?"詳細 ▲":"詳細 ▼"};
 
+ // Round the measured content height up to half-unit steps, keeping its top fixed.
+ const skillBox=document.querySelector('#v12Ability .skill-box');
+ function resizeSkillBlock(){
+   const card=skillBox?.closest('.ability-card');
+   if(!card||!skillBox.getBoundingClientRect().height)return;
+   const style=getComputedStyle(card),unit=parseFloat(getComputedStyle(document.getElementById('dexDetail')).getPropertyValue('--box-unit-height'));
+   // clamp() may remain unresolved as a custom property; the fact row resolves the unit.
+   const fact=document.querySelector('#dexDetail .psg-detail-trait');
+   const resolvedUnit=fact?.getBoundingClientRect().height||unit;
+   if(!(resolvedUnit>0))return;
+   const inset=['paddingTop','paddingBottom','borderTopWidth','borderBottomWidth'].reduce((n,key)=>n+(parseFloat(style[key])||0),0);
+   const half=resolvedUnit/2,needed=skillBox.getBoundingClientRect().height+inset;
+   card.style.setProperty('--skill-block-height',`${Math.max(4,Math.ceil((needed-.01)/half))*half}px`);
+ }
+ if(window.ResizeObserver&&skillBox)new ResizeObserver(resizeSkillBlock).observe(skillBox);
+ window.addEventListener('resize',resizeSkillBlock,{passive:true});
  switchTab("ability");
 })();
 </script>
