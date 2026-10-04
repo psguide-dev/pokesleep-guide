@@ -4,7 +4,7 @@ const catalog={natures:JSON.parse(read('master/natures/data.json')),subskills:JS
 if(!Array.isArray(catalog.subskills))catalog.subskills=catalog.subskills.records;
 const ctx={window:{PS_CATALOG:catalog},speciesFor:(item,c=catalog)=>c.pokemon[item?.no],berryEnergyAtLevel:(base,level)=>base+level};
 vm.createContext(ctx);
-vm.runInContext(read('templates/core/07-corrections.html')+read('templates/core/02-team.html').split('function readTeam')[0]+read('templates/whistle/01-calculator.html'),ctx);
+vm.runInContext(read('templates/core/07-corrections.html')+read('templates/core/02-team.html').split('function readTeam')[0]+require('./whistle_kernel.cjs'),ctx);
 const box=Array.from({length:10},(_,i)=>{
  catalog.pokemon[i+1]={no:i+1,help:2900+i*137,carry:10,foodRate:18+i*2,berryQty:i%3===0?2:1,berry:i%2?'a':'b',ingredientSlots:[{unlock:1,candidates:[{name:i%2?'apple':'milk',qty:2+i%3}]},{unlock:30,candidates:[{name:'apple',qty:3+i%4}]}]};
  return {id:'id'+i,no:i+1,name:'Test'+i,level:30+i,nature:i%2?'いじっぱり':'ひかえめ',subskills:[i%3===0?'おてつだいボーナス':'おてつだいスピードM',i%2?'きのみの数S':'食材確率アップM']};

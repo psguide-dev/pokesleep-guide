@@ -36,8 +36,10 @@
 
 | 編集元 | 責務 |
 | --- | --- |
-| `whistle/01-calculator.html` | 笛1回分の個体計算・不足条件・チーム集計。DOMや比較状態を持たない |
-| `team/06-whistle.html` | 笛の表示・比較基準・操作イベント |
+| `whistle/01-calculator.html` | 笛1回分の個体計算・不足条件・チーム集計。DOMを持たない |
+| `whistle/02-additive-recommendation.html` | きのみ／単一食材の加算型最適編成と既存重み付き参照計算 |
+| `whistle/03-balanced-recommendation.html` | 指定割合で揃う食材量を最大化する編成探索 |
+| `team/06-whistle.html` | 笛の表示・割合によるチーム提案・操作イベント |
 | `fields/01-spawn-calculator.html` | 睡眠スコアから必要エナジーと観測範囲を計算 |
 | `core/11-field-spawn.html` | 出現匹数表・出典の表示と入力イベント |
 
@@ -48,3 +50,5 @@
 ビルドと`check_fragment_assembly.cjs`で組み立て・構文を確認。種族参照変更は`check_species_catalog.cjs`（前版HTMLを任意指定して同値比較）、登録/保存変更は`check_all_pokemon.cjs`、姿の進化は`check_size_evolution.cjs`、候補表示は`check_form_providers.cjs`、計算は`check_daily_calculator.cjs`を使う。検証対象に応じて選び、一度に機能変更と構成変更を広げない。
 
 計算の単体検証は`tests/daily_kernel.cjs`がビルド側のファイル順を読み取る。テスト専用の別実装や手書きの第二の順序を持たない。構成変更時は`check_daily_refactor.cjs <前版の21-day-calculator.html>`で全結果を比較できる。v274は1666条件で整理前と一致。
+
+笛の編成検証は `tests/whistle_kernel.cjs` が本番の結合順を読み取り、推定値と最適編成を別々の責務で検証する。v354では関数の内容・結合結果は変更しない。
