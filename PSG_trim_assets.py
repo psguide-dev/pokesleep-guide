@@ -2,6 +2,7 @@
 import hashlib
 import json
 from zipfile import ZipFile
+from PSG_retired_images import retired_images
 
 
 def restore_trim_assets(root):
@@ -19,6 +20,9 @@ def restore_trim_assets(root):
                 row = rows[member]
                 data = archive.read(member)
                 assert hashlib.sha256(data).hexdigest() == row['sha256']
+                if member in retired_images(root):
+                    seen.add(member)
+                    continue
                 destination = root / member
                 assert destination.is_file()
                 assert hashlib.sha256(destination.read_bytes()).hexdigest() in (row['originalSha256'], row['sha256']), member
@@ -45,6 +49,9 @@ def restore_additional_trim_assets(root):
                 row = rows[member]
                 data = archive.read(member)
                 assert hashlib.sha256(data).hexdigest() == row['sha256']
+                if member in retired_images(root):
+                    seen.add(member)
+                    continue
                 destination = root / member
                 if destination.exists():
                     assert hashlib.sha256(destination.read_bytes()).hexdigest() in (row['originalSha256'], row['sha256']), member

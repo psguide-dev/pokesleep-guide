@@ -11,6 +11,10 @@ on:
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
       - 'PSG_sleep_images.py'
+      - 'PSG_retired_images.py'
+      - 'PSG_trim_assets.py'
+      - 'PSG_biblo_assets.py'
+      - 'data-import/retired-pokemon-images-v352.json'
       - 'data-import/picasso-sleep-v277/**'
       - 'PSG_import_cooking.py'
       - 'PSG_import_recipe_evaluation.py'
@@ -49,6 +53,7 @@ jobs:
         run: |
           node tests/check_image_first.cjs
           node tests/check_biblo_assets.cjs
+          node tests/check_retired_images.cjs
       - name: Assemble site, keeping the current main page
         run: |
           mkdir -p public

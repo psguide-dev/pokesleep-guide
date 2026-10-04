@@ -22,4 +22,4 @@ def face_sheet_script(root, script, sheet):
     source = script.read_text()
     assert source.count('/* PSG_BUILD_FACE_SHEET */') == 1
     return source.replace('/* PSG_BUILD_FACE_SHEET */',
-                          json.dumps(sheet.relative_to(root).as_posix()))
+                          json.dumps(sheet.relative_to(root).as_posix() if sheet.exists() else None))

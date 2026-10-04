@@ -4,6 +4,7 @@ import json
 import unicodedata
 from pathlib import PurePosixPath
 from zipfile import ZipFile
+from PSG_retired_images import retired_images
 
 
 def restore_biblo_assets(root, catalog, images):
@@ -26,6 +27,9 @@ def restore_biblo_assets(root, catalog, images):
                 data = z.read(member)
                 assert hashlib.sha256(data).hexdigest() == rows[member]['sha256']
                 assert data[:4] == b'RIFF' and data[8:12] == b'WEBP'
+                if member in retired_images(root):
+                    seen.add(member)
+                    continue
                 target = root / member
                 target.parent.mkdir(parents=True, exist_ok=True)
                 if not target.exists() or target.read_bytes() != data:
@@ -76,6 +80,8 @@ def apply_sleep_corrections(root, catalog, images, manifest):
     # Combining and precomposed kana must not leave received pictures disconnected.
     normalize = lambda name: unicodedata.normalize('NFC', name or '')
     for row in manifest['images']:
+        if row['path'] in retired_images(root):
+            continue
         if row['role'] != 'sleep' or row['bindings']:
             continue
         name = row['sleepStyleName'] or row['proposedSleepStyleName']
