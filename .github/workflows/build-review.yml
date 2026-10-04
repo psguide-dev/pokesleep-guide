@@ -10,7 +10,6 @@ on:
       - 'vendor/enigma-swap/**'
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
-      - 'PSG_sleep_images.py'
       - 'PSG_retired_images.py'
       - 'PSG_trim_assets.py'
       - 'PSG_biblo_assets.py'
@@ -54,6 +53,7 @@ jobs:
           node tests/check_image_first.cjs
           node tests/check_biblo_assets.cjs
           node tests/check_retired_images.cjs
+          python tests/check_image_archives.py
       - name: Assemble site, keeping the current main page
         run: |
           mkdir -p public

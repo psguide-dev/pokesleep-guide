@@ -728,7 +728,7 @@
     },
     {
       "path": "pack-21.zip",
-      "sha256": "790feb40dfa402df8694e95aea8d974be01a953f3459286c70ffb8dcbddf3c8a"
+      "sha256": "a80ee1268d7676ca9b00b0092ed73b3ca1c6564c0307bc990ef1d4183fd28e96"
     },
     {
       "path": "pack-22.zip",
@@ -746,5 +746,6 @@
       "path": "pack-25.zip",
       "sha256": "89bf83e926ff610cb1d05e80e7f72abe933d8fd2630633cc3e6f6f5918d04db3"
     }
-  ]
+  ],
+  "archiveCleanup": "v353: retired image payloads removed; historical image rows retained for provenance."
 }

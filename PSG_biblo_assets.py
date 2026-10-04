@@ -35,7 +35,7 @@ def restore_biblo_assets(root, catalog, images):
                 if not target.exists() or target.read_bytes() != data:
                     target.write_bytes(data)
                 seen.add(member)
-    assert seen == set(rows)
+    assert seen == set(rows) - set(retired_images(root))
     previews = json.loads((folder / 'new-species.json').read_text())
     assert len(previews) == 2 and all(p['boxEligible'] is False for p in previews)
     catalog['forms']['species'].extend(previews)
@@ -48,6 +48,7 @@ def restore_biblo_assets(root, catalog, images):
     catalog['pendingSleepArtwork'] = manifest['pendingSleepArtwork']
     forms = {p['speciesId']: p for p in catalog['forms']['species']}
     for sid, bindings in manifest['sleepBindings'].items():
+        bindings = {key: value for key, value in bindings.items() if value not in retired_images(root)}
         if sid in forms:
             valid = {s['id'] for s in catalog['forms']['sleepStyleGroups'][forms[sid]['sleepStyleGroupId']]['styles']}
         else:
@@ -57,7 +58,7 @@ def restore_biblo_assets(root, catalog, images):
         if sid.endswith('_default') and str(int(sid.split('_')[0])) in catalog['pokemon']:
             images['sleepStyles'].update(bindings)
     apply_sleep_corrections(root, catalog, images, manifest)
-    print('Biblo: 944 sleep / 11 portraits / 6 normal bodies restored; v348 user corrections applied')
+    print('Biblo: 942 sleep / 11 portraits / 6 normal bodies restored; v348 user corrections applied')
 
 
 def apply_sleep_corrections(root, catalog, images, manifest):

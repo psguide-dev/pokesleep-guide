@@ -1966,39 +1966,24 @@
     },
     {
       "path": "pack-015.zip",
-      "sha256": "945ea83960a2c87ad349d09f2fcba94e390d560522dcecae06e67935ee681c05"
+      "sha256": "8ccb6b8f24e8234c82c98682ce06b22e2a2c5faf132cf76289fbef6eac44f235"
     },
     {
       "path": "pack-016.zip",
-      "sha256": "3ab2269a86a84704de21e1497913d6d24d682f61f1040fa8f09e47cac5f43803"
+      "sha256": "2fef4842263257ef756690c65374352537ac1f43ae61b0ba85da6c0c1860a17d"
     },
     {
       "path": "pack-017.zip",
-      "sha256": "ebb1ada49b2f81e1946db885668bf59fa047bea4971fe4f13039995334995b60"
-    },
-    {
-      "path": "pack-018.zip",
-      "sha256": "abbef465cd9085c261af88ea8e173515ae9fa3fa0b269f5f61425060afd6b19b"
-    },
-    {
-      "path": "pack-019.zip",
-      "sha256": "a18ae5655da8812b0b251473cf170251f266aebdf7db96b6ce3fadf34e759d1b"
-    },
-    {
-      "path": "pack-020.zip",
-      "sha256": "cf86b4133617b40f9f883087c3959074fcd04331bf114d1d78d445c7d02d77e6"
-    },
-    {
-      "path": "pack-021.zip",
-      "sha256": "a06a49888ba2dd7c0f152d2b7cb33399003cef78fed0008832b7bd2eea2d37e6"
+      "sha256": "4515e15e6409939987c25276970ddede4d7e7ce590b6c835223583f17b87e539"
     },
     {
       "path": "pack-022.zip",
-      "sha256": "c15dfc7f3d0eaead998b902a4fb8ed67231bbf083d081431ee36fb6d472d276c"
+      "sha256": "eaef61df78a0f62a42aec5b1ab9d497ec368ba0c19dfb5bcafa89fd236132cdc"
     },
     {
       "path": "pack-023.zip",
       "sha256": "6e186313a02aa58364db966b526e32026251bc654ed1d0708d5b0ef08dfb2a3b"
     }
-  ]
+  ],
+  "archiveCleanup": "v353: retired image payloads removed; historical image rows retained for provenance."
 }

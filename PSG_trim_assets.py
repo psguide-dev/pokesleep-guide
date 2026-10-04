@@ -29,8 +29,8 @@ def restore_trim_assets(root):
                 if destination.read_bytes() != data:
                     destination.write_bytes(data)
                 seen.add(member)
-    assert seen == set(rows)
-    print('Trimmed artwork: 381/381 received images restored unchanged')
+    assert seen == set(rows) - set(retired_images(root))
+    print(f'Trimmed artwork: {len(seen)} current images restored unchanged')
 
 
 def restore_additional_trim_assets(root):
@@ -61,5 +61,5 @@ def restore_additional_trim_assets(root):
                 if not destination.exists() or destination.read_bytes() != data:
                     destination.write_bytes(data)
                 seen.add(member)
-    assert seen == set(rows)
-    print('Additional trimmed artwork: 89 raster / 18 SVG restored unchanged')
+    assert seen == set(rows) - set(retired_images(root))
+    print(f'Additional trimmed artwork: {len(seen)} current images restored unchanged')
