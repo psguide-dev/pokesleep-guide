@@ -230,9 +230,7 @@
 
 /* Active-tab surface: type identity stays above; content below follows tab semantics. */
 #v12Ability,#v12Sleep,#v12Field{border-radius:0 0 18px 18px!important;padding:10px 8px 16px!important}
-#v12Ability{background:#f1f7ff!important}
-#v12Sleep{background:#f6f1fb!important}
-#v12Field{background:#f0f6f1!important}
+#v12Ability,#v12Sleep,#v12Field{background:#fff!important}
 #v12Ability>.ability-card,#v12Ability>#evolutionCard{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;margin:0!important;padding:14px 6px!important}
 #v12Ability>.ability-card+#v12Ability>.ability-card{}
 #v12Ability>.ability-card:not(:first-child),#v12Ability>#evolutionCard{border-top:0!important}
