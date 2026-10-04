@@ -498,12 +498,15 @@
 
 /* Individual daily forecasts: compact rows and three ingredient columns. */
 .psg-day-member-details .psg-day-row{gap:0;padding:4px 8px}
-.psg-day-member-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:center;gap:4px;height:calc(var(--psg-ui-unit) * .75)}
+.psg-day-member-heading{display:flex;align-items:center;height:calc(var(--psg-ui-unit) * .75)}
 .psg-day-member-heading>strong{font-size:12px;line-height:1.15}
-.psg-day-member-berries{display:flex;align-items:center;justify-content:center;gap:3px;min-width:0}
+.psg-day-member-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.psg-day-member-column{min-width:0}
+.psg-day-member-column+.psg-day-member-column{border-left:1px solid #e6ebe8;padding-left:6px}
+.psg-day-member-berries{display:flex;align-items:center;justify-content:center;gap:3px;min-width:0;height:calc(var(--psg-ui-unit) * .75)}
 .psg-day-row .psg-day-member-berries span{font-size:11px;line-height:1.1}
 .psg-day-member-berries img{width:22px;height:22px;object-fit:contain;flex:none}
-.psg-day-member-metric{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;text-align:center;height:calc(var(--psg-ui-unit) * .75);font-size:12px}
+.psg-day-member-metric{display:flex;justify-content:space-between;gap:3px;align-items:center;text-align:center;height:calc(var(--psg-ui-unit) * .75);font-size:11px}
 .psg-day-member-effect{display:flex;align-items:center;justify-content:center;text-align:center;min-height:calc(var(--psg-ui-unit) * .75);font-size:11px;line-height:1.2}
 .psg-day-member-note{margin:0;min-height:calc(var(--psg-ui-unit) * .75);display:flex;align-items:center;font-size:11px;line-height:1.25;color:#66716c}
 .psg-day-member-details .psg-day-food-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin:0}
