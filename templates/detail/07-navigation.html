@@ -5,6 +5,7 @@
    const scroll=window.scrollY;
    currentNo=m.no;currentSpeciesId=m.speciesId||null;setTheme(m.type);show("dexDetail");
    header(m);renderStats(m);renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);renderPokemonFields(m);switchTab(currentTab||"ability");
+   updateDexStickyTop();
    if(opts.keepScroll)window.scrollTo(0,scroll);
  }
  window.openPokemonDetail=openPokemonDetail;

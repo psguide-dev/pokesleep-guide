@@ -88,3 +88,13 @@
    sticky=document.createElement('div');sticky.id='psgDexSticky';sticky.className='psg-dex-sticky';
    hero.before(sticky);sticky.append(hero,tabs);
  }
+ // Match the normal-flow position; a hard-coded top lets the card drift before sticking.
+ function updateDexStickyTop(){
+   const detail=document.getElementById('dexDetail'),head=detail?.querySelector('.detail-head');
+   if(!head||!detail.classList.contains('active'))return;
+   const style=getComputedStyle(head),height=head.getBoundingClientRect().height;
+   if(height>0)detail.style.setProperty('--dex-sticky-top',`${(parseFloat(style.top)||0)+height+(parseFloat(style.marginBottom)||0)}px`);
+ }
+ const dexHead=document.querySelector('#dexDetail .detail-head');
+ if(window.ResizeObserver&&dexHead)new ResizeObserver(updateDexStickyTop).observe(dexHead);
+ window.addEventListener('resize',updateDexStickyTop,{passive:true});
