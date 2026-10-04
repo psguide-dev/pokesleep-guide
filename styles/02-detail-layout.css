@@ -444,7 +444,7 @@
   .v20b-skill-rate{font-size:10px!important;padding:4px 5px!important}
 }
 
-#home .psg-team-card{border:0;border-radius:0;background:transparent;padding:0;box-shadow:none}
+#home .psg-team-card{border:0;border-radius:0;background:transparent;padding:0;box-shadow:none;scroll-margin-top:calc(var(--psg-header-height) + var(--psg-home-heading-height,0px) + 6px)}
 
 .psg-day-energy-amount{display:block;font-size:18px;line-height:1.4}.psg-day-energy-breakdown{display:block;font-size:12px;font-weight:400;margin-top:3px}
 
