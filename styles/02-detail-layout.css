@@ -255,9 +255,9 @@
 .psg-team-recipe-image{display:flex;align-items:center;justify-content:center;flex:none;width:52px;height:52px;font-size:10px}
 .psg-team-recipe-image img{width:100%;height:100%;object-fit:contain}
 .psg-team-recipe-copy{display:flex;flex-direction:column;gap:0;min-width:0;flex:1}
-.psg-team-recipe-name-line{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:calc(var(--psg-ui-unit) * .75)}
+.psg-team-recipe-name-line{grid-column:1 / span 2;grid-row:1;display:flex;align-items:center;justify-content:flex-start;gap:4px;height:calc(var(--psg-ui-unit) * .75)}
 .psg-team-recipe-name-line>strong{min-width:0;overflow-wrap:anywhere}
-.psg-team-recipe-name-line>.psg-team-recipe-pot{flex:none;margin-left:auto;text-align:right;line-height:1}
+.psg-team-recipe-name-line>.psg-team-recipe-pot{flex:none;text-align:left;line-height:1;font-size:10px}
 .psg-team-recipe-pot{font-size:.78em;color:#276747}
 .psg-team-recipe-pot.is-over-capacity{color:#8b5d26}
 .psg-skill-conditions{margin-top:12px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
@@ -527,16 +527,21 @@
 .psg-team-recipe-heading .section-title{margin:0}
 .psg-team-recipe-heading>strong{margin-left:auto;text-align:right;color:#000;font-size:13px}
 .psg-team-recipe-level{display:inline-flex;align-items:baseline;gap:1px;white-space:nowrap}
-.psg-team-recipe-level small{font-size:8px;line-height:1;align-self:flex-end}
+.psg-team-recipe-level small{font-size:9px;line-height:1;align-self:baseline}
 .psg-team-recipe-level strong{font-size:12px}
-.psg-team-recipe-ingredients{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:3px;width:calc(var(--psg-ui-unit) * 1.75);height:calc(var(--psg-ui-unit) * 2);flex:none}
-.psg-team-recipe-ingredient{min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;border:1px solid #d7deda;border-radius:7px;background:#dce0de;padding:2px}
+.psg-team-recipe-ingredients{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:3px;grid-column:3;grid-row:1 / span 2;width:100%;height:calc(var(--psg-ui-unit) * 2);}
+.psg-team-recipe-ingredient{min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;border:1px solid #d7deda;border-radius:7px;background:#dce0de;padding:2px;gap:2px}
 .psg-team-recipe-ingredient.is-covered{background:#fff}
 .psg-team-recipe-ingredient.is-empty{background:transparent;border-color:#e4e8e6}
-.psg-team-recipe-ingredient>img,.psg-team-recipe-ingredient>svg,.psg-team-recipe-ingredient>span{width:100%;height:100%;object-fit:contain}
-.psg-team-recipe-row{padding:4px 6px}
-.psg-team-recipe-image{width:calc(var(--psg-ui-unit) * 1.2);height:calc(var(--psg-ui-unit) * 2)}
+.psg-team-recipe-ingredient>img,.psg-team-recipe-ingredient>svg,.psg-team-recipe-ingredient>span{width:20px;height:24px;max-width:35%;object-fit:contain;flex:none}
+.psg-team-recipe-ingredient-amount{font-size:9px;line-height:1;white-space:nowrap;letter-spacing:-.3px}
+.psg-team-recipe-row{display:grid;grid-template-columns:calc(var(--psg-ui-unit) * 1.1) minmax(0,1fr) minmax(105px,42%);grid-template-rows:calc(var(--psg-ui-unit) * .75) calc(var(--psg-ui-unit) * 1.25);column-gap:5px;row-gap:0;padding:4px 6px}
+.psg-team-recipe-image{grid-column:1;grid-row:2;width:100%;height:calc(var(--psg-ui-unit) * 1.25)}
+.psg-team-recipe-copy{grid-column:2;grid-row:2}
 .psg-team-recipe-image img{max-height:calc(var(--psg-ui-unit) * 1.2)}
-.psg-team-recipe-name-line>strong{font-size:12px;line-height:1.1}
+.psg-team-recipe-name-line>strong{font-size:11px;line-height:1.1}
+.psg-team-recipe-heading #teamPotCapacity{font-size:11px;font-weight:700;color:#000}
+.psg-team-recipe-meta{font-size:11px}
+.psg-team-recipe-base-energy{font-size:9px}
 .psg-account-settings{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#000}
 .psg-account-settings select{min-height:var(--psg-ui-unit);font:inherit;color:#000;background:#fff;border:1px solid #d7e0da;border-radius:10px;padding:4px 10px}

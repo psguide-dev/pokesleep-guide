@@ -15,7 +15,7 @@ function renderTeamFood(){
   potSelect.value=pot.base===null?'':String(pot.base);
 
  }
- document.getElementById('teamPotCapacity').textContent=pot.capacity===null?'未設定':`${pot.capacity}個`;
+ document.getElementById('teamPotCapacity').textContent=pot.capacity===null?'（鍋未設定）':`（鍋${pot.capacity}個）`;
  const {confirmed,unconfirmed}=teamFoodContext();
  const areaBonus=Math.max(0,Math.min(200,Number(fieldProfile.areaBonuses[fieldProfile.selectedFieldId])||0));
  const areaFactor=1+areaBonus/100;
@@ -40,21 +40,21 @@ function renderTeamFood(){
    const name=document.createElement('strong');name.textContent=recipe.name;
    const meta=document.createElement('span');meta.className='psg-team-recipe-meta';const verified=recipe.energy?.max,shown=verified||[...(recipe.energy?.observed||[])].sort((a,b)=>b.level-a.level)[0];if(Number.isFinite(shown?.value)){
     const level=document.createElement('span');level.className='psg-team-recipe-level';
-    const lv=document.createElement('small');lv.textContent='Lv.';const n=document.createElement('strong');n.textContent=String(shown.level);level.append(lv,n);
-    const energy=document.createElement('strong');energy.textContent=`${Math.round(shown.value*areaFactor).toLocaleString()} エナジー`;meta.append(level,energy);
+    const lv=document.createElement('small');lv.textContent='Lv.';const n=document.createElement('strong');n.textContent=String(shown.level);level.append(lv,n);nameLine.append(level);
+    const energy=document.createElement('strong');energy.textContent=`${Math.round(shown.value*areaFactor).toLocaleString()} エナジー`;meta.append(energy);
    }else meta.textContent='エナジー未確認';meta.title='選択中フィールドのFBを反映。追加食材・大成功の効果は含みません。';
    const base=document.createElement('span');base.className='psg-team-recipe-base-energy';base.textContent=Number.isFinite(shown?.value)?`（基礎 ${Math.round(shown.value).toLocaleString()} エナジー）`:'';
    const status=document.createElement('span');status.className=`psg-team-recipe-status ${missing.length?'is-unconfirmed':'is-covered'}`;
    status.textContent=!team.some(Boolean)?'チーム未設定':missing.length?`未確認：${missing.map(item=>item.name).join('・')}`:'食材の種類が揃う';
    const required=recipe.ingredients.reduce((sum,item)=>sum+item.qty,0),potStatus=document.createElement('span');potStatus.className='psg-team-recipe-pot';
-   potStatus.textContent=`${required}個`;potStatus.setAttribute('aria-label',`必要鍋容量 ${required}`);
+   potStatus.textContent=`（${required}個）`;potStatus.setAttribute('aria-label',`必要鍋容量 ${required}`);
    potStatus.title=pot.capacity===null?'容量未設定':required<=pot.capacity?'容量内':`容量不足：あと${required-pot.capacity}`;
    potStatus.classList.toggle('is-over-capacity',pot.capacity!==null&&required>pot.capacity);
    const ingredients=document.createElement('span');ingredients.className='psg-team-recipe-ingredients';
-   for(const item of recipe.ingredients){const tile=document.createElement('span');tile.className='psg-team-recipe-ingredient';tile.title=`${item.name} ${item.qty}個`;tile.setAttribute('aria-label',tile.title);tile.classList.toggle('is-covered',confirmed.has(item.name));tile.append(teamFoodIcon(item.name));ingredients.append(tile)}
-   nameLine.append(name,potStatus);copy.append(nameLine,meta,base);
+   for(const item of recipe.ingredients){const tile=document.createElement('span');tile.className='psg-team-recipe-ingredient';tile.title=`${item.name} 1食 ${item.qty}個／3食 ${item.qty*3}個`;tile.setAttribute('aria-label',tile.title);tile.classList.toggle('is-covered',confirmed.has(item.name));const amount=document.createElement('strong');amount.className='psg-team-recipe-ingredient-amount';amount.textContent=`${item.qty}／${item.qty*3}`;tile.append(teamFoodIcon(item.name),amount);ingredients.append(tile)}
+   nameLine.append(name,potStatus);copy.append(meta,base);
    for(let slot=recipe.ingredients.length;slot<4;slot++){const empty=document.createElement('span');empty.className='psg-team-recipe-ingredient is-empty';empty.setAttribute('aria-hidden','true');ingredients.append(empty)}
-   row.append(image,copy,ingredients);
+   row.append(nameLine,image,copy,ingredients);
    row.setAttribute('aria-label',`${recipe.name}、${meta.textContent}、${potStatus.textContent}、${status.textContent}、料理の詳細へ`);
    row.onclick=()=>window.PS_OPEN_RECIPE?.(recipe.id);
    (index<3?list:moreList).append(row);
