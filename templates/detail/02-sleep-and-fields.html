@@ -18,7 +18,7 @@
    if(!styles.length){
      const empty=document.createElement('p');empty.className='psg-sleep-empty';
      empty.textContent='寝顔データ未登録。確認できた寝顔をマスターデータに追加すると、ここに★順で表示します。';
-     sleep.appendChild(empty);return;
+     sleep.appendChild(empty);renderPendingSleepArtwork(m);return;
    }
    const grid=document.createElement('div');grid.className='psg-sleep-grid';
    styles.forEach(style=>{
@@ -29,6 +29,10 @@
        const img=document.createElement('img');img.src=style.image;img.alt=style.name||'寝顔';img.loading='lazy';
        img.onerror=()=>{img.remove();photo.appendChild(fallback)};
        photo.appendChild(img);
+       const sid=m.speciesId||`${String(m.no).padStart(4,'0')}_default`;
+       if(V.sleepArtworkStatus?.[sid]?.[style.id]==='provisional'){
+         const note=document.createElement('small');note.className='psg-sleep-art-status';note.textContent='画像照合中';photo.append(note);
+       }
      }else photo.appendChild(fallback);
      const toggle=document.createElement('button');toggle.type='button';toggle.className='psg-sleep-toggle';
      toggle.setAttribute('aria-pressed',sleepFound[style.id]?'true':'false');
@@ -46,11 +50,31 @@
      const name=document.createElement('span');name.textContent=style.name||'名称未確認';
      caption.append(stars,name);card.appendChild(caption);grid.appendChild(card);
    });
-   sleep.appendChild(grid);
+   sleep.appendChild(grid);renderPendingSleepArtwork(m);
+ }
+ function renderPendingSleepArtwork(m){
+   const sid=m.speciesId||`${String(m.no).padStart(4,'0')}_default`;
+   const rows=V.pendingSleepArtwork?.[sid]||[];if(!rows.length)return;
+   const note=document.createElement('p');note.className='note';
+   note.textContent=m.dataStatus==='preview_pending_abilities'?'寝顔名は確認待ちです。★は提供資料の確認値です。':'以下の画像は寝顔名・星数との対応を確認中です。';sleep.append(note);
+   const grid=document.createElement('div');grid.className='psg-sleep-grid';
+   for(const row of rows){
+     const card=document.createElement('article');card.className='psg-sleep-card';
+     const photo=document.createElement('div');photo.className='psg-sleep-photo';
+     const img=document.createElement('img');img.src=row.image;img.alt=row.name||'寝顔名未確認';img.loading='lazy';photo.append(img);
+     const caption=document.createElement('div');caption.className='psg-sleep-caption';
+     const stars=document.createElement('strong');stars.className='psg-sleep-stars';stars.textContent=row.stars?`★${row.stars}`:'★未確認';
+     const name=document.createElement('span');name.textContent=row.name||'寝顔名未確認';caption.append(stars,name);card.append(photo,caption);grid.append(card);
+   }
+   sleep.append(grid);
  }
  function renderPokemonFields(m){
    field.replaceChildren();
    const title=document.createElement('h3');title.textContent='寝顔別のフィールド・最低ランク';field.append(title);
+   if(m.dataStatus==='preview_pending_abilities'){
+     const note=document.createElement('p');note.className='note';note.textContent='2026年10月5日 15:00登場予定。寝顔別の最低ランク・ねむけパワーは確認待ちです。';field.append(note);
+     for(const name of m.appearanceFields||[]){const line=document.createElement('p');line.textContent=name;field.append(line)}return;
+   }
    if(m.detailPreviewOnly){const pending=document.createElement('p');pending.className='note';pending.textContent='この姿のフィールド出現条件は未登録です。通常の姿の条件は流用しません。';field.append(pending);return}
    const note=document.createElement('p');note.className='note';note.textContent='解放エナジーは最低ランクへの到達値で、出現を保証しません。必要ねむけパワーは別条件です。攻略資料に基づく掲載値・ゲーム内未照合。未掲載は出現しないという意味ではありません。';field.append(note);
    const fieldOrder=['greengrass','cyan','taupe','snowdrop','lapis','old_gold','amber'];

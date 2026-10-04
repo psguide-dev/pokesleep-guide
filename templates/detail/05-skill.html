@@ -59,7 +59,15 @@
   return '効果未確認';
  }
  function renderSkill(m){
-   const s=skillOf(m);if(!s)return;
+   const s=skillOf(m);if(!s){
+     document.querySelector('#v12Ability .skill-icon')?.replaceChildren();
+     document.getElementById('detailSkill').textContent='スキル未確認';
+     document.getElementById('detailSkillEffect').textContent='能力データは確認後に追加します。';
+     document.getElementById('skillRateInline').textContent='発動確率 未確認';
+     document.getElementById('skillLevels').replaceChildren();
+     document.getElementById('skillDetailToggle').hidden=true;return;
+   }
+   document.getElementById('skillDetailToggle').hidden=false;
    const skillIcon=document.querySelector('#v12Ability .skill-icon');
    if(skillIcon){
      skillIcon.replaceChildren();

@@ -4,7 +4,11 @@
    if(opts.pushHistory&&currentNo&&(currentSpeciesId||currentNo)!==(m.speciesId||m.no)){detailHistory.push(currentSpeciesId||currentNo);detailForward.length=0}
    const scroll=window.scrollY;
    currentNo=m.no;currentSpeciesId=m.speciesId||null;setTheme(m.type);show("dexDetail");
-   header(m);renderStats(m);renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);renderPokemonFields(m);switchTab(currentTab||"ability");
+   header(m);renderStats(m);
+   let notice=document.getElementById('dexPreviewNotice');
+   if(!notice){notice=document.createElement('p');notice.id='dexPreviewNotice';notice.className='note';ability.prepend(notice)}
+   notice.hidden=m.dataStatus!=='preview_pending_abilities';notice.textContent='10月5日 15:00登場予定。能力データは確認待ちです。';
+   renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);renderPokemonFields(m);switchTab(currentTab||"ability");
    updateDexStickyTop();
    if(opts.keepScroll)window.scrollTo(0,scroll);
  }

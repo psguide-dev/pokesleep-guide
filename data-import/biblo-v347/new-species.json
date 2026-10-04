@@ -1,0 +1,74 @@
+[
+  {
+    "no": 590,
+    "speciesId": "0590_default",
+    "formId": "default",
+    "name": "タマゲタケ",
+    "type": "どく",
+    "sleepType": "うとうと",
+    "specialty": null,
+    "berry": null,
+    "berryQty": null,
+    "help": null,
+    "carry": null,
+    "foodRate": null,
+    "skillRate": null,
+    "mainSkillId": null,
+    "ingredientSlots": [],
+    "friendPoints": null,
+    "expType": null,
+    "boxEligible": false,
+    "sleepStyleGroupId": "0590_default",
+    "evolutionTransitions": [],
+    "dataStatus": "preview_pending_abilities",
+    "releaseAt": "2026-10-05T15:00:00+09:00",
+    "appearanceFields": [
+      "ワカクサ本島",
+      "ラピスラズリ湖畔",
+      "アンバー渓谷",
+      "ワカクサ本島 EX",
+      "シアンの砂浜 EX"
+    ],
+    "sources": [
+      "https://www.pokemonsleep.net/news/343430323735343731303033383131383431/"
+    ],
+    "sourceCheckedAt": "2026-10-04",
+    "sleepStyleNames": null
+  },
+  {
+    "no": 591,
+    "speciesId": "0591_default",
+    "formId": "default",
+    "name": "モロバレル",
+    "type": "どく",
+    "sleepType": "うとうと",
+    "specialty": null,
+    "berry": null,
+    "berryQty": null,
+    "help": null,
+    "carry": null,
+    "foodRate": null,
+    "skillRate": null,
+    "mainSkillId": null,
+    "ingredientSlots": [],
+    "friendPoints": null,
+    "expType": null,
+    "boxEligible": false,
+    "sleepStyleGroupId": "0591_default",
+    "evolutionTransitions": [],
+    "dataStatus": "preview_pending_abilities",
+    "releaseAt": "2026-10-05T15:00:00+09:00",
+    "appearanceFields": [
+      "ワカクサ本島",
+      "ラピスラズリ湖畔",
+      "アンバー渓谷",
+      "ワカクサ本島 EX",
+      "シアンの砂浜 EX"
+    ],
+    "sources": [
+      "https://www.pokemonsleep.net/news/343430323735343731303033383131383431/"
+    ],
+    "sourceCheckedAt": "2026-10-04",
+    "sleepStyleNames": null
+  }
+]
