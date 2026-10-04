@@ -39,7 +39,7 @@ function syncDayControls(){
  document.getElementById('teamCollectionInterval').value=String(daySettings.collectionHours);
  document.getElementById('teamInitialEnergy').value=String(teamInitialEnergy);
  for(const [id,label,active] of [['teamGoodCamp','いいキャンプ',teamGoodCamp],['teamMeals','食事3回',teamMeals]]){
-  const button=document.getElementById(id);button.setAttribute('aria-pressed',String(active));button.textContent=`${label}：${active?'ON':'OFF'}`;
+  const button=document.getElementById(id);button.setAttribute('aria-pressed',String(active));const text=`${label}：${active?'ON':'OFF'}`;if(id==='teamGoodCamp'){button.setAttribute('aria-label',text);button.title=text}else button.textContent=text;
  }
  document.querySelectorAll('.psg-day-energy-options button').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.energy)===teamInitialEnergy)));
 }
@@ -114,13 +114,12 @@ function renderFieldControls(){
  const field=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId];
  document.getElementById('fieldWeekLabel').textContent=`今週：${currentFieldWeek()}開始（端末の現地時間・月曜4時切替）・${field?.favoriteMode==='fixed'?'通常は固定3種':'毎週ランダム'}`;
  document.getElementById('fieldFavoriteReset').hidden=fieldProfile.weekly[fieldProfile.selectedFieldId]?.weekKey!==currentFieldWeek();
- const fieldName=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.name||'フィールド未設定';
  const summary=document.getElementById('teamFieldSummary');
  const heading=document.createElement('span');heading.textContent=`FB＋${areaBonusInput.value}%`;
- const berryRow=document.createElement('span');berryRow.className='psg-day-field-berries';
+ const berryRow=document.getElementById('homeFieldBerries');berryRow.replaceChildren();
  for(const berry of berries.filter(Boolean)){const icon=berryIcon(berry);if(icon)berryRow.append(icon);else berryRow.append(document.createTextNode(berry+' '))}
  if(!berries.filter(Boolean).length)berryRow.textContent='未設定';
- summary.replaceChildren(heading,berryRow);
+ summary.replaceChildren(heading);
  renderFieldEncounters(field);
 }
 function renderFieldEncounters(field){

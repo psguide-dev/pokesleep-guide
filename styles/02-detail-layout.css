@@ -85,11 +85,20 @@
 }
 
 /* Team ingredient coverage is based on the selected individual and unlocked slots. */
-.psg-home-heading{position:sticky;top:var(--psg-header-height);z-index:67;background:var(--bg);padding:6px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
-.psg-home-heading h2{margin:0;flex:none}
-.psg-home-settings{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px;flex:1 1 270px;min-width:0}
-.psg-home-field{display:flex;flex-direction:column;align-items:stretch;gap:3px;min-width:0;font-size:12px;font-weight:700}
-.psg-home-field select{min-width:0;width:100%;max-width:none;min-height:40px;padding:5px 8px;border:1px solid #d7e0da;border-radius:10px;background:#fff;color:#111;font:inherit;font-size:14px}
+.psg-home-heading{position:sticky;top:var(--psg-header-height);z-index:67;background:var(--bg);padding:6px 0;display:grid;grid-template-columns:minmax(60px,.65fr) minmax(0,1.2fr) minmax(0,1.2fr);gap:6px;margin-bottom:10px;align-items:start}
+.psg-home-title{display:flex;flex-direction:column;gap:3px;min-width:0}
+.psg-home-heading h2{margin:0;height:40px;display:flex;align-items:center;font-size:18px}
+.psg-home-field{display:flex;flex-direction:column;gap:3px;min-width:0}
+.psg-home-field select{min-width:0;width:100%;max-width:none;min-height:40px;padding:5px 3px;border:1px solid #d7e0da;border-radius:10px;background:#fff;color:#111;font:inherit;font-size:12px;font-weight:700}
+.psg-home-fb{min-height:38px;padding:3px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#111;font-size:12px;font-weight:800;width:100%}
+.psg-home-berries{display:flex;justify-content:center;align-items:center;gap:3px;min-height:38px}
+.psg-home-berries img{width:28px;height:28px;object-fit:contain}
+.psg-home-image-toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
+.psg-home-image-toggles button{display:grid;place-items:center;width:100%;min-height:38px;padding:2px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.psg-home-image-toggles button[aria-pressed="false"] img{opacity:.45}
+.psg-home-image-toggles button[aria-pressed="true"]{border-color:var(--green);background:#dff2e6}
+.psg-home-image-toggles img{width:32px;height:32px;object-fit:contain}
+.psg-visually-hidden{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .psg-team-face-dock:not([hidden]){position:fixed;top:calc(var(--psg-header-height) + var(--psg-home-heading-height,0px));left:50%;transform:translateX(-50%);z-index:66;box-sizing:border-box;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;width:min(100%,720px);padding:5px 12px;background:var(--bg);border-bottom:1px solid #dce5df;box-shadow:0 3px 8px #1b36241a}
 .psg-team-face-dock-cell{display:grid;place-items:center;min-width:0;padding:2px;border:0;border-radius:0;background:transparent;cursor:pointer}
 .psg-team-face-dock-cell .psg-team-face{width:min(100%,72px);height:auto;aspect-ratio:1;border-radius:0;overflow:visible}
@@ -446,12 +455,6 @@
 .psg-team-toolbar #teamReorder{min-height:34px;padding:5px 7px;font-size:10px}.psg-team-toolbar #whistleToggle{display:inline-flex;align-items:center;justify-content:center;min-height:34px;width:34px;padding:2px;flex:none}.psg-team-toolbar #whistleToggle img{display:block;width:28px;height:28px;object-fit:contain}
 
 /* Current field state survives team changes and is entered beside the team. */
-.psg-team-extras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:start}
-.psg-team-extras>.card{min-width:0;padding:8px}
-.psg-home-field .psg-day-field-link{padding:2px 4px;min-height:30px;margin:0;width:100%}
-.psg-home-field #teamFieldSummary{display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-size:12px}
-.psg-home-field .psg-day-field-berries{display:flex;gap:2px}
-.psg-home-field .psg-master-berry-icon{width:24px;height:24px}
 .psg-team-zone{margin-top:0}
 .psg-team-zone label{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px;font-size:13px;font-weight:800;color:#111}
 .psg-team-zone-value{display:flex;align-items:center;gap:3px;flex:none}
@@ -459,4 +462,3 @@
 .psg-team-zone small{display:block;margin-top:4px;color:#52645b;font-size:11px;line-height:1.4}
 .psg-team-zone .note:empty{display:none}
 
-.psg-team-extras .psg-nightcap button{width:100%;padding:5px 2px;font-size:12px;font-weight:700;justify-content:center;flex-wrap:wrap}

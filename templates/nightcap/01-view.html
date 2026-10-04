@@ -5,7 +5,8 @@ let nightcapSettings=readNightcap();
 const nightcapRows=window.PS_CATALOG.nightcap.rows;
 for(const row of nightcapRows)document.getElementById('nightcapLevel').add(new Option(String(row.level),String(row.level)));
 function renderNightcap(){
- const button=document.getElementById('nightcapToggle');button.setAttribute('aria-pressed',String(nightcapSettings.enabled));document.getElementById('nightcapToggleIcon').src=nightcapSettings.enabled?'assets/ui/nightcap_pikachu.webp':'assets/ui/go_plus_plus.webp';document.getElementById('nightcapToggleLabel').textContent=`ナイトキャップ：${nightcapSettings.enabled?'ON':'OFF'}`;
+ const button=document.getElementById('nightcapToggle');button.setAttribute('aria-pressed',String(nightcapSettings.enabled));document.getElementById('nightcapToggleIcon').src='assets/ui/nightcap_pikachu.webp';document.getElementById('nightcapToggleLabel').textContent=`ナイトキャップ：${nightcapSettings.enabled?'ON':'OFF'}`;
+ const label=`ナイトキャップ：${nightcapSettings.enabled?'ON':'OFF'}`;button.setAttribute('aria-label',label);button.title=label;
  document.getElementById('nightcapForecastNote').hidden=!nightcapSettings.enabled;document.getElementById('nightcapLevel').value=String(nightcapSettings.level);
  const row=nightcapRows[nightcapSettings.level-1];document.getElementById('nightcapStats').textContent=`参考値：お手伝い ${row.helpSeconds}秒・所持数 ${row.carry}・累計 ${row.requiredHours}時間`;
 }
