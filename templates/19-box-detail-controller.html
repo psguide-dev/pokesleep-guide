@@ -1,4 +1,13 @@
 // Box detail fragment: assembled inside the core controller closure.
 const boxEsc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const selectedSpecies=()=>speciesFor(state.selected);
-function openBox(id){state.selected=state.box.find(x=>x.id===id);if(!state.selected)return;boxTitle.textContent=state.selected.name;syncLevel();go('boxDetail')}
+function updateBoxStickyTop(){
+ const detail=document.getElementById('boxDetail'),head=detail?.querySelector('.detail-head');
+ if(!head||!detail.classList.contains('active'))return;
+ const style=getComputedStyle(head),height=head.getBoundingClientRect().height;
+ if(height>0)detail.style.setProperty('--box-sticky-top',`${(parseFloat(style.top)||0)+height+(parseFloat(style.marginBottom)||0)}px`);
+}
+const boxStickyHead=document.querySelector('#boxDetail .detail-head');
+if(window.ResizeObserver&&boxStickyHead)new ResizeObserver(updateBoxStickyTop).observe(boxStickyHead);
+window.addEventListener('resize',updateBoxStickyTop,{passive:true});
+function openBox(id){state.selected=state.box.find(x=>x.id===id);if(!state.selected)return;boxTitle.textContent=state.selected.name;syncLevel();go('boxDetail');updateBoxStickyTop()}

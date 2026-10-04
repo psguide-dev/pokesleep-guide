@@ -176,8 +176,8 @@
 /* PSG v58 — focused mobile refinement: attached header, stronger Pokémon name, A/B/C tint through quantities. */
 @media(max-width:620px){
   /* Keep the app header at its normal safe-area position and attach 1-1 directly beneath it. */
-  main:has(#dexDetail.active){padding-top:0!important;}
-  #dexDetail{padding-top:0!important;}
+  main:has(#dexDetail.active),main:has(#boxDetail.active){padding-top:0!important;}
+  #dexDetail,#boxDetail{padding-top:0!important;}
   .psg-app-header{margin-bottom:0!important;}
   #dexDetail .detail-head{margin-top:0!important;}
 

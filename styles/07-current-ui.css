@@ -92,6 +92,9 @@
 @media(max-width:620px) and (orientation:portrait){
   #dexDetail>.psg-dex-sticky,#boxDetail>.psg-box-hero{position:sticky!important;top:calc(83px + env(safe-area-inset-top))!important;z-index:55!important}
   #dexDetail>.psg-dex-sticky{top:var(--dex-sticky-top,calc(83px + env(safe-area-inset-top)))!important}
+  #boxDetail>.psg-box-hero{top:var(--box-sticky-top,calc(83px + env(safe-area-inset-top)))!important;isolation:isolate}
+  #boxDetail>.psg-box-hero::before{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 12px var(--bg);z-index:-1;pointer-events:none}
+  #boxDetail>.psg-box-hero::after{content:"";position:absolute;top:-12px;left:-12px;right:-12px;height:12px;background:var(--bg);z-index:-1;pointer-events:none}
   /* Opaque backing also covers the header gap and rounded card corners. */
   #dexDetail>.psg-dex-sticky{isolation:isolate}
   #dexDetail>.psg-dex-sticky::before{content:"";position:absolute;inset:-12px -10px 0;background:var(--pane-bg,#f1f7ff);z-index:-1;pointer-events:none}
