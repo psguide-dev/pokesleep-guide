@@ -85,19 +85,18 @@
 }
 
 /* Team ingredient coverage is based on the selected individual and unlocked slots. */
-.psg-home-heading{position:sticky;top:var(--psg-header-height);z-index:67;background:var(--bg);padding:6px 0;display:grid;grid-template-columns:minmax(60px,.65fr) minmax(0,1.2fr) minmax(0,1.2fr);gap:6px;margin-bottom:10px;align-items:start}
-.psg-home-title{display:flex;flex-direction:column;gap:3px;min-width:0}
-.psg-home-heading h2{margin:0;height:40px;display:flex;align-items:center;font-size:18px}
-.psg-home-field{display:flex;flex-direction:column;gap:3px;min-width:0}
-.psg-home-field select{min-width:0;width:100%;max-width:none;min-height:40px;padding:5px 3px;border:1px solid #d7e0da;border-radius:10px;background:#fff;color:#111;font:inherit;font-size:12px;font-weight:700}
-.psg-home-fb{min-height:38px;padding:3px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#111;font-size:12px;font-weight:800;width:100%}
-.psg-home-berries{display:flex;justify-content:center;align-items:center;gap:3px;min-height:38px}
-.psg-home-berries img{width:28px;height:28px;object-fit:contain}
-.psg-home-image-toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
-.psg-home-image-toggles button{display:grid;place-items:center;width:100%;min-height:38px;padding:2px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.psg-home-heading{--home-row-height:clamp(27px,7.5vw,31.5px);position:sticky;top:var(--psg-header-height);z-index:67;background:var(--bg);padding:0;display:grid;grid-template-columns:minmax(60px,.65fr) minmax(0,1.2fr) minmax(0,1.2fr);grid-template-rows:repeat(2,var(--home-row-height));column-gap:4px;row-gap:2px;margin-top:-12px;margin-bottom:6px;align-items:stretch}
+.psg-home-heading h2{margin:0;min-width:0;display:flex;align-items:center;font-size:18px;line-height:1}
+.psg-home-heading select{min-width:0;width:100%;max-width:none;height:100%;min-height:0;padding:0 2px;border:1px solid #d7e0da;border-radius:8px;background:#fff;color:#111;font:inherit;font-size:12px;font-weight:700}
+.psg-home-fb{grid-column:1 / 3;display:flex;align-items:center;justify-content:space-evenly;gap:4px;min-width:0;min-height:0;padding:0 4px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;font-size:12px;font-weight:800;width:100%}
+.psg-home-fb #teamFieldSummary{flex:0 0 auto;gap:0;white-space:nowrap}
+.psg-home-berries{display:flex;justify-content:center;align-items:center;gap:4px;min-width:0;font-size:11px}
+.psg-home-berries img{width:24px;height:24px;object-fit:contain}
+.psg-home-image-toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;min-width:0}
+.psg-home-image-toggles button{display:grid;place-items:center;width:100%;height:100%;min-height:0;padding:0;border:1px solid var(--line);border-radius:8px;background:#fff}
 .psg-home-image-toggles button[aria-pressed="false"] img{opacity:.45}
 .psg-home-image-toggles button[aria-pressed="true"]{border-color:var(--green);background:#dff2e6}
-.psg-home-image-toggles img{width:32px;height:32px;object-fit:contain}
+.psg-home-image-toggles img{width:24px;height:24px;object-fit:contain}
 .psg-visually-hidden{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .psg-team-face-dock:not([hidden]){position:fixed;top:calc(var(--psg-header-height) + var(--psg-home-heading-height,0px));left:50%;transform:translateX(-50%);z-index:66;box-sizing:border-box;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;width:min(100%,720px);padding:5px 12px;background:var(--bg);border-bottom:1px solid #dce5df;box-shadow:0 3px 8px #1b36241a}
 .psg-team-face-dock-cell{display:grid;place-items:center;min-width:0;padding:2px;border:0;border-radius:0;background:transparent;cursor:pointer}
