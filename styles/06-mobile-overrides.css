@@ -126,6 +126,7 @@
     border-bottom:0!important;backdrop-filter:none!important;
   }
   .psg-app-title{justify-self:start!important;font-size:14px!important;white-space:nowrap!important;}
+  .psg-header-logo{height:34px;}
   .psg-app-version{justify-self:end!important;margin:0!important;color:#7d8a85!important;font-size:10px!important;white-space:nowrap!important;}
   #dexDetail .detail-head{
     position:sticky!important;top:calc(38px + env(safe-area-inset-top))!important;z-index:69!important;
