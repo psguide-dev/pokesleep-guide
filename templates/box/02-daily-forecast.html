@@ -21,6 +21,10 @@ function boxDailySkillForecast(estimate,totalsOnly=false){
  if(!totalsOnly)return `<small>１日発動予想</small><strong>約${window.PS_NUMBERS.display(member.skillTriggers)}回</strong>`;
  const n=member.skillTriggers,totals=[];
  const add=(label,value,unit='',digits=1)=>{if(Number.isFinite(value))totals.push(`<span><small>${label}</small><b>約${window.PS_NUMBERS.display(value)}${unit}</b></span>`)};
+ if(member.specialResult){
+  add('効果エナジー',member.specialEnergy);add('ランダム食材',member.randomIngredients,'個');add('基礎アメ',member.specialCandy,'個');
+  const note=dailySkillOmissionText(member);return `<small>１日効果量合計（暫定）</small>${totals.join('')}${note?`<p>${boxEsc(note)}</p>`:''}`;
+ }
  if(member.skillEffectType==='random_ingredients'&&Number.isFinite(member.skillAmount))add('ランダム食材',n*member.skillAmount,'個');
  if(['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy))add('エナジー',n*member.skillEnergy*result.areaFactor,'',0);
  if(['team_energy_recovery','self_energy_recovery','ally_energy_recovery'].includes(member.skillEffectType)&&Number.isFinite(member.skillRecovery))add('げんき回復',n*member.skillRecovery);

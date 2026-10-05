@@ -1,12 +1,12 @@
 // Individual inputs and validation for the shared daily estimate.
 function dailyMemberContext(item,speedContext,items,catalog,startingEnergy){
   const species=speciesFor(item,catalog),stats=speedContext.members.get(item.id);
-  const slots=(species?.ingredientSlots||[]).filter(slot=>slot.unlock<=item.level).map(slot=>{
+  const slots=(species?.ingredientSlots||[]).filter(slot=>slot.unlock<=item.level&&(!species.mythicalSettings||item.mythicalState?.ingredientUnlocked?.[slot.unlock]===true)).map(slot=>{
    const chosen=item.ingredients?.[slot.unlock];
    return slot.candidates?.length===1?slot.candidates[0]:slot.candidates?.find(candidate=>candidate.name===chosen);
   });
   const reasons=[];
-  if(species?.dailyCalculationStatus==='pending_special_skill')reasons.push('特殊スキルを含む日産計算は未対応');
+  if(species?.mythicalSettings&&(species.ingredientSlots||[]).some(s=>s.unlock<=item.level&&item.mythicalState?.ingredientUnlocked?.[s.unlock]==null))reasons.push('食材枠の解放状態');
   if(!stats?.speed)reasons.push('おてつだい時間');
   if(!stats?.carry)reasons.push('最大所持数');
   if(!Number.isFinite(stats?.food))reasons.push('食材確率');
@@ -27,7 +27,7 @@ function dailyMemberContext(item,speedContext,items,catalog,startingEnergy){
   return {id:item.id,name:item.name,stats,slots,chance,averageSize,stockLimit,
    berryBase:catalog.berries[species.berry],berryName:species.berry,level:item.level,
    foods:new Map(),berries:0,overflow:0,skillTriggers:0,energy:startingEnergy,skillExtraHelps:0,randomIngredients:0,
-   skillCalculationNote:skill?.calculationNote||null,skillName:skill?.name||null,skillEffectType:skill?.effectType,
+   skillId:skill?.id||species.mainSkillId,skillLevel,skillCalculationNote:skill?.calculationNote||null,skillName:skill?.name||null,skillEffectType:skill?.effectType,
    skillAmount:skillEffect?.amount,skillEnergy:skillEffect?.energy ??
     (Number.isFinite(skillEffect?.min)&&Number.isFinite(skillEffect?.max)?(skillEffect.min+skillEffect.max)/2:null),
    skillShards:skillEffect?.shards ?? (skill?.effectType==='variable_dream_shards'&&Number.isFinite(skillEffect?.min)&&Number.isFinite(skillEffect?.max)?(skillEffect.min+skillEffect.max)/2:null),

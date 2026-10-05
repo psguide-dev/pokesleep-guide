@@ -8,6 +8,7 @@ on:
       - 'templates/**'
       - 'styles/**'
       - 'vendor/enigma-swap/**'
+      - 'vendor/enigma-special/**'
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
       - 'PSG_retired_images.py'
@@ -54,6 +55,7 @@ jobs:
           node tests/check_box_update_paths.cjs
           node tests/check_fragment_assembly.cjs
           node tests/check_daily_calculator.cjs
+          node tests/check_special_skills.cjs
           node tests/check_number_policy.cjs
           node tests/check_evolution_skill_policy.cjs
           node tests/check_whistle.cjs

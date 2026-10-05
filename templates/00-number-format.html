@@ -15,7 +15,7 @@ window.PS_NUMBERS=(()=>{
  const display=value=>{const text=fixed(value,1);return text===null?'未確認':text.replace(/\B(?=(\d{3})+(?!\d))/g,',');};
  function finalValues(estimate){
   const values={};
-  for(const key of ['berryCount','berryEnergy','skillEnergy','skillEnergyBase','randomIngredients','dreamShards'])if(key in estimate)values[key]=result(estimate[key]);
+  for(const key of ['berryCount','berryEnergy','skillEnergy','skillEnergyBase','specialCandy','randomIngredients','dreamShards'])if(key in estimate)values[key]=result(estimate[key]);
   if(estimate.foods instanceof Map)values.foods=new Map([...estimate.foods].map(([name,value])=>[name,result(value)]));
   return values;
  }

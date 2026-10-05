@@ -1,0 +1,85 @@
+// Phase 2: basic rewards only. Recovery/pot/zone changes never feed normal production here.
+function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZones){
+ const engine=window.PS_SPECIAL_ENGINE;
+ if(!engine)return {energy:0,candy:0};
+ const zone=Math.max(0,Math.min(24,Number(berryZones?.['マゴのみ'])||0));
+ const names=engine.ingredientNames,ingredientId=name=>Object.keys(names).find(id=>names[id]===name)||name;
+ const types={'ノーマル':'normal','ほのお':'fire','みず':'water','でんき':'electric','くさ':'grass','こおり':'ice','かくとう':'fighting','どく':'poison','じめん':'ground','ひこう':'flying','エスパー':'psychic','むし':'bug','いわ':'rock','ゴースト':'ghost','ドラゴン':'dragon','あく':'dark','はがね':'steel','フェアリー':'fairy'};
+ const normalize=name=>String(name||'').normalize('NFKC').replace(/\s/g,'');
+ const teamMembers=members.map(m=>{
+  const item=items.find(x=>x.id===m.id),p=speciesFor(item,catalog),selected=Object.values(catalog.skills||{}).find(s=>normalize(s.name)===normalize(item.mythicalState?.selectedEffect));
+  const ingredients={};for(const slot of m.slots)ingredients[ingredientId(slot.name)]=(ingredients[ingredientId(slot.name)]||0)+m.chance*slot.qty/m.slots.length;
+  return {id:m.id,nationalDex:Number(p.no),types:[types[p.type]||p.type],initialEnergy:100,recoveryFactor:m.stats.energyFactor||1,
+   berryId:m.berryName==='マゴのみ'?'mago':m.berryName,berryEnergyBase:berryEnergyAtLevel(m.berryBase,m.level),favoriteFactor:favorites.has(m.berryName)?2:1,
+   nativeSkillFamily:p.mainSkillId==='plus_ingredient_magnet_s'?'plus':p.mainSkillId==='minus_cooking_power_up_s'?'minus':null,
+   firstIngredientId:ingredientId(m.slots[0]?.name),partnerEffectUnlocked:null,selectedSkillId:selected?.id,
+   helpYield:{berries:(1-m.chance)*m.stats.berryQty,ingredients}};
+ });
+ let energy=0,candy=0;
+ for(const member of members){
+  if(!engine.kernel.skillIds.includes(member.skillId))continue;
+  const caster=teamMembers.find(m=>m.id===member.id),selected=catalog.skills?.[caster.selectedSkillId];
+  const activeId=member.skillId==='almighty'?caster.selectedSkillId:member.skillId;
+  const row=engine.tables.skills.find(s=>s.skillId===activeId)?.levels[Math.min(member.skillLevel,engine.tables.skills.find(s=>s.skillId===activeId)?.levels.length||1)-1];
+  const totals={directEnergy:0,berryEnergy:0,ingredients:{},instantHelps:{},candyExpectedByMember:{}};
+  const omitted=new Set(),add=(target,key,value)=>target[key]=(target[key]||0)+value;
+  // Mew delegates known ordinary effects through the same reward contract.
+  const ordinary=input=>{
+   const s=catalog.skills?.[input.skillId],r=s?.levels?.[Math.min(member.skillLevel,s?.maxLevel||7)];if(!r)return null;
+   const out={probability:1,state:structuredClone(input.state),reward:{directEnergy:0,berryEnergy:0,berriesByDonor:{},ingredients:{},instantHelps:{},candyExpectedByMember:{},heldBerryEnergyTransferred:0},omitted:[],assumptions:[],actions:[],activationConsumed:true};
+   const mean=Number.isFinite(r.energy)?r.energy:Number.isFinite(r.min)&&Number.isFinite(r.max)?(r.min+r.max)/2:null;
+   if(['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(s.effectType)&&Number.isFinite(mean))out.reward.directEnergy=mean*areaFactor;
+   else if(s.effectType==='random_ingredients')out.omitted.push('random_ingredients_unspecified');
+   else if(s.effectType==='berry_burst')for(const m of teamMembers){const qty=m.id===member.id?r.selfBerries:r.teamBerriesEach;out.reward.berryEnergy+=qty*m.berryEnergyBase*m.favoriteFactor*areaFactor*(m.berryId==='mago'?1+zone/100:1);out.reward.berriesByDonor[m.id]=qty;}
+   else if(s.effectType==='extra_help')for(const m of teamMembers){const qty=r.helps/teamMembers.length;out.reward.instantHelps[m.id]=qty;out.reward.berryEnergy+=qty*m.helpYield.berries*m.berryEnergyBase*m.favoriteFactor*areaFactor*(m.berryId==='mago'?1+zone/100:1);for(const [id,n] of Object.entries(m.helpYield.ingredients))add(out.reward.ingredients,id,n*qty);}
+   else if(!['variable_dream_shards','fixed_dream_shards','team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(s.effectType))out.omitted.push('selected_effect_not_connected');
+   return [out];
+  };
+  // Adjacent integer counts are an explicit approximation; states stay discrete.
+  // Merge only stockpile/disguise states: <=22 states, no cross-team branch explosion.
+  for(const distribution of engine.provisionalCountDistribution(member.skillTriggers)){
+   let states=new Map([['0|true',{probability:1,stock:0,eligible:true}]]);
+   for(let count=0;count<distribution.count;count++){
+    const next=new Map();
+    for(const branch of states.values()){
+     const state=engine.initialState(teamMembers);state.zonePP=Math.max(0,Math.min(24,Number(berryZones?.['マゴのみ'])||0));
+     state.stockpile[member.id]=branch.stock;state.disguiseEligible[member.id]=branch.eligible;
+     const outcomes=engine.kernel.activate({team:teamMembers,state,casterId:member.id,skillId:member.skillId,level:member.skillLevel,context:{fieldBonus:areaFactor-1,resolveSelectedEffect:ordinary}});
+     for(const outcome of outcomes){
+      const probability=branch.probability*outcome.probability,weight=probability*distribution.probability;
+      for(const key of ['directEnergy','berryEnergy'])totals[key]+=outcome.reward[key]*weight;
+      for(const key of ['ingredients','instantHelps','candyExpectedByMember'])for(const [id,qty] of Object.entries(outcome.reward[key]))add(totals[key],id,qty*weight);
+      outcome.omitted.forEach(x=>omitted.add(x));
+      const stock=outcome.state.stockpile[member.id]||0,eligible=outcome.state.disguiseEligible[member.id]!==false,key=stock+'|'+eligible;
+      if(next.has(key))next.get(key).probability+=probability;else next.set(key,{stock,eligible,probability});
+     }
+    }
+    states=next;
+   }
+  }
+  // Unknown ingredient pool remains an unspecified random total, never an invented inventory.
+  const randomAmount=row?.randomIngredientTotalBase??(selected?.effectType==='random_ingredients'?selected.levels?.[Math.min(member.skillLevel,selected.maxLevel)]?.amount:null);
+  if(Number.isFinite(randomAmount)){member.randomIngredients+=member.skillTriggers*randomAmount;omitted.delete('obtained_ingredient_pool_missing');omitted.delete('random_ingredients_unspecified');}
+  if(selected&&['variable_dream_shards','fixed_dream_shards','fixed_dream_shards_energy'].includes(selected.effectType)){
+   const r=selected.levels?.[Math.min(member.skillLevel,selected.maxLevel)];member.specialShards=member.skillTriggers*(r?.shards??(Number.isFinite(r?.min)&&Number.isFinite(r?.max)?(r.min+r.max)/2:0));
+  }
+  for(const [id,qty] of Object.entries(totals.ingredients))member.foods.set(names[id]||id,(member.foods.get(names[id]||id)||0)+qty);
+  member.specialEnergy=totals.directEnergy+totals.berryEnergy;
+  member.specialCandy=Object.values(totals.candyExpectedByMember).reduce((sum,n)=>sum+n,0);
+  member.specialInstantHelps=Object.values(totals.instantHelps).reduce((sum,n)=>sum+n,0);
+  member.specialResult=totals;member.skillOmitted=[...omitted];
+  member.specialBasicText=row?[Number.isFinite(row.potIncrease)?`鍋＋${row.potIncrease}個／発動`:'',Number.isFinite(row.recovery)?`1匹のげんき＋${row.recovery}／発動`:'',Number.isFinite(row.recoveryPerTarget)?`2匹のげんき各＋${row.recoveryPerTarget}／発動`:'',Number.isFinite(row.recoveryPerTeamMember)?`全員のげんき各＋${row.recoveryPerTeamMember}／発動`:'',Number.isFinite(row.energyLossPerNonDarkMember)?`あく以外のげんき－${row.energyLossPerNonDarkMember}／発動`:'',Number.isFinite(row.zoneIncreasePercentagePoints)?`ゾーン＋${row.zoneIncreasePercentagePoints}%／発動（上限24%）`:''].filter(Boolean).join('・'):'';
+  member.specialDeferred=['minus_cooking_power_up_s','psystrike_berry_zone','nightmare_energy_charge_m','lunar_blessing_energy_for_everyone_s','healing_pulse_energy_cheer_s','nuzzle_energy_cheer_s'].includes(activeId)||['team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(selected?.effectType);
+  if(member.specialDeferred)member.skillOmitted.push('recovery_pot_zone_production_not_connected');
+  if(activeId==='stockpile_energy_charge_s')member.skillOmitted.push('initial_stockpile_zero_provisional_spit_probability');
+  if(activeId==='disguise_berry_burst')member.skillOmitted.push('initial_disguise_eligible_provisional_success_probability');
+  member.skillCalculationNote='特殊スキルの基本効果は暫定モデル。発動回数は既存の予測を使用。';
+  energy+=member.specialEnergy;candy+=member.specialCandy;
+ }
+ return {energy,candy};
+}
+
+function dailySkillOmissionText(member){
+ const labels={nuzzle_bonus_skill_not_added:'ほっぺすりすりの追加発動は未加算',occasional_extra_candy_not_added:'追加アメは未加算',held_berry_consumption_not_modelled:'箱内きのみは通常収集側で集計（二重加算なし）',latias_partner_unlock_unknown:'ラティアスとの追加効果は解放未確認のため未加算',latios_partner_unlock_unknown:'ラティオスとの追加効果は解放未確認のため未加算',recovery_pot_zone_production_not_connected:'回復・げんき減少・鍋・ゾーンの変化による収集量への連動は未対応',initial_stockpile_zero_provisional_spit_probability:'たくわえ0回から開始・はきだす25%の暫定予測',initial_disguise_eligible_provisional_success_probability:'大成功前から開始・成功20%の暫定予測',selected_skill_missing_or_recursion:'セット効果未確認：基礎アメのみ計算',plus_additional_quantity_unknown:'相方条件の追加食材数が未確認',selected_effect_not_connected:'セット効果は未加算',unsupported_main_skill:'メインスキルの効果は未加算'};
+ return (member.skillOmitted||[]).map(key=>labels[key]||(key.startsWith('selected_effect_adapter_missing:')?'セット効果は未加算':'未加算の効果あり')).join('。');
+}

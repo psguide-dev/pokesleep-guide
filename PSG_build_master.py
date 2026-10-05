@@ -29,6 +29,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     '10-box-detail.html',
     '11-navigation.html',
     '12-swap-engine.html',
+    '12-special-engine.html',
     '12-core-controller.html',
     'core/01-box-storage.html',
     'core/02-team.html',
@@ -54,6 +55,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     'day/01-calculation-helpers.html',
     'day/02-member-context.html',
     'day/03-skill-effects.html',
+    'day/04-special-skills.html',
     '21-day-calculator.html',
     'team/05-swap-assist.html',
     '19-box-detail-controller.html',
@@ -418,6 +420,16 @@ def swap_engine():
             '\nreturn {simulateTeam,evaluateSwap,findSwapOptionsAsync,mealTiming,findMealOptionsAsync,supplementTiming,berryUnitEnergy,ribbon:daily.ribbon};})();')
 
 
+def special_engine():
+    folder = ROOT / 'vendor/enigma-special'
+    kernel = re.sub(r'\bexport ', '', (folder / 'special_skill_kernel.mjs').read_text())
+    tables = json.loads((folder / 'effect_tables.json').read_text())
+    names = {key: obj['name'] for key, (obj, _) in records('ingredients').items()}
+    payload = json.dumps({'tables': tables, 'ingredientNames': names}, ensure_ascii=False).replace('<', '\\u003c')
+    return ('window.PS_SPECIAL_ENGINE=(()=>{' + kernel + '\nconst data=' + payload +
+            ';return {kernel:createKernel(data.tables),tables:data.tables,ingredientNames:data.ingredientNames,initialState,provisionalCountDistribution};})();')
+
+
 def build():
     purge_retired_images(ROOT)
     restore_trim_assets(ROOT)  # Verify received pack hashes before applying artwork.
@@ -437,7 +449,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v392') == 2
+    assert source.count('Review v393') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
@@ -448,7 +460,7 @@ def build():
     if not CSS.exists() or CSS.read_text() != css_text:
         CSS.write_text(css_text)  # Compatibility copy; edit styles/*.css instead.
     assert source.count('/* PSG_BUILD_SWAP_ENGINE */') == 1
-    html = source.replace(MARKER,injection).replace('/* PSG_BUILD_STYLES */',css_text).replace('/* PSG_BUILD_SPECIALTY_IMAGES */',ART.read_text()).replace('/* PSG_BUILD_FACE_SCRIPT */',face_script).replace('/* PSG_BUILD_SWAP_ENGINE */',swap_engine())
+    html = source.replace(MARKER,injection).replace('/* PSG_BUILD_STYLES */',css_text).replace('/* PSG_BUILD_SPECIALTY_IMAGES */',ART.read_text()).replace('/* PSG_BUILD_FACE_SCRIPT */',face_script).replace('/* PSG_BUILD_SWAP_ENGINE */',swap_engine()).replace('/* PSG_BUILD_SPECIAL_ENGINE */',special_engine())
     trim_bounds = json.loads((ROOT / 'assets/ui/icon-trim-bounds.json').read_text())
     trim_script = (ROOT / 'templates/icon-trim.js').read_text().replace('/* PSG_ICON_TRIM_BOUNDS */', json.dumps(trim_bounds,separators=(',',':')))
     import re

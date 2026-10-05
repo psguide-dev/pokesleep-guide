@@ -11,12 +11,6 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  const periods=[];for(let h=0;h<16;h+=interval)periods.push(Math.min(interval,16-h));
  periods.push(8); // No collection during sleep; collect at wake-up.
  const items=ids.map(id=>box.find(item=>item.id===id)).filter(Boolean);
- if(items.some(item=>speciesFor(item,catalog)?.dailyCalculationStatus==='pending_special_skill'))return {
-  pendingReason:'特殊スキルを含むチームの日産計算は未対応です。個体情報は保存できます。',
-  members:items.map(item=>({id:item.id,name:item.name,missing:true,reasons:['特殊スキルを含むチームの日産計算は未対応']})),
-  foods:new Map(),randomIngredients:null,dreamShards:null,berryEnergy:null,skillEnergy:null,skillEnergyBase:null,
-  periods,interval,startingEnergy,goodCamp,threeMeals,mealCount,favorites,areaFactor
- };
  const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,startingEnergy));
  const valid=members.filter(m=>!m.missing);
  let elapsedTicks=0;
@@ -59,12 +53,14 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
   member.zoneFactor=1+Math.max(0,Math.min(24,Number(berryZones?.[member.berryName])||0))/100;
   member.berryEnergy=member.berryEnergyBase*(favorites.has(member.berryName)?2:1)*areaFactor*member.zoneFactor;
  }
+ const special=dailySpecialSkills(valid,items,catalog,areaFactor,favorites,berryZones);
  const foods=new Map();
  valid.forEach(member=>member.foods.forEach((qty,name)=>foods.set(name,(foods.get(name)||0)+qty)));
  const berryEnergy=valid.reduce((sum,member)=>sum+member.berryEnergy,0);
- const skillEnergyBase=valid.reduce((sum,member)=>sum+(['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy)?member.skillTriggers*member.skillEnergy:0),0);
- const skillEnergy=skillEnergyBase*areaFactor;
- const dreamShards=valid.reduce((sum,member)=>sum+(Number.isFinite(member.skillShards)?member.skillTriggers*member.skillShards:0),0);
+ const ordinarySkillEnergyBase=valid.reduce((sum,member)=>sum+(['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy)?member.skillTriggers*member.skillEnergy:0),0);
+ const skillEnergyBase=ordinarySkillEnergyBase+special.energy/areaFactor;
+ const skillEnergy=ordinarySkillEnergyBase*areaFactor+special.energy;
+ const dreamShards=valid.reduce((sum,member)=>sum+(Number.isFinite(member.skillShards)?member.skillTriggers*member.skillShards:0)+(member.specialShards||0),0);
  const randomIngredients=valid.reduce((sum,member)=>sum+member.randomIngredients,0);
- return {members,foods,randomIngredients,dreamShards,berryEnergy,skillEnergy,skillEnergyBase,periods,interval,startingEnergy,goodCamp,threeMeals,mealCount,favorites,areaFactor,berryZones};
+ return {members,foods,specialCandy:special.candy,randomIngredients,dreamShards,berryEnergy,skillEnergy,skillEnergyBase,periods,interval,startingEnergy,goodCamp,threeMeals,mealCount,favorites,areaFactor,berryZones};
 }
