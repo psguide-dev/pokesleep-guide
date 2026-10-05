@@ -2,7 +2,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8'),ctx={window:{}};vm.createContext(ctx);
 vm.runInContext(read('templates/import/03-ingredient-reader.html').replace(/^<script[^>]*>/,'').replace(/<\/script>\s*$/,''),ctx);
 const reader=ctx.window.PS_INGREDIENT_READER,refs=JSON.parse(read('assets/import/ingredient-fingerprints.json'));
-assert.equal(refs.length,9);assert.equal(new Set(refs.map(r=>r.name)).size,9);
+assert.equal(refs.length,15);assert.equal(new Set(refs.map(r=>r.name)).size,15);
 for(const ref of refs){assert.equal(ref.values.length,1024);assert.ok(ref.values.every(v=>Number.isInteger(v)&&v>=0&&v<=255));}
 // Another Pokémon's screenshot, excluded from the references, at three widths.
 for(const sample of JSON.parse(read('tests/fixtures/ingredient-heldout.json')))assert.equal(reader.choose(sample.values,refs),sample.name,`${sample.source} width ${sample.width}`);
