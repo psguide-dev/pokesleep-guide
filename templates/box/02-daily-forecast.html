@@ -1,7 +1,7 @@
 function boxDailyEstimate(item){
  const ids=[item.id];
  const interval=Number(document.getElementById('teamCollectionInterval').value);
- const result=dailyBaseline(ids,state.box,window.PS_CATALOG,interval,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones());
+ const result=dailyBaseline(ids,state.box,window.PS_CATALOG,interval,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones(),cookingContext());
  return {result,member:result.members.find(m=>m.id===item.id)};
 }
 function renderBoxDayFood(estimate){
@@ -21,6 +21,7 @@ function boxDailySkillForecast(estimate,totalsOnly=false){
  if(!totalsOnly)return `<small>１日発動予想</small><strong>約${window.PS_NUMBERS.display(member.skillTriggers)}回</strong>`;
  const n=member.skillTriggers,totals=[];
  const add=(label,value,unit='',digits=1)=>{if(Number.isFinite(value))totals.push(`<span><small>${label}</small><b>約${window.PS_NUMBERS.display(value)}${unit}</b></span>`)};
+ if(member.potLinked)add('鍋追加合計',member.potAdded,'個');
  if(member.specialResult){
   add('効果エナジー',member.specialEnergy);add('ランダム食材',member.randomIngredients,'個');add('基礎アメ',member.specialCandy,'個');
   const note=dailySkillOmissionText(member);return `<small>１日効果量合計（暫定）</small>${totals.join('')}${note?`<p>${boxEsc(note)}</p>`:''}`;

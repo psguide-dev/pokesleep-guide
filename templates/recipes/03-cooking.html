@@ -31,7 +31,7 @@
  function updatePot(){
   const base=Number(potBase.value),event=eventInput.value.trim()===''?NaN:Number(eventInput.value),skill=skillInput.value.trim()===''?NaN:Number(skillInput.value);
   const result=calculatePot(base,event,skill,sundayInput.checked,campInput.checked);
-  document.getElementById('cookingPotResult').textContent=result===null?'入力を確認してください（加算0〜200、倍率は正数・小数3桁まで）':`試算容量 ${result.toLocaleString()}個`;
+  document.getElementById('cookingPotResult').textContent=result===null?'入力を確認してください（加算0〜200、倍率は正数・小数3桁まで）':`試算容量 ${window.PS_NUMBERS.display(result)}個`;
   const row=potRows.find(item=>item['容量']===base);
   document.getElementById('cookingPotCost').textContent=`寝顔 ${row['必要寝顔種類数']}種類・この段階の拡張 ${row['拡張1回のゆめのかけら'].toLocaleString()}かけら・初期から累計 ${row['初期からの累計ゆめのかけら'].toLocaleString()}かけら（資料確認）`;
  }
@@ -60,7 +60,7 @@
  addNote(`確認日 ${cooking.pot['確認日']}。鍋・費用・倍率・EXPは資料確認、料理Lv上限70は公式確認。`);
  addTable('鍋の拡張23段階',['容量','寝顔種類','拡張費用','累計費用'],potRows.map(r=>[r['容量'],r['必要寝顔種類数'],r['拡張1回のゆめのかけら'],r['初期からの累計ゆめのかけら']]));
  addTable('料理Lv1〜70',['Lv','倍率','次Lv EXP','累計EXP'],levelRows.map(r=>[r['レベル'],r['倍率'],r['次Lvまでの必要EXP'],r['Lv1からの累計EXP']]));
- addNote('鍋はイベント乗算・四捨五入 → 日曜乗算 → スキル加算 → キャンプ乗算・四捨五入。0.5は切り上げ。通常容量の上限81。');
+ addNote('鍋はイベント倍率 → 日曜倍率 → スキル加算 → キャンプ倍率の順で試算します。途中丸めはせず、結果2桁・表示1桁の共通規格を使用します。ゲーム内の端数処理例外は未採用です。通常容量の上限81。');
  addNote('料理の取得EXPは総エナジー。Lv倍率はレシピ部分に適用し、追加食材には適用しません。上限時の余剰EXP保存、レベルアップした料理への倍率遡及は未確定。');
  addNote('比較Lvは表示用で個別の育成記録ではありません。実測・掲載値のないLvはLv1×倍率を丸めずに計算した推定値。Lv70掲載値との端数不一致は補正せず保持します。');
  for(const url of new Set([...cooking.pot['出典'],...cooking.levels['出典']])){const p=document.createElement('p');p.className='note';const link=document.createElement('a');link.href=url;link.textContent=url;link.target='_blank';link.rel='noopener';p.append(link);reference.append(p)}

@@ -57,6 +57,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     'day/03-skill-effects.html',
     'day/04-special-skills.html',
     'day/05-energy-feedback.html',
+    'day/06-pot-feedback.html',
     '21-day-calculator.html',
     'team/05-swap-assist.html',
     '19-box-detail-controller.html',
@@ -450,7 +451,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v394') == 2
+    assert source.count('Review v395') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'

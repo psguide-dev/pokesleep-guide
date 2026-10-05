@@ -9,3 +9,7 @@
 .psg-cooking-table{width:100%;border-collapse:collapse;font-size:12px}
 .psg-cooking-table th,.psg-cooking-table td{padding:4px 3px;text-align:right;border-bottom:1px solid #dce4df}
 .psg-cooking-table th:first-child,.psg-cooking-table td:first-child{text-align:left}
+
+.psg-team-pot-forecast{margin:0 0 8px}
+.psg-team-pot-forecast summary{text-align:right;cursor:pointer}
+.psg-team-pot-forecast .note{margin:4px 0;font-size:12px}

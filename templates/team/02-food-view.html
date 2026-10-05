@@ -15,7 +15,15 @@ function renderTeamFood(){
   potSelect.value=pot.base===null?'':String(pot.base);
 
  }
- document.getElementById('teamPotCapacity').textContent=pot.capacity===null?'（鍋未設定）':`（鍋${pot.capacity}個）`;
+ document.getElementById('teamPotCapacity').textContent=pot.capacity===null?'（鍋未設定）':`（鍋${window.PS_NUMBERS.display(pot.capacity)}個）`;
+ const forecast=dailyBaseline(team,state.box,window.PS_CATALOG,document.getElementById('teamCollectionInterval').value,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones(),pot).potForecast;
+ if(forecast.hasSkills){
+  const details=document.createElement('details');details.className='psg-team-pot-forecast';
+  const summary=document.createElement('summary');summary.textContent='鍋の予測';details.append(summary);
+  const projected=dailyPotRecipeCheck(forecast,pot,0,calculatePotCapacity);
+  for(const [i,meal] of projected.entries()){const p=document.createElement('p');p.className='note';p.textContent=`${i+1}食目（起床から${meal.hour}時間） ${meal.capacity===null?'鍋未設定':`約${window.PS_NUMBERS.display(meal.capacity)}個`}`;details.append(p)}
+  const note=document.createElement('p');note.className='note';note.textContent=projected.length?'スキル込みの期待容量。料理で鍋追加をリセットし、上限200では発動を保留します。手入力の容量設定は変更しません。食材の在庫・料理の完成を保証するものではありません。':'食事0回：料理時点の容量は予測しません。';details.append(note);recipes.append(details);
+ }
  const {confirmed,unconfirmed}=teamFoodContext();
  const areaBonus=Math.max(0,Math.min(200,Number(fieldProfile.areaBonuses[fieldProfile.selectedFieldId])||0));
  const areaFactor=1+areaBonus/100;
@@ -50,6 +58,8 @@ function renderTeamFood(){
    const potNumber=document.createElement('span');potNumber.className='psg-team-recipe-pot-number';potNumber.textContent=String(required);potStatus.append('（',potNumber,'個）');potStatus.setAttribute('aria-label',`必要鍋容量 ${required}`);
    potStatus.title=pot.capacity===null?'容量未設定':required<=pot.capacity?'容量内':`容量不足：あと${required-pot.capacity}`;
    potStatus.classList.toggle('is-over-capacity',pot.capacity!==null&&required>pot.capacity);
+   const projected=dailyPotRecipeCheck(forecast,pot,required,calculatePotCapacity);
+   if(forecast.hasSkills&&projected.length)potStatus.title+='。スキル込みの暫定容量達成率：'+projected.map((m,i)=>`${i+1}食目 ${m.fits===null?'未確認':window.PS_NUMBERS.display(m.fits*100)+'%'}`).join('／');
    const ingredients=document.createElement('span');ingredients.className='psg-team-recipe-ingredients';
    for(const item of recipe.ingredients){const tile=document.createElement('span');tile.className='psg-team-recipe-ingredient';tile.title=`${item.name} 1食 ${item.qty}個／3食 ${item.qty*3}個`;tile.setAttribute('aria-label',tile.title);tile.classList.toggle('is-covered',confirmed.has(item.name));const amount=document.createElement('strong');amount.className='psg-team-recipe-ingredient-amount';amount.textContent=`${item.qty}／${item.qty*3}`;tile.append(teamFoodIcon(item.name),amount);ingredients.append(tile)}
    nameLine.append(name,potStatus);copy.append(meta,base);

@@ -36,7 +36,7 @@ function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZone
    else if(s.effectType==='random_ingredients')out.omitted.push('random_ingredients_unspecified');
    else if(s.effectType==='berry_burst')for(const m of teamMembers){const qty=m.id===member.id?r.selfBerries:r.teamBerriesEach;out.reward.berryEnergy+=qty*m.berryEnergyBase*m.favoriteFactor*areaFactor*(m.berryId==='mago'?1+zone/100:1);out.reward.berriesByDonor[m.id]=qty;}
    else if(s.effectType==='extra_help')for(const m of teamMembers){const qty=r.helps/teamMembers.length;out.reward.instantHelps[m.id]=qty;out.reward.berryEnergy+=qty*m.helpYield.berries*m.berryEnergyBase*m.favoriteFactor*areaFactor*(m.berryId==='mago'?1+zone/100:1);for(const [id,n] of Object.entries(m.helpYield.ingredients))add(out.reward.ingredients,id,n*qty);}
-   else if(!['variable_dream_shards','fixed_dream_shards','team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(s.effectType))out.omitted.push('selected_effect_not_connected');
+   else if(!['variable_dream_shards','fixed_dream_shards','team_energy_recovery','ally_energy_recovery','self_energy_recovery','cooking_pot_capacity'].includes(s.effectType))out.omitted.push('selected_effect_not_connected');
    return [out];
   };
   // Adjacent integer counts are an explicit approximation; states stay discrete.
@@ -76,7 +76,7 @@ function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZone
   member.specialDeferred=['minus_cooking_power_up_s','psystrike_berry_zone','nightmare_energy_charge_m','lunar_blessing_energy_for_everyone_s','healing_pulse_energy_cheer_s','nuzzle_energy_cheer_s'].includes(activeId)||['team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(selected?.effectType);
   if(activeId==='psystrike_berry_zone')member.skillOmitted.push('zone_input_fixed');
   else if(member.specialDeferred&&!member.energyLinked)member.skillOmitted.push('recovery_pot_zone_production_not_connected');
-  else if(activeId==='minus_cooking_power_up_s')member.skillOmitted.push('pot_cooking_deferred');
+  else if(activeId==='minus_cooking_power_up_s'&&!member.potLinked)member.skillOmitted.push('pot_cooking_deferred');
   if(activeId==='stockpile_energy_charge_s')member.skillOmitted.push('initial_stockpile_zero_provisional_spit_probability');
   if(activeId==='disguise_berry_burst')member.skillOmitted.push('initial_disguise_eligible_provisional_success_probability');
   member.skillCalculationNote=member.energyLinked?'回復・げんき減少を回収後の収集・発動見込みへ反映。対象とげんきは期待値で近似し、発動保証は未計算。':'特殊スキルの基本効果は暫定モデル。発動回数は既存の予測を使用。';

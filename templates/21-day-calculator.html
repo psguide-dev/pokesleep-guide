@@ -1,5 +1,5 @@
 // Shared daily estimate: collection timeline and team totals.
-function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={}){
+function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},potSettings=null){
  const interval=[1,2,4,8].includes(Number(collectionHours))?Number(collectionHours):4;
  const mealCount=threeMeals===true?3:threeMeals===false?0:Number.isInteger(threeMeals)&&threeMeals>=0&&threeMeals<=3?threeMeals:3;
  const mealTicks=[[],[0],[0,72],[0,36,72]][mealCount];
@@ -13,10 +13,13 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  const items=ids.map(id=>box.find(item=>item.id===id)).filter(Boolean);
  const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,startingEnergy));
  const valid=members.filter(m=>!m.missing);
+ valid.forEach(m=>m.potConfig=dailyPotConfig(m,items.find(i=>i.id===m.id),catalog));
+ const potForecast=dailyCreatePotForecast(potSettings,valid.some(m=>m.potConfig));
  const energyLinked=dailyHasEnergyLink(valid,items,catalog);
  if(energyLinked)valid.forEach(m=>m.energyLinked=true);
  let elapsedTicks=0;
  periods.forEach((hours,periodIndex)=>{
+  for(const tick of mealTicks.filter(t=>t>=elapsedTicks&&t<elapsedTicks+hours*6))dailyPotAtMeal(potForecast,tick/6);
   let teamRecovery=0,allyRecovery=0,bonusHelps=0;const periodTriggers=new Map();
   for(const member of valid){
    let helps=0;
@@ -29,14 +32,17 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
    member.normalHelps=(member.normalHelps||0)+helps;
    const regular=Math.min(helps,member.stats.carry*(goodCamp?1.2:1)/member.averageSize);
    const extra=Math.max(0,helps-regular);
-   const triggers=Number.isFinite(member.stats.skill)&&member.skillName?expectedStoredSkills(regular,member.stats.skill,member.stockLimit):0;
-   member.skillTriggers+=triggers;
+   const triggers=Number.isFinite(member.stats.skill)&&member.skillName?(member.potConfig?dailyPotNewStock(regular,member.stats.skill,member.stockLimit,member.pendingPotStock||0):expectedStoredSkills(regular,member.stats.skill,member.stockLimit)):0;
    periodTriggers.set(member.id,triggers);
-   const effects=dailyCollectionSkills(member,triggers,periodIndex<periods.length-1,items.length);
-   bonusHelps+=effects.bonusHelps;teamRecovery+=effects.teamRecovery;allyRecovery+=effects.allyRecovery;
    for(const slot of member.slots)member.foods.set(slot.name,(member.foods.get(slot.name)||0)+regular*member.chance*slot.qty/member.slots.length);
    member.berries+=regular*(1-member.chance)*member.stats.berryQty+extra*member.stats.berryQty;
    member.overflow+=extra*member.stats.berryQty;
+  }
+  dailyCollectPot(potForecast,valid,periodTriggers);
+  for(const member of valid){
+   const triggers=periodTriggers.get(member.id)||0;member.skillTriggers+=triggers;
+   const effects=dailyCollectionSkills(member,triggers,periodIndex<periods.length-1,items.length);
+   bonusHelps+=effects.bonusHelps;teamRecovery+=effects.teamRecovery;allyRecovery+=effects.allyRecovery;
   }
   // Immediate helps bypass normal carry and never produce further skill rolls.
   // Use skills and collect their products at every collection boundary.
@@ -68,5 +74,5 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  const skillEnergy=ordinarySkillEnergyBase*areaFactor+special.energy;
  const dreamShards=valid.reduce((sum,member)=>sum+(Number.isFinite(member.skillShards)?member.skillTriggers*member.skillShards:0)+(member.specialShards||0),0);
  const randomIngredients=valid.reduce((sum,member)=>sum+member.randomIngredients,0);
- return {members,foods,specialCandy:special.candy,randomIngredients,dreamShards,berryEnergy,skillEnergy,skillEnergyBase,periods,interval,startingEnergy,goodCamp,threeMeals,mealCount,favorites,areaFactor,berryZones};
+ return {members,foods,potForecast,specialCandy:special.candy,randomIngredients,dreamShards,berryEnergy,skillEnergy,skillEnergyBase,periods,interval,startingEnergy,goodCamp,threeMeals,mealCount,favorites,areaFactor,berryZones};
 }

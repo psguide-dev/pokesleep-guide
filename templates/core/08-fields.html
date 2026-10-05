@@ -26,15 +26,16 @@ function calculatePotCapacity(base,event=1,skill=0,sunday=false,camp=false){
  if(!potCapacities.includes(base)||!Number.isFinite(event)||event<=0||!Number.isInteger(skill)||skill<0||skill>200)return null;
  const scaled=event*1000;
  if(Math.abs(scaled-Math.round(scaled))>1e-7||!Number.isSafeInteger(base*Math.round(scaled)))return null;
- const first=Math.floor((base*Math.round(scaled)+500)/1000),subtotal=first*(sunday?2:1)+skill;
- const result=camp?Math.ceil(subtotal*1.5):subtotal;
- return Number.isSafeInteger(result)?result:null;
+ // Same no-intermediate-rounding policy as all prediction calculations.
+ const subtotal=base*event*(sunday?2:1)+skill;
+ const result=subtotal*(camp?1.5:1);
+ return Number.isFinite(result)?result:null;
 }
 function cookingContext(){return {...cookingSettings,camp:teamGoodCamp,capacity:calculatePotCapacity(cookingSettings.base,cookingSettings.event,cookingSettings.skill,cookingSettings.sunday,teamGoodCamp)}}
 function saveCookingSettings(value){
  cookingSettings=normalizeCookingSettings({...cookingSettings,...value});
  try{localStorage.setItem(COOKING_SETTINGS_KEY,JSON.stringify(cookingSettings))}catch{}
- renderTeamFood();window.dispatchEvent(new Event('psg-cooking-settings-change'));
+ teamViewDirty=true;if(state.screen==='home'){renderTeamDay();renderTeamFood()}window.dispatchEvent(new Event('psg-cooking-settings-change'));
 }
 function syncExEffectControls(){
  const isEx=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.mode==='expert';
