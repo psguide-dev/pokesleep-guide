@@ -6,12 +6,10 @@ if(window.PS?.master&&window.PS_CATALOG){
   ...[...Object.values(window.PS_CATALOG.pokemon),...(window.PS_FORMS?.dexEntries||[])].filter(p=>p.dexVisible).sort((a,b)=>Number(a.no)-Number(b.no))
  );
  // The catalog arrives after the controller initializes; generate its filters now.
- window.PS.renderFilters?.();
- window.PS.renderDex?.();
+ window.PS.refreshAssetViews?.();
 }
 })();
 </script>
-
 
 
 
