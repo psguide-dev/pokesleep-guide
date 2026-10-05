@@ -8,6 +8,7 @@ not the upstream Monte Carlo simulator: target and energy correlations are proje
 Existing expected carry occupancy and stock caps remain. Unfinished helps retain their interval.
 Normal teams keep their existing forecast path. Special recovery teams use discrete help completions.
 Meals still use existing fixed times. Guarantees and exact low-energy target preference are omitted.
+Minus activation blocking/retained stock at the pot cap is deferred with pot/cooking integration.
 Pot changes do not feed cooking. Zone is fixed at the user input; predicted accumulation is reserved
 for a future opt-in feature and must never write back to the user's input or saved conditions.
 Manual Mago zone applies; held berry transfer is not counted as an additional reward.
