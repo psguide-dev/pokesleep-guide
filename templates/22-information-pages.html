@@ -1,0 +1,24 @@
+<script id="psg-information-pages">
+(()=>{
+ const shelf=document.getElementById('bookshelfContent');
+ for(const id of ['recipeEvaluationBasis','friendshipReference','dailySupplyReference','swapPredictionBasis'])shelf.append(document.getElementById(id));
+ shelf.append(document.getElementById('cookingReferenceTables').closest('details'));
+ window.PS_PAGE_RENDERERS??={};
+ let ready=false;
+ window.PS_PAGE_RENDERERS.expPage=()=>{
+  if(ready)return;
+  const data=window.PS_CATALOG?.growth,host=document.getElementById('expContent');
+  if(!data){host.textContent='経験値資料は未登録です。';return;}
+  const note=document.createElement('p');note.textContent='登録済み資料を表示しています。育成費用の予測はボックスの個体詳細で確認できます。';host.append(note);
+  const label=document.createElement('label');label.textContent='必要EXPタイプ ';
+  const select=document.createElement('select');select.setAttribute('aria-label','必要EXPタイプ');
+  for(const [type,multiplier] of Object.entries(data.expTypeMultipliers)){const option=document.createElement('option');option.value=type;option.textContent=`${type}（通常の${multiplier}倍）`;select.append(option)}
+  label.append(select);host.append(label);
+  const candy=document.createElement('p');candy.textContent='アメ1個の獲得EXPはレベル・性格により変わります。表は性格無補正の値です。';host.append(candy);
+  const wrap=document.createElement('div');wrap.className='psg-cooking-table-wrap';const table=document.createElement('table');table.className='psg-cooking-table';
+  table.innerHTML='<thead><tr><th scope="col">Lv</th><th scope="col">次Lvまで</th><th scope="col">次Lvの累計EXP</th><th scope="col">アメ1個</th></tr></thead><tbody></tbody>';wrap.append(table);host.append(wrap);
+  const render=()=>{const body=table.tBodies[0];body.replaceChildren();for(const row of data.rows.filter(r=>r.target_level<=data.levelCap)){const tr=document.createElement('tr');const values=[`${row.current_level} → ${row.target_level}`,row.exp_types?.[select.value]?.exp_to_next,row.exp_types?.[select.value]?.cumulative_exp_at_target,row.candy_exp?.neutral];for(const value of values){const td=document.createElement('td');td.textContent=value==null?'未確認':typeof value==='number'?value.toLocaleString('ja-JP'):value;tr.append(td)}body.append(tr)}};
+  select.onchange=render;render();ready=true;
+ };
+})();
+</script>

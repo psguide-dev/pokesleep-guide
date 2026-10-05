@@ -6,12 +6,13 @@ let speed=3600,food=50;
 const ctx={Map,Set,Number,Math,SUBSKILL_LEVELS:[10,25,50,70,80],speciesFor:item=>catalog.pokemon[item.no],teamSpeedContext:()=>({members:new Map([['one',{speed,food,berryQty:1,unknown:[]}]])}),berryEnergyAtLevel:()=>30};
 vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'templates/whistle/01-calculator.html'),'utf8'),ctx);
 const estimate=(options={})=>ctx.whistleEstimate(['one'],[item],catalog,options);
-let r=estimate();assert.equal(r.foods.get('same'),4,'two slots round to 2 each, rather than rounding the merged 3.333 to 3');assert.equal(r.berryCount,3);assert.equal(r.berryEnergy,90);
-r=estimate({favoriteBerries:['berry'],areaBonus:50});assert.equal(r.berryEnergy,270);
-// Individual-slot rounding remains intact for a one-slot and three-slot configuration.
-catalog.pokemon[1].ingredientSlots.pop();r=estimate();assert.equal(r.foods.get('same'),3);
+const close=(a,b)=>assert(Math.abs(a-b)<1e-9,`${a} != ${b}`);
+let r=estimate();close(r.foods.get('same'),10/3);close(r.berryCount,10/3);close(r.berryEnergy,100);
+r=estimate({favoriteBerries:['berry'],areaBonus:50});close(r.berryEnergy,300);
+// Expected quantities remain unrounded for one, two and three slots.
+catalog.pokemon[1].ingredientSlots.pop();r=estimate();close(r.foods.get('same'),10/3);
 catalog.pokemon[1].ingredientSlots.push({unlock:30,candidates:[{name:'second',qty:4}]},{unlock:60,candidates:[{name:'third',qty:6}]});
-item.level=60;item.subskills.push('known');r=estimate();assert.equal(r.foods.get('same'),1);assert.equal(r.foods.get('second'),4);assert.equal(r.foods.get('third'),7);
+item.level=60;item.subskills.push('known');r=estimate();close(r.foods.get('same'),10/9);close(r.foods.get('second'),40/9);close(r.foods.get('third'),20/3);
 // Current energy, collection, camp, meal and skill fields never enter this route.
 assert.deepEqual(estimate({goodCamp:true,initialEnergy:0,collectionHours:8}),estimate({goodCamp:false,initialEnergy:150,collectionHours:1}));
 speed=1800;assert(estimate().berryCount>r.berryCount,'uses team-corrected time');speed=3600;
@@ -21,7 +22,7 @@ item.nature=null;assert(estimate().pendingReasons.length);assert.equal(estimate(
 item.ingredients={};catalog.pokemon[1].ingredientSlots[1].candidates.push({name:'alternative',qty:3});assert(estimate({assumeNeutral:true}).pendingReasons.length);catalog.pokemon[1].ingredientSlots[1].candidates.pop();
 catalog.pokemon[1].dailyCalculationStatus='pending_special_skill';assert(estimate().pendingReasons.length);delete catalog.pokemon[1].dailyCalculationStatus;
 assert(estimate({fieldMode:'ex'}).pendingReasons.length);assert(ctx.whistleEstimate(['missing'],[item],catalog).pendingReasons.length);
-console.log('Whistle: per-slot rounding, one/two/three slots, field energy, independent inputs and unknown-condition hold passed.');
+console.log('Whistle: unrounded aggregation, one/two/three slots, field energy, independent inputs and unknown-condition hold passed.');
 const rows=JSON.parse(fs.readFileSync(path.join(root,'master/research/field-spawn-counts.json'))).fields;
 vm.runInContext(fs.readFileSync(path.join(root,'templates/fields/01-spawn-calculator.html'),'utf8'),ctx);
 assert.equal(Object.values(rows).flat().length,45);assert.equal(Object.values(rows).flat().filter(r=>r.exactThreshold!==null).length,12);

@@ -33,9 +33,9 @@ function syncLevel({refreshEditor=true}={}){
  hydrateSpecialtyIcons(artwork);
  const naturePending=(!item.nature&&!item.mint)||calc.unknown.length;
  const nextRateUnlock=kind=>SUBSKILL_LEVELS.find((unlock,i)=>unlock>item.level&&unlock<=MAX_POKEMON_LEVEL&&SUBSKILLS[item.subskills?.[i]]?.effect===kind);
- const rateNote=(factor,kind)=>{const next=factor===1?nextRateUnlock(kind):null;return next?`推定・Lv.${next}で補正`:`推定・×${factor.toFixed(2)}`};
+ const rateNote=(factor,kind)=>{const next=factor===1?nextRateUnlock(kind):null;return next?`推定・Lv.${next}で補正`:`推定・×${window.PS_NUMBERS.display(factor)}`};
  const fields=[['おてつだい時間',calc.speed,'秒','Lv・個体補正',naturePending],['最大所持数',calc.carry,'','補正反映',false],['食材確率',calc.food,'%',rateNote(calc.foodFactor,'foodRateBonus'),naturePending],['スキル発動確率',calc.skill,'%',rateNote(calc.skillFactor,'skillRateBonus'),naturePending]];
- const renderStat=([title,value,unit,note,pending])=>`<div class="psg-detail-stat" role="button" tabindex="0" aria-label="${title}：押している間、補足を表示"><small>${title}</small><strong>${value==null?'未確認':(unit==='%'?value.toFixed(1):value.toLocaleString())+unit}</strong><em>${value==null?'（基礎データなし）':'（'+(pending?'暫定・':'')+note+'）'}</em></div>`;
+ const renderStat=([title,value,unit,note,pending])=>`<div class="psg-detail-stat" role="button" tabindex="0" aria-label="${title}：押している間、補足を表示"><small>${title}</small><strong>${value==null?'未確認':(unit==='%'?window.PS_NUMBERS.display(value):window.PS_NUMBERS.display(value))+unit}</strong><em>${value==null?'（基礎データなし）':'（'+(pending?'暫定・':'')+note+'）'}</em></div>`;
  document.getElementById('boxSpeed').innerHTML=renderStat(fields[0]);
  document.getElementById('boxStats').innerHTML=fields.slice(1).map(renderStat).join('');
  for(const stat of document.querySelectorAll('#boxDetail .psg-detail-stat')){

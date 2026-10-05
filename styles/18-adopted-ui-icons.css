@@ -1,3 +1,9 @@
 .psg-info-link strong{display:flex;align-items:center;gap:8px}.psg-info-icon{width:36px;height:36px;object-fit:contain;flex:none}.psg-ui-ui{display:inline-block;width:24px;height:24px;object-fit:contain;vertical-align:middle}
 .psg-box-flags .psg-ui-ui{margin:0;transform:none}
 #boxGrid .psg-box-card{position:relative}#boxGrid .psg-box-card-copy{width:100%;box-sizing:border-box;padding-right:0;container-type:inline-size}#boxGrid .psg-box-card-copy b{font-size:min(11px,calc(100cqi / var(--psg-name-chars,5)));line-height:12px;text-overflow:clip}.psg-card-flags{position:absolute;right:1px;top:15px;z-index:3;display:flex;align-items:center;justify-content:center;width:14px;height:14px}.psg-card-flags .psg-ui-ui{display:block;width:14px;height:14px}.psg-box-flags .psg-ui-ui{display:block;width:26px;height:26px;flex:none}
+
+/* Text detail triggers share a right edge; card headings remain full card controls. */
+.screen details:not(.psg-recipe-entry):not(.psg-skill-entry):not(.psg-box-header-menu)>summary{text-align:right;cursor:pointer}
+#dexDetail #skillDetailToggle{margin-left:auto;text-align:right;min-height:32px}
+#expContent select{max-width:100%;margin:8px 0}
+#bookshelfContent>details{margin:12px 0}

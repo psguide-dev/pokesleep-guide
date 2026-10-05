@@ -19,8 +19,8 @@ export function berryUnitEnergy(species,level,{fieldBonusFraction,favoriteMultip
   need(finite(species?.['きのみ基礎エナジー'],1,Infinity),'berryBase');
   need(Number.isInteger(level)&&level>=1&&level<=100,'level','invalid_input');
   need(finite(fieldBonusFraction,0,Infinity)&&[1,2].includes(favoriteMultiplier)&&finite(berryZoneFraction,0,Infinity),'berryEnvironment','invalid_input');
-  const base=Math.round(Math.max(species['きのみ基礎エナジー']+level-1,species['きのみ基礎エナジー']*1.025**(level-1)));
-  return Math.ceil(base*(1+fieldBonusFraction)*(1+berryZoneFraction))*favoriteMultiplier;
+  const base=Math.max(species['きのみ基礎エナジー']+level-1,species['きのみ基礎エナジー']*1.025**(level-1));
+  return base*(1+fieldBonusFraction)*(1+berryZoneFraction)*favoriteMultiplier;
 }
 function prepare(request,solo=false){
   need(request&&typeof request==='object','request');

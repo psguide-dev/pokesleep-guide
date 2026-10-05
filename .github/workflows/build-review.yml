@@ -54,6 +54,10 @@ jobs:
           node tests/check_box_update_paths.cjs
           node tests/check_fragment_assembly.cjs
           node tests/check_daily_calculator.cjs
+          node tests/check_number_policy.cjs
+          node tests/check_evolution_skill_policy.cjs
+          node tests/check_whistle.cjs
+          node tests/check_individual_evaluation.cjs
       - name: Check image-first species and received artwork
         run: |
           node tests/check_image_first.cjs

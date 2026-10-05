@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const base={no:1,name:'base',mainSkillId:'a',evolution:{toNo:2}},target={no:2,name:'target',mainSkillId:'b'};
+const ctx={window:{PS_CATALOG:{skills:{a:{maxLevel:7},b:{maxLevel:8}}}},state:{selected:{skillLevel:2}},boxCatalog:()=>[base,target],speciesKey:p=>String(p.no),boxEsc:String,document:{getElementById:()=>({hidden:false})}};
+vm.createContext(ctx);vm.runInContext(fs.readFileSync('templates/box/04-editor.html','utf8'),ctx);
+const form={elements:{evolution:{options:[{},{}]},skillLevel:{}}};
+ctx.fillBoxEvolution(form,base);
+form.elements.evolution.value='2';form.elements.evolution.onchange();assert.equal(form.elements.skillLevel.value,'8');
+form.elements.evolution.value='1';form.elements.evolution.onchange();assert.equal(form.elements.skillLevel.value,'2');
+ctx.fillBoxSkillLevel(form,target,3);assert.equal(form.elements.skillLevel.value,'3');
+assert.equal(ctx.state.selected.skillLevel,2,'selection preview never changes saved data');
+console.log('Evolution skill policy: target maximum, restore current form and manual adjustment passed.');

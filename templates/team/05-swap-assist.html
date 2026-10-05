@@ -75,13 +75,13 @@ function swapRequest(recipe){
  return {request:{members,teamIds:team.filter(Boolean),collectionHours,demand},candidateIds,rejected};
 }
 function appendSwapNote(host,text){const p=document.createElement('p');p.className='note';p.textContent=text;host.append(p)}
-function mealTimeText(food){return food.hour!==null?`約${food.hour.toFixed(1)}時間`:'24時間超'}
+function mealTimeText(food){return food.hour!==null?`約${window.PS_NUMBERS.display(food.hour)}時間`:'24時間超'}
 function renderMealFoods(host,timing,focus){
  const list=document.createElement('div');list.className='psg-meal-food-times';
  for(const [name,food]of Object.entries(timing.foods)){
   const deficit=Math.max(0,food.required-food.expected);
   const row=document.createElement('button');row.type='button';row.className='psg-meal-food-time'+(name===focus?' is-focus':'');row.setAttribute('aria-pressed',String(name===focus));row.dataset.food=name;
-  row.append(teamFoodIcon(name));const label=document.createElement('span');label.textContent=`${name} ×${food.required}`;const value=document.createElement('strong');value.textContent=deficit>1e-7?`不足 約${deficit.toFixed(1)}個`:'足りる見込み';row.append(label,value);
+  row.append(teamFoodIcon(name));const label=document.createElement('span');label.textContent=`${name} ×${food.required}`;const value=document.createElement('strong');value.textContent=deficit>1e-7?`不足 約${window.PS_NUMBERS.display(deficit)}個`:'足りる見込み';row.append(label,value);
   row.onclick=()=>{mealFocus=name;calculateSwap()};list.append(row);
  }host.append(list);
 }
@@ -114,8 +114,8 @@ async function calculateSwap(){
  for(const option of options){
   const incoming=state.box.find(x=>x.id===option.id),row=document.createElement('div');row.className='psg-swap-option';
   const title=document.createElement('strong');title.textContent=`${incoming.name} Lv.${incoming.level}`;const identity=document.createElement('div');identity.className='psg-supplement-identity';identity.append(teamFace(incoming),title);row.append(identity);
-  appendSwapNote(row,`不足 約${deficit.toFixed(1)}個を補う目安：${mealTimeText(option.food)}`);
-  if(option.food.hour===null)appendSwapNote(row,`単体の24時間予測：約${option.food.expected.toFixed(1)}個`);
+  appendSwapNote(row,`不足 約${window.PS_NUMBERS.display(deficit)}個を補う目安：${mealTimeText(option.food)}`);
+  if(option.food.hour===null)appendSwapNote(row,`単体の24時間予測：約${window.PS_NUMBERS.display(option.food.expected)}個`);
   host.append(row);
  }
  for(const message of input.rejected)appendSwapNote(host,`控えを保留：${message}`);

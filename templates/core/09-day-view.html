@@ -11,10 +11,10 @@ function renderTeamDay(){
  const foodTiles=(foods,summary=false)=>{
   const tiles=document.createElement('div');tiles.className='psg-day-food-list'+(summary?' psg-day-food-summary':'');
   for(const [name,qty] of foods){
-   const tile=document.createElement('span');tile.className='psg-day-food-tile';tile.setAttribute('aria-label',`${name} 約${qty.toFixed(1)}個`);
+   const tile=document.createElement('span');tile.className='psg-day-food-tile';tile.setAttribute('aria-label',`${name} 約${window.PS_NUMBERS.display(qty)}個`);
    tile.append(teamFoodIcon(name));
    const copy=document.createElement('span');const title=document.createElement('small');title.textContent=name;
-   const amount=document.createElement('strong');amount.textContent=`約${qty.toFixed(1)}個`;
+   const amount=document.createElement('strong');amount.textContent=`約${window.PS_NUMBERS.display(qty)}個`;
    copy.append(title,amount);tile.append(copy);tiles.append(tile);
   }
   return tiles;
@@ -31,8 +31,8 @@ function renderTeamDay(){
   columns.append(berryColumn,skillColumn);row.append(columns);
   const berries=document.createElement('span');berries.className='psg-day-member-berries';
   const berry=berryIcon(member.berryName);if(berry){berry.className+=' psg-day-member-icon';berryColumn.append(berry)}
-  const berryAmount=document.createElement('span');berryAmount.textContent=member.missing?'未確認':`約${member.berries.toFixed(1)}個`;
-  if(!member.missing){const overflow=document.createElement('small');overflow.textContent=`（満杯後 約${member.overflow.toFixed(1)}個）`;berryAmount.append(overflow)}
+  const berryAmount=document.createElement('span');berryAmount.textContent=member.missing?'未確認':`約${window.PS_NUMBERS.display(member.berries)}個`;
+  if(!member.missing){const overflow=document.createElement('small');overflow.textContent=`（満杯後 約${window.PS_NUMBERS.display(member.overflow)}個）`;berryAmount.append(overflow)}
   berries.append(berryAmount);berryColumn.append(berries);
   const metric=(column,name,value)=>{
    const line=document.createElement('div');line.className='psg-day-member-metric';
@@ -43,15 +43,15 @@ function renderTeamDay(){
   if(member.missing){
    const reason=document.createElement('p');reason.className='psg-day-member-note';reason.textContent=`未確認：${member.reasons.join('・')}`;row.append(reason);
   }else{
-   metric(berryColumn,'エナジー',`約${Math.round(member.berryEnergy).toLocaleString()}`);
+   metric(berryColumn,'エナジー',`約${window.PS_NUMBERS.display(member.berryEnergy)}`);
    if(member.skillName){
     const individual=state.box.find(item=>item.id===member.id),species=individual?speciesFor(individual,window.PS_CATALOG):null;
     const skill=window.PS_CATALOG.skills?.[species?.mainSkillId];
     const source=window.PS_IMAGE_FILES?.skills?.[skill?.id]||skill?.image;
     if(source){const icon=document.createElement('img');icon.className='psg-day-member-icon';icon.src=source;icon.alt=member.skillName;skillColumn.append(icon)}
-    metric(skillColumn,'スキル',`約${member.skillTriggers.toFixed(1)}回`);
+    metric(skillColumn,'スキル',`約${window.PS_NUMBERS.display(member.skillTriggers)}回`);
     const effect=document.createElement('div');effect.className='psg-day-member-effect';
-    const effectText=member.skillEffectType==='random_ingredients'&&Number.isFinite(member.skillAmount)?`（ランダム食材 約${(member.skillTriggers*member.skillAmount).toFixed(1)}個）`:['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy)?`（エナジー期待値 約${Math.round(member.skillTriggers*member.skillEnergy*result.areaFactor).toLocaleString()}）`:member.skillEffectType==='team_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（チーム各匹＋${member.skillRecovery}）`:member.skillEffectType==='self_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（自分のげんき＋${member.skillRecovery}）`:member.skillEffectType==='ally_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（1匹のげんき＋${member.skillRecovery}・対象は仮配分）`:member.boost&&Number.isFinite(member.skillHelps)?`（同タイプ${member.boost.unique}種・各${member.skillHelps}回／発動・日産に反映）`:member.skillEffectType==='extra_help'&&Number.isFinite(member.skillHelps)?`（即時おてつだい約${(member.skillTriggers*member.skillHelps).toFixed(1)}回・均等配分して日産に反映）`:'';
+    const effectText=member.skillEffectType==='random_ingredients'&&Number.isFinite(member.skillAmount)?`（ランダム食材 約${window.PS_NUMBERS.display((member.skillTriggers*member.skillAmount))}個）`:['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy)?`（エナジー期待値 約${window.PS_NUMBERS.display(member.skillTriggers*member.skillEnergy*result.areaFactor)}）`:member.skillEffectType==='team_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（チーム各匹＋${member.skillRecovery}）`:member.skillEffectType==='self_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（自分のげんき＋${member.skillRecovery}）`:member.skillEffectType==='ally_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（1匹のげんき＋${member.skillRecovery}・対象は仮配分）`:member.boost&&Number.isFinite(member.skillHelps)?`（同タイプ${member.boost.unique}種・各${member.skillHelps}回／発動・日産に反映）`:member.skillEffectType==='extra_help'&&Number.isFinite(member.skillHelps)?`（即時おてつだい約${window.PS_NUMBERS.display((member.skillTriggers*member.skillHelps))}回・均等配分して日産に反映）`:'';
     effect.textContent=effectText||member.skillName;effect.title=member.skillName;skillColumn.append(effect);
    }
    if(member.foods.size)row.append(foodTiles(member.foods));
@@ -60,10 +60,10 @@ function renderTeamDay(){
   list.append(row);
  }
 
- if(result.members.some(member=>!member.missing)){const total=document.createElement('div');total.className='psg-day-total psg-day-energy-total';const amount=document.createElement('strong');amount.className='psg-day-energy-amount';amount.textContent=`エナジー合計 約${Math.round(result.berryEnergy+result.skillEnergy).toLocaleString()}`;const breakdown=document.createElement('span');breakdown.className='psg-day-energy-breakdown';breakdown.textContent=`（きのみ 約${Math.round(result.berryEnergy).toLocaleString()}・スキル 約${Math.round(result.skillEnergy).toLocaleString()}）`;total.append(amount,breakdown);host.append(total)}
+ if(result.members.some(member=>!member.missing)){const total=document.createElement('div');total.className='psg-day-total psg-day-energy-total';const amount=document.createElement('strong');amount.className='psg-day-energy-amount';amount.textContent=`エナジー合計 約${window.PS_NUMBERS.display(result.berryEnergy+result.skillEnergy)}`;const breakdown=document.createElement('span');breakdown.className='psg-day-energy-breakdown';breakdown.textContent=`（きのみ 約${window.PS_NUMBERS.display(result.berryEnergy)}・スキル 約${window.PS_NUMBERS.display(result.skillEnergy)}）`;total.append(amount,breakdown);host.append(total)}
  if(result.foods.size){const total=document.createElement('div');total.className='psg-day-total psg-day-food-total';const label=document.createElement('strong');label.textContent='食材合計';total.append(label,foodTiles(result.foods,true));host.append(total)}
- if(result.randomIngredients>0){const extra=document.createElement('p');extra.className='psg-day-total psg-day-random-total';extra.textContent=`ランダム食材 合計 約${result.randomIngredients.toFixed(1)}個（種類未指定・種類別の合計とは別集計）`;host.append(extra)}
- if(result.dreamShards>0){const total=document.createElement('p');total.className='psg-day-total';total.textContent=`ゆめのかけら期待値：約${Math.round(result.dreamShards).toLocaleString()}個（スキル分・エナジーとは別集計${result.members.some(m=>m.skillEffectType==='variable_dream_shards')?'・ランダムは範囲平均の近似':''}）`;host.append(total)}
+ if(result.randomIngredients>0){const extra=document.createElement('p');extra.className='psg-day-total psg-day-random-total';extra.textContent=`ランダム食材 合計 約${window.PS_NUMBERS.display(result.randomIngredients)}個（種類未指定・種類別の合計とは別集計）`;host.append(extra)}
+ if(result.dreamShards>0){const total=document.createElement('p');total.className='psg-day-total';total.textContent=`ゆめのかけら期待値：約${window.PS_NUMBERS.display(result.dreamShards)}個（スキル分・エナジーとは別集計${result.members.some(m=>m.skillEffectType==='variable_dream_shards')?'・ランダムは範囲平均の近似':''}）`;host.append(total)}
  const details=document.createElement('details');details.className='psg-day-member-details';const summary=document.createElement('summary');summary.textContent='個別の詳細';details.append(summary,list);host.append(details);
 }
 document.getElementById('teamCollectionInterval').onchange=saveDaySettings;

@@ -14,7 +14,7 @@ function expectedStoredSkills(regularHelps,rate,stockLimit){
 }
 function berryEnergyAtLevel(base,level){
  if(!Number.isFinite(base)||!Number.isFinite(level))return null;
- return Math.round(Math.max(base+level-1,base*Math.pow(1.025,level-1)));
+ return Math.max(base+level-1,base*Math.pow(1.025,level-1));
 }
 function mealRecoveryAtEnergy(energy){
  return energy>80?1:energy>70?2:energy>60?3:energy>50?4:energy>40?5:energy>30?6:energy>20?7:energy>10?8:9;

@@ -30,9 +30,9 @@ function whistleEstimate(ids,box,catalog,options={}){
   if(!slots.length)reasons.push('食材枠');
   if(reasons.length){pendingReasons.push(`${item.name}：${[...new Set(reasons)].join('・')}`);continue}
   const helps=10800/(stats.speed*.45),chance=stats.food/100;
-  const berries=Math.floor(helps*(1-chance)*stats.berryQty+.5),foods=new Map();
-  // Round each slot before merging identical ingredient names or individuals.
-  for(const slot of slots)foods.set(slot.name,(foods.get(slot.name)||0)+Math.floor(helps*chance*slot.qty/slots.length+.5));
+  const berries=helps*(1-chance)*stats.berryQty,foods=new Map();
+  // Aggregate unrounded expected quantities across slots and individuals.
+  for(const slot of slots)foods.set(slot.name,(foods.get(slot.name)||0)+helps*chance*slot.qty/slots.length);
   const zoneFactor=1+Math.max(0,Math.min(24,Number(options.berryZones?.[species.berry])||0))/100;
   const berryEnergy=options.favoritesKnown===false?null:berries*berryEnergyAtLevel(berryBase,item.level)*(favorites.has(species.berry)?2:1)*areaFactor*zoneFactor;
   members.push({id:item.id,name:item.name,level:item.level,berryName:species.berry,berries,berryEnergy,foods,helpSeconds:stats.speed});
@@ -42,4 +42,3 @@ function whistleEstimate(ids,box,catalog,options={}){
  const foods=new Map();for(const member of members)for(const [name,qty] of member.foods)foods.set(name,(foods.get(name)||0)+qty);
  return {members,foods,berryCount:members.reduce((sum,m)=>sum+m.berries,0),berryEnergy:members.some(m=>m.berryEnergy===null)?null:members.reduce((sum,m)=>sum+m.berryEnergy,0),pendingReasons};
 }
-

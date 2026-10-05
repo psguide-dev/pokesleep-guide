@@ -60,8 +60,9 @@ function boxEvolutionChoices(p){
 function fillBoxEvolution(form,p){
  form.elements.evolution.innerHTML=boxEvolutionChoices(p).map(x=>`<option value="${speciesKey(x)}">${boxEsc(x.name)}</option>`).join('');
  form.elements.evolution.value=p?speciesKey(p):'';form.elements.evolution.disabled=form.elements.evolution.options.length<2;document.getElementById('boxEvolutionLabel').hidden=form.elements.evolution.options.length<2;
- form.elements.evolution.onchange=()=>{const chosen=boxEvolutionChoices(p).find(x=>speciesKey(x)===form.elements.evolution.value)||p;fillBoxSkillLevel(form,chosen,Number(form.elements.skillLevel.value)||1)};
+ form.elements.evolution.onchange=()=>{const chosen=boxEvolutionChoices(p).find(x=>speciesKey(x)===form.elements.evolution.value)||p;fillBoxSkillLevel(form,chosen,speciesKey(chosen)!==speciesKey(p)?(window.PS_CATALOG?.skills?.[chosen.mainSkillId]?.maxLevel||7):(itemSkillLevelBeforeEvolution(form)))};
 }
+function itemSkillLevelBeforeEvolution(form){return state.selected?.skillLevel||1}
 function fillBoxIngredients(item,p){
  const slots=p?.ingredientSlots||[];
  document.getElementById('boxEditIngredients').innerHTML=[1,30,60].map(unlock=>{

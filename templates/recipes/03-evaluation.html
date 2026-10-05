@@ -29,7 +29,7 @@
   for(const [key,label,digits,suffix] of [['total','総エナジー',0,''],['efficiency','1個あたり',2,''],['amplification','増幅率',4,'倍']]){
    const cell=document.createElement('span');cell.className='psg-recipe-metric';cell.classList.toggle('active',evaluationSort.value===key);
    const caption=document.createElement('small');caption.textContent=label;
-   const value=document.createElement('b');value.textContent=Number.isFinite(data[key])?`${data[key].toLocaleString('ja-JP',{minimumFractionDigits:digits,maximumFractionDigits:digits})}${suffix}`:'未確定';
+   const value=document.createElement('b');value.textContent=Number.isFinite(data[key])?`${window.PS_NUMBERS.display(data[key])}${suffix}`:'未確定';
    cell.append(caption,value);row.append(cell);
   }
   return row;

@@ -1,0 +1,24 @@
+<script id="psg-number-format">
+// Final results and display derive independently from the unrounded estimate.
+window.PS_NUMBERS=(()=>{
+ function fixed(value,digits=1){
+  if(!Number.isFinite(value))return null;
+  const negative=value<0,parts=Math.abs(value).toString().split('e');
+  const coefficient=parts[0],exponent=Number(parts[1]||0),fraction=(coefficient.split('.')[1]||'').length;
+  let integer=BigInt(coefficient.replace('.','')),shift=exponent-fraction+digits;
+  if(shift>=0)integer*=10n**BigInt(shift);
+  else{const divisor=10n**BigInt(-shift);integer=(integer+divisor/2n)/divisor;}
+  const text=integer.toString().padStart(digits+1,'0');
+  return (negative&&integer!==0n?'-':'')+(digits?text.slice(0,-digits)+'.'+text.slice(-digits):text);
+ }
+ const result=value=>Number.isFinite(value)?Number(fixed(value,2)):null;
+ const display=value=>{const text=fixed(value,1);return text===null?'未確認':text.replace(/\B(?=(\d{3})+(?!\d))/g,',');};
+ function finalValues(estimate){
+  const values={};
+  for(const key of ['berryCount','berryEnergy','skillEnergy','skillEnergyBase','randomIngredients','dreamShards'])if(key in estimate)values[key]=result(estimate[key]);
+  if(estimate.foods instanceof Map)values.foods=new Map([...estimate.foods].map(([name,value])=>[name,result(value)]));
+  return values;
+ }
+ return Object.freeze({fixed,result,display,finalValues});
+})();
+</script>

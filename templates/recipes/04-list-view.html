@@ -21,7 +21,7 @@
    const energy=document.createElement('div');energy.className='psg-recipe-energy';
    const max=document.createElement('strong');max.className='psg-recipe-energy-max';
    const shown=energyAtLevel(recipe);
-   max.innerHTML=Number.isFinite(shown?.value)?`<small>${shown.status==='推定'?'推定 ':shown.status==='確認値'?'確認値 ':''}Lv.${shown.level}</small> ${shown.value.toLocaleString()} <span>エナジー</span>`:'エナジー未確認';
+   max.innerHTML=Number.isFinite(shown?.value)?`<small>${shown.status==='推定'?'推定 ':shown.status==='確認値'?'確認値 ':''}Lv.${shown.level}</small> ${shown.status==='推定'?window.PS_NUMBERS.display(shown.value):shown.value.toLocaleString()} <span>エナジー</span>`:'エナジー未確認';
    const min=document.createElement('small');min.className='psg-recipe-energy-min';min.textContent=Number.isFinite(recipe.energy?.min?.value)?`（Lv.${recipe.energy.min.level} ${recipe.energy.min.value.toLocaleString()} エナジー）`:'（Lv.1・Lv.70 未確認）';
    energy.append(max);
    const ingredientRow=document.createElement('div');ingredientRow.className='psg-recipe-ingredients';

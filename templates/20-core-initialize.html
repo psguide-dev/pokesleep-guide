@@ -32,6 +32,6 @@ function refreshAssetViews(){
  if(state.screen==='box')renderBox();
  if(state.screen==='home')renderTeam();
 }
-window.PS={refreshAssetViews,state,master,go,renderDex,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,setGoodCamp:value=>{teamGoodCamp=value===true;saveDaySettings()}};
+window.PS={dailyResult:(...args)=>window.PS_NUMBERS.finalValues(dailyBaseline(...args)),whistleResult:(...args)=>window.PS_NUMBERS.finalValues(whistleEstimate(...args)),refreshAssetViews,state,master,go,renderDex,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,setGoodCamp:value=>{teamGoodCamp=value===true;saveDaySettings()}};
 })();
 </script>

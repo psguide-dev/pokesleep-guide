@@ -9,7 +9,7 @@
   if(observed)return {...observed,status:'確認値'};
   for(const item of [data?.min,data?.max])if(item?.level===level&&Number.isFinite(item.value))return item;
   if(!Number.isFinite(data?.min?.value))return null;
-  return {level,value:Math.floor(data.min.value*(100+selectedLevel()['レベルボーナスpct'])/100),status:'推定'};
+  return {level,value:data.min.value*(100+selectedLevel()['レベルボーナスpct'])/100,status:'推定'};
  }
  function updateLevelFacts(){
   const row=selectedLevel(),next=row['次Lvまでの必要EXP'];
@@ -62,5 +62,5 @@
  addTable('料理Lv1〜70',['Lv','倍率','次Lv EXP','累計EXP'],levelRows.map(r=>[r['レベル'],r['倍率'],r['次Lvまでの必要EXP'],r['Lv1からの累計EXP']]));
  addNote('鍋はイベント乗算・四捨五入 → 日曜乗算 → スキル加算 → キャンプ乗算・四捨五入。0.5は切り上げ。通常容量の上限81。');
  addNote('料理の取得EXPは総エナジー。Lv倍率はレシピ部分に適用し、追加食材には適用しません。上限時の余剰EXP保存、レベルアップした料理への倍率遡及は未確定。');
- addNote('比較Lvは表示用で個別の育成記録ではありません。実測・掲載値のないLvはLv1×倍率を暫定切り捨てした推定値。Lv70掲載値との端数不一致は補正せず保持します。');
+ addNote('比較Lvは表示用で個別の育成記録ではありません。実測・掲載値のないLvはLv1×倍率を丸めずに計算した推定値。Lv70掲載値との端数不一致は補正せず保持します。');
  for(const url of new Set([...cooking.pot['出典'],...cooking.levels['出典']])){const p=document.createElement('p');p.className='note';const link=document.createElement('a');link.href=url;link.textContent=url;link.target='_blank';link.rel='noopener';p.append(link);reference.append(p)}

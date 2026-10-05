@@ -8,11 +8,11 @@ function renderTeamWhistle(){
  const note=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;host.append(p)};
  if(result.pendingReasons.length){note(`計算保留：${result.pendingReasons.join(' ／ ')}`);return}
  if(!result.members.length){note('チームを選ぶとホイッスル1回分の獲得予想を表示します。');return}
- const energy=document.createElement('p');energy.className='psg-day-total';energy.textContent=`きのみ 合計 約${result.berryCount}個 ／ ${result.berryEnergy===null?'エナジーは好物きのみの設定待ち':`エナジー 約${Math.round(result.berryEnergy).toLocaleString()}`}`;host.append(energy);
+ const energy=document.createElement('p');energy.className='psg-day-total';energy.textContent=`きのみ 合計 約${window.PS_NUMBERS.display(result.berryCount)}個 ／ ${result.berryEnergy===null?'エナジーは好物きのみの設定待ち':`エナジー 約${window.PS_NUMBERS.display(result.berryEnergy)}`}`;host.append(energy);
  const tiles=document.createElement('div');tiles.className='psg-day-food-list psg-day-food-summary';
  for(const [name,qty] of result.foods){const tile=document.createElement('span');tile.className='psg-day-food-tile';tile.setAttribute('aria-label',`${name} 約${qty}個`);tile.append(teamFoodIcon(name));const copy=document.createElement('span'),label=document.createElement('small'),amount=document.createElement('strong');label.textContent=name;amount.textContent=`約${qty}個`;copy.append(label,amount);tile.append(copy);tiles.append(tile)}host.append(tiles);
  const details=document.createElement('details'),summary=document.createElement('summary');summary.textContent='個体別のきのみ';details.append(summary);
- for(const member of result.members){const row=document.createElement('p');row.className='note';row.textContent=`${member.name} Lv.${member.level}：${member.berryName} 約${member.berries}個${member.berryEnergy===null?'':`・約${Math.round(member.berryEnergy).toLocaleString()}エナジー`}`;details.append(row)}host.append(details);
+ for(const member of result.members){const row=document.createElement('p');row.className='note';row.textContent=`${member.name} Lv.${member.level}：${member.berryName} 約${window.PS_NUMBERS.display(member.berries)}個${member.berryEnergy===null?'':`・約${window.PS_NUMBERS.display(member.berryEnergy)}エナジー`}`;details.append(row)}host.append(details);
 
 }
 
@@ -41,7 +41,7 @@ function renderWhistleRecommendation(catalog,options){
  if(!recommendation.ids.length){note.textContent=recommendation.reason;host.append(note);return}
  const result=recommendation.result,total=document.createElement('p');total.className='psg-day-total';
  total.textContent='ホイッスル1回の獲得予想';host.append(total);
- for(const target of recommendation.targets||[{name:'berry'}]){const row=document.createElement('p');row.className='note';const amount=target.name==='berry'?result.berryEnergy:result.foods.get(target.name)||0;row.textContent=`${target.name==='berry'?'きのみエナジー':target.name}：約${Math.round(amount).toLocaleString()}${target.name==='berry'?'':'個'}${berryMode?'':`（割合${target.weight}）`}`;host.append(row)}
+ for(const target of recommendation.targets||[{name:'berry'}]){const row=document.createElement('p');row.className='note';const amount=target.name==='berry'?result.berryEnergy:result.foods.get(target.name)||0;row.textContent=`${target.name==='berry'?'きのみエナジー':target.name}：約${window.PS_NUMBERS.display(amount)}${target.name==='berry'?'':'個'}${berryMode?'':`（割合${target.weight}）`}`;host.append(row)}
 
  const members=document.createElement('div');members.className='psg-whistle-recommend-members';
  for(const id of recommendation.ids){const item=state.box.find(x=>x.id===id),card=document.createElement('div'),name=document.createElement('small');name.textContent=`${cardDisplayName(item.name)} Lv.${item.level}`;card.append(teamFace(item),name);members.append(card)}host.append(members);

@@ -7,7 +7,7 @@
   for(const hours of [1,3,6])for(const meals of [0,1]){const option=document.createElement('option');option.value=`collect${hours}h_meals${meals}`;option.textContent=`回収${hours}時間・料理回復${meals?'あり':'なし'}${hours===3&&!meals?'（基準）':''}`;select.append(option)}select.value=supplyScenario;label.append(select);parent.append(label);scenarioControls.push(select);
   select.addEventListener('change',()=>{supplyScenario=select.value;for(const control of scenarioControls)control.value=supplyScenario;preserveRecipeDetails(()=>{});renderDailyTiers()});
  }
- const supplyNumber=value=>Number.isFinite(value)?value.toLocaleString('ja-JP',{minimumFractionDigits:2,maximumFractionDigits:2}):'未対応';
+ const supplyNumber=value=>Number.isFinite(value)?window.PS_NUMBERS.display(value):'未対応';
  function supplyBurden(recipe){
   const data=currentSupply().burdens[supplyLevel.value]?.[recipe.id],scale=Number(supplyMeals.value)/3;
   return {dedicated:Number.isFinite(data?.dedicated)?data.dedicated*scale:null,relaxed:Number.isFinite(data?.relaxed)?data.relaxed*scale:null,bottleneck:data?.bottleneck};

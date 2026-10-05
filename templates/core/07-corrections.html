@@ -32,8 +32,8 @@ function individualCorrections(item,p,teamSpeedReduction=0){
  const speedReduction=Math.min(.35,sum('speedReduction')+teamSpeedReduction);
  const ribbon=individualRibbon(item,p);
  const speedBase=Number.isFinite(p?.help)&&ribbon.time!==null?p.help*(1-(item.level-1)*.002)*natureFactor('speed')*ribbon.time:null;
- const soloSpeed=speedBase==null?null:Math.floor(speedBase*(1-soloSpeedReduction));
- const speed=speedBase==null?null:Math.floor(speedBase*(1-speedReduction));
+ const soloSpeed=speedBase==null?null:speedBase*(1-soloSpeedReduction);
+ const speed=speedBase==null?null:speedBase*(1-speedReduction);
  const foodFactor=natureFactor('food')*(1+sum('foodRateBonus'));
  const skillFactor=natureFactor('skill')*(1+sum('skillRateBonus'));
  const carry=Number.isFinite(p?.carry)&&ribbon.capacity!==null?p.carry+sum('carryBonus')+ribbon.capacity:null;

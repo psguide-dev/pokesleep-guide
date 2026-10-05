@@ -2,15 +2,15 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('nod
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const ctx={window:{PS_CATALOG:{natures:JSON.parse(read('master/natures/data.json')),subskills:JSON.parse(read('master/subskills/data.json'))}},boxEsc:String};
 if(!Array.isArray(ctx.window.PS_CATALOG.subskills))ctx.window.PS_CATALOG.subskills=ctx.window.PS_CATALOG.subskills.records;
-vm.createContext(ctx);vm.runInContext(read('templates/core/07-corrections.html')+read('templates/core/10-individual-evaluation.html'),ctx);
+vm.createContext(ctx);vm.runInContext(read('templates/00-number-format.html').replace(/<\/?script[^>]*>/g,''),ctx);vm.runInContext(read('templates/core/07-corrections.html')+read('templates/core/10-individual-evaluation.html'),ctx);
 ctx.p={no:1,help:3600,carry:10,foodRate:20,skillRate:5,berryQty:2,specialty:'きのみ'};
 const run=(item,fn='individualOpportunities')=>{ctx.item=item;return vm.runInContext(`${fn}(item,p)`,ctx)};
 const base={level:10,nature:'がんばりや',subskills:['最大所持数アップS']},a=run(base);
-assert.equal(a.berry,3600/3535*.8*2);assert(Math.abs(a.food-3600/3535*.2)<1e-12);
+assert.equal(a.berry,3600/(3600*.982)*.8*2);assert(Math.abs(a.food-3600/(3600*.982)*.2)<1e-12);
 assert(run({...base,subskills:['きのみの数S']}).berry>a.berry);
 assert(run({...base,subskills:['食材確率アップS']}).food>a.food);
 assert(run({...base,subskills:['スキル確率アップS']}).skill>a.skill);
-const hb=run({...base,subskills:['おてつだいボーナス']});assert(Math.abs(hb.food-3600/Math.floor(3600*.982*.95)*.2)<1e-12);
+const hb=run({...base,subskills:['おてつだいボーナス']});assert(Math.abs(hb.food-3600/(3600*.982*.95)*.2)<1e-12);
 assert.equal(run({...base,subskills:['最大所持数アップS','きのみの数S']}).berry,a.berry);
 assert.equal(run({...base,skillLevel:8}).skill,a.skill);
 assert(run({...base,nature:''},'individualEvaluation').reasons.length);

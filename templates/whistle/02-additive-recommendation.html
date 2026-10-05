@@ -1,5 +1,5 @@
 // Exact additive optimization for each attainable team helping-bonus total.
-// Individual yields are rounded by whistleEstimate; no solo top-five heuristic.
+// Individual yields remain unrounded in whistleEstimate; no solo top-five heuristic.
 function whistleRecommend(box,catalog,options={},target='berry',maxSize=5){
  const unique=[...new Map(box.map(item=>[item.id,item])).values()],excluded=[],candidates=[];
  if(options.fieldMode==='ex')return {ids:[],excluded,reason:'EXフィールドの補正は未対応です。'};
@@ -51,4 +51,3 @@ function whistleRecommendWeighted(box,catalog,options,targets){
  const recommendation=whistleRecommend(box,catalog,options,normalized);
  recommendation.targets=normalized;return recommendation;
 }
-

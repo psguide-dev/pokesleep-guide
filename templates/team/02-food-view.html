@@ -41,9 +41,9 @@ function renderTeamFood(){
    const meta=document.createElement('span');meta.className='psg-team-recipe-meta';const verified=recipe.energy?.max,shown=verified||[...(recipe.energy?.observed||[])].sort((a,b)=>b.level-a.level)[0];if(Number.isFinite(shown?.value)){
     const level=document.createElement('span');level.className='psg-team-recipe-level';
     const lv=document.createElement('small');lv.textContent='Lv.';const n=document.createElement('strong');n.textContent=String(shown.level);level.append(lv,n);
-    const energy=document.createElement('strong');energy.textContent=`${Math.round(shown.value*areaFactor).toLocaleString()} エナジー`;meta.append(level,energy);
+    const energy=document.createElement('strong');energy.textContent=`${window.PS_NUMBERS.display(shown.value*areaFactor)} エナジー`;meta.append(level,energy);
    }else meta.textContent='エナジー未確認';meta.title='選択中フィールドのFBを反映。追加食材・大成功の効果は含みません。';
-   const base=document.createElement('span');base.className='psg-team-recipe-base-energy';if(Number.isFinite(shown?.value)){const label=document.createElement('span');label.textContent='（基礎';const value=document.createElement('span');value.textContent=`${Math.round(shown.value).toLocaleString()} エナジー）`;base.append(label,value)}
+   const base=document.createElement('span');base.className='psg-team-recipe-base-energy';if(Number.isFinite(shown?.value)){const label=document.createElement('span');label.textContent='（基礎';const value=document.createElement('span');value.textContent=`${window.PS_NUMBERS.display(shown.value)} エナジー）`;base.append(label,value)}
    const status=document.createElement('span');status.className=`psg-team-recipe-status ${missing.length?'is-unconfirmed':'is-covered'}`;
    status.textContent=!team.some(Boolean)?'チーム未設定':missing.length?`未確認：${missing.map(item=>item.name).join('・')}`:'食材の種類が揃う';
    const required=recipe.ingredients.reduce((sum,item)=>sum+item.qty,0),potStatus=document.createElement('span');potStatus.className='psg-team-recipe-pot';

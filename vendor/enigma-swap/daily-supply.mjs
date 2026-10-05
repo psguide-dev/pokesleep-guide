@@ -58,8 +58,8 @@ export function modifiers(species, individual, context={}) {
   requireInput(finite(species['食材確率推定pct'],0,100),'species.ingredientProbability');
   requireInput(Number.isInteger(species['きのみ個数']) && species['きのみ個数']>0,'species.berryCount');
   const base=species['基準おてつだい時間秒']*(1-.002*(i.level-1))*nature.time*rib.time;
-  const individualSeconds=Math.floor(base*(1-Math.min(.35,sum('speed'))));
-  const teamSeconds=Math.floor(base*(1-Math.min(.35,sum('speed')+.05*teamBonus)));
+  const individualSeconds=base*(1-Math.min(.35,sum('speed')));
+  const teamSeconds=base*(1-Math.min(.35,sum('speed')+.05*teamBonus));
   const ingredientProbability=species['食材確率推定pct']/100*nature.ingredient*(1+sum('ingredient'));
   requireInput(ingredientProbability<=1,'ingredientProbability>1','unsupported');
   return {individualSeconds,teamSeconds,ingredientProbability,
