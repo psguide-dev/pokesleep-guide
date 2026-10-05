@@ -69,7 +69,8 @@
   for(let y=0;y<height;y++){
    let count=0;for(let x=0;x<width;x++){
     const i=y*width+x,r=pixels[4*i],g=pixels[4*i+1],b=pixels[4*i+2];
-    mask[i]=g>180&&r>180&&(b<190||r+20<b&&b>225)?1:0;
+    // Locked blue cards are nearly white, but retain a blue/green tint.
+    mask[i]=g>180&&r>180&&(b<190||r+10<b&&g>r+5&&b>225)?1:0;
     if(g>150&&g>r*1.25&&g>b*1.2)count++;
    }
    if(count>width*.5)green.push(y);

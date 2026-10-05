@@ -32,6 +32,9 @@ rectangle(24,365,430,26,[30,210,90]);rectangle(24,815,430,26,[30,210,90]);
 rectangle(36,565,188,44,[250,235,140]);rectangle(255,565,188,44,[195,235,255]);rectangle(36,643,188,44,[195,235,255]);
 const regions=reader.regionsFromPixels(pixels,480,1040);assert.equal(regions.filter(r=>r.kind==='subskill').length,5);assert.ok(regions.some(r=>r.kind==='nature'));assert.ok(regions.some(r=>r.kind==='main'));
 assert.equal(regions.find(r=>r.index===4).y,717);assert.equal(reader.regionsFromPixels(new Uint8ClampedArray(480*1040*4).fill(255),480,1040).length,0,'no grid guessed on a different screenshot');
+// Lv.14: only the first card is unlocked; pale locked blue still anchors column 2.
+rectangle(255,565,188,44,[239,252,254]);
+assert.equal(reader.regionsFromPixels(pixels,480,1040).filter(r=>r.kind==='subskill').length,5,'pale locked card completes the validated grid');
 // Exercise the production save validation with catalog-backed options, without touching storage.
 const p={no:1,name:'フシギダネ',specialty:'食材',ingredientSlots:[{unlock:1,candidates:[{name:'あまいミツ'}]},{unlock:30,candidates:[{name:'あまいミツ'},{name:'あんみんトマト'}]}],mainSkillId:'food'};
 const saveCtx=vm.createContext({boxCatalog:()=>[p],speciesKey:x=>x.speciesId||`${String(x.no).padStart(4,'0')}_default`,MAX_POKEMON_LEVEL:70,SUBSKILL_LEVELS:dictionary.levels,SUBSKILL_NAMES:dictionary.subskills,NATURE_EFFECTS:{いじっぱり:{}},defaultIndividualRole:()=> '食材',window:{PS_CATALOG:{skills:{food:{maxLevel:7}}}}});
