@@ -1,6 +1,6 @@
 // New individuals only: reading/reviewing screenshots never changes saved Box data.
 const imageDialog=document.getElementById('boxImageDialog'),imageForm=document.getElementById('boxImageForm'),imageFiles=document.getElementById('boxImageFiles'),imageRead=document.getElementById('boxImageRead'),imageStop=document.getElementById('boxImageStop'),imageStatus=document.getElementById('boxImageStatus');
-let imageEpoch=0,imageWorker=null,imageBusy=false,imageURLs=[],imageWatchdog=null;
+let imageEpoch=0,imageWorker=null,imageBusy=false,imageURLs=[],imageWatchdog=null,imageFoodChoices=[],imageReadFoods=[];
 const imageOptions=(select,values,empty='未確認')=>{
  select.replaceChildren();const option=document.createElement('option');option.value='';option.textContent=empty;select.append(option);
  for(const value of values){const option=document.createElement('option');option.value=typeof value==='string'?value:value.value;option.textContent=typeof value==='string'?value:value.label;select.append(option)}
@@ -16,6 +16,7 @@ function fillImageSpeciesFields(){
   imageOptions(select,candidates.map(item=>({value:item.name,label:`${item.name} ×${item.qty}`})));
   if(candidates.some(item=>item.name===prior[level]))select.value=prior[level];
   else if(candidates.length===1&&!p?.mythicalSettings)select.value=candidates[0].name;
+  else if(candidates.some(item=>item.name===imageFoodChoices[[1,30,60].indexOf(level)]))select.value=imageFoodChoices[[1,30,60].indexOf(level)];
   label.append(select);host.append(label);
  }
  const skill=imageForm.elements.skillLevel,old=skill.value;
@@ -33,6 +34,7 @@ function stopImageRead(message='読み取りを中止しました。'){
 }
 function clearImagePreviews(){imageURLs.forEach(url=>URL.revokeObjectURL(url));imageURLs=[];document.getElementById('boxImagePreviews').replaceChildren()}
 function setupImageForm(){
+ imageFoodChoices=[];imageReadFoods=[];
  imageForm.reset();imageForm.hidden=true;document.getElementById('boxImageText').value='';
  document.getElementById('boxImageMessage').textContent='';document.getElementById('boxImageConflicts').textContent='';document.getElementById('boxImageCandidates').textContent='';
  imageOptions(imageForm.elements.species,boxCatalog().map(p=>({value:speciesKey(p),label:`No.${String(p.no).padStart(3,'0')} ${p.name}`})),'選択してください');
@@ -44,14 +46,15 @@ function setupImageForm(){
  });
  fillImageSpeciesFields();
 }
-function parseImageTexts(texts,regions=[]){
+function parseImageTexts(texts,regions=[],foods=[]){
  const dictionary={species:boxCatalog(),natures:Object.keys(NATURE_EFFECTS),subskills:SUBSKILL_NAMES,levels:SUBSKILL_LEVELS};
- return window.PS_IMAGE_READER.merge(texts.map((text,i)=>window.PS_IMAGE_READER.parse(text,dictionary,regions[i]||[])));
+ const result=window.PS_IMAGE_READER.merge(texts.map((text,i)=>window.PS_IMAGE_READER.parse(text,dictionary,regions[i]||[])));
+ const choices=window.PS_INGREDIENT_READER.mergeChoices(foods);result.ingredients=choices.ingredients;result.conflicts.push(...choices.conflicts);return result;
 }
 function applyImageReading(result){
  imageForm.hidden=false;imageForm.elements.species.value=result.speciesId||'';
  imageForm.elements.level.value=Number.isInteger(result.level)&&result.level>=1&&result.level<=MAX_POKEMON_LEVEL?result.level:'';
- imageForm.elements.nature.value=result.nature||'';fillImageSpeciesFields();
+ imageForm.elements.nature.value=result.nature||'';imageFoodChoices=result.ingredients||[];fillImageSpeciesFields();
  const skill=imageForm.elements.skillLevel;
  skill.value=[...skill.options].some(option=>option.value===String(result.skillLevel))?String(result.skillLevel):'';
  result.subskills.forEach((name,i)=>{imageForm.elements[`sub-${i}`].value=name||''});
@@ -82,7 +85,7 @@ imageFiles.onchange=()=>{
 };
 imageRead.onclick=async()=>{
  if(imageBusy||!imageFiles.files.length)return;
- const token=++imageEpoch,files=[...imageFiles.files],texts=[],readRegions=[];let worker=null;
+ const token=++imageEpoch,files=[...imageFiles.files],texts=[],readRegions=[],readFoods=[];let worker=null;
  imageForm.hidden=true;imageBusyState(true);imageStatus.textContent='読み取り機能を準備しています…';
  imageWatchdog=setTimeout(()=>{if(token===imageEpoch)stopImageRead('読み取りがタイムアウトしました。枚数を減らして再試行してください。')},180000);
  try{
@@ -104,12 +107,13 @@ imageRead.onclick=async()=>{
      try{await worker.setParameters({tessedit_pageseg_mode:region.kind==='main'?engine.PSM.SPARSE_TEXT:engine.PSM.SINGLE_LINE});const part=await worker.recognize(cropped);if(token!==imageEpoch)return;extra.push({...region,text:part.data.text||''})}
      finally{cropped.width=cropped.height=1}
     }
-    texts.push(result.data.text||'');readRegions.push(extra);
+    let foods=[];try{foods=await window.PS_INGREDIENT_READER.read(canvas)}catch{}if(token!==imageEpoch)return;
+    texts.push(result.data.text||'');readRegions.push(extra);readFoods.push(foods);
    }
    finally{canvas.width=canvas.height=1}
   }
   if(token!==imageEpoch)return;
-  document.getElementById('boxImageText').value=texts.map((text,i)=>text+readRegions[i].map(r=>`\n[${r.kind==='subskill'?`Lv.${SUBSKILL_LEVELS[r.index]} サブスキル`:r.kind==='nature'?'性格':'メインスキル'}]\n${r.text}`).join('')).join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions));
+  imageReadFoods=readFoods;document.getElementById('boxImageText').value=texts.map((text,i)=>text+readRegions[i].map(r=>`\n[${r.kind==='subskill'?`Lv.${SUBSKILL_LEVELS[r.index]} サブスキル`:r.kind==='nature'?'性格':'メインスキル'}]\n${r.text}`).join('')).join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions,readFoods));
   imageStatus.textContent=texts.some(text=>text.trim())?'読み取りが終わりました。確認後に登録してください。':'文字を読み取れませんでした。画像を確認するか、各項目を選んで登録できます。';
  }catch(error){if(token===imageEpoch)imageStatus.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
  finally{
@@ -117,7 +121,7 @@ imageRead.onclick=async()=>{
   if(token===imageEpoch){imageWorker=null;clearTimeout(imageWatchdog);imageWatchdog=null;imageBusyState(false)}
  }
 };
-document.getElementById('boxImageReparse').onclick=()=>{if(!imageBusy)applyImageReading(parseImageTexts(document.getElementById('boxImageText').value.split('\n--- 画像 ---\n')))};
+document.getElementById('boxImageReparse').onclick=()=>{if(!imageBusy)applyImageReading(parseImageTexts(document.getElementById('boxImageText').value.split('\n--- 画像 ---\n'),[],imageReadFoods))};
 function validatedImageIndividual(data,p){
  if(!p||!boxCatalog().some(x=>speciesKey(x)===speciesKey(p)))return {error:'ポケモンを選んでください。'};
  const level=Number(data.get('level')),skillLevel=Number(data.get('skillLevel'));

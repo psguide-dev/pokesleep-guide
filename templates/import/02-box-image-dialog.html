@@ -6,7 +6,7 @@
  <div class="psg-image-actions"><button type="button" id="boxImageRead" class="btn primary" disabled>読み取る</button><button type="button" id="boxImageStop" class="btn" hidden>中止</button></div>
  <p id="boxImageStatus" role="status" aria-live="polite">画像は端末内で処理します。初回は読み取りデータを取得します。</p>
  <form id="boxImageForm" hidden>
-  <p>画像と照らし合わせて確認してください。食材アイコンは手動で選択します。</p>
+  <p>画像と照らし合わせて確認してください。判定できない食材は手動で選択してください。</p>
   <p id="boxImageConflicts" role="alert"></p>
   <div class="psg-image-fields"><label>ポケモン（姿・衣装も確認）<select name="species" id="boxImageSpecies" required></select></label><label>レベル<input name="level" type="number" min="1" max="70" step="1" required inputmode="numeric"></label></div>
   <div id="boxImageIngredients" class="psg-image-fields"></div>

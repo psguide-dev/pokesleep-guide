@@ -1,0 +1,47 @@
+<script id="psg-ingredient-reader">
+// Compare compact, contrast-normalized icon fingerprints on the device.
+// Reference screenshots are not shipped; only small numeric fingerprints are.
+(()=>{
+ function locate(pixels,width,height){
+  const limit=Math.min(height,Math.floor(width*.85)),size=width*limit,mask=new Uint8Array(size),queue=new Int32Array(size),boxes=[];
+  for(let i=0;i<size;i++){const r=pixels[i*4],g=pixels[i*4+1],b=pixels[i*4+2];mask[i]=r>245&&g>240&&b>195&&b<245?1:0}
+  for(let start=0;start<size;start++){
+   if(mask[start]!==1)continue;let head=0,tail=1;queue[0]=start;mask[start]=2;let x0=width,y0=limit,x1=0,y1=0;
+   while(head<tail){const i=queue[head++],x=i%width,y=Math.floor(i/width);x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);
+    for(const next of [x?i-1:-1,x<width-1?i+1:-1,y?i-width:-1,y<limit-1?i+width:-1])if(next>=0&&mask[next]===1){mask[next]=2;queue[tail++]=next}
+   }
+   const w=x1-x0+1,h=y1-y0+1;if(w>width*.12&&w<width*.15&&h>width*.12&&h<width*.15&&y0>width*.18&&tail>w*h*.20)boxes.push({x:x0,y:y0,width:w,height:h});
+  }
+  for(const middle of boxes.filter(b=>b.x>width*.57&&b.x<width*.62).sort((a,b)=>a.y-b.y)){
+   const right=boxes.find(b=>b.x>width*.74&&b.x<width*.78&&Math.abs(b.y-middle.y)<width*.008&&Math.abs(b.width-middle.width)<width*.01);
+   if(right)return [null,middle,right];
+  }
+  return [];
+ }
+ function fingerprint(pixels,width,height,box){
+  const x0=box.x+box.width*.10,y0=box.y+box.height*.10,w=box.width*.80,h=box.height*.76,values=[];
+  for(let y=0;y<32;y++)for(let x=0;x<32;x++){
+   let sum=0,count=0;for(let yy=Math.floor(y0+y*h/32);yy<Math.ceil(y0+(y+1)*h/32);yy++)for(let xx=Math.floor(x0+x*w/32);xx<Math.ceil(x0+(x+1)*w/32);xx++){
+    if(xx<0||yy<0||xx>=width||yy>=height)continue;const i=(yy*width+xx)*4;sum+=Math.max(0,250-(pixels[i]*.299+pixels[i+1]*.587+pixels[i+2]*.114));count++;
+   }values.push(count?sum/count:0);
+  }
+  const peak=[...values].sort((a,b)=>a-b)[Math.floor(values.length*.90)];
+  return peak<5?null:values.map(v=>Math.round(Math.min(1,v/peak)*255));
+ }
+ function choose(feature,references){
+  if(!feature)return null;
+  const scores=references.map(ref=>{let dot=0,a=0,b=0;for(let i=0;i<feature.length;i++){dot+=feature[i]*ref.values[i];a+=feature[i]**2;b+=ref.values[i]**2}return {name:ref.name,score:a&&b?dot/Math.sqrt(a*b):0}}).sort((a,b)=>b.score-a.score);
+  return scores[0]?.score>=.95&&scores[0].score-(scores[1]?.score||0)>=.06?scores[0].name:null;
+ }
+ let referencePromise=null;
+ async function read(canvas){
+  if(!referencePromise)referencePromise=fetch('assets/import/ingredient-fingerprints.json').then(r=>{if(!r.ok)throw Error('食材見本を読み込めませんでした。');return r.json()}).catch(error=>{referencePromise=null;throw error});
+  const refs=await referencePromise,context=canvas.getContext('2d',{willReadFrequently:true}),pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
+  return locate(pixels,canvas.width,canvas.height).map(box=>box?choose(fingerprint(pixels,canvas.width,canvas.height,box),refs):null);
+ }
+ function mergeChoices(readings){
+  const conflicts=[],ingredients=[1,30,60].map((level,i)=>{const names=[...new Set(readings.map(r=>r[i]).filter(Boolean))];if(names.length>1)conflicts.push(`Lv.${level} 食材`);return names.length===1?names[0]:null});return {ingredients,conflicts};
+ }
+ window.PS_INGREDIENT_READER={locate,fingerprint,choose,read,mergeChoices};
+})();
+</script>

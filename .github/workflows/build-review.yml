@@ -54,6 +54,7 @@ jobs:
           node tests/check_saved_teams.cjs
           node tests/check_box_update_paths.cjs
           node tests/check_image_import.cjs
+          node tests/check_ingredient_import.cjs
           node tests/check_fragment_assembly.cjs
           node tests/check_daily_calculator.cjs
           node tests/check_special_skills.cjs
