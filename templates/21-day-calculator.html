@@ -1,5 +1,5 @@
 // Shared daily estimate: collection timeline and team totals.
-function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},potSettings=null){
+function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},potSettings=null,memberStartingEnergies={}){
  const interval=[1,2,4,8].includes(Number(collectionHours))?Number(collectionHours):4;
  const mealCount=threeMeals===true?3:threeMeals===false?0:Number.isInteger(threeMeals)&&threeMeals>=0&&threeMeals<=3?threeMeals:3;
  const mealTicks=[[],[0],[0,72],[0,36,72]][mealCount];
@@ -11,7 +11,7 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  const periods=[];for(let h=0;h<16;h+=interval)periods.push(Math.min(interval,16-h));
  periods.push(8); // No collection during sleep; collect at wake-up.
  const items=ids.map(id=>box.find(item=>item.id===id)).filter(Boolean);
- const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,startingEnergy));
+ const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,Number.isFinite(memberStartingEnergies[item.id])?Math.max(0,Math.min(150,memberStartingEnergies[item.id])):startingEnergy));
  const valid=members.filter(m=>!m.missing);
  valid.forEach(m=>m.potConfig=dailyPotConfig(m,items.find(i=>i.id===m.id),catalog));
  const potForecast=dailyCreatePotForecast(potSettings,valid.some(m=>m.potConfig));

@@ -1,0 +1,26 @@
+// Full-day replacement comparison, not a duration search or an inventory prediction.
+function dailySwapCompatible(ids,box,catalog){
+ if(ids.length!==5||new Set(ids).size!==5)return false;
+ const special=[];
+ for(const id of ids){
+  const item=box.find(x=>x.id===id),species=speciesFor(item,catalog);if(!item||!species)return false;
+  if(species.specialTeamLimited){if(!specialTeamCompatible(species,special))return false;special.push(species)}
+ }
+ return true;
+}
+function dailySwapForecast(request,ids=request.ids){
+ if(!dailySwapCompatible(ids,request.box,request.catalog))return {missing:true,reasons:['編成制限・個体の重複']};
+ const r=dailyBaseline(ids,request.box,request.catalog,request.interval,request.energy,request.camp,request.meals,request.favorites,request.areaBonus,request.zones,request.pot,request.energies);
+ const pending=r.members.filter(m=>m.missing);
+ if(pending.length)return {missing:true,reasons:pending.map(m=>`${m.name}：${(m.reasons||['入力']).join('・')}`)};
+ return r;
+}
+function dailySwapDifference(before,after,demand){
+ const foods={};let deficit=0;
+ for(const [name,required] of Object.entries(demand)){
+  const current=before.foods.get(name)||0,expected=after.foods.get(name)||0;
+  foods[name]={required,expected,delta:expected-current,deficit:Math.max(0,required-expected)};
+  deficit+=foods[name].deficit;
+ }
+ return {foods,deficit,energyDelta:after.berryEnergy+after.skillEnergy-before.berryEnergy-before.skillEnergy};
+}

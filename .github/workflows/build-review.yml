@@ -58,6 +58,7 @@ jobs:
           node tests/check_special_skills.cjs
           node tests/check_energy_feedback.cjs
           node tests/check_pot_feedback.cjs
+          node tests/check_swap_comparison.cjs
           node tests/check_number_policy.cjs
           node tests/check_evolution_skill_policy.cjs
           node tests/check_whistle.cjs
