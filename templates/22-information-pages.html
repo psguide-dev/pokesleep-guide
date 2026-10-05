@@ -2,7 +2,7 @@
 (()=>{
  window.PS_BOOKSHELF={openReference(id){
   const reference=document.getElementById(id);if(!reference)return;
-  go('bookshelfPage');
+  window.PS.go('bookshelfPage');
   for(let node=reference;node&&node.id!=='bookshelfContent';node=node.parentElement)if(node.tagName==='DETAILS')node.open=true;
   reference.scrollIntoView({block:'start'});
  }};
