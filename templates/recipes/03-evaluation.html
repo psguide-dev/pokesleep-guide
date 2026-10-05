@@ -52,7 +52,7 @@
  }));
  evaluationSort.addEventListener('change',()=>preserveRecipeDetails(()=>{}));
  document.getElementById('recipeEvaluationBasisLink').addEventListener('click',()=>{
-  window.PS?.go('info');const section=document.getElementById('recipeEvaluationBasis');section.open=true;section.scrollIntoView({block:'start'});
+  window.PS_BOOKSHELF.openReference('recipeEvaluationBasis');
  });
  const basis=document.getElementById('recipeEvaluationBasisContent');
  const basisText=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;basis.append(p)};

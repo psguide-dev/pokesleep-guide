@@ -111,4 +111,4 @@ async function calculateSwap(){
 for(const id of ['swapRecipe','swapAssumeSubskills'])swapUI(id).onchange=()=>{mealFocus=null;invalidateSwap()};
 swapUI('swapCalculate').onclick=calculateSwap;
 swapUI('swapCancel').onclick=()=>swapAbort?.abort();
-swapUI('swapBasisLink').onclick=()=>{go('info');const details=swapUI('swapPredictionBasis');details.open=true;details.scrollIntoView({block:'start'})};
+swapUI('swapBasisLink').onclick=()=>window.PS_BOOKSHELF.openReference('swapPredictionBasis');

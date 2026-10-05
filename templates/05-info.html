@@ -6,11 +6,6 @@
 <button type="button" class="card psg-info-link" data-info-page="nightcapPage"><strong><img class="psg-info-icon" src="assets/ui/go_plus_plus.webp" width="36" height="36" alt=""> GO Plus＋</strong><span>なつき度と能力表</span><b aria-hidden="true">›</b></button><button type="button" class="card psg-info-link" data-info-page="accountPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_account.png" width="36" height="36" alt=""> アカウント</strong><span>鍋容量を設定する</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="bookshelfPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_bookshelf.png" width="36" height="36" alt=""> 本棚</strong><span>説明・計算の前提・資料を見る</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="expPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_exp.png" width="36" height="36" alt=""> EXP</strong><span>必要経験値・アメの資料を見る</span><b aria-hidden="true">›</b></button></div>
-<details id="recipeEvaluationBasis" class="psg-cooking-reference"><summary>料理の評価基準</summary><div id="recipeEvaluationBasisContent"></div></details>
-<details id="friendshipReference" class="psg-cooking-reference"><summary>フレンドメダル・サブスキル</summary><div id="friendshipReferenceContent"></div></details>
-<details id="dailySupplyReference" class="psg-cooking-reference"><summary>食材の日産量・収集負担の前提</summary><div id="dailySupplyReferenceContent"></div></details>
-<details id="swapPredictionBasis"><summary>不足食材・補充候補の前提</summary><p>料理1食分の必要数と現チームの24時間予測を比較します。選んだ控え×現チーム5枠を再計算し、外す個体の減収・残る4匹のおてボ・回復・対応済みの特殊スキルも反映します。起点から24時間入れ替えた場合の期待値比較で、必要な交代時間の探索は次段階です。上の回収間隔・食事・キャンプ・入力済みゾーンを使用。EXは未対応。在庫なし。ランダム食材は種類別の必要数へ割り当てず、料理エナジーは差分へ加算しません。追加効果の未確認・対象抽選の相関・発動保証は日産と同じ制限を維持します。改善候補は対象食材の不足量、全必要食材の不足量、対象食材の増加量、エナジー差の順で並べ、上位10案を表示します。確定入手・最短交代時間ではありません。保存チーム・在庫を変更しません。</p></details>
-<details class="psg-cooking-reference"><summary>鍋の拡張費用・料理Lv資料</summary><div id="cookingReferenceTables"></div></details>
 <div class="card"><div class="section-title">記録のバックアップ</div><p>ボックス・寝顔・チーム・フィールド設定を１つのファイルに保存できます。</p>
  <button class="btn primary" type="button" id="backupExport">バックアップを書き出す</button>
  <label for="backupFile" style="display:block;margin-top:16px">バックアップを取り込む</label>
@@ -22,5 +17,41 @@
 
 <section id="accountPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">アカウント</h2><div class="card psg-account-settings"><label for="teamPotBase">鍋容量</label><select id="teamPotBase" aria-label="アカウントの通常鍋容量"><option value="">未設定</option></select></div></section>
 
-<section id="bookshelfPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">本棚</h2><div id="bookshelfContent" class="card"><details><summary>1日の獲得予想</summary><p>エナジー合計はきのみ＋スキル。料理エナジーは含みません。食事はげんき回復と、その後の収集量・スキル発動見込みへの影響だけを計算します。3食は起床時・6時間後・12時間後、2食は起床時・12時間後、1食は起床時。16時間活動・8時間睡眠で試算します。</p><p>食材枠は等確率、満杯は期待値で判定し、満杯後は食材・スキル抽選を止めてきのみを集計します。ボックスの単体予想はチーム画面の回収条件を使用し、他個体からの補正は含みません。</p></details><details><summary>鍋・料理の扱い</summary><p>鍋スキルは発動回数と1回分の効果値を表示します。実際の鍋追加には上限があり、上限で発動できない場合や料理で解除される条件がありますが、日産では鍋上限・保留ストック・料理時点の容量をシミュレーションしません。マイナスの回復効果も鍋上限で発動回数を減らしません。</p><p>料理チェックは必要食材だけの掲載エナジーにFBを反映。追加食材・大成功・在庫・料理の完成は計算せず、1日合計と交代案のエナジー差にも料理を加算しません。</p></details><details><summary>抽選・コピーの扱い</summary><p>食材セレクトは発動回数・候補・1回分の個数を表示し、抽選結果を種類別の食材合計や料理判定へ割り当てません。通常版の候補は種族の3食材、きょううん・かいりきバサミは各スキルの固定候補です。きょううんの食材とかけらの分岐、かいりきバサミの大成功は結果を決め打ちしません。ゆびをふる・スキルコピーは発動回数だけ表示します。</p><p><a href="https://wikiwiki.jp/poke_sleep/メインスキル/食材セレクト" target="_blank" rel="noopener">食材セレクトの仕様参照</a></p></details><details><summary>特殊スキルの計算範囲</summary><p>直接エナジー・きのみ・食材・即時おてつだい・基礎アメを加算し、未確認の追加効果は省略します。回復・げんき減少は回収後の収集へ反映。対象とげんきは期待値へ近似し、上限150・下限0を適用します。進行中のおてつだいの間隔は変更せず、次のおてつだいから更新します。通常回復の後、特殊回復は左から処理します。睡眠終了時の発動は当日の収集に戻しません。</p><p>ゾーンは入力値固定で、サイコブレイクは直接エナジーだけ加算します。たくわえるは0回、大成功は未発生から予測。ほっぺすりすりの追加発動、追加アメ、ラティ兄妹の未確認追加効果は含みません。箱内きのみの即消費は通常収集側と二重加算しません。ミュウのセット効果は対応済みのものだけ計算。発動保証・低げんき優先の厳密な対象抽選・対象間の相関は扱いません。</p></details><details><summary>計算結果の扱い</summary><p>予測の途中計算は丸めず、合計も丸め前の値で計算します。最終結果は小数第2位、画面表示は小数第1位まで四捨五入します。どちらも丸め前の値から求めるため、二重に丸めません。</p><p>必要食材数・レベル・登録済みのEXP表など、整数として扱う資料値はそのまま表示します。予測値はゲーム内の結果を保証するものではありません。未確認の値は未確認のまま扱います。</p></details></div></section>
+<section id="bookshelfPage" class="screen">
+<button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">本棚</h2>
+<div id="bookshelfContent" class="card">
+<details id="bookshelfCalculation" class="psg-bookshelf-section"><summary>計算の共通ルール</summary>
+<p>個体・げんき・補正・回収条件から、1日分の収集量とスキル発動回数を予想します。</p>
+<details><summary>小数・未確認値の扱い</summary><p>途中計算と合計は丸めず、最終結果は小数第2位、表示は小数第1位まで四捨五入します。それぞれ丸め前の値から求めます。整数の資料値はそのまま扱い、個別の端数処理は各部門に記載します。</p><p>未確認の値と暫定採用値を区別します。予想だけでBox・保存チーム・在庫を変更しません。</p></details>
+</details>
+<details id="bookshelfTeam" class="psg-bookshelf-section"><summary>チーム・おてつだい</summary>
+<p>エナジー合計はきのみ＋計算対象のスキル。料理エナジーは含めません。</p>
+<p>交代比較は、1匹を起点から24時間入れ替えた場合の食材・エナジー差を表示します。</p>
+<details><summary>日産の計算条件</summary><p>16時間活動・8時間睡眠で試算します。食材枠は等確率、満杯は期待値で判定し、満杯後は食材・スキル抽選を止めてきのみを集計します。</p><p>Boxの単体予想はチーム画面の回収条件を使い、他個体からの補正は含みません。</p></details>
+<details id="swapPredictionBasis"><summary>交代比較の詳細</summary><p>料理1食分の必要数と、現チーム・1匹を入れ替えたチームの24時間獲得量を比較します。外す個体の減収と、残る4匹への補正・回復を再計算します。回収間隔・食事・キャンプ・入力ゾーンはチームの設定を使用し、控えの起点げんきは個別に指定します。</p><p>対象食材の不足、全必要食材の不足、対象食材の増加、きのみ＋スキルのエナジー差の順で上位10案を表示します。好物きのみが未確定の場合はエナジー差を順位に使いません。EXと交代時間の探索は未対応です。</p></details>
+</details>
+<details id="bookshelfSkills" class="psg-bookshelf-section"><summary>メインスキル</summary>
+<p>計算対象の効果を発動回数に基づいて加算します。食材セレクトは回数・候補・1回の個数、ゆびをふる・スキルコピーは回数を表示します。</p>
+<details><summary>食材セレクト・抽選・コピー</summary><p>食材セレクトは候補から必要な食材を判断してください。抽選結果を種類別合計や料理判定に仮配分しません。通常版の候補は種族の3食材、きょううん・かいりきバサミは固定候補です。</p><p>きょううんの食材・かけら、かいりきバサミの大成功は結果を決め打ちしません。ゆびをふる・スキルコピーの抽選先の効果量は合計に含めません。</p><p><a href="https://wikiwiki.jp/poke_sleep/メインスキル/食材セレクト" target="_blank" rel="noopener">食材セレクトの仕様参照</a></p></details>
+<details><summary>きのみゾーン・継続する状態</summary><p>ゾーンは入力値で固定し、マゴのみのエナジーに適用します。予想発動による増加は含めず、サイコブレイクの直接エナジーを加算します。</p><p>たくわえるは0回、大成功は未発生から予想します。</p></details>
+<details><summary>鍋スキル</summary><p>発動回数と1回の効果値を表示します。鍋上限による発動停止・保留ストック・料理時点の容量はシミュレーションしません。マイナスの回復も鍋上限で発動回数を減らしません。</p></details>
+<details><summary>特殊スキル・回復の詳細</summary><p>直接エナジー・きのみ・食材・即時おてつだい・基礎アメを加算し、未確認の追加効果は省略します。回復・げんき減少は回収後の収集と発動見込みへ反映します。</p><p>対象とげんきは期待値へ近似し、上限150・下限0を適用します。進行中のおてつだいの間隔は変えず、次のおてつだいから更新します。通常回復の後、特殊回復は左から処理します。睡眠終了時の発動は当日の収集に戻しません。</p><p>ほっぺすりすりの追加発動、追加アメ、ラティ兄妹の未確認追加効果は含みません。箱内きのみの即消費は通常収集側と二重加算しません。ミュウのセット効果は対応済みのものだけ計算します。発動保証・低げんき優先の厳密な対象抽選・対象間の相関は扱いません。</p></details>
+</details>
+<details id="bookshelfCooking" class="psg-bookshelf-section"><summary>料理・食材</summary>
+<p>料理チェックは必要食材だけの掲載エナジーにFBを反映します。追加食材・大成功・在庫・料理完成の予測は行いません。</p>
+<details><summary>食事のタイミング</summary><p>食事はげんき回復と、その後の収集量・スキル発動見込みに反映します。3食は起床時・6時間後・12時間後、2食は起床時・12時間後、1食は起床時です。料理時点の食材在庫は予測しません。</p></details>
+<details id="recipeEvaluationBasis" class="psg-cooking-reference"><summary>料理の評価基準</summary><div id="recipeEvaluationBasisContent"></div></details>
+<details id="dailySupplyReference" class="psg-cooking-reference"><summary>食材の日産量・収集負担の前提</summary><div id="dailySupplyReferenceContent"></div></details>
+<details class="psg-cooking-reference"><summary>鍋の拡張費用・料理Lv資料</summary><div id="cookingReferenceTables"></div></details>
+</details>
+<details id="bookshelfWhistle" class="psg-bookshelf-section"><summary>おてつだいホイッスル</summary>
+<p>げんき最大時のおてつだい3時間分を見積もります。ナイトキャップは対象外です。</p>
+<details><summary>補正・端数処理</summary><p>性格・サブスキル・リボンとチームのおてつだいボーナスを反映します。メインスキル・いいキャンプ・イベントの収量補正は含めません。好物きのみ・FB・入力したマゴのみゾーンはきのみエナジーへ反映します。EX・特殊な追加状態は未対応です。</p><p>食材は個体・解放枠ごとに丸めてから合算します。食材確率・最大効率0.45・端数処理は検証モデルによる推定です。バッグの空き・在庫は判定しません。</p></details>
+</details>
+<details id="bookshelfGrowth" class="psg-bookshelf-section"><summary>育成・進化</summary>
+<p>進化先へ変更するとスキルレベルは進化先の上限に設定されます。実際の個体に合わせて調整してください。</p>
+<p>必要EXP・アメの登録済み資料は情報のEXPで確認できます。未確認の値・暫定値・未実装のレベル帯を区別します。</p>
+<details id="friendshipReference" class="psg-cooking-reference"><summary>フレンドメダル・サブスキル</summary><div id="friendshipReferenceContent"></div></details>
+</details>
+</div></section>
 <section id="expPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">EXP</h2><div id="expContent" class="card"></div></section>

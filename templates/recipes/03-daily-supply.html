@@ -45,7 +45,7 @@
  for(const control of [supplyLevel,supplyMeals])control.addEventListener('change',()=>preserveRecipeDetails(()=>{}));
  const referenceContent=document.getElementById('dailySupplyReferenceContent');
  const supplyNote=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;referenceContent.append(p)};
- function openSupplyReference(){window.PS?.go('info');const details=document.getElementById('dailySupplyReference');details.open=true;details.scrollIntoView({block:'start'})}
+ function openSupplyReference(){window.PS_BOOKSHELF.openReference('dailySupplyReference')}
  supplyNote('共通条件の独自モデルによる推定。ポケモンLv30／60、無補正の性格・サブスキル・リボンなし、起床げんき100、睡眠8時間半。日中3時間ごと＋就寝直前と起床時に回収（例8:00起床・23:30就寝）。');
  supplyNote('料理・スキル回復なし。スキル由来の食材も含めません。キャンプ・イベント・EXなし。種族の初期所持数による満杯・超過分破棄を反映、バッグ容量の制限・元の在庫は含みません。解放食材枠の均等抽選は推定です。ホームの日産予想と条件が異なります。');
  supplyNote('日産ティアは最良担当の期待個数を基準にした独自の暫定閾値：S≥60、A≥45、B≥30、C≥15、D<15個/日。候補なしは未対応。担当の選択肢の多さを示す入手ティアとは別指標です。');

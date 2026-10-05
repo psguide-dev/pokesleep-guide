@@ -1,8 +1,11 @@
 <script id="psg-information-pages">
 (()=>{
- const shelf=document.getElementById('bookshelfContent');
- for(const id of ['recipeEvaluationBasis','friendshipReference','dailySupplyReference','swapPredictionBasis'])shelf.append(document.getElementById(id));
- shelf.append(document.getElementById('cookingReferenceTables').closest('details'));
+ window.PS_BOOKSHELF={openReference(id){
+  const reference=document.getElementById(id);if(!reference)return;
+  go('bookshelfPage');
+  for(let node=reference;node&&node.id!=='bookshelfContent';node=node.parentElement)if(node.tagName==='DETAILS')node.open=true;
+  reference.scrollIntoView({block:'start'});
+ }};
  window.PS_PAGE_RENDERERS??={};
  let ready=false;
  window.PS_PAGE_RENDERERS.expPage=()=>{
