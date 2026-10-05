@@ -20,6 +20,9 @@ assert.equal(conflict.speciesId,null);assert.equal(conflict.level,null);assert.e
 assert.ok(conflict.conflicts.includes('ポケモン'));assert.equal(parsed.level,35,'merging does not mutate source');
 const two=reader.merge([parsed,reader.parse('性格:いじっぱり',dictionary)]);assert.equal(two.level,35);assert.equal(two.nature,'いじっぱり');
 const combined=reader.parse('Lv.35 フシギダネ\nLv.60\nメインスキル・サブスキル\n食材ゲットS\nLv.3',dictionary,[{kind:'nature',text:'いじっぱり'},...dictionary.subskills.map((text,index)=>({kind:'subskill',index,text}))]);
+assert.equal(reader.parse('',{...dictionary,subskills:['おてつだいボーナス']},[{kind:'subskill',index:0,text:'おてつだいボポーナス'}]).subskills[0],'おてつだいボーナス');
+assert.equal(reader.parse('',dictionary,[{kind:'subskill',index:0,text:'スキル確率アップM'}]).subskills[0],null,'never replace an S/M/L grade');
+assert.equal(reader.parse('おてつだいボポーナス',{...dictionary,subskills:['おてつだいボーナス']}).subskills[0],null,'approximate names require a located card');
 assert.equal(combined.speciesId,'0001_default');assert.equal(combined.level,35);assert.equal(combined.skillLevel,3);assert.equal(combined.nature,'いじっぱり');assert.deepEqual(Array.from(combined.subskills),dictionary.subskills);
 // Same two-column layout as the game: unlocked cards retain colored backgrounds,
 // locked cards do not. Their positions come from the validated grid, not Lv text.

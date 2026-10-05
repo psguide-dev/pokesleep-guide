@@ -101,7 +101,7 @@ imageRead.onclick=async()=>{
     for(const region of window.PS_IMAGE_READER.regions(canvas)){
      if(token!==imageEpoch)return;
      const cropped=window.PS_IMAGE_READER.crop(canvas,region);
-     try{await worker.setParameters({tessedit_pageseg_mode:region.kind==='subskill'?engine.PSM.SINGLE_LINE:engine.PSM.SPARSE_TEXT});const part=await worker.recognize(cropped);if(token!==imageEpoch)return;extra.push({...region,text:part.data.text||''})}
+     try{await worker.setParameters({tessedit_pageseg_mode:region.kind==='main'?engine.PSM.SPARSE_TEXT:engine.PSM.SINGLE_LINE});const part=await worker.recognize(cropped);if(token!==imageEpoch)return;extra.push({...region,text:part.data.text||''})}
      finally{cropped.width=cropped.height=1}
     }
     texts.push(result.data.text||'');readRegions.push(extra);
