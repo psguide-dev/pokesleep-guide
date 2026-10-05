@@ -1,5 +1,6 @@
 // Shared daily estimate: collection timeline and team totals.
-function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},potSettings=null,memberStartingEnergies={}){
+// Keep the unused pot argument for compatibility with PS.dailyResult callers.
+function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},_legacyPotSettings=null,memberStartingEnergies={}){
  const interval=[1,2,4,8].includes(Number(collectionHours))?Number(collectionHours):4;
  const mealCount=threeMeals===true?3:threeMeals===false?0:Number.isInteger(threeMeals)&&threeMeals>=0&&threeMeals<=3?threeMeals:3;
  const mealTicks=[[],[0],[0,72],[0,36,72]][mealCount];

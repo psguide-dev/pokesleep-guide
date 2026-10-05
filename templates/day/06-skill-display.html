@@ -19,3 +19,9 @@ function dailySkillCandidateTiles(display){
  for(const name of display.candidates){const tile=document.createElement('span');tile.title=name;tile.setAttribute('aria-label',name);tile.append(teamFoodIcon(name));host.append(tile)}
  return host;
 }
+function dailySkillSelectText(display,unknown='未確認個'){
+ if(!Number.isFinite(display.amount))return unknown;
+ const bonus=display.bonusAmount?`（大成功＋${display.bonusAmount}個）`:'';
+ const shards=display.shards.length?'／'+display.shards.map(n=>n.toLocaleString()).join('・')+'かけら':'';
+ return `${display.amount}個${bonus}${shards}`;
+}

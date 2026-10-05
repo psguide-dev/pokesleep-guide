@@ -1,7 +1,5 @@
 function boxDailyEstimate(item){
- const ids=[item.id];
- const interval=Number(document.getElementById('teamCollectionInterval').value);
- const result=dailyBaseline(ids,state.box,window.PS_CATALOG,interval,teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones(),cookingContext());
+ const result=dailyCurrentForecast([item.id]);
  return {result,member:result.members.find(m=>m.id===item.id)};
 }
 function renderBoxDayFood(estimate){
@@ -21,19 +19,19 @@ function boxDailySkillForecast(estimate,totalsOnly=false){
  if(!totalsOnly)return `<small>１日発動予想</small><strong>約${window.PS_NUMBERS.display(member.skillTriggers)}回</strong>`;
  const item=state.box.find(x=>x.id===member.id),display=dailySkillDisplay(member,item,window.PS_CATALOG);
  if(display.countOnly)return '';
- if(display.select)return `<small>１回の候補</small><b>${display.amount??'未確認'}個${display.bonusAmount?`（大成功＋${display.bonusAmount}個）`:''}${display.shards.length?'／'+display.shards.map(n=>n.toLocaleString()).join('・')+'かけら':''}</b>${display.candidates.length?dailySkillCandidateTiles(display).outerHTML:'<small>候補未確認</small>'}`;
+ if(display.select)return `<small>１回の候補</small><b>${boxEsc(dailySkillSelectText(display))}</b>${display.candidates.length?dailySkillCandidateTiles(display).outerHTML:'<small>候補未確認</small>'}`;
  if(display.potAmount!==null)return `<small>１回の効果</small><b>${boxEsc(member.specialBasicText||`鍋＋${display.potAmount}個`)}</b>`;
  const n=member.skillTriggers,totals=[];
- const add=(label,value,unit='',digits=1)=>{if(Number.isFinite(value))totals.push(`<span><small>${label}</small><b>約${window.PS_NUMBERS.display(value)}${unit}</b></span>`)};
+ const add=(label,value,unit='')=>{if(Number.isFinite(value))totals.push(`<span><small>${label}</small><b>約${window.PS_NUMBERS.display(value)}${unit}</b></span>`)};
  if(member.specialResult){
   if(member.specialEnergy>0)add('効果エナジー',member.specialEnergy);if(member.randomIngredients>0)add('ランダム食材',member.randomIngredients,'個');if(member.specialCandy>0)add('基礎アメ',member.specialCandy,'個');
   if(!totals.length)return `<small>１回の効果</small><b>${boxEsc(member.specialBasicText||member.skillName)}</b>`;
   return `<small>１日効果量合計</small>${totals.join('')}`;
  }
  if(member.skillEffectType==='random_ingredients'&&Number.isFinite(member.skillAmount))add('ランダム食材',n*member.skillAmount,'個');
- if(['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy))add('エナジー',n*member.skillEnergy*result.areaFactor,'',0);
+ if(['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy))add('エナジー',n*member.skillEnergy*result.areaFactor);
  if(['team_energy_recovery','self_energy_recovery','ally_energy_recovery'].includes(member.skillEffectType)&&Number.isFinite(member.skillRecovery))add('げんき回復',n*member.skillRecovery);
  if(member.boost||member.skillEffectType==='extra_help')add('追加おてつだい',member.skillExtraHelps,'回');
- if(Number.isFinite(member.skillShards))add('ゆめのかけら',n*member.skillShards,'個',0);
+ if(Number.isFinite(member.skillShards))add('ゆめのかけら',n*member.skillShards,'個');
  return `<small>１日効果量合計</small>${totals.length?totals.join(''):'<b>未計算</b>'}`;
 }

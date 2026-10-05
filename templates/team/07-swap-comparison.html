@@ -10,7 +10,7 @@ function dailySwapCompatible(ids,box,catalog){
 }
 function dailySwapForecast(request,ids=request.ids){
  if(!dailySwapCompatible(ids,request.box,request.catalog))return {missing:true,reasons:['編成制限・個体の重複']};
- const r=dailyBaseline(ids,request.box,request.catalog,request.interval,request.energy,request.camp,request.meals,request.favorites,request.areaBonus,request.zones,request.pot,request.energies);
+ const r=dailyBaseline(ids,request.box,request.catalog,request.interval,request.energy,request.camp,request.meals,request.favorites,request.areaBonus,request.zones,undefined,request.energies);
  const pending=r.members.filter(m=>m.missing);
  if(pending.length)return {missing:true,reasons:pending.map(m=>`${m.name}：${(m.reasons||['入力']).join('・')}`)};
  return r;

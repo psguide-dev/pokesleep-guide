@@ -49,7 +49,7 @@ function swapRequest(recipe){
  }
  const demand={};for(const item of recipe.ingredients)demand[item.name]=(demand[item.name]||0)+item.qty;
  const favorites=activeFieldBerries(),berryKnown=window.PS_CATALOG.fields[fieldProfile.selectedFieldId]?.favoriteMode==='fixed'||(favorites.length===3&&new Set(favorites).size===3);
- return {request:{ids:[...team],box:state.box,catalog:window.PS_CATALOG,interval:Number(swapUI('teamCollectionInterval').value),energy:teamInitialEnergy,camp:teamGoodCamp,meals:teamMeals,favorites,berryKnown,areaBonus:fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,zones:activeBerryZones(),pot:cookingContext(),energies,demand},candidateIds,rejected};
+ return {request:{ids:[...team],box:state.box,catalog:window.PS_CATALOG,interval:Number(swapUI('teamCollectionInterval').value),energy:teamInitialEnergy,camp:teamGoodCamp,meals:teamMeals,favorites,berryKnown,areaBonus:fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,zones:activeBerryZones(),energies,demand},candidateIds,rejected};
 }
 function appendSwapNote(host,text){const p=document.createElement('p');p.className='note';p.textContent=text;host.append(p)}
 function renderMealFoods(host,timing,focus){
