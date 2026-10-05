@@ -32,3 +32,24 @@ assert.match(actions,/commitBox\(\[\.\.\.state\.box,item\]\)/,'save appends, nev
 assert.match(actions,/token!==imageEpoch/,'cancelled runs cannot publish stale results');
 assert.match(actions,/worker\.terminate/,'worker is released');
 console.log('Image import: field/slot parsing, nickname/manual species, unlock isolation, unassigned candidates, conflicts, forms, validation, append-only save and stale-job guards passed.');
+// Actual submit handler: failed persistence leaves the review and existing individuals intact.
+let succeed=false,submitted=null,closed=0,opened=0;
+const original=[{id:'existing',level:60}],messages={textContent:''};
+Object.assign(saveCtx,{imageForm:{hidden:false},imageBusy:false,FormData:class{get(name){return values[name]??null}},imageSpecies:()=>p,state:{box:original},document:{getElementById:()=>messages},globalThis:{crypto:{randomUUID:()=> 'new-id'}},commitBox:next=>{submitted=next;return succeed},boxUndoPanel:{},closeBoxAdd(){},boxSearch:{},imageDialog:{close(){closed++}},openBox(){opened++}});
+vm.runInContext(actions.slice(actions.indexOf('imageForm.onsubmit=')),saveCtx);
+saveCtx.imageForm.onsubmit({preventDefault(){}});assert.equal(submitted.length,2);assert.equal(submitted[0],original[0]);assert.equal(original.length,1);assert.equal(closed,0);assert.match(messages.textContent,/保存できません/);
+succeed=true;saveCtx.imageForm.onsubmit({preventDefault(){}});assert.equal(submitted[1].id,'new-id');assert.equal(closed,1);assert.equal(opened,1);
+// Cancellation while worker initialization is pending: the late worker must be terminated.
+(async()=>{
+ const nodes=new Map(),node=id=>{if(!nodes.has(id))nodes.set(id,{value:'',textContent:'',hidden:false,disabled:false,addEventListener(){},elements:{species:{}}});return nodes.get(id)};
+ node('boxImageFiles').files=[{name:'screenshot.png'}];
+ let resolveWorker,workerStarted,terminated=0;
+ const started=new Promise(resolve=>{workerStarted=resolve});
+ const pendingWorker=new Promise(resolve=>{resolveWorker=resolve});
+ const cancelCtx=vm.createContext({document:{getElementById:node},window:{PS_IMAGE_READER:{loadEngine:async()=>({createWorker:()=>{workerStarted();return pendingWorker}})}},setTimeout:()=>1,clearTimeout(){},SUBSKILL_LEVELS:dictionary.levels});
+ vm.runInContext(actions,cancelCtx);
+ const run=node('boxImageRead').onclick();await started;
+ node('boxImageStop').onclick();resolveWorker({terminate:async()=>{terminated++}});await run;
+ assert.equal(terminated,1);assert.equal(node('boxImageRead').disabled,false);assert.match(node('boxImageStatus').textContent,/中止/);assert.equal(node('boxImageForm').hidden,true);
+ console.log('Production submit/cancel: append preserves prior individuals, save failure retains review, confirmed save opens new detail, cancelled initialization releases late worker.');
+})().catch(error=>{console.error(error);process.exitCode=1});
