@@ -1,5 +1,7 @@
 function cardDisplayName(name){return String(name||'').replace(/\s*[（(][^）)]*[）)]/g,'').trim()}
+let dexListDirty=true;
 function renderDex(){
+ dexListDirty=false;
  renderSelectedFilters('dex');
  const q=searchKey(dexSearch.value.trim());
  const all=master.pokemon;

@@ -23,7 +23,7 @@ ctx.lvRange.onpointerup();ctx.lvRange.onchange();ctx.lvRange.onblur();
 assert.equal(ctx.state.selected.level,60);assert.equal(calls.save,before+1,'one save after release');assert.equal(calls.detail,1);assert.equal(calls.team,0);
 assert.equal(vm.runInContext('teamViewDirty',ctx),true);
 // Execute the production navigation function with harmless DOM/window stubs.
-Object.assign(ctx,{screens:[],tabs:[],window:{scrollTo(){}},requestAnimationFrame(){},updateTeamFaceDock(){}});ctx.state.history=[];
+Object.assign(ctx,{screens:[],tabs:[],window:{scrollTo(){}},requestAnimationFrame(){},updateHomeStickyHeight(){}});ctx.state.history=[];
 const nav=read('core/05-navigation-and-filters.html');vm.runInContext(nav.slice(nav.indexOf('function go('),nav.indexOf("document.querySelectorAll('[data-screen]')")),ctx);
 vm.runInContext("go('home')",ctx);assert.equal(calls.team,1);vm.runInContext("go('home')",ctx);assert.equal(calls.team,1,'clean team is not recomputed');
 vm.runInContext("go('box')",ctx);assert.equal(calls.box,1,'dirty list rebuilt on entry');

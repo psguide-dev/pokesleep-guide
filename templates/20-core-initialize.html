@@ -24,7 +24,14 @@ boxUndoRemove.onclick=()=>{
  const next=[...state.box];next.splice(lastRemoval.index,0,lastRemoval.selected);
  if(commitBox(next)){lastRemoval=null;boxUndoPanel.hidden=true}
 };
-hydrateSpecialtyIcons(document);renderFilters();setupMenus();renderDex();renderBox();
-window.PS={state,master,go,renderDex,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,setGoodCamp:value=>{teamGoodCamp=value===true;saveDaySettings()}};
+hydrateSpecialtyIcons(document);renderFilters();setupMenus();
+function refreshAssetViews(){
+ dexListDirty=true;boxListDirty=true;teamViewDirty=true;
+ renderFilters();
+ if(state.screen==='dex')renderDex();
+ if(state.screen==='box')renderBox();
+ if(state.screen==='home')renderTeam();
+}
+window.PS={refreshAssetViews,state,master,go,renderDex,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,setGoodCamp:value=>{teamGoodCamp=value===true;saveDaySettings()}};
 })();
 </script>

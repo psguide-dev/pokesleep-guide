@@ -1,5 +1,5 @@
 function renderTeamDay(){
- renderTeamWhistle();
+ if(!document.getElementById('teamWhistlePanel').hidden)renderTeamWhistle();
  renderTeamSwap();
  const host=document.getElementById('teamDayEstimate');if(!host)return;
  const interval=document.getElementById('teamCollectionInterval').value;

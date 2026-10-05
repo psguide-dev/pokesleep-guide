@@ -55,4 +55,6 @@
    });item.append(links);list.append(item);
   });
  }
- input.addEventListener('input',render);render();
+ input.addEventListener('input',render);
+ window.PS_PAGE_RENDERERS??={};let skillListReady=false;
+ window.PS_PAGE_RENDERERS.skillPage=()=>{if(!skillListReady){render();skillListReady=true}};

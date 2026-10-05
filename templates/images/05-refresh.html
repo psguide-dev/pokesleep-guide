@@ -1,6 +1,6 @@
 window.PS_AUTO_ASSETS={ready:Promise.all(jobs).then(found=>{
   if(found.some(Boolean)){
-    window.PS?.renderFilters();window.PS?.renderDex();window.PS?.renderBox();
+    window.PS?.refreshAssetViews();
     if(document.getElementById('boxDetail')?.classList.contains('active'))window.PS?.refreshBoxDetail?.();
     if(document.getElementById('dexDetail')?.classList.contains('active')){
       window.PSG_REFRESH_DEX_DETAIL?.();

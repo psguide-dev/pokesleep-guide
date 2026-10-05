@@ -12,8 +12,9 @@
   if(entry)entry.open=true;
  };
  // Navigation reuses the current list; providers are built only when details open.
- ingredientChoices();
- render();
+ window.PS_PAGE_RENDERERS??={};
+ let recipeListReady=false;
+ window.PS_PAGE_RENDERERS.recipePage=()=>{if(!recipeListReady){ingredientChoices();render();recipeListReady=true}};
 })();
 </script>
 </body></html>

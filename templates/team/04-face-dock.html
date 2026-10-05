@@ -1,6 +1,4 @@
-// The original cards stay in the sticky heading; no duplicate card dock.
-function renderTeamFaceDock(){updateHomeStickyHeight()}
-function updateTeamFaceDock(){}
+// The original cards stay in the sticky heading; only its height is observed.
 const teamSubskillsToggle=document.getElementById('teamSubskillsToggle');
 teamSubskillsToggle.onclick=()=>{
  const expanded=teamSubskillsToggle.getAttribute('aria-expanded')!=='true';
@@ -12,7 +10,7 @@ teamSubskillsToggle.onclick=()=>{
 };
 
 const homeStickyHeading=document.getElementById('homeStickyHeading');
-function updateHomeStickyHeight(){if(document.getElementById('home').classList.contains('active'))document.getElementById('home').style.setProperty('--psg-home-heading-height',`${homeStickyHeading.getBoundingClientRect().height}px`);updateTeamFaceDock()}
+function updateHomeStickyHeight(){if(document.getElementById('home').classList.contains('active'))document.getElementById('home').style.setProperty('--psg-home-heading-height',`${homeStickyHeading.getBoundingClientRect().height}px`)}
 if(window.ResizeObserver)new ResizeObserver(updateHomeStickyHeight).observe(homeStickyHeading);
 updateHomeStickyHeight();
 
