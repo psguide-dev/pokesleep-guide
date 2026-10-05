@@ -95,12 +95,13 @@ imageRead.onclick=async()=>{
    if(token!==imageEpoch)return;
    const canvas=await window.PS_IMAGE_READER.canvas(file);
    try{
+    await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT});
     const result=await worker.recognize(canvas);if(token!==imageEpoch)return;
     const extra=[];
     for(const region of window.PS_IMAGE_READER.regions(canvas)){
      if(token!==imageEpoch)return;
      const cropped=window.PS_IMAGE_READER.crop(canvas,region);
-     try{const part=await worker.recognize(cropped);if(token!==imageEpoch)return;extra.push({...region,text:part.data.text||''})}
+     try{await worker.setParameters({tessedit_pageseg_mode:region.kind==='subskill'?engine.PSM.SINGLE_LINE:engine.PSM.SPARSE_TEXT});const part=await worker.recognize(cropped);if(token!==imageEpoch)return;extra.push({...region,text:part.data.text||''})}
      finally{cropped.width=cropped.height=1}
     }
     texts.push(result.data.text||'');readRegions.push(extra);
@@ -108,7 +109,7 @@ imageRead.onclick=async()=>{
    finally{canvas.width=canvas.height=1}
   }
   if(token!==imageEpoch)return;
-  document.getElementById('boxImageText').value=texts.join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions));
+  document.getElementById('boxImageText').value=texts.map((text,i)=>text+readRegions[i].map(r=>`\n[${r.kind==='subskill'?`Lv.${SUBSKILL_LEVELS[r.index]} サブスキル`:r.kind==='nature'?'性格':'メインスキル'}]\n${r.text}`).join('')).join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions));
   imageStatus.textContent=texts.some(text=>text.trim())?'読み取りが終わりました。確認後に登録してください。':'文字を読み取れませんでした。画像を確認するか、各項目を選んで登録できます。';
  }catch(error){if(token===imageEpoch)imageStatus.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
  finally{
