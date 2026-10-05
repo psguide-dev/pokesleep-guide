@@ -58,7 +58,7 @@ function renderTeam(){
   }
   choose.append(identity);
   if(individual)choose.insertAdjacentHTML('beforeend',subskillCardBadges(individual));
-  const arrow=document.createElement('span');arrow.className='psg-team-choose-arrow';arrow.textContent=teamReorderMode?(teamReorderFrom===index?'選択中':'移動先'):'Boxで選ぶ';choose.append(arrow);
+  if(teamReorderMode){const arrow=document.createElement('span');arrow.className='psg-team-choose-arrow';arrow.textContent=teamReorderFrom===index?'選択中':'移動先';choose.append(arrow)}
   choose.onclick=()=>{
    if(teamReorderMode){
     if(teamReorderFrom===null){if(!id)return;teamReorderFrom=index;renderTeam();return}

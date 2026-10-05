@@ -99,10 +99,6 @@
 .psg-home-image-toggles button[aria-pressed="true"]{border-color:var(--green);background:#dff2e6}
 .psg-home-image-toggles img{width:24px;height:24px;object-fit:contain}
 .psg-visually-hidden{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.psg-team-face-dock:not([hidden]){position:fixed;top:calc(var(--psg-header-height) + var(--psg-home-heading-height,0px));left:50%;transform:translateX(-50%);z-index:66;box-sizing:border-box;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;width:min(100%,720px);padding:0 12px;background:var(--bg);border-bottom:0;box-shadow:none;align-items:start}
-#teamFaceDock .psg-team-face-dock-cell{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-width:0;min-height:0;padding:3px 2px 0;gap:1px;border:1px solid #dfe8e3;border-radius:10px;background:#fff;text-align:center;cursor:pointer}
-#teamFaceDock .psg-team-face-dock-cell[class*="type-"]{background:var(--psg-type-bg)}
-.psg-team-face-dock[hidden]{display:none}
 .psg-team-row{display:flex;align-items:center;gap:7px;}
 .psg-team-choose{display:flex;align-items:center;gap:9px;flex:1;min-width:0;padding:5px 9px;text-align:left;background:#fff;color:#111;border:1px solid #dfe8e3;border-radius:12px;cursor:pointer;font:inherit}
 .psg-team-face{display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;border-radius:0;background:transparent;color:#83918a;font-size:9px;font-weight:700;overflow:hidden}
@@ -146,12 +142,12 @@
 #teamSlots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;align-items:start}
 #teamSlots .psg-team-row{position:relative;display:flex;flex-direction:column;min-width:0;margin:0;gap:0}
 #teamSlots .psg-team-number{position:absolute;top:4px;left:4px;z-index:1;width:15px;height:15px;border-radius:50%;background:#fff;color:#345944;font-size:10px}
-#teamSlots .psg-team-choose{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px;width:100%;min-height:123px;padding:3px 2px;text-align:center;border-radius:10px}
+#teamSlots .psg-team-choose{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1px;width:100%;min-height:0;padding:3px 2px;text-align:center;border-radius:10px}
 #teamSlots .psg-team-choose[class*="type-"]{background:var(--psg-type-bg)}
-:is(#teamSlots,#teamFaceDock) .psg-team-card-name{display:block;width:100%;padding-left:0;box-sizing:border-box;color:#111;font-size:clamp(8px,2.4vw,11px);line-height:1.2;text-align:center;overflow-wrap:anywhere;white-space:normal}
-:is(#teamSlots,#teamFaceDock) .psg-team-card-art{position:relative;display:block;width:100%}
-:is(#teamSlots,#teamFaceDock) .psg-team-face{flex:0 0 auto;width:100%;height:62px;border-radius:6px}
-:is(#teamSlots,#teamFaceDock) .psg-team-card-level{position:absolute;right:1px;bottom:1px;padding:1px 2px;border-radius:3px;background:#ffffffe8;color:#111;font-size:10px;font-weight:950;line-height:1.15}
+#teamSlots .psg-team-card-name{display:block;width:100%;padding-left:0;box-sizing:border-box;color:#111;font-size:clamp(8px,2.4vw,11px);line-height:1.2;text-align:center;overflow-wrap:anywhere;white-space:normal}
+#teamSlots .psg-team-card-art{position:relative;display:block;width:100%}
+#teamSlots .psg-team-face{flex:0 0 auto;width:100%;height:62px;border-radius:6px}
+#teamSlots .psg-team-card-level{position:absolute;right:1px;bottom:1px;padding:1px 2px;border-radius:3px;background:#ffffffe8;color:#111;font-size:10px;font-weight:950;line-height:1.15}
 #teamSlots .psg-team-identity{width:100%;gap:0}
 #teamSlots .psg-team-identity strong{font-size:11px}
 #teamSlots .psg-team-identity small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -567,3 +563,9 @@
 .psg-saved-team-actions button{min-height:36px;border:1px solid var(--line);border-radius:8px;padding:3px;background:#fff;color:#111;font-size:11px}
 .psg-saved-team-actions button:disabled{opacity:.4}
 #savedTeamStatus[hidden]{display:none}
+
+.psg-team-card-strip{grid-column:1/-1;position:relative;min-width:0}
+.psg-team-card-strip:not(.is-expanded) .psg-subskill-card-grid,.psg-team-card-strip:not(.is-expanded) .psg-team-identity{display:none!important}
+.psg-team-subskills-toggle{position:absolute;top:100%;right:0;z-index:1;width:calc((100% - 16px)/5);min-height:22px;padding:0 8px;border:1px solid var(--line);border-top:0;border-radius:0 0 9px 9px;background:var(--bg);color:#111;font-size:12px;line-height:22px;cursor:pointer}
+.psg-team-subskills-toggle::after{content:"";position:absolute;inset:-5px -4px -10px}
+#home .psg-team-card{padding-top:20px}

@@ -1,23 +1,15 @@
-function renderTeamFaceDock(){
- const dock=document.getElementById('teamFaceDock');dock.replaceChildren();
- team.forEach((id,index)=>{
-  const individual=state.box.find(item=>item.id===id);
-  const source=document.querySelectorAll('#teamSlots .psg-team-choose')[index];
-  const cell=source.cloneNode(false);cell.classList.add('psg-team-face-dock-cell');
-  for(const selector of ['.psg-team-card-name','.psg-team-card-art']){const part=source.querySelector(selector);if(part)cell.append(part.cloneNode(true))}
-  cell.setAttribute('aria-label',`${index+1}匹目：${individual?.name||'未設定'}。チームへ戻る`);
-  cell.onclick=()=>document.querySelector('#home .psg-team-card').scrollIntoView({behavior:'smooth',block:'start'});
-  dock.append(cell);
- });
- updateTeamFaceDock();
-}
-function updateTeamFaceDock(){
- const dock=document.getElementById('teamFaceDock');
- const face=document.querySelector('#teamSlots .psg-team-choose');
- dock.hidden=!document.getElementById('home').classList.contains('active')||!face||face.getBoundingClientRect().top>document.getElementById('homeStickyHeading').getBoundingClientRect().bottom;
-}
-window.addEventListener('scroll',updateTeamFaceDock,{passive:true});
-window.addEventListener('resize',updateTeamFaceDock,{passive:true});
+// The original cards stay in the sticky heading; no duplicate card dock.
+function renderTeamFaceDock(){updateHomeStickyHeight()}
+function updateTeamFaceDock(){}
+const teamSubskillsToggle=document.getElementById('teamSubskillsToggle');
+teamSubskillsToggle.onclick=()=>{
+ const expanded=teamSubskillsToggle.getAttribute('aria-expanded')!=='true';
+ document.getElementById('teamCardStrip').classList.toggle('is-expanded',expanded);
+ teamSubskillsToggle.setAttribute('aria-expanded',String(expanded));
+ teamSubskillsToggle.setAttribute('aria-label',expanded?'サブスキルを隠す':'サブスキルを表示');
+ teamSubskillsToggle.textContent=expanded?'▲':'▼';
+ updateHomeStickyHeight();
+};
 document.getElementById('teamReorder').onclick=()=>{teamReorderMode=!teamReorderMode;teamReorderFrom=null;renderTeam()};
 
 const homeStickyHeading=document.getElementById('homeStickyHeading');

@@ -15,4 +15,4 @@
 
 /* Species-based frames shared by Dex and Box cards. */
 #dexGrid .dex-card,#boxGrid .psg-box-card,#teamSlots .psg-team-choose{border:1px solid #000}
-#dexGrid .dex-card.psg-special-card,#boxGrid .psg-box-card.psg-special-card,:is(#teamSlots,#teamFaceDock) .psg-team-choose.psg-special-card{border:2px solid #e4b847;box-shadow:inset 0 0 0 1px #666,0 0 0 1px #666}
+#dexGrid .dex-card.psg-special-card,#boxGrid .psg-box-card.psg-special-card,#teamSlots .psg-team-choose.psg-special-card{border:2px solid #e4b847;box-shadow:inset 0 0 0 1px #666,0 0 0 1px #666}
