@@ -1,0 +1,51 @@
+// Bounded expectation model: no sampling or exponential cross-team branching.
+const DAILY_ENERGY_SKILLS=new Set(['minus_cooking_power_up_s','healing_pulse_energy_cheer_s','lunar_blessing_energy_for_everyone_s','nightmare_energy_charge_m','nuzzle_energy_cheer_s']);
+function dailyHasEnergyLink(members,items,catalog){
+ if(!window.PS_SPECIAL_ENGINE)return false;
+ return dailySpecialTeamMembers(members,items,catalog,new Set()).some(m=>members.find(x=>x.id===m.id)?.stats.skill>0&&(DAILY_ENERGY_SKILLS.has(speciesFor(items.find(i=>i.id===m.id),catalog)?.mainSkillId)||['team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(catalog.skills?.[m.selectedSkillId]?.effectType)));
+}
+function dailyAdvanceLinkedMember(member,hours,elapsedTicks,mealTicks,goodCamp){
+ const factor=e=>e>=81?.45:e>=61?.52:e>=41?.58:e>=1?.66:1;
+ const interval=e=>member.stats.speed*factor(e)/(goodCamp?1.2:1);
+ let helps=0;
+ for(let tick=0;tick<hours*6;tick++){
+  if(mealTicks.includes(elapsedTicks+tick))member.energy=Math.min(150,member.energy+mealRecoveryAtEnergy(member.energy));
+  if(member.pendingHelpSeconds==null)member.pendingHelpSeconds=interval(member.energy);
+  let remaining=600;
+  while(member.pendingHelpSeconds<=remaining+1e-9){
+   remaining=Math.max(0,remaining-member.pendingHelpSeconds);helps++;
+   if(helps>50000)throw new Error('おてつだい予測の計算上限');
+   // Lock each new help's interval. Recovery never restarts an unfinished help.
+   member.pendingHelpSeconds=interval(Math.max(0,member.energy-(remaining<1e-9?1:0)));
+  }
+  member.pendingHelpSeconds-=remaining;member.energy=Math.max(0,member.energy-1);
+ }
+ return helps;
+}
+function dailyApplySpecialRecovery(members,items,catalog,triggers){
+ const engine=window.PS_SPECIAL_ENGINE;
+ if(!engine||!members.length)return;
+ const team=dailySpecialTeamMembers(members,items,catalog,new Set());
+ for(const member of members){
+  const caster=team.find(m=>m.id===member.id),selected=catalog.skills?.[caster.selectedSkillId];
+  if(!DAILY_ENERGY_SKILLS.has(member.skillId)&&!(member.skillId==='almighty'&&['team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(selected?.effectType)))continue;
+  const initial=Object.fromEntries(members.map(m=>[m.id,m.energy])),expected=Object.fromEntries(members.map(m=>[m.id,0]));
+  const ordinary=input=>{
+   const r=selected?.levels?.[Math.min(member.skillLevel,selected.maxLevel||7)];
+   if(!Number.isFinite(r?.recovery))return null;
+   const eligible=selected.effectType==='self_energy_recovery'?[caster]:team;
+   const groups=selected.effectType==='ally_energy_recovery'?eligible.map(m=>[m]):[eligible];
+   return groups.map(group=>{const state=structuredClone(input.state);for(const m of group)state.energy[m.id]=Math.min(150,state.energy[m.id]+r.recovery*m.recoveryFactor);return {probability:1/groups.length,state,reward:{directEnergy:0,berryEnergy:0,berriesByDonor:{},ingredients:{},instantHelps:{},candyExpectedByMember:{},heldBerryEnergyTransferred:0},omitted:[],assumptions:[],actions:[],activationConsumed:true};});
+  };
+  for(const d of engine.provisionalCountDistribution(triggers.get(member.id)||0)){
+   let energy={...initial};
+   for(let count=0;count<d.count;count++){
+    const state=engine.initialState(team);state.energy=energy;
+    const outcomes=engine.kernel.activate({team,state,casterId:member.id,skillId:member.skillId,level:member.skillLevel,context:{fieldBonus:0,resolveSelectedEffect:ordinary}});
+    energy=Object.fromEntries(members.map(m=>[m.id,outcomes.reduce((sum,o)=>sum+o.probability*o.state.energy[m.id],0)]));
+   }
+   for(const m of members)expected[m.id]+=energy[m.id]*d.probability;
+  }
+  for(const m of members){const delta=expected[m.id]-m.energy;m.specialRecoveryNet=(m.specialRecoveryNet||0)+delta;m.energy=Math.max(0,Math.min(150,expected[m.id]));}
+ }
+}

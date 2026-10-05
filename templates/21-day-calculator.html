@@ -13,20 +13,25 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  const items=ids.map(id=>box.find(item=>item.id===id)).filter(Boolean);
  const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,startingEnergy));
  const valid=members.filter(m=>!m.missing);
+ const energyLinked=dailyHasEnergyLink(valid,items,catalog);
+ if(energyLinked)valid.forEach(m=>m.energyLinked=true);
  let elapsedTicks=0;
  periods.forEach((hours,periodIndex)=>{
-  let teamRecovery=0,allyRecovery=0,bonusHelps=0;
+  let teamRecovery=0,allyRecovery=0,bonusHelps=0;const periodTriggers=new Map();
   for(const member of valid){
    let helps=0;
-   for(let tick=0;tick<hours*6;tick++){
+   if(energyLinked)helps=dailyAdvanceLinkedMember(member,hours,elapsedTicks,mealTicks,goodCamp);
+   else for(let tick=0;tick<hours*6;tick++){
     if(mealTicks.includes(elapsedTicks+tick))member.energy=Math.min(150,member.energy+mealRecoveryAtEnergy(member.energy));
     helps+=600*(goodCamp?1.2:1)/(member.stats.speed*energyIntervalFactor(member.energy));
     member.energy=Math.max(0,member.energy-1);
    }
+   member.normalHelps=(member.normalHelps||0)+helps;
    const regular=Math.min(helps,member.stats.carry*(goodCamp?1.2:1)/member.averageSize);
    const extra=Math.max(0,helps-regular);
    const triggers=Number.isFinite(member.stats.skill)&&member.skillName?expectedStoredSkills(regular,member.stats.skill,member.stockLimit):0;
    member.skillTriggers+=triggers;
+   periodTriggers.set(member.id,triggers);
    const effects=dailyCollectionSkills(member,triggers,periodIndex<periods.length-1,items.length);
    bonusHelps+=effects.bonusHelps;teamRecovery+=effects.teamRecovery;allyRecovery+=effects.allyRecovery;
    for(const slot of member.slots)member.foods.set(slot.name,(member.foods.get(slot.name)||0)+regular*member.chance*slot.qty/member.slots.length);
@@ -46,6 +51,7 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
    // Random ally target is approximated as an equal share; actual targeting favors low energy.
    for(const member of valid)member.energy=Math.min(150,member.energy+(teamRecovery+allyRecovery/valid.length)*member.stats.energyFactor);
   }
+  if(energyLinked&&periodIndex<periods.length-1)dailyApplySpecialRecovery(valid,items,catalog,periodTriggers);
   elapsedTicks+=hours*6;
  });
  for(const member of valid){
