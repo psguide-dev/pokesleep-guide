@@ -14,7 +14,7 @@ function renderSavedTeamControls(){
 }
 function savedTeamMessage(text){const node=document.getElementById('savedTeamStatus');node.textContent=text;node.hidden=!text}
 function runSavedTeamAction(action,message){
- try{action();teamReorderFrom=null;renderTeam();savedTeamMessage(message)}
+ try{action();renderTeam();savedTeamMessage(message)}
  catch{renderSavedTeamControls();savedTeamMessage('チームを保存できませんでした。端末の保存設定を確認してください。')}
 }
 function switchSavedTeam(id){

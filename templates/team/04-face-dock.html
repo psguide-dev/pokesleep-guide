@@ -10,9 +10,15 @@ teamSubskillsToggle.onclick=()=>{
  teamSubskillsToggle.textContent=expanded?'▲':'▼';
  updateHomeStickyHeight();
 };
-document.getElementById('teamReorder').onclick=()=>{teamReorderMode=!teamReorderMode;teamReorderFrom=null;renderTeam()};
 
 const homeStickyHeading=document.getElementById('homeStickyHeading');
 function updateHomeStickyHeight(){if(document.getElementById('home').classList.contains('active'))document.getElementById('home').style.setProperty('--psg-home-heading-height',`${homeStickyHeading.getBoundingClientRect().height}px`);updateTeamFaceDock()}
 if(window.ResizeObserver)new ResizeObserver(updateHomeStickyHeight).observe(homeStickyHeading);
 updateHomeStickyHeight();
+
+const teamManagerToggle=document.getElementById('teamManagerToggle');
+teamManagerToggle.onclick=()=>{
+ const panel=document.getElementById('teamManagerPanel');panel.hidden=!panel.hidden;
+ teamManagerToggle.setAttribute('aria-expanded',String(!panel.hidden));
+ teamManagerToggle.setAttribute('aria-label',panel.hidden?'チーム管理を開く':'チーム管理を閉じる');
+};

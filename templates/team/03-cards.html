@@ -1,8 +1,7 @@
 let teamBoxSlot=null;
-let teamReorderMode=false,teamReorderFrom=null;
 function saveTeamSelection(next){
- try{const members=normalizeTeam(next,state.box);writeSavedTeams({...savedTeams,...(!savedTeams.selectedId?{draft:members}:{})},members);teamReorderFrom=null;renderTeam()}
- catch{document.getElementById('teamSummary').textContent='チームを保存できませんでした。端末の設定を確認してください。'}
+ try{const members=normalizeTeam(next,state.box);writeSavedTeams({...savedTeams,...(!savedTeams.selectedId?{draft:members}:{})},members);renderTeam()}
+ catch{savedTeamMessage('チームを保存できませんでした。端末の設定を確認してください。')}
 }
 function teamFace(individual){
  const art=document.createElement('span');art.className='psg-team-face';
@@ -28,22 +27,13 @@ function renderTeam(){
  try{pruneSavedTeams()}catch{savedTeamMessage('チームの保存に失敗しました。端末の保存設定を確認してください。')}
  team=normalizeTeam(team,state.box);
  renderSavedTeamControls();
- const reorder=document.getElementById('teamReorder'),hint=document.getElementById('teamHint');
- reorder.disabled=team.filter(Boolean).length<2;
- if(reorder.disabled)teamReorderMode=false;
- reorder.textContent=teamReorderMode?'並び替えを終了':'並び替え';
- reorder.setAttribute('aria-pressed',String(teamReorderMode));
- hint.hidden=!teamReorderMode;
- hint.textContent=teamReorderFrom===null?'移動する個体を選び、移動先の枠をタップしてください。':`${teamReorderFrom+1}匹目を選択中。移動先の枠をタップしてください。`;
  const teamSpeeds=teamSpeedContext();
  team.forEach((id,index)=>{
   const individual=state.box.find(x=>x.id===id);
   const row=document.createElement('div');row.className='psg-team-row';
-  if(teamReorderMode)row.classList.add('is-reordering');
-  if(teamReorderFrom===index)row.classList.add('is-reorder-source');
   const choose=document.createElement('button');choose.type='button';choose.className='psg-team-choose';
   if(individual){choose.classList.add(`type-${typeClass(speciesFor(individual)?.type)}`);if(speciesFor(individual)?.specialTeamLimited===true)choose.classList.add('psg-special-card')}
-  choose.setAttribute('aria-label',`${index+1}匹目：${individual?individual.name:'未設定'}。${teamReorderMode?'並び替える枠を選ぶ':'Boxで個体を選ぶ'}`);
+  choose.setAttribute('aria-label',`${index+1}匹目：${individual?individual.name:'未設定'}。Boxで個体を選ぶ`);
   const name=document.createElement('strong');name.className='psg-team-card-name';name.textContent=individual?cardDisplayName(individual.name):'個体を選ぶ';choose.append(name);
   const artwork=document.createElement('span');artwork.className='psg-team-card-art';artwork.append(teamFace(individual));
   if(individual){const level=document.createElement('span');level.className='psg-team-card-level';level.textContent=`Lv.${individual.level}`;artwork.append(level)}
@@ -58,20 +48,12 @@ function renderTeam(){
   }
   choose.append(identity);
   if(individual)choose.insertAdjacentHTML('beforeend',subskillCardBadges(individual));
-  if(teamReorderMode){const arrow=document.createElement('span');arrow.className='psg-team-choose-arrow';arrow.textContent=teamReorderFrom===index?'選択中':'移動先';choose.append(arrow)}
   choose.onclick=()=>{
-   if(teamReorderMode){
-    if(teamReorderFrom===null){if(!id)return;teamReorderFrom=index;renderTeam();return}
-    if(teamReorderFrom===index){teamReorderFrom=null;renderTeam();return}
-    const next=[...team];[next[index],next[teamReorderFrom]]=[next[teamReorderFrom],next[index]];saveTeamSelection(next);return;
-   }
    teamBoxSlot=index;renderBoxTeamMode();renderBox();go('box');
   };
   row.append(choose);panel.append(row);
  });
  const selected=team.map(id=>state.box.find(x=>x.id===id)).filter(Boolean);
- const summary=document.getElementById('teamSummary');
- summary.textContent=`おてボ 合計 ${Math.round(teamSpeeds.bonus*100)}%`;
  const composition=document.getElementById('teamComposition');
  composition.innerHTML=['きのみ','食材','スキル','オール'].map(s=>{
   const count=selected.filter(x=>speciesFor(x)?.specialty===s).length;

@@ -89,11 +89,11 @@
 .psg-home-heading::before{content:"";position:absolute;inset:0 -12px 0;background:var(--bg);z-index:-1;pointer-events:none}
 .psg-home-heading h2{grid-column:span 2;margin:0;min-width:0;display:flex;align-items:center;justify-content:center;background:var(--bg);text-align:center;font-size:18px;line-height:1}
 .psg-home-heading select{grid-column:span 3;min-width:0;width:100%;max-width:none;height:100%;min-height:0;padding:0 2px;border:1px solid #d7e0da;border-radius:8px;background:#fff;color:#111;font:inherit;font-size:12px;font-weight:700;text-align:center;text-align-last:center}
-.psg-home-fb{grid-column:1 / 6;display:flex;align-items:center;justify-content:space-evenly;gap:4px;min-width:0;min-height:0;padding:0 4px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;font-size:12px;font-weight:800;width:100%}
+.psg-home-fb{grid-column:1 / 5;display:flex;align-items:center;justify-content:space-evenly;gap:4px;min-width:0;min-height:0;padding:0 4px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;font-size:12px;font-weight:800;width:100%}
 .psg-home-fb #teamFieldSummary{flex:0 0 auto;gap:0;white-space:nowrap}
 .psg-home-berries{display:flex;justify-content:center;align-items:center;gap:4px;min-width:0;font-size:11px}
 .psg-home-berries img{width:24px;height:24px;object-fit:contain}
-.psg-home-image-toggles{grid-column:span 3;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;min-width:0}
+.psg-home-image-toggles{grid-column:span 2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;min-width:0}
 .psg-home-image-toggles button{display:grid;place-items:center;width:100%;height:100%;min-height:0;padding:0;border:1px solid var(--line);border-radius:8px;background:#fff}
 .psg-home-image-toggles button[aria-pressed="false"] img{opacity:.45}
 .psg-home-image-toggles button[aria-pressed="true"]{border-color:var(--green);background:#dff2e6}
@@ -121,15 +121,9 @@
 .psg-team-option strong{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .psg-team-option:disabled{opacity:.5;cursor:default}
 .psg-team-option[hidden]{display:none}
-.psg-team-toolbar{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:nowrap;min-height:calc(var(--psg-ui-unit) * .75);margin-top:6px;margin-bottom:5px}
-.psg-team-toolbar>.section-title{margin:0;font-size:16px;white-space:nowrap}
-.psg-team-composition{display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1;min-width:0}
-.psg-team-composition>span{display:flex;align-items:center;gap:2px;font-size:12px;white-space:nowrap}
+.psg-team-composition{display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:3px;min-width:0}
+.psg-team-composition>span{display:flex;align-items:center;gap:1px;font-size:11px;white-space:nowrap}
 .psg-team-composition .psg-specialty-icon{width:20px;height:20px;object-fit:contain}
-#teamSummary{margin:8px 0 0;font-size:13px}
-.psg-team-toolbar button,.psg-team-picker-remove{min-height:44px;padding:7px 11px;border:1px solid #d5e3db;border-radius:10px;background:#fff;color:#276747;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
-.psg-team-toolbar button[aria-pressed="true"]{background:#e5f4e9;border-color:#70af82}
-.psg-team-toolbar button:disabled{opacity:.45;cursor:default}
 .psg-team-hint,.psg-team-picker-hint{font-size:12px;color:#40644f;line-height:1.4;margin:4px 0 8px}
 .psg-team-row{margin:5px 0}
 .psg-team-number{flex:none;display:grid;place-items:center;width:20px;color:#5a7564;font-size:13px;font-weight:700}
@@ -160,13 +154,12 @@
 .psg-box-team-mode span{flex:1 1 100%}
 .psg-box-team-mode button{min-height:38px;padding:5px 9px;border:1px solid #78ab8a;border-radius:8px;background:#fff;color:#286a47;font-weight:700}
 .psg-team-option.is-selected{border-color:#70af82;background:#eff8f1}
-.psg-team-toolbar button:focus-visible,.psg-team-picker-remove:focus-visible{outline:2px solid #438ac8;outline-offset:2px}
 .psg-team-choose:focus-visible,.psg-team-actions button:focus-visible,.psg-team-option:focus-visible{outline:2px solid #438ac8;outline-offset:2px}
 @media(max-width:355px){.psg-team-choose{gap:5px;padding:5px}.psg-team-face{flex-basis:40px;width:40px;height:40px}.psg-team-actions button{min-width:31px}.psg-team-actions .psg-team-remove{min-width:37px}}
 .psg-team-food-card,.psg-team-recipe-card{margin-top:12px}
 .psg-day-card{margin-top:12px}
 .psg-day-header{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:4px;height:calc(var(--psg-ui-unit) * .75)}
-.psg-day-header .section-title{grid-column:span 2;margin:0;min-width:0;font-size:14px;line-height:1}
+.psg-day-header .section-title{display:flex;align-items:center;justify-content:space-between;gap:2px;grid-column:span 2;margin:0;min-width:0;font-size:14px;line-height:1}
 .psg-day-ex-setting{grid-column:span 2;width:100%;max-width:none;min-width:0;min-height:0;height:100%;padding:0 3px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#111;font-size:12px;font-weight:700;text-align:center;text-align-last:center}
 .psg-day-setting{grid-column:span 2;display:grid;grid-template-rows:calc(var(--psg-ui-unit) * .5) calc(var(--psg-ui-unit) * .75);align-items:stretch;min-width:0;white-space:nowrap;font-size:12px;font-weight:700;text-align:center}
 .psg-day-setting>span{display:flex;align-items:center;justify-content:center}
@@ -454,7 +447,6 @@
 .psg-style-field-condition{grid-column:1/-1;margin:0}
 
 
-.psg-team-toolbar #teamReorder{min-height:34px;padding:5px 7px;font-size:10px}.psg-team-toolbar #whistleToggle{display:inline-flex;align-items:center;justify-content:center;min-height:34px;width:34px;padding:2px;flex:none}.psg-team-toolbar #whistleToggle img{display:block;width:28px;height:28px;object-fit:contain}
 
 /* Manual zone controls live beside the meal toggle. */
 .psg-team-zone{grid-column:span 2;min-width:0}
@@ -553,9 +545,7 @@
 .psg-team-recipe-more>summary::before{content:"▶"}
 .psg-team-recipe-more[open]>summary::before{content:"▼"}
 
-.psg-team-toolbar #savedTeamSelect{flex:0 1 42%;min-width:0;min-height:calc(var(--psg-ui-unit) * .75);max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;padding:3px;font-size:12px;font-weight:700}
 .psg-saved-team-manager{font-size:12px;color:#111;margin:6px 0}
-.psg-saved-team-manager>summary{cursor:pointer;text-align:right}
 .psg-saved-team-name{display:flex;align-items:center;gap:8px;margin:8px 0}
 .psg-saved-team-name label{flex:none}
 .psg-saved-team-name input{min-width:0;flex:1;border:1px solid var(--line);border-radius:8px;padding:7px;background:#fff;color:#111}
@@ -566,6 +556,13 @@
 
 .psg-team-card-strip{grid-column:1/-1;position:relative;min-width:0}
 .psg-team-card-strip:not(.is-expanded) .psg-subskill-card-grid,.psg-team-card-strip:not(.is-expanded) .psg-team-identity{display:none!important}
-.psg-team-subskills-toggle{position:absolute;top:100%;right:0;z-index:1;width:calc((100% - 16px)/5);min-height:22px;padding:0 8px;border:1px solid var(--line);border-top:0;border-radius:0 0 9px 9px;background:var(--bg);color:#111;font-size:12px;line-height:22px;cursor:pointer}
-.psg-team-subskills-toggle::after{content:"";position:absolute;inset:-5px -4px -10px}
-#home .psg-team-card{padding-top:20px}
+
+#teamManagerToggle{grid-column:span 2;min-width:0;padding:0 2px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;font-size:11px;font-weight:700;cursor:pointer}
+.psg-team-strip-controls{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,2fr) minmax(0,1fr);align-items:center;gap:4px;height:calc(var(--psg-ui-unit) * .75);margin-top:2px}
+.psg-team-strip-controls #savedTeamSelect{grid-column:auto;width:100%;height:100%;padding:0 2px;font-size:11px;text-overflow:ellipsis}
+.psg-team-strip-controls .psg-specialty-icon{width:16px;height:16px}
+.psg-team-strip-controls .psg-team-composition>span{font-size:10px}
+.psg-team-subskills-toggle{align-self:stretch;min-width:0;min-height:0;padding:0;border:1px solid var(--line);border-radius:0 0 9px 9px;background:#fff;color:#111;font-size:12px;cursor:pointer}
+#whistleToggle{display:inline-flex;align-items:center;justify-content:center;min-height:0;width:28px;height:28px;padding:0;border:1px solid var(--line);border-radius:6px;background:#fff;flex:none;cursor:pointer}
+#whistleToggle img{width:24px;height:24px;object-fit:contain}
+.psg-team-card:has(#teamManagerPanel[hidden]):has(#savedTeamStatus[hidden]){display:none}
