@@ -10,18 +10,35 @@
  let ready=false;
  window.PS_PAGE_RENDERERS.expPage=()=>{
   if(ready)return;
-  const data=window.PS_CATALOG?.growth,host=document.getElementById('expContent');
-  if(!data){host.textContent='経験値資料は未登録です。';return;}
-  const note=document.createElement('p');note.textContent='登録済み資料を表示しています。育成費用の予測はボックスの個体詳細で確認できます。';host.append(note);
+  const catalog=window.PS_CATALOG,host=document.getElementById('expContent');
+  if(!catalog?.growth){host.textContent='経験値資料は未登録です。';return;}
+  function section(title){const details=document.createElement('details');details.className='psg-exp-section';const summary=document.createElement('summary');summary.textContent=title;details.append(summary);host.append(details);return details;}
+  function note(parent,text){const p=document.createElement('p');p.className='note';p.textContent=text;parent.append(p);}
+  function source(parent,url){if(!url)return;const p=document.createElement('p');p.className='note';const link=document.createElement('a');link.href=url;link.textContent='出典';link.target='_blank';link.rel='noopener';p.append(link);parent.append(p);}
+  function table(parent,columns,rows){
+   const wrap=document.createElement('div');wrap.className='psg-cooking-table-wrap';const element=document.createElement('table');element.className='psg-cooking-table';
+   const head=document.createElement('thead'),tr=document.createElement('tr');for(const name of columns){const th=document.createElement('th');th.scope='col';th.textContent=name;tr.append(th)}head.append(tr);element.append(head);
+   const body=document.createElement('tbody');element.append(body);wrap.append(element);parent.append(wrap);
+   const update=values=>{body.replaceChildren();for(const row of values){const tr=document.createElement('tr');for(const value of row){const td=document.createElement('td');td.textContent=value==null?'未確認':typeof value==='number'?value.toLocaleString('ja-JP'):value;tr.append(td)}body.append(tr)}};
+   update(rows);return update;
+  }
+  const data=catalog.growth,pokemon=section('ポケモンの経験値・ゆめのかけら');
   const label=document.createElement('label');label.textContent='必要EXPタイプ ';
   const select=document.createElement('select');select.setAttribute('aria-label','必要EXPタイプ');
-  for(const [type,multiplier] of Object.entries(data.expTypeMultipliers)){const option=document.createElement('option');option.value=type;option.textContent=`${type}（通常の${multiplier}倍）`;select.append(option)}
-  label.append(select);host.append(label);
-  const candy=document.createElement('p');candy.textContent='アメ1個の獲得EXPはレベル・性格により変わります。表は性格無補正の値です。';host.append(candy);
-  const wrap=document.createElement('div');wrap.className='psg-cooking-table-wrap';const table=document.createElement('table');table.className='psg-cooking-table';
-  table.innerHTML='<thead><tr><th scope="col">Lv</th><th scope="col">次Lvまで</th><th scope="col">次Lvの累計EXP</th><th scope="col">アメ1個</th></tr></thead><tbody></tbody>';wrap.append(table);host.append(wrap);
-  const render=()=>{const body=table.tBodies[0];body.replaceChildren();for(const row of data.rows.filter(r=>r.target_level<=data.levelCap)){const tr=document.createElement('tr');const values=[`${row.current_level} → ${row.target_level}`,row.exp_types?.[select.value]?.exp_to_next,row.exp_types?.[select.value]?.cumulative_exp_at_target,row.candy_exp?.neutral];for(const value of values){const td=document.createElement('td');td.textContent=value==null?'未確認':typeof value==='number'?value.toLocaleString('ja-JP'):value;tr.append(td)}body.append(tr)}};
-  select.onchange=render;render();ready=true;
+  for(const [type,multiplier]of Object.entries(data.expTypeMultipliers)){const option=document.createElement('option');option.value=type;option.textContent=`${type}（通常の${multiplier}倍）`;select.append(option)}label.append(select);pokemon.append(label);
+  note(pokemon,'通常アメ・性格無補正。かけらはアメ1個に必要な費用。育成の合計費用はボックスの個体詳細で確認できます。');
+  const update=table(pokemon,['Lv','次LvまでのEXP','次Lvの累計EXP','アメ1個のEXP','アメ1個のかけら'],[]);
+  const render=()=>update(data.rows.filter(r=>r.target_level<=data.levelCap).map(row=>{
+   const conflict=data.sourceTableConflicts?.some(c=>String(c.exp_type)===select.value&&c.target_level===row.target_level);
+   const exp=row.exp_types?.[select.value]?.exp_to_next;
+   return [`${row.current_level} → ${row.target_level}`,conflict&&exp!=null?`${exp.toLocaleString('ja-JP')} ※`:exp,row.exp_types?.[select.value]?.cumulative_exp_at_target,row.candy_exp?.neutral,row.dream_shards_per_candy_at_current_level];
+  }));select.onchange=render;render();
+  note(pokemon,'※ 資料の表と累計丸めによる値に差があります。現在は登録済みの累計丸め値を表示しています。');source(pokemon,data.sources?.level);source(pokemon,data.sources?.exp_type);
+  const user=section('ユーザーの経験値（リサーチEXP）'),ranks=catalog.researchRanks;
+  if(ranks){table(user,['ランク','必要EXP','累計EXP'],ranks.rows.map(r=>[r.rank,r.expToReach,r.cumulativeExp]));note(user,`ランク到達に必要なEXP。攻略・検証資料の参考値（確認日 ${ranks.checkedAt}）。`);source(user,ranks.source)}else note(user,'リサーチEXP資料は未登録です。');
+  const pot=section('鍋容量の拡張コスト'),potData=catalog.cooking?.pot;
+  if(potData){table(pot,['容量','寝顔種類','拡張のかけら','累計かけら'],potData['拡張表'].map(r=>[r['容量'],r['必要寝顔種類数'],r['拡張1回のゆめのかけら'],r['初期からの累計ゆめのかけら']]));note(pot,`通常鍋の容量。資料確認日 ${potData['確認日']}。`);for(const url of potData['出典']||[])source(pot,url)}else note(pot,'鍋の拡張費用は未登録です。');
+  ready=true;
  };
 })();
 </script>

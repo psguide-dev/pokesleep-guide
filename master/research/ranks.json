@@ -1,0 +1,359 @@
+{
+  "schemaVersion": 1,
+  "status": "community_reference",
+  "checkedAt": "2026-10-05",
+  "source": "https://wikiwiki.jp/poke_sleep/リサーチランク",
+  "rankCap": 70,
+  "rows": [
+    {
+      "rank": 1,
+      "expToReach": 0,
+      "cumulativeExp": 0
+    },
+    {
+      "rank": 2,
+      "expToReach": 103,
+      "cumulativeExp": 103
+    },
+    {
+      "rank": 3,
+      "expToReach": 146,
+      "cumulativeExp": 249
+    },
+    {
+      "rank": 4,
+      "expToReach": 200,
+      "cumulativeExp": 449
+    },
+    {
+      "rank": 5,
+      "expToReach": 263,
+      "cumulativeExp": 712
+    },
+    {
+      "rank": 6,
+      "expToReach": 352,
+      "cumulativeExp": 1064
+    },
+    {
+      "rank": 7,
+      "expToReach": 464,
+      "cumulativeExp": 1528
+    },
+    {
+      "rank": 8,
+      "expToReach": 600,
+      "cumulativeExp": 2128
+    },
+    {
+      "rank": 9,
+      "expToReach": 724,
+      "cumulativeExp": 2852
+    },
+    {
+      "rank": 10,
+      "expToReach": 867,
+      "cumulativeExp": 3719
+    },
+    {
+      "rank": 11,
+      "expToReach": 966,
+      "cumulativeExp": 4685
+    },
+    {
+      "rank": 12,
+      "expToReach": 1054,
+      "cumulativeExp": 5739
+    },
+    {
+      "rank": 13,
+      "expToReach": 1147,
+      "cumulativeExp": 6886
+    },
+    {
+      "rank": 14,
+      "expToReach": 1270,
+      "cumulativeExp": 8156
+    },
+    {
+      "rank": 15,
+      "expToReach": 1409,
+      "cumulativeExp": 9565
+    },
+    {
+      "rank": 16,
+      "expToReach": 1558,
+      "cumulativeExp": 11123
+    },
+    {
+      "rank": 17,
+      "expToReach": 1723,
+      "cumulativeExp": 12846
+    },
+    {
+      "rank": 18,
+      "expToReach": 1869,
+      "cumulativeExp": 14715
+    },
+    {
+      "rank": 19,
+      "expToReach": 2024,
+      "cumulativeExp": 16739
+    },
+    {
+      "rank": 20,
+      "expToReach": 2199,
+      "cumulativeExp": 18938
+    },
+    {
+      "rank": 21,
+      "expToReach": 2384,
+      "cumulativeExp": 21322
+    },
+    {
+      "rank": 22,
+      "expToReach": 2581,
+      "cumulativeExp": 23903
+    },
+    {
+      "rank": 23,
+      "expToReach": 2788,
+      "cumulativeExp": 26691
+    },
+    {
+      "rank": 24,
+      "expToReach": 3009,
+      "cumulativeExp": 29700
+    },
+    {
+      "rank": 25,
+      "expToReach": 3219,
+      "cumulativeExp": 32919
+    },
+    {
+      "rank": 26,
+      "expToReach": 3441,
+      "cumulativeExp": 36360
+    },
+    {
+      "rank": 27,
+      "expToReach": 3734,
+      "cumulativeExp": 40094
+    },
+    {
+      "rank": 28,
+      "expToReach": 4048,
+      "cumulativeExp": 44142
+    },
+    {
+      "rank": 29,
+      "expToReach": 4382,
+      "cumulativeExp": 48524
+    },
+    {
+      "rank": 30,
+      "expToReach": 4742,
+      "cumulativeExp": 53266
+    },
+    {
+      "rank": 31,
+      "expToReach": 5083,
+      "cumulativeExp": 58349
+    },
+    {
+      "rank": 32,
+      "expToReach": 5350,
+      "cumulativeExp": 63699
+    },
+    {
+      "rank": 33,
+      "expToReach": 5630,
+      "cumulativeExp": 69329
+    },
+    {
+      "rank": 34,
+      "expToReach": 6018,
+      "cumulativeExp": 75347
+    },
+    {
+      "rank": 35,
+      "expToReach": 6427,
+      "cumulativeExp": 81774
+    },
+    {
+      "rank": 36,
+      "expToReach": 6910,
+      "cumulativeExp": 88684
+    },
+    {
+      "rank": 37,
+      "expToReach": 7436,
+      "cumulativeExp": 96120
+    },
+    {
+      "rank": 38,
+      "expToReach": 7862,
+      "cumulativeExp": 103982
+    },
+    {
+      "rank": 39,
+      "expToReach": 8318,
+      "cumulativeExp": 112300
+    },
+    {
+      "rank": 40,
+      "expToReach": 8936,
+      "cumulativeExp": 121236
+    },
+    {
+      "rank": 41,
+      "expToReach": 9494,
+      "cumulativeExp": 130730
+    },
+    {
+      "rank": 42,
+      "expToReach": 10082,
+      "cumulativeExp": 140812
+    },
+    {
+      "rank": 43,
+      "expToReach": 10699,
+      "cumulativeExp": 151511
+    },
+    {
+      "rank": 44,
+      "expToReach": 11346,
+      "cumulativeExp": 162857
+    },
+    {
+      "rank": 45,
+      "expToReach": 11844,
+      "cumulativeExp": 174701
+    },
+    {
+      "rank": 46,
+      "expToReach": 12471,
+      "cumulativeExp": 187172
+    },
+    {
+      "rank": 47,
+      "expToReach": 13359,
+      "cumulativeExp": 200531
+    },
+    {
+      "rank": 48,
+      "expToReach": 14300,
+      "cumulativeExp": 214831
+    },
+    {
+      "rank": 49,
+      "expToReach": 15299,
+      "cumulativeExp": 230130
+    },
+    {
+      "rank": 50,
+      "expToReach": 16360,
+      "cumulativeExp": 246490
+    },
+    {
+      "rank": 51,
+      "expToReach": 23913,
+      "cumulativeExp": 270403
+    },
+    {
+      "rank": 52,
+      "expToReach": 26997,
+      "cumulativeExp": 297400
+    },
+    {
+      "rank": 53,
+      "expToReach": 30422,
+      "cumulativeExp": 327822
+    },
+    {
+      "rank": 54,
+      "expToReach": 34612,
+      "cumulativeExp": 362434
+    },
+    {
+      "rank": 55,
+      "expToReach": 37594,
+      "cumulativeExp": 400028
+    },
+    {
+      "rank": 56,
+      "expToReach": 44634,
+      "cumulativeExp": 444662
+    },
+    {
+      "rank": 57,
+      "expToReach": 52702,
+      "cumulativeExp": 497364
+    },
+    {
+      "rank": 58,
+      "expToReach": 61361,
+      "cumulativeExp": 558725
+    },
+    {
+      "rank": 59,
+      "expToReach": 68872,
+      "cumulativeExp": 627597
+    },
+    {
+      "rank": 60,
+      "expToReach": 77939,
+      "cumulativeExp": 705536
+    },
+    {
+      "rank": 61,
+      "expToReach": 112544,
+      "cumulativeExp": 818080
+    },
+    {
+      "rank": 62,
+      "expToReach": 142308,
+      "cumulativeExp": 960388
+    },
+    {
+      "rank": 63,
+      "expToReach": 189439,
+      "cumulativeExp": 1149827
+    },
+    {
+      "rank": 64,
+      "expToReach": 253450,
+      "cumulativeExp": 1403277
+    },
+    {
+      "rank": 65,
+      "expToReach": 340980,
+      "cumulativeExp": 1744257
+    },
+    {
+      "rank": 66,
+      "expToReach": 348931,
+      "cumulativeExp": 2093188
+    },
+    {
+      "rank": 67,
+      "expToReach": 356688,
+      "cumulativeExp": 2449876
+    },
+    {
+      "rank": 68,
+      "expToReach": 362409,
+      "cumulativeExp": 2812285
+    },
+    {
+      "rank": 69,
+      "expToReach": 373722,
+      "cumulativeExp": 3186007
+    },
+    {
+      "rank": 70,
+      "expToReach": 409260,
+      "cumulativeExp": 3595267
+    }
+  ]
+}

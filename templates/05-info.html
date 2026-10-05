@@ -3,9 +3,9 @@
 <button type="button" class="card psg-info-link" data-info-page="recipePage"><strong><img class="psg-info-icon" src="assets/ui/info_cooking.webp" width="36" height="36" alt=""> 料理</strong><span>食材からレシピを探す</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="ingredientPage"><strong><img class="psg-info-icon" src="assets/ui/info_ingredients.webp" width="36" height="36" alt=""> 食材</strong><span>基本エナジー・日産量・担当を見る</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="skillPage"><strong><img class="psg-info-icon" src="assets/ui/info_skills.webp" width="36" height="36" alt=""> スキル</strong><span>効果とレベルを見る</span><b aria-hidden="true">›</b></button>
-<button type="button" class="card psg-info-link" data-info-page="nightcapPage"><strong><img class="psg-info-icon" src="assets/ui/go_plus_plus.webp" width="36" height="36" alt=""> GO Plus＋</strong><span>なつき度と能力表</span><b aria-hidden="true">›</b></button><button type="button" class="card psg-info-link" data-info-page="accountPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_account.png" width="36" height="36" alt=""> アカウント</strong><span>鍋容量を設定する</span><b aria-hidden="true">›</b></button>
+<button type="button" class="card psg-info-link" data-info-page="accountPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_account.png" width="36" height="36" alt=""> アカウント</strong><span>鍋容量・GO Plus＋を設定する</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="bookshelfPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_bookshelf.png" width="36" height="36" alt=""> 本棚</strong><span>説明・計算の前提・資料を見る</span><b aria-hidden="true">›</b></button>
-<button type="button" class="card psg-info-link" data-info-page="expPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_exp.png" width="36" height="36" alt=""> EXP</strong><span>必要経験値・アメの資料を見る</span><b aria-hidden="true">›</b></button></div>
+<button type="button" class="card psg-info-link" data-info-page="expPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_exp.png" width="36" height="36" alt=""> 経験値</strong><span>EXP・かけら・鍋の拡張費用</span><b aria-hidden="true">›</b></button></div>
 <div class="card"><div class="section-title">記録のバックアップ</div><p>ボックス・寝顔・チーム・フィールド設定を１つのファイルに保存できます。</p>
  <button class="btn primary" type="button" id="backupExport">バックアップを書き出す</button>
  <label for="backupFile" style="display:block;margin-top:16px">バックアップを取り込む</label>
@@ -15,7 +15,7 @@
 </div></section>
 <section id="nightcapPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2>ナイトキャップピカチュウ</h2><div class="card"><div class="psg-nightcap-row"><img src="assets/ui/nightcap_pikachu.webp" width="52" height="52" alt="ナイトキャップピカチュウ"><label>なつき度 <select id="nightcapLevel" aria-label="ナイトキャップのなつき度"></select></label></div><p id="nightcapStats"></p><p id="nightcapInfoSaveStatus" class="note" role="status"></p></div><p>GO Plus+のお手伝いはチーム5匹とは別枠です。以下は回収資料の参考値で、ゲーム内の照合は未完了です。</p><p>数量はそのきのみ・食材が選ばれた時の数です。出現確率と補正の適用は未確認のため収量を計算しません。</p><div class="psg-nightcap-table"><table><caption>なつき度別の能力（参考値）</caption><thead><tr><th>なつき度</th><th>累計時間</th><th>お手伝い秒</th><th>所持数</th><th>ウブ</th><th>リンゴ</th><th>カカオ</th><th>ミツ</th></tr></thead><tbody id="nightcapTable"></tbody></table></div><p><a href="https://www.pokemongoplusplus.com/sleep/" target="_blank" rel="noopener">公式説明</a> · <a href="https://www.fireyoshida.com/entry/2023/10/20/133854" target="_blank" rel="noopener">能力表の参照資料</a></p></section>
 
-<section id="accountPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">アカウント</h2><div class="card psg-account-settings"><label for="teamPotBase">鍋容量</label><select id="teamPotBase" aria-label="アカウントの通常鍋容量"><option value="">未設定</option></select></div></section>
+<section id="accountPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">アカウント</h2><div class="card psg-account-settings"><label for="teamPotBase">鍋容量</label><select id="teamPotBase" aria-label="アカウントの通常鍋容量"><option value="">未設定</option></select></div><button type="button" class="card psg-info-link" data-info-page="nightcapPage"><strong><img class="psg-info-icon" src="assets/ui/go_plus_plus.webp" width="36" height="36" alt=""> GO Plus＋</strong><span>なつき度と能力表</span><b aria-hidden="true">›</b></button></section>
 
 <section id="bookshelfPage" class="screen">
 <button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">本棚</h2>
@@ -54,4 +54,4 @@
 <details id="friendshipReference" class="psg-cooking-reference"><summary>フレンドメダル・サブスキル</summary><div id="friendshipReferenceContent"></div></details>
 </details>
 </div></section>
-<section id="expPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">EXP</h2><div id="expContent" class="card"></div></section>
+<section id="expPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">経験値</h2><div id="expContent" class="card"></div></section>

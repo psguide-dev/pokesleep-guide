@@ -181,6 +181,13 @@ def catalog_and_images():
     catalog['nightcap'] = json.loads((MASTER / 'nightcap/data.json').read_text())
     assert [row['level'] for row in catalog['nightcap']['rows']] == list(range(1, 21))
     assert all(value is None for value in catalog['nightcap']['probabilities'].values())
+    catalog['researchRanks'] = json.loads((MASTER / 'research/ranks.json').read_text())
+    rank_total = 0
+    for rank, row in enumerate(catalog['researchRanks']['rows'], 1):
+        assert row['rank'] == rank
+        rank_total += row['expToReach']
+        assert row['cumulativeExp'] == rank_total
+    assert len(catalog['researchRanks']['rows']) == catalog['researchRanks']['rankCap'] == 70
     catalog['growth'] = json.loads((MASTER / 'growth/data.json').read_text())
     growth = catalog['growth']
     assert growth['levelCap'] == 70 and len(growth['rows']) == 69
@@ -454,7 +461,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v402') == 2
+    assert source.count('Review v403') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'

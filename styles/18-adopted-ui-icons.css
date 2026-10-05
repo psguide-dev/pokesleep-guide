@@ -6,6 +6,7 @@
 .screen details:not(.psg-recipe-entry):not(.psg-skill-entry):not(.psg-box-header-menu)>summary{text-align:right;cursor:pointer}
 #dexDetail #skillDetailToggle{margin-left:auto;text-align:right;min-height:32px}
 #expContent select{max-width:100%;margin:8px 0}
+.psg-exp-section{padding:12px 0;border-bottom:1px solid #dce6e2;color:#000}.psg-exp-section:last-child{border-bottom:0}.psg-exp-section>summary{font-weight:700;min-height:36px;cursor:pointer;text-align:right}.psg-exp-section .psg-cooking-table-wrap{margin-top:8px}.psg-exp-section label{display:block;margin-top:8px}.psg-exp-section .note{color:#000}
 #bookshelfContent>.psg-bookshelf-section{margin:0;padding:12px 0;border-bottom:1px solid #dce6e2}
 #bookshelfContent>.psg-bookshelf-section:last-child{border-bottom:0}
 #bookshelfContent>.psg-bookshelf-section>summary{font-weight:700;min-height:32px;line-height:32px}
