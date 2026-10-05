@@ -1,4 +1,4 @@
-// Shared full-day team comparison. No inventory, Box or saved team is changed.
+// Shared collection-boundary duration search. No inventory, Box or saved team is changed.
 const swapChoices=new Map();
 let swapAbort=null,swapGeneration=0,mealFocus=null;
 const swapUI=id=>document.getElementById(id);
@@ -66,47 +66,53 @@ async function calculateSwap(){
  const recipe=window.PS_CATALOG.recipes[swapUI('swapRecipe').value];
  if(!recipe){status.textContent='目標料理を選んでください。';return}
  let input;try{input=swapRequest(recipe)}catch(error){status.textContent=error.message;swapUI('swapSettings').open=true;return}
- const baseline=dailySwapForecast(input.request);
- if(baseline.missing){status.textContent=baseline.reasons.join('／');return}
- const timing=dailySwapDifference(baseline,baseline,input.request.demand);
- const foods=Object.entries(timing.foods).sort((a,b)=>b[1].deficit-a[1].deficit);
- const focus=Object.hasOwn(timing.foods,mealFocus)?mealFocus:foods[0][0];
- const heading=document.createElement('strong');heading.className='psg-meal-total';heading.textContent='現チームの24時間予測 → 料理1食分';host.append(heading);
- renderMealFoods(host,timing,focus);
- if(timing.foods[focus].deficit<=1e-7){status.textContent=`${focus}は足りる見込みです。不足する食材をタップしてください。`;return}
- const options=[],controller=new AbortController();swapAbort=controller;swapUI('swapCancel').hidden=false;swapUI('swapCalculate').disabled=true;
+ const controller=new AbortController();swapAbort=controller;swapUI('swapCancel').hidden=false;swapUI('swapCalculate').disabled=true;
+ let runner;
  try{
+  runner=createSwapWorker(controller.signal);
+  const request=swapWorkerRequest(input.request),baseline=await runner.call({kind:'init',request});
+  if(controller.signal.aborted||generation!==swapGeneration)return;
+  if(baseline.missing){status.textContent=baseline.reasons.join('／');return}
+  const timing=dailySwapDifference(baseline,baseline,input.request.demand);
+  const foods=Object.entries(timing.foods).sort((a,b)=>b[1].deficit-a[1].deficit);
+  if(!foods.length){status.textContent='必要食材が未登録です。';return}
+  const focus=Object.hasOwn(timing.foods,mealFocus)?mealFocus:foods[0][0];
+  const heading=document.createElement('strong');heading.className='psg-meal-total';heading.textContent='現チームの24時間予測 → 料理1食分';host.append(heading);
+  renderMealFoods(host,timing,focus);
+  if(timing.foods[focus].deficit<=1e-7){status.textContent=`${focus}は足りる見込みです。不足する食材をタップしてください。`;return}
+  const options=[];
   for(const [index,id] of input.candidateIds.entries()){
-   for(const [slot,outgoing] of input.request.ids.entries()){
-    // Yield between complete five-member simulations; never run automatically on edits.
+   for(const outgoing of input.request.ids){
     await new Promise(resolve=>setTimeout(resolve,0));
     if(controller.signal.aborted||generation!==swapGeneration)return;
-    const ids=[...input.request.ids];ids[slot]=id;
+    const ids=input.request.ids.map(x=>x===outgoing?id:x);
     if(!dailySwapCompatible(ids,input.request.box,input.request.catalog))continue;
-    const after=dailySwapForecast(input.request,ids);
-    if(after.missing){input.rejected.push(`${state.box.find(x=>x.id===id)?.name}：${after.reasons.join('・')}`);continue}
-    const result=dailySwapDifference(baseline,after,input.request.demand);
-    if(result.foods[focus].delta>1e-7)options.push({id,outgoing,...result});
+    const result=await runner.call({kind:'pair',outgoing,id,focus,baseline});
+    if(controller.signal.aborted||generation!==swapGeneration)return;
+    if(result?.missing){input.rejected.push(`${state.box.find(x=>x.id===id)?.name}：${result.reasons.join('・')}`);continue}
+    if(result)options.push(result);
    }
-   status.textContent=`比較中 ${index+1}／${input.candidateIds.length}体`;
+   status.textContent=`探索中 ${index+1}／${input.candidateIds.length}体`;
   }
-  options.sort((a,b)=>a.foods[focus].deficit-b.foods[focus].deficit||a.deficit-b.deficit||b.foods[focus].delta-a.foods[focus].delta||(input.request.berryKnown?b.energyDelta-a.energyDelta:0)||a.id.localeCompare(b.id)||a.outgoing.localeCompare(b.outgoing));
-  appendSwapNote(host,`${focus}を改善する交代案（起点から24時間入れ替え）`);
+  options.sort((a,b)=>Number(b.focusMet)-Number(a.focusMet)||(a.focusMet&&b.focusMet?a.hours-b.hours:a.foods[focus].deficit-b.foods[focus].deficit)||a.deficit-b.deficit||(input.request.berryKnown?b.energyDelta-a.energyDelta:0)||a.id.localeCompare(b.id)||a.outgoing.localeCompare(b.outgoing));
+  appendSwapNote(host,`${focus}を補う交代時間（起床から）`);
   for(const option of options.slice(0,10)){
    const incoming=state.box.find(x=>x.id===option.id),outgoing=state.box.find(x=>x.id===option.outgoing),row=document.createElement('div');row.className='psg-swap-option';
    const title=document.createElement('strong');title.textContent=`${outgoing.name} → ${incoming.name} Lv.${incoming.level}`;const identity=document.createElement('div');identity.className='psg-supplement-identity';identity.append(teamFace(incoming),title);row.append(identity);
    const n=window.PS_NUMBERS.display,food=option.foods[focus];
+   appendSwapNote(row,option.focusMet?`${option.hours}時間交代${option.hours<24?' → 元の個体へ戻す':''}`:`${option.hours}時間交代でも不足`);
    appendSwapNote(row,`${focus} 約${n(food.expected)}個（＋${n(food.delta)}個）／1食分の不足 約${n(food.deficit)}個`);
    const lost=Object.entries(option.foods).filter(([,f])=>f.delta<-1e-7).map(([name,f])=>`${name} ${n(f.delta)}個`);
    if(lost.length)appendSwapNote(row,'減る必要食材：'+lost.join('・'));
+   const remaining=Object.entries(option.foods).filter(([name,f])=>name!==focus&&f.deficit>1e-7).map(([name,f])=>`${name} 約${n(f.deficit)}個`);if(remaining.length)appendSwapNote(row,'他の不足：'+remaining.join('・'));
    appendSwapNote(row,input.request.berryKnown?`きのみ＋スキルのエナジー差 ${option.energyDelta>=0?'＋':''}${n(option.energyDelta)}（料理を含まない）`:'エナジー差は好物きのみを3種類指定してから比較できます。');
    host.append(row);
   }
   for(const message of new Set(input.rejected))appendSwapNote(host,`控えを保留：${message}`);
-  status.textContent=options.length?`${options.length}案中${Math.min(10,options.length)}案を表示。食材をタップして比較対象を変更できます。`:input.candidateIds.length?'選んだ控えでは、この食材の24時間獲得量が改善する編成はありません。':'「条件を変更・控えを選ぶ」で候補を指定してください。';
-  appendSwapNote(host,'残る4匹への補正・回復・特殊スキルも再計算した期待値です。必要な交代時間の探索は次段階。保存チーム・在庫は変更しません。');
- }catch(error){if(generation===swapGeneration)status.textContent='比較を保留しました：'+error.message}
- finally{if(generation===swapGeneration){swapAbort=null;swapUI('swapCancel').hidden=true;swapUI('swapCalculate').disabled=false;if(controller.signal.aborted)status.textContent='比較を中止しました。'}}
+  status.textContent=options.length?`${options.length}案中${Math.min(10,options.length)}案を表示。食材をタップして比較対象を変更できます。`:input.candidateIds.length?'選んだ控えでは、探索した時間では、この食材を改善する交代案はありません。':'「条件を変更・控えを選ぶ」で候補を指定してください。';
+  appendSwapNote(host,`回収間隔${input.request.interval}時間の時点と24時間で探索。交代後に元へ戻した分も含む1日の獲得量です。`);
+ }catch(error){if(generation===swapGeneration&&!controller.signal.aborted)status.textContent='探索を保留しました：'+error.message}
+ finally{runner?.close();if(generation===swapGeneration){swapAbort=null;swapUI('swapCancel').hidden=true;swapUI('swapCalculate').disabled=false;if(controller.signal.aborted)status.textContent='比較を中止しました。'}}
 }
 for(const id of ['swapRecipe','swapAssumeSubskills'])swapUI(id).onchange=()=>{mealFocus=null;invalidateSwap()};
 swapUI('swapCalculate').onclick=calculateSwap;

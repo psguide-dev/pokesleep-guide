@@ -1,0 +1,55 @@
+// Temporary exchange: collect before returning; paused Box members keep their energy and help progress.
+// Every proposal and its baseline use the same completed-help clock and collection boundaries.
+function dailySwapDurationPoints(interval){
+ const step=[1,2,4,8].includes(Number(interval))?Number(interval):4,points=[];
+ for(let h=step;h<=16;h+=step)points.push(h);
+ points.push(24);return points;
+}
+function dailyTimedForecast(request,exchange=null){
+ const catalog=request.catalog,baseIds=request.ids,replacement=[...baseIds];
+ if(exchange){const slot=replacement.indexOf(exchange.outgoing);if(slot<0||baseIds.includes(exchange.id)||!dailySwapDurationPoints(request.interval).includes(exchange.hours))return {missing:true,reasons:['交代条件']};replacement[slot]=exchange.id;}
+ if(!dailySwapCompatible(baseIds,request.box,catalog)||!dailySwapCompatible(replacement,request.box,catalog))return {missing:true,reasons:['編成制限・個体の重複']};
+ const favorites=new Set(request.favorites.filter(n=>Object.hasOwn(catalog.berries,n))),areaFactor=1+Math.max(0,Math.min(200,Number(request.areaBonus)||0))/100;
+ const mealCount=request.meals===true?3:request.meals===false?0:request.meals,mealTicks=[[],[0],[0,72],[0,36,72]][mealCount]||[0,36,72];
+ const activeItems=ids=>ids.map(id=>request.box.find(i=>i.id===id));
+ const contexts=new Map(),all=new Map();
+ for(const ids of [baseIds,replacement]){
+  const items=activeItems(ids),speed=request.contexts?.[ids.join('|')]||teamSpeedContext(ids,request.box,catalog);
+  const members=items.map(item=>dailyMemberContext(item,speed,items,catalog,Math.max(0,Math.min(150,Number.isFinite(request.energies?.[item.id])?request.energies[item.id]:request.energy))));
+  const pending=members.filter(m=>m.missing);if(pending.length)return {missing:true,reasons:pending.map(m=>`${m.name}：${(m.reasons||['入力']).join('・')}`)};
+  contexts.set(ids.join('|'),new Map(members.map(m=>[m.id,m])));
+  for(const m of members)if(!all.has(m.id))all.set(m.id,m);
+ }
+ let elapsed=0,ids=exchange?replacement:baseIds,skillEnergy=0;
+ const states=new Map(),trace=[],points=dailySwapDurationPoints(request.interval);
+ for(const end of points){
+  const members=ids.map(id=>all.get(id)),items=activeItems(ids),context=contexts.get(ids.join('|'));
+  for(const m of members){const current=context.get(m.id);m.stats=current.stats;m.boost=current.boost;m.skillHelps=current.skillHelps;m.energyLinked=true;}
+  const triggers=new Map();let teamRecovery=0,allyRecovery=0,bonusHelps=0;
+  for(const m of members){
+   const helps=dailyAdvanceLinkedMember(m,end-elapsed,elapsed*6,mealTicks,request.camp),regular=Math.min(helps,m.stats.carry*(request.camp?1.2:1)/m.averageSize),overflow=Math.max(0,helps-regular);
+   m.normalHelps=(m.normalHelps||0)+helps;
+   for(const slot of m.slots)m.foods.set(slot.name,(m.foods.get(slot.name)||0)+regular*m.chance*slot.qty/m.slots.length);
+   m.berries+=regular*(1-m.chance)*m.stats.berryQty+overflow*m.stats.berryQty;m.overflow+=overflow*m.stats.berryQty;
+   const count=Number.isFinite(m.stats.skill)&&m.skillName?expectedStoredSkills(regular,m.stats.skill,m.stockLimit):0;triggers.set(m.id,count);m.skillTriggers+=count;
+  }
+  for(const m of members){
+   const count=triggers.get(m.id),effect=dailyCollectionSkills(m,count,end<24,items.length);
+   bonusHelps+=effect.bonusHelps;teamRecovery+=effect.teamRecovery;allyRecovery+=effect.allyRecovery;
+   if(['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(m.skillEffectType)&&Number.isFinite(m.skillEnergy))skillEnergy+=count*m.skillEnergy*areaFactor;
+  }
+  for(const m of members){const immediate=Math.min(bonusHelps,999/m.averageSize);m.skillExtraHelps+=immediate;for(const slot of m.slots)m.foods.set(slot.name,(m.foods.get(slot.name)||0)+immediate*m.chance*slot.qty/m.slots.length);m.berries+=immediate*(1-m.chance)*m.stats.berryQty;}
+  skillEnergy+=dailySpecialSkills(members,items,catalog,areaFactor,favorites,request.zones,{states,triggers}).energy;
+  if(end<24){for(const m of members)m.energy=Math.min(150,m.energy+(teamRecovery+allyRecovery/members.length)*m.stats.energyFactor);dailyApplySpecialRecovery(members,items,catalog,triggers);}
+  trace.push({hour:end,ids:[...ids],members:members.map(m=>({id:m.id,energy:m.energy,pendingHelpSeconds:m.pendingHelpSeconds,normalHelps:m.normalHelps}))});
+  if(exchange&&end===exchange.hours)ids=baseIds;
+  elapsed=end;
+ }
+ const members=[...all.values()],foods=new Map();let berryEnergy=0;
+ for(const m of members){
+  m.foods.forEach((n,name)=>foods.set(name,(foods.get(name)||0)+n));
+  const zone=1+Math.max(0,Math.min(24,Number(request.zones?.[m.berryName])||0))/100;
+  m.berryEnergy=m.berries*berryEnergyAtLevel(m.berryBase,m.level)*(favorites.has(m.berryName)?2:1)*areaFactor*zone;berryEnergy+=m.berryEnergy;
+ }
+ return {members,foods,berryEnergy,skillEnergy,trace,states};
+}

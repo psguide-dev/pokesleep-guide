@@ -14,7 +14,7 @@ function dailySpecialTeamMembers(members,items,catalog,favorites){
  });
 }
 // Reward ledger only. Recovery is applied separately at collection boundaries; zone stays fixed.
-function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZones){
+function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZones,runtime=null){
  const engine=window.PS_SPECIAL_ENGINE;
  if(!engine)return {energy:0,candy:0};
  const zone=Math.max(0,Math.min(24,Number(berryZones?.['マゴのみ'])||0));
@@ -41,8 +41,9 @@ function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZone
   };
   // Adjacent integer counts are an explicit approximation; states stay discrete.
   // Merge only stockpile/disguise states: <=22 states, no cross-team branch explosion.
-  for(const distribution of engine.provisionalCountDistribution(member.skillTriggers)){
-   let states=new Map([['0|true',{probability:1,stock:0,eligible:true}]]);
+  const finalStates=new Map(),initialStates=runtime?.states.get(member.id)||new Map([['0|true',{probability:1,stock:0,eligible:true}]]);
+  for(const distribution of engine.provisionalCountDistribution(runtime?runtime.triggers.get(member.id)||0:member.skillTriggers)){
+   let states=new Map(initialStates);
    for(let count=0;count<distribution.count;count++){
     const next=new Map();
     for(const branch of states.values()){
@@ -60,17 +61,22 @@ function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZone
     }
     states=next;
    }
+   if(runtime)for(const [key,branch] of states){const probability=branch.probability*distribution.probability;if(finalStates.has(key))finalStates.get(key).probability+=probability;else finalStates.set(key,{...branch,probability});}
   }
+  if(runtime)runtime.states.set(member.id,finalStates);
+  const activationCount=runtime?runtime.triggers.get(member.id)||0:member.skillTriggers;
   // Unknown ingredient pool remains an unspecified random total, never an invented inventory.
   const randomAmount=row?.randomIngredientTotalBase??(selected?.effectType==='random_ingredients'?selected.levels?.[Math.min(member.skillLevel,selected.maxLevel)]?.amount:null);
-  if(Number.isFinite(randomAmount)){member.randomIngredients+=member.skillTriggers*randomAmount;omitted.delete('obtained_ingredient_pool_missing');omitted.delete('random_ingredients_unspecified');}
+  if(Number.isFinite(randomAmount)){member.randomIngredients+=activationCount*randomAmount;omitted.delete('obtained_ingredient_pool_missing');omitted.delete('random_ingredients_unspecified');}
   if(selected&&['variable_dream_shards','fixed_dream_shards','fixed_dream_shards_energy'].includes(selected.effectType)){
-   const r=selected.levels?.[Math.min(member.skillLevel,selected.maxLevel)];member.specialShards=member.skillTriggers*(r?.shards??(Number.isFinite(r?.min)&&Number.isFinite(r?.max)?(r.min+r.max)/2:0));
+   const r=selected.levels?.[Math.min(member.skillLevel,selected.maxLevel)];member.specialShards=(runtime?member.specialShards||0:0)+activationCount*(r?.shards??(Number.isFinite(r?.min)&&Number.isFinite(r?.max)?(r.min+r.max)/2:0));
   }
   for(const [id,qty] of Object.entries(totals.ingredients))member.foods.set(names[id]||id,(member.foods.get(names[id]||id)||0)+qty);
-  member.specialEnergy=totals.directEnergy+totals.berryEnergy;
-  member.specialCandy=Object.values(totals.candyExpectedByMember).reduce((sum,n)=>sum+n,0);
-  member.specialInstantHelps=Object.values(totals.instantHelps).reduce((sum,n)=>sum+n,0);
+  const periodEnergy=totals.directEnergy+totals.berryEnergy;
+  member.specialEnergy=(runtime?member.specialEnergy||0:0)+periodEnergy;
+  const periodCandy=Object.values(totals.candyExpectedByMember).reduce((sum,n)=>sum+n,0);
+  member.specialCandy=(runtime?member.specialCandy||0:0)+periodCandy;
+  member.specialInstantHelps=(runtime?member.specialInstantHelps||0:0)+Object.values(totals.instantHelps).reduce((sum,n)=>sum+n,0);
   member.specialResult=totals;member.skillOmitted=[...omitted];
   member.specialBasicText=row?[Number.isFinite(row.potIncrease)?`鍋＋${row.potIncrease}個／回`:'',Number.isFinite(row.recovery)?`1匹のげんき＋${row.recovery}／回`:'',Number.isFinite(row.recoveryPerTarget)?`2匹のげんき各＋${row.recoveryPerTarget}／回`:'',Number.isFinite(row.recoveryPerTeamMember)?`全員のげんき各＋${row.recoveryPerTeamMember}／回`:'',Number.isFinite(row.energyLossPerNonDarkMember)?`あく以外のげんき－${row.energyLossPerNonDarkMember}／回`:'',Number.isFinite(row.zoneIncreasePercentagePoints)?`ゾーン＋${row.zoneIncreasePercentagePoints}%／回`:''].filter(Boolean).join('・'):'';
   member.specialDeferred=['minus_cooking_power_up_s','psystrike_berry_zone','nightmare_energy_charge_m','lunar_blessing_energy_for_everyone_s','healing_pulse_energy_cheer_s','nuzzle_energy_cheer_s'].includes(activeId)||['team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(selected?.effectType);
@@ -79,7 +85,7 @@ function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZone
   if(activeId==='stockpile_energy_charge_s')member.skillOmitted.push('initial_stockpile_zero_provisional_spit_probability');
   if(activeId==='disguise_berry_burst')member.skillOmitted.push('initial_disguise_eligible_provisional_success_probability');
   member.skillCalculationNote=member.energyLinked?'回復・げんき減少を回収後の収集・発動見込みへ反映。対象とげんきは期待値で近似し、発動保証は未計算。':'特殊スキルの基本効果は暫定モデル。発動回数は既存の予測を使用。';
-  energy+=member.specialEnergy;candy+=member.specialCandy;
+  energy+=periodEnergy;candy+=periodCandy;
  }
  return {energy,candy};
 }

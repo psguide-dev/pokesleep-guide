@@ -9,5 +9,5 @@
 <p id="swapConditions" class="note"></p><details><summary>控えを選ぶ・げんきを入力</summary><p class="note">選んだ控えの起点げんきを入力（0〜150）。起点から24時間入れ替える比較です。</p><div id="swapCandidates" class="psg-swap-candidates"></div></details>
 <label class="psg-swap-assumption"><input id="swapAssumeSubskills" type="checkbox">未確認サブスキルを補正なしとして試算</label>
 </details><div class="psg-swap-actions"><button type="button" id="swapCalculate">不足と候補を見る</button><button type="button" id="swapCancel" hidden>中止</button></div><p id="swapStatus" class="note" role="status" aria-live="polite"></p><div id="swapResults" class="psg-swap-result"></div>
-<details><summary>この予測の前提</summary><p class="note">在庫なし。料理1食分と24時間の獲得予測を比較します。選んだ控えと現チームの各個体を入れ替え、残る4匹へのおてボ・回復・対応済みスキルも同じ日産モデルで再計算します。起点から24時間入れ替えた比較で、必要な交代時間はまだ探索しません。上の回収間隔・食事・キャンプと入力済みゾーンを使用。EXは未対応。種類未指定のランダム食材は必要食材へ割り当てません。未対応のスキル追加効果・対象抽選の相関・発動保証は含まず、料理エナジーを差分に加算しません。保存チーム・在庫は変更しません。</p><button type="button" id="swapBasisLink">詳しい前提を見る</button></details></div>
+<details><summary>この予測の前提</summary><p class="note">在庫なし。料理1食分と24時間の獲得予測を比較します。選んだ控えと現チームの各個体を入れ替え、残る4匹へのおてボ・回復・対応済みスキルも同じ日産モデルで再計算します。起床から1匹を交代し、回収時点で元へ戻す時間を探索します。戻した後も1日の終わりまで計算します。上の回収間隔・食事・キャンプと入力済みゾーンを使用。EXは未対応。種類未指定のランダム食材は必要食材へ割り当てません。未対応のスキル追加効果・対象抽選の相関・発動保証は含まず、料理エナジーを差分に加算しません。保存チーム・在庫は変更しません。</p><button type="button" id="swapBasisLink">詳しい前提を見る</button></details></div>
 </section>

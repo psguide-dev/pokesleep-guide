@@ -1,0 +1,34 @@
+// Serialize only calculation functions and input snapshots; the Worker has no UI or storage access.
+function swapWorkerRequest(request){
+ const contexts={};
+ const ids=request.ids,items=request.box.filter(i=>ids.includes(i.id)||Object.hasOwn(request.energies,i.id));
+ const save=members=>{const key=members.join('|');if(!contexts[key])contexts[key]={members:teamSpeedContext(members,items,request.catalog).members};};
+ save(ids);
+ for(const incoming of items.filter(i=>!ids.includes(i.id)))for(let slot=0;slot<ids.length;slot++){const next=[...ids];next[slot]=incoming.id;if(dailySwapCompatible(next,items,request.catalog))save(next);}
+ const species=Object.fromEntries(items.map(i=>[i.id,speciesFor(i,request.catalog)]));
+ return {...request,box:items,catalog:JSON.parse(JSON.stringify({berries:request.catalog.berries,skills:request.catalog.skills})),contexts,species};
+}
+function dailySwapTimedProposal(request,outgoing,id,focus,baseline){
+ let best=null;
+ for(const hours of dailySwapDurationPoints(request.interval)){
+  const after=dailyTimedForecast(request,{outgoing,id,hours});if(after.missing)return after;
+  const result=dailySwapDifference(baseline,after,request.demand),food=result.foods[focus];
+  if(food.delta<=1e-7)continue;
+  const option={id,outgoing,hours,focusMet:food.deficit<=1e-7,...result};
+  if(option.focusMet)return option;
+  if(!best||food.deficit<best.foods[focus].deficit-1e-7||Math.abs(food.deficit-best.foods[focus].deficit)<=1e-7&&result.deficit<best.deficit-1e-7)best=option;
+ }
+ return best;
+}
+function createSwapWorker(signal){
+ const helpers=[speciesFor,specialTeamCompatible,dailySwapCompatible,expectedStoredSkills,berryEnergyAtLevel,mealRecoveryAtEnergy,helperBoostContext,dailyMemberContext,dailyCollectionSkills,dailySpecialTeamMembers,dailySpecialSkills,dailyAdvanceLinkedMember,dailyApplySpecialRecovery,dailySwapDurationPoints,dailyTimedForecast,dailySwapDifference,dailySwapTimedProposal];
+ const source=`const window={};let request;const DAILY_ENERGY_SKILLS=new Set(${JSON.stringify([...DAILY_ENERGY_SKILLS])});\n`+document.getElementById('psg-special-skill-engine').textContent+'\n'+helpers.map(f=>f.toString()).join('\n')+`\nself.onmessage=event=>{try{const data=event.data;let result;if(data.kind==='init'){request=data.request;window.PS_CATALOG=request.catalog;window.PS_SPECIES=item=>request.species[item?.id]||null;result=dailyTimedForecast(request);}else result=dailySwapTimedProposal(request,data.outgoing,data.id,data.focus,data.baseline);self.postMessage({result});}catch(error){self.postMessage({error:error.message});}};`;
+ const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));let worker;
+ try{worker=new Worker(url);}finally{URL.revokeObjectURL(url);}
+ let pending=null,closed=false;
+ const close=()=>{if(closed)return;closed=true;worker.terminate();signal.removeEventListener('abort',close);pending?.reject(new DOMException('探索を中止','AbortError'));pending=null;};
+ signal.addEventListener('abort',close,{once:true});
+ worker.onmessage=event=>{const current=pending;pending=null;if(event.data.error)current?.reject(Error(event.data.error));else current?.resolve(event.data.result);};
+ worker.onerror=event=>{pending?.reject(Error(event.message||'探索処理を開始できませんでした'));pending=null;close();};
+ return {call(data){if(closed||signal.aborted)return Promise.reject(new DOMException('探索を中止','AbortError'));return new Promise((resolve,reject)=>{pending={resolve,reject};worker.postMessage(data);});},close};
+}
