@@ -35,7 +35,7 @@
  }
  let referencePromise=null;
  async function read(canvas){
-  if(!referencePromise)referencePromise=fetch('assets/import/ingredient-fingerprints.json').then(r=>{if(!r.ok)throw Error('食材見本を読み込めませんでした。');return r.json()}).catch(error=>{referencePromise=null;throw error});
+  if(!referencePromise)referencePromise=fetch('assets/import/ingredient-fingerprints.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('食材見本を読み込めませんでした。');return r.json()}).catch(error=>{referencePromise=null;throw error});
   const refs=await referencePromise,context=canvas.getContext('2d',{willReadFrequently:true}),pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
   return locate(pixels,canvas.width,canvas.height).map(box=>box?choose(fingerprint(pixels,canvas.width,canvas.height,box),refs):null);
  }
