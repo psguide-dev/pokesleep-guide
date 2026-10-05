@@ -19,6 +19,16 @@ const conflict=reader.merge([parsed,reader.parse('ヒトカゲ\nLv.30\n性格:�
 assert.equal(conflict.speciesId,null);assert.equal(conflict.level,null);assert.equal(conflict.nature,null);assert.equal(conflict.subskills[0],null);
 assert.ok(conflict.conflicts.includes('ポケモン'));assert.equal(parsed.level,35,'merging does not mutate source');
 const two=reader.merge([parsed,reader.parse('性格:いじっぱり',dictionary)]);assert.equal(two.level,35);assert.equal(two.nature,'いじっぱり');
+const combined=reader.parse('Lv.35 フシギダネ\nLv.60\nメインスキル・サブスキル\n食材ゲットS\nLv.3',dictionary,[{kind:'nature',text:'いじっぱり'},...dictionary.subskills.map((text,index)=>({kind:'subskill',index,text}))]);
+assert.equal(combined.speciesId,'0001_default');assert.equal(combined.level,35);assert.equal(combined.skillLevel,3);assert.equal(combined.nature,'いじっぱり');assert.deepEqual(Array.from(combined.subskills),dictionary.subskills);
+// Same two-column layout as the game: unlocked cards retain colored backgrounds,
+// locked cards do not. Their positions come from the validated grid, not Lv text.
+const pixels=new Uint8ClampedArray(480*1040*4).fill(255);
+function rectangle(x,y,w,h,color){for(let row=y;row<y+h;row++)for(let col=x;col<x+w;col++)pixels.set([...color,255],4*(row*480+col))}
+rectangle(24,365,430,26,[30,210,90]);rectangle(24,815,430,26,[30,210,90]);
+rectangle(36,565,188,44,[250,235,140]);rectangle(255,565,188,44,[195,235,255]);rectangle(36,643,188,44,[195,235,255]);
+const regions=reader.regionsFromPixels(pixels,480,1040);assert.equal(regions.filter(r=>r.kind==='subskill').length,5);assert.ok(regions.some(r=>r.kind==='nature'));assert.ok(regions.some(r=>r.kind==='main'));
+assert.equal(regions.find(r=>r.index===4).y,717);assert.equal(reader.regionsFromPixels(new Uint8ClampedArray(480*1040*4).fill(255),480,1040).length,0,'no grid guessed on a different screenshot');
 // Exercise the production save validation with catalog-backed options, without touching storage.
 const p={no:1,name:'フシギダネ',specialty:'食材',ingredientSlots:[{unlock:1,candidates:[{name:'あまいミツ'}]},{unlock:30,candidates:[{name:'あまいミツ'},{name:'あんみんトマト'}]}],mainSkillId:'food'};
 const saveCtx=vm.createContext({boxCatalog:()=>[p],speciesKey:x=>x.speciesId||`${String(x.no).padStart(4,'0')}_default`,MAX_POKEMON_LEVEL:70,SUBSKILL_LEVELS:dictionary.levels,SUBSKILL_NAMES:dictionary.subskills,NATURE_EFFECTS:{いじっぱり:{}},defaultIndividualRole:()=> '食材',window:{PS_CATALOG:{skills:{food:{maxLevel:7}}}}});

@@ -44,9 +44,9 @@ function setupImageForm(){
  });
  fillImageSpeciesFields();
 }
-function parseImageTexts(texts){
+function parseImageTexts(texts,regions=[]){
  const dictionary={species:boxCatalog(),natures:Object.keys(NATURE_EFFECTS),subskills:SUBSKILL_NAMES,levels:SUBSKILL_LEVELS};
- return window.PS_IMAGE_READER.merge(texts.map(text=>window.PS_IMAGE_READER.parse(text,dictionary)));
+ return window.PS_IMAGE_READER.merge(texts.map((text,i)=>window.PS_IMAGE_READER.parse(text,dictionary,regions[i]||[])));
 }
 function applyImageReading(result){
  imageForm.hidden=false;imageForm.elements.species.value=result.speciesId||'';
@@ -82,7 +82,7 @@ imageFiles.onchange=()=>{
 };
 imageRead.onclick=async()=>{
  if(imageBusy||!imageFiles.files.length)return;
- const token=++imageEpoch,files=[...imageFiles.files],texts=[];let worker=null;
+ const token=++imageEpoch,files=[...imageFiles.files],texts=[],readRegions=[];let worker=null;
  imageForm.hidden=true;imageBusyState(true);imageStatus.textContent='読み取り機能を準備しています…';
  imageWatchdog=setTimeout(()=>{if(token===imageEpoch)stopImageRead('読み取りがタイムアウトしました。枚数を減らして再試行してください。')},180000);
  try{
@@ -94,11 +94,21 @@ imageRead.onclick=async()=>{
   for(const file of files){
    if(token!==imageEpoch)return;
    const canvas=await window.PS_IMAGE_READER.canvas(file);
-   try{const result=await worker.recognize(canvas);if(token!==imageEpoch)return;texts.push(result.data.text||'')}
+   try{
+    const result=await worker.recognize(canvas);if(token!==imageEpoch)return;
+    const extra=[];
+    for(const region of window.PS_IMAGE_READER.regions(canvas)){
+     if(token!==imageEpoch)return;
+     const cropped=window.PS_IMAGE_READER.crop(canvas,region);
+     try{const part=await worker.recognize(cropped);if(token!==imageEpoch)return;extra.push({...region,text:part.data.text||''})}
+     finally{cropped.width=cropped.height=1}
+    }
+    texts.push(result.data.text||'');readRegions.push(extra);
+   }
    finally{canvas.width=canvas.height=1}
   }
   if(token!==imageEpoch)return;
-  document.getElementById('boxImageText').value=texts.join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts));
+  document.getElementById('boxImageText').value=texts.join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions));
   imageStatus.textContent=texts.some(text=>text.trim())?'読み取りが終わりました。確認後に登録してください。':'文字を読み取れませんでした。画像を確認するか、各項目を選んで登録できます。';
  }catch(error){if(token===imageEpoch)imageStatus.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
  finally{
