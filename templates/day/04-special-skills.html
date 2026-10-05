@@ -72,11 +72,10 @@ function dailySpecialSkills(members,items,catalog,areaFactor,favorites,berryZone
   member.specialCandy=Object.values(totals.candyExpectedByMember).reduce((sum,n)=>sum+n,0);
   member.specialInstantHelps=Object.values(totals.instantHelps).reduce((sum,n)=>sum+n,0);
   member.specialResult=totals;member.skillOmitted=[...omitted];
-  member.specialBasicText=row?[Number.isFinite(row.potIncrease)?`鍋＋${row.potIncrease}個／発動`:'',Number.isFinite(row.recovery)?`1匹のげんき＋${row.recovery}／発動`:'',Number.isFinite(row.recoveryPerTarget)?`2匹のげんき各＋${row.recoveryPerTarget}／発動`:'',Number.isFinite(row.recoveryPerTeamMember)?`全員のげんき各＋${row.recoveryPerTeamMember}／発動`:'',Number.isFinite(row.energyLossPerNonDarkMember)?`あく以外のげんき－${row.energyLossPerNonDarkMember}／発動`:'',Number.isFinite(row.zoneIncreasePercentagePoints)?`ゾーン＋${row.zoneIncreasePercentagePoints}%／発動（上限24%）`:''].filter(Boolean).join('・'):'';
+  member.specialBasicText=row?[Number.isFinite(row.potIncrease)?`鍋＋${row.potIncrease}個／回`:'',Number.isFinite(row.recovery)?`1匹のげんき＋${row.recovery}／回`:'',Number.isFinite(row.recoveryPerTarget)?`2匹のげんき各＋${row.recoveryPerTarget}／回`:'',Number.isFinite(row.recoveryPerTeamMember)?`全員のげんき各＋${row.recoveryPerTeamMember}／回`:'',Number.isFinite(row.energyLossPerNonDarkMember)?`あく以外のげんき－${row.energyLossPerNonDarkMember}／回`:'',Number.isFinite(row.zoneIncreasePercentagePoints)?`ゾーン＋${row.zoneIncreasePercentagePoints}%／回`:''].filter(Boolean).join('・'):'';
   member.specialDeferred=['minus_cooking_power_up_s','psystrike_berry_zone','nightmare_energy_charge_m','lunar_blessing_energy_for_everyone_s','healing_pulse_energy_cheer_s','nuzzle_energy_cheer_s'].includes(activeId)||['team_energy_recovery','ally_energy_recovery','self_energy_recovery'].includes(selected?.effectType);
   if(activeId==='psystrike_berry_zone')member.skillOmitted.push('zone_input_fixed');
   else if(member.specialDeferred&&!member.energyLinked)member.skillOmitted.push('recovery_pot_zone_production_not_connected');
-  else if(activeId==='minus_cooking_power_up_s'&&!member.potLinked)member.skillOmitted.push('pot_cooking_deferred');
   if(activeId==='stockpile_energy_charge_s')member.skillOmitted.push('initial_stockpile_zero_provisional_spit_probability');
   if(activeId==='disguise_berry_burst')member.skillOmitted.push('initial_disguise_eligible_provisional_success_probability');
   member.skillCalculationNote=member.energyLinked?'回復・げんき減少を回収後の収集・発動見込みへ反映。対象とげんきは期待値で近似し、発動保証は未計算。':'特殊スキルの基本効果は暫定モデル。発動回数は既存の予測を使用。';

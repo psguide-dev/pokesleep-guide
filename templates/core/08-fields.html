@@ -35,7 +35,7 @@ function cookingContext(){return {...cookingSettings,camp:teamGoodCamp,capacity:
 function saveCookingSettings(value){
  cookingSettings=normalizeCookingSettings({...cookingSettings,...value});
  try{localStorage.setItem(COOKING_SETTINGS_KEY,JSON.stringify(cookingSettings))}catch{}
- teamViewDirty=true;if(state.screen==='home'){renderTeamDay();renderTeamFood()}window.dispatchEvent(new Event('psg-cooking-settings-change'));
+ if(state.screen==='home')renderTeamFood();window.dispatchEvent(new Event('psg-cooking-settings-change'));
 }
 function syncExEffectControls(){
  const isEx=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.mode==='expert';

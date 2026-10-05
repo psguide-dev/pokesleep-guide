@@ -1,0 +1,21 @@
+// Presentation only: random outcomes and pot usage do not change the daily simulation.
+function dailySkillDisplay(member,item,catalog){
+ let skill=catalog.skills?.[member.skillId],id=member.skillId;
+ if(id==='almighty'){
+  const name=String(item?.mythicalState?.selectedEffect||'').normalize('NFKC').replace(/\s/g,'');
+  skill=Object.values(catalog.skills||{}).find(s=>String(s.name||'').normalize('NFKC').replace(/\s/g,'')===name);id=skill?.id;
+ }
+ const level=Math.min(member.skillLevel,skill?.maxLevel||7),row=skill?.levels?.[level];
+ const countOnly=['random_main_skill','team_skill_copy'].includes(skill?.effectType);
+ let potAmount=skill?.effectType==='cooking_pot_capacity'?row?.capacity:null;
+ if(id==='minus_cooking_power_up_s')potAmount=window.PS_SPECIAL_ENGINE?.tables.skills.find(s=>s.skillId===id)?.levels[level-1]?.potIncrease;
+ const select=['select_ingredients','conditional_ingredient_select'].includes(skill?.effectType);
+ const species=speciesFor(item,catalog);
+ const candidates=select?[...new Set(skill.ingredientCandidates||(member.skillId===id?(species?.ingredientSlots||[]).flatMap(s=>s.candidates||[]).map(c=>c.name).filter(Boolean):[]))]:[];
+ return {countOnly,select,candidates,amount:select?row?.amount:null,bonusAmount:select?row?.bonusAmount:null,shards:select?[row?.shardsSmall,row?.shardsLarge].filter(Number.isFinite):[],potAmount:Number.isFinite(potAmount)?potAmount:null};
+}
+function dailySkillCandidateTiles(display){
+ const host=document.createElement('div');host.className='psg-day-skill-candidates';
+ for(const name of display.candidates){const tile=document.createElement('span');tile.title=name;tile.setAttribute('aria-label',name);tile.append(teamFoodIcon(name));host.append(tile)}
+ return host;
+}

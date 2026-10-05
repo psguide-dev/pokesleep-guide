@@ -8,10 +8,10 @@ not the upstream Monte Carlo simulator: target and energy correlations are proje
 Existing expected carry occupancy and stock caps remain. Unfinished helps retain their interval.
 Normal teams keep their existing forecast path. Special recovery teams use discrete help completions.
 Meals still use existing fixed times. Guarantees and exact low-energy target preference are omitted.
-Pot/cooking integration lives in templates/day/06-pot-feedback.html. A shared pot distribution
-contains at most 201 integer states; blocked activations retain stock and resume after cooking.
-Pending stock is projected to per-member expectations, omitting joint stock/pot/energy correlations.
-Cooking resets additions at the existing meal times, and capacity forecasts never mutate settings. Zone is fixed at the user input; predicted accumulation is reserved
+Pot skills display triggers and one-activation capacity only. Pot caps, blocked stock and meal-time
+capacity distributions are intentionally excluded from the forecast. Meal recovery still feeds production.
+Random ingredient select displays candidate sets; Metronome/copy display trigger counts only.
+Zone is fixed at the user input; predicted accumulation is reserved
 for a future opt-in feature and must never write back to the user's input or saved conditions.
 Manual Mago zone applies; held berry transfer is not counted as an additional reward.
 Unknown additions are omitted explicitly. Random ingredient pools remain unspecified totals.

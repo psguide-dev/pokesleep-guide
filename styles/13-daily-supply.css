@@ -9,3 +9,7 @@
 .psg-supply-tier .psg-supply-daily{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums}
 #dailySupplyReferenceContent .note{font-size:12px;overflow-wrap:anywhere;margin:6px 0}
 #dailySupplyReference{scroll-margin-top:55px}
+
+.psg-day-skill-candidates{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+.psg-day-skill-candidates span{display:inline-flex;align-items:center}
+.psg-day-skill-candidates img{width:26px;height:26px;object-fit:contain}
