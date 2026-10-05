@@ -7,6 +7,11 @@
   reference.scrollIntoView({block:'start'});
  }};
  window.PS_PAGE_RENDERERS??={};
+ window.PS_PAGE_RENDERERS.accountPage=()=>{
+  const select=document.getElementById('teamPotBase');
+  if(select.options.length===1)for(const row of window.PS_CATALOG.cooking.pot['拡張表']){const option=document.createElement('option');option.value=String(row['容量']);option.textContent=`${row['容量']}個`;select.append(option)}
+  const base=window.PS.cookingContext().base;select.value=base===null?'':String(base);
+ };
  let ready=false;
  window.PS_PAGE_RENDERERS.expPage=()=>{
   if(ready)return;
