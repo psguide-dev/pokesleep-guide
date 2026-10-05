@@ -1,0 +1,76 @@
+<script id="psg-image-reader">
+// Shared, on-device screenshot reader. No images or OCR results are sent to a server.
+(()=>{
+ const compact=value=>String(value||'').normalize('NFKC').replace(/[\s　]/g,'');
+ const unique=values=>[...new Set(values.filter(value=>value!==null&&value!==undefined&&value!==''))];
+ function parse(text,{species=[],natures=[],subskills=[],levels=[10,25,50,70,80]}={}){
+  const lines=String(text||'').split(/\r?\n/).map(compact).filter(Boolean),whole=lines.join('\n');
+  const exactNames=species.filter(p=>lines.some(line=>line===compact(p.name)||line.replace(/^No\.?\d+[:：]?/i,'')===compact(p.name)));
+  const speciesIds=unique(exactNames.map(p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`));
+  const natureNames=unique(natures.filter(name=>lines.some(line=>line===name||line===`せいかく${name}`||line===`性格${name}`||line===`せいかく:${name}`||line===`性格:${name}`)));
+  const hits=line=>subskills.filter(name=>line.includes(compact(name)));
+  // Do not confuse ingredient unlocks, subskill unlocks or main-skill levels with Pokémon Lv.
+  const firstSection=lines.findIndex(line=>/食材|メインスキル|サブスキル|せいかく|性格/.test(line));
+  const header=firstSection<0?lines.slice(0,5):lines.slice(0,firstSection);
+  const levelValues=unique(header.filter(line=>!hits(line).length&&!/スキル|あと|EXP|必要|解放/.test(line)).flatMap(line=>{
+   const match=line.match(/(?:^|レベル|ポケモン)L[vV][.:・]?(\d{1,3})(?!\d)/i)||line.match(/^レベル[:：]?(\d{1,3})(?!\d)/);
+   return match&&(speciesIds.length||/RP|ポケモン|レベル/.test(whole))?[Number(match[1])]:[];
+  }));
+  const slots=levels.map(()=>[]),skillValues=[];
+  const slotIndex=level=>{const i=levels.indexOf(level);return i>=0?i:level===75?3:level===100?4:-1};
+  lines.forEach((line,i)=>{
+   const marker=line.match(/L[vV][.:・]?(\d{1,3})(?!\d)/i);
+   if(marker){
+    const index=slotIndex(Number(marker[1]));
+    if(index>=0){
+     const nearby=[line];
+     for(let offset=1;offset<=2&&i+offset<lines.length;offset++){
+      if(/L[vV][.:・]?\d/i.test(lines[i+offset])||/メインスキル|せいかく|性格/.test(lines[i+offset]))break;
+      nearby.push(lines[i+offset]);
+     }
+     const names=unique(nearby.flatMap(hits));if(names.length===1)slots[index].push(names[0]);
+    }
+   }
+   if(/メインスキル/.test(line)){
+    const area=lines.slice(i,i+5).join('\n').split('サブスキル')[0];
+    for(const m of area.matchAll(/L[vV][.:・]?(\d{1,2})(?!\d)/gi))if(Number(m[1])<=7)skillValues.push(Number(m[1]));
+   }
+  });
+  const skillDirect=whole.match(/(?:スキルLv\.?|スキルレベル[:：]?)(\d{1,2})(?!\d)/i);
+  if(skillDirect)skillValues.push(Number(skillDirect[1]));
+  const single=values=>unique(values).length===1?unique(values)[0]:null;
+  return {speciesId:single(speciesIds),level:single(levelValues),nature:single(natureNames),skillLevel:single(skillValues),
+   subskills:slots.map(single),candidates:unique(lines.flatMap(hits)),
+   conflicts:[speciesIds.length>1?'ポケモン':null,levelValues.length>1?'レベル':null,natureNames.length>1?'性格':null,...slots.map((v,i)=>unique(v).length>1?`Lv.${levels[i]} サブスキル`:null)].filter(Boolean)};
+ }
+ function merge(results){
+  const merged={subskills:[],candidates:unique(results.flatMap(x=>x.candidates)),conflicts:unique(results.flatMap(x=>x.conflicts))};
+  const field=(values,label)=>{const distinct=unique(values);if(distinct.length>1)merged.conflicts.push(label);return distinct.length===1?distinct[0]:null};
+  for(const [key,label] of [['speciesId','ポケモン'],['level','レベル'],['nature','性格'],['skillLevel','スキルLv']])merged[key]=field(results.map(x=>x[key]),label);
+  for(let i=0;i<5;i++)merged.subskills[i]=field(results.map(x=>x.subskills[i]),`サブスキル ${i+1}`);
+  merged.conflicts=unique(merged.conflicts);return merged;
+ }
+ let enginePromise=null;
+ function loadEngine(){
+  if(window.Tesseract)return Promise.resolve(window.Tesseract);
+  if(!enginePromise)enginePromise=new Promise((resolve,reject)=>{
+   const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js';script.crossOrigin='anonymous';
+   const timer=setTimeout(()=>{script.remove();reject(Error('読み取り機能の準備がタイムアウトしました。もう一度お試しください。'))},40000);
+   script.onload=()=>{clearTimeout(timer);window.Tesseract?resolve(window.Tesseract):reject(Error('読み取り機能を準備できませんでした。'))};
+   script.onerror=()=>{clearTimeout(timer);script.remove();reject(Error('読み取り機能を取得できませんでした。通信を確認してください。'))};document.head.append(script);
+  }).catch(error=>{enginePromise=null;throw error});
+  return enginePromise;
+ }
+ async function canvas(file){
+  const url=URL.createObjectURL(file),image=new Image();
+  try{
+   image.src=url;await image.decode();
+   if(!image.naturalWidth||!image.naturalHeight)throw Error('画像を開けませんでした。');
+   const scale=Math.min(2,Math.max(1,1000/image.naturalWidth),3000/Math.max(image.naturalWidth,image.naturalHeight),Math.sqrt(4000000/(image.naturalWidth*image.naturalHeight)));
+   const output=document.createElement('canvas');output.width=Math.round(image.naturalWidth*scale);output.height=Math.round(image.naturalHeight*scale);
+   const context=output.getContext('2d');context.fillStyle='#fff';context.fillRect(0,0,output.width,output.height);context.drawImage(image,0,0,output.width,output.height);return output;
+  }finally{URL.revokeObjectURL(url)}
+ }
+ window.PS_IMAGE_READER={parse,merge,loadEngine,canvas};
+})();
+</script>

@@ -1,0 +1,20 @@
+<dialog id="boxImageDialog" class="psg-image-dialog" aria-labelledby="boxImageTitle">
+ <div class="psg-image-heading"><h2 id="boxImageTitle">画像から登録</h2><button type="button" class="btn" id="boxImageClose" aria-label="画像読み込みを閉じる">閉じる</button></div>
+ <p>同じ1体の能力画面を選んでください（5枚まで）。</p>
+ <label class="btn psg-image-file-label">画像を選ぶ<input type="file" id="boxImageFiles" accept="image/png,image/jpeg,image/webp" multiple></label>
+ <div id="boxImagePreviews" class="psg-image-previews"></div>
+ <div class="psg-image-actions"><button type="button" id="boxImageRead" class="btn primary" disabled>読み取る</button><button type="button" id="boxImageStop" class="btn" hidden>中止</button></div>
+ <p id="boxImageStatus" role="status" aria-live="polite">画像は端末内で処理します。初回は読み取りデータを取得します。</p>
+ <form id="boxImageForm" hidden>
+  <p>画像と照らし合わせて確認してください。食材アイコンは手動で選択します。</p>
+  <p id="boxImageConflicts" role="alert"></p>
+  <div class="psg-image-fields"><label>ポケモン（姿・衣装も確認）<select name="species" id="boxImageSpecies" required></select></label><label>レベル<input name="level" type="number" min="1" max="70" step="1" required inputmode="numeric"></label></div>
+  <div id="boxImageIngredients" class="psg-image-fields"></div>
+  <div id="boxImageSubskills" class="psg-image-fields"></div>
+  <p id="boxImageCandidates"></p>
+  <div class="psg-image-fields"><label>性格<select name="nature" id="boxImageNature"></select></label><label>スキルLv<select name="skillLevel" required></select></label></div>
+  <label class="psg-image-check"><input type="checkbox" name="mint">まっしろミント適用済み</label>
+  <details><summary>読み取りテキスト</summary><textarea id="boxImageText" rows="8" aria-label="読み取りテキスト"></textarea><button type="button" class="btn" id="boxImageReparse">テキストから再読み取り</button></details>
+  <p id="boxImageMessage" role="status"></p><button type="submit" class="btn primary" id="boxImageSave">確認してボックスに登録</button>
+ </form>
+</dialog>

@@ -1,0 +1,12 @@
+.psg-image-dialog{box-sizing:border-box;width:min(94vw,720px);max-height:90dvh;overflow:auto;border:1px solid #dce6e2;border-radius:18px;padding:18px;color:#000;background:#fff}
+.psg-image-dialog::backdrop{background:#0007}
+.psg-image-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.psg-image-heading h2{font-size:1.2rem;margin:0}
+.psg-image-dialog p{font-size:.9rem;line-height:1.5;margin:12px 0}.psg-image-file-label{display:inline-flex;position:relative;cursor:pointer;overflow:hidden}
+.psg-image-file-label input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.psg-image-previews{display:flex;gap:8px;overflow-x:auto;margin:12px 0}.psg-image-previews img{height:140px;max-width:180px;object-fit:contain;flex-shrink:0;border:1px solid #dce6e2;border-radius:8px}
+.psg-image-actions{display:flex;gap:8px}.psg-image-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.psg-image-fields label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;font-weight:700;min-width:0}
+.psg-image-fields select,.psg-image-fields input,.psg-image-dialog textarea{box-sizing:border-box;width:100%;min-height:40px;font-size:16px;color:#000;background:#fff;border:1px solid #dce6e2;border-radius:8px;padding:6px}
+.psg-image-check{display:flex;align-items:center;gap:8px}.psg-image-dialog summary{text-align:right;cursor:pointer;padding:10px 0}.psg-image-dialog textarea{resize:vertical}
+#boxImageConflicts,#boxImageMessage{color:#b22}#boxImageCandidates:empty,#boxImageConflicts:empty,#boxImageMessage:empty{display:none}
+#boxImageSave{margin-top:12px;width:100%}body:has(#boxImageDialog[open]){overflow:hidden}

@@ -1,0 +1,135 @@
+// New individuals only: reading/reviewing screenshots never changes saved Box data.
+const imageDialog=document.getElementById('boxImageDialog'),imageForm=document.getElementById('boxImageForm'),imageFiles=document.getElementById('boxImageFiles'),imageRead=document.getElementById('boxImageRead'),imageStop=document.getElementById('boxImageStop'),imageStatus=document.getElementById('boxImageStatus');
+let imageEpoch=0,imageWorker=null,imageBusy=false,imageURLs=[],imageWatchdog=null;
+const imageOptions=(select,values,empty='未確認')=>{
+ select.replaceChildren();const option=document.createElement('option');option.value='';option.textContent=empty;select.append(option);
+ for(const value of values){const option=document.createElement('option');option.value=typeof value==='string'?value:value.value;option.textContent=typeof value==='string'?value:value.label;select.append(option)}
+};
+function imageSpecies(){return boxCatalog().find(p=>speciesKey(p)===imageForm.elements.species.value)}
+function fillImageSpeciesFields(){
+ const p=imageSpecies(),prior=Object.fromEntries([1,30,60].map(level=>[level,imageForm.elements[`food-${level}`]?.value||'']));
+ const host=document.getElementById('boxImageIngredients');host.replaceChildren();
+ for(const level of [1,30,60]){
+  const candidates=p?.ingredientSlots?.find(slot=>slot.unlock===level)?.candidates||[];
+  const label=document.createElement('label');label.textContent=`Lv.${level} 食材`;
+  const select=document.createElement('select');select.name=`food-${level}`;select.disabled=!p;
+  imageOptions(select,candidates.map(item=>({value:item.name,label:`${item.name} ×${item.qty}`})));
+  if(candidates.some(item=>item.name===prior[level]))select.value=prior[level];
+  else if(candidates.length===1&&!p?.mythicalSettings)select.value=candidates[0].name;
+  label.append(select);host.append(label);
+ }
+ const skill=imageForm.elements.skillLevel,old=skill.value;
+ imageOptions(skill,Array.from({length:window.PS_CATALOG?.skills?.[p?.mainSkillId]?.maxLevel||7},(_,i)=>({value:String(i+1),label:`Lv.${i+1}`})),'選択してください');
+ if([...skill.options].some(option=>option.value===old))skill.value=old;
+}
+function imageBusyState(value){
+ imageBusy=value;imageFiles.disabled=value;imageRead.disabled=value||!imageFiles.files.length;imageStop.hidden=!value;
+ document.getElementById('boxImageSave').disabled=value;document.getElementById('boxImageReparse').disabled=value;
+}
+function stopImageRead(message='読み取りを中止しました。'){
+ ++imageEpoch;clearTimeout(imageWatchdog);imageWatchdog=null;
+ const worker=imageWorker;imageWorker=null;if(worker)worker.terminate().catch(()=>{});
+ imageBusyState(false);imageStatus.textContent=message;
+}
+function clearImagePreviews(){imageURLs.forEach(url=>URL.revokeObjectURL(url));imageURLs=[];document.getElementById('boxImagePreviews').replaceChildren()}
+function setupImageForm(){
+ imageForm.reset();imageForm.hidden=true;document.getElementById('boxImageText').value='';
+ document.getElementById('boxImageMessage').textContent='';document.getElementById('boxImageConflicts').textContent='';document.getElementById('boxImageCandidates').textContent='';
+ imageOptions(imageForm.elements.species,boxCatalog().map(p=>({value:speciesKey(p),label:`No.${String(p.no).padStart(3,'0')} ${p.name}`})),'選択してください');
+ imageOptions(imageForm.elements.nature,Object.keys(NATURE_EFFECTS));
+ const host=document.getElementById('boxImageSubskills');host.replaceChildren();
+ SUBSKILL_LEVELS.forEach((level,i)=>{
+  const label=document.createElement('label');label.textContent=`Lv.${level} サブスキル`;const select=document.createElement('select');select.name=`sub-${i}`;
+  imageOptions(select,SUBSKILL_NAMES);label.append(select);host.append(label);
+ });
+ fillImageSpeciesFields();
+}
+function parseImageTexts(texts){
+ const dictionary={species:boxCatalog(),natures:Object.keys(NATURE_EFFECTS),subskills:SUBSKILL_NAMES,levels:SUBSKILL_LEVELS};
+ return window.PS_IMAGE_READER.merge(texts.map(text=>window.PS_IMAGE_READER.parse(text,dictionary)));
+}
+function applyImageReading(result){
+ imageForm.hidden=false;imageForm.elements.species.value=result.speciesId||'';
+ imageForm.elements.level.value=Number.isInteger(result.level)&&result.level>=1&&result.level<=MAX_POKEMON_LEVEL?result.level:'';
+ imageForm.elements.nature.value=result.nature||'';fillImageSpeciesFields();
+ const skill=imageForm.elements.skillLevel;
+ skill.value=[...skill.options].some(option=>option.value===String(result.skillLevel))?String(result.skillLevel):'';
+ result.subskills.forEach((name,i)=>{imageForm.elements[`sub-${i}`].value=name||''});
+ const warnings=[...result.conflicts];if(result.level!==null&&(result.level<1||result.level>MAX_POKEMON_LEVEL))warnings.push('レベルの対応範囲');
+ document.getElementById('boxImageConflicts').textContent=warnings.length?`${warnings.join('・')}を確認してください。複数の候補は自動設定していません。`:'';
+ const assigned=new Set(result.subskills.filter(Boolean)),unassigned=result.candidates.filter(name=>!assigned.has(name));
+ document.getElementById('boxImageCandidates').textContent=unassigned.length?`読み取り候補（枠を確認）：${unassigned.join('・')}`:'';
+ document.getElementById('boxImageMessage').textContent='';
+}
+document.getElementById('boxImageOpen').onclick=()=>{
+ stopImageRead();clearImagePreviews();imageFiles.value='';setupImageForm();imageBusyState(false);
+ imageStatus.textContent='画像は端末内で処理します。初回は読み取りデータを取得します。';imageDialog.showModal();
+};
+document.getElementById('boxImageClose').onclick=()=>imageDialog.close();
+imageDialog.addEventListener('close',()=>{stopImageRead();clearImagePreviews();imageFiles.value='';setupImageForm();});
+imageDialog.addEventListener('cancel',()=>stopImageRead());
+imageStop.onclick=()=>stopImageRead();
+imageForm.elements.species.onchange=fillImageSpeciesFields;
+imageFiles.onchange=()=>{
+ stopImageRead();clearImagePreviews();setupImageForm();
+ const files=[...imageFiles.files];
+ if(!files.length){imageStatus.textContent='画像を選んでください。';imageBusyState(false);return}
+ if(files.length>5||files.some(file=>!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>10*1024*1024)){
+  imageFiles.value='';imageBusyState(false);imageStatus.textContent='PNG・JPEG・WebPを5枚まで、1枚10MB以内で選んでください。';return;
+ }
+ for(const file of files){const url=URL.createObjectURL(file);imageURLs.push(url);const img=document.createElement('img');img.src=url;img.alt=file.name;document.getElementById('boxImagePreviews').append(img)}
+ imageStatus.textContent=`${files.length}枚を選択しました。同じ1体の画像か確認して「読み取る」を押してください。`;imageBusyState(false);
+};
+imageRead.onclick=async()=>{
+ if(imageBusy||!imageFiles.files.length)return;
+ const token=++imageEpoch,files=[...imageFiles.files],texts=[];let worker=null;
+ imageForm.hidden=true;imageBusyState(true);imageStatus.textContent='読み取り機能を準備しています…';
+ imageWatchdog=setTimeout(()=>{if(token===imageEpoch)stopImageRead('読み取りがタイムアウトしました。枚数を減らして再試行してください。')},180000);
+ try{
+  const engine=await window.PS_IMAGE_READER.loadEngine();if(token!==imageEpoch)return;
+  worker=await engine.createWorker(['jpn','eng'],1,{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0',
+   logger:event=>{if(token===imageEpoch&&event.status==='recognizing text')imageStatus.textContent=`画像 ${texts.length+1}/${files.length} を読み取り中 ${Math.round(event.progress*100)}%`}});
+  if(token!==imageEpoch){await worker.terminate();worker=null;return}
+  imageWorker=worker;await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT,preserve_interword_spaces:'1'});
+  for(const file of files){
+   if(token!==imageEpoch)return;
+   const canvas=await window.PS_IMAGE_READER.canvas(file);
+   try{const result=await worker.recognize(canvas);if(token!==imageEpoch)return;texts.push(result.data.text||'')}
+   finally{canvas.width=canvas.height=1}
+  }
+  if(token!==imageEpoch)return;
+  document.getElementById('boxImageText').value=texts.join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts));
+  imageStatus.textContent=texts.some(text=>text.trim())?'読み取りが終わりました。確認後に登録してください。':'文字を読み取れませんでした。画像を確認するか、各項目を選んで登録できます。';
+ }catch(error){if(token===imageEpoch)imageStatus.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
+ finally{
+  if(worker)try{await worker.terminate()}catch{}
+  if(token===imageEpoch){imageWorker=null;clearTimeout(imageWatchdog);imageWatchdog=null;imageBusyState(false)}
+ }
+};
+document.getElementById('boxImageReparse').onclick=()=>{if(!imageBusy)applyImageReading(parseImageTexts(document.getElementById('boxImageText').value.split('\n--- 画像 ---\n')))};
+function validatedImageIndividual(data,p){
+ if(!p||!boxCatalog().some(x=>speciesKey(x)===speciesKey(p)))return {error:'ポケモンを選んでください。'};
+ const level=Number(data.get('level')),skillLevel=Number(data.get('skillLevel'));
+ if(!Number.isInteger(level)||level<1||level>MAX_POKEMON_LEVEL)return {error:'レベルを確認してください。'};
+ if(!Number.isInteger(skillLevel)||skillLevel<1||skillLevel>(window.PS_CATALOG?.skills?.[p.mainSkillId]?.maxLevel||7))return {error:'スキルLvを選んでください。'};
+ const ingredients={};for(const unlock of [1,30,60]){
+  const value=String(data.get(`food-${unlock}`)||'');if(!value)continue;
+  if(!p.ingredientSlots?.find(slot=>slot.unlock===unlock)?.candidates?.some(item=>item.name===value))return {error:'食材を確認してください。'};
+  ingredients[unlock]=value;
+ }
+ const subskills=SUBSKILL_LEVELS.map((_,i)=>String(data.get(`sub-${i}`)||''));
+ if(subskills.some(name=>name&&!SUBSKILL_NAMES.includes(name)))return {error:'サブスキルを確認してください。'};
+ const filled=subskills.filter(Boolean);if(new Set(filled).size!==filled.length)return {error:'同じサブスキルを重複して設定できません。'};
+ const nature=String(data.get('nature')||'');if(nature&&!Object.hasOwn(NATURE_EFFECTS,nature))return {error:'性格を確認してください。'};
+ return {value:{no:Number(p.no),speciesId:speciesKey(p),name:p.name,specialty:p.specialty,level,skillLevel,ingredients,subskills,nature,mint:data.get('mint')==='on',role:defaultIndividualRole(p),favorite:false,training:false,ribbonHours:0}};
+}
+imageForm.onsubmit=event=>{
+ event.preventDefault();if(imageBusy||imageForm.hidden)return;
+ const result=validatedImageIndividual(new FormData(imageForm),imageSpecies());
+ if(result.error){document.getElementById('boxImageMessage').textContent=result.error;return}
+ const id=globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
+ const item={id,...result.value};
+ if(commitBox([...state.box,item])){
+  boxUndoPanel.hidden=true;closeBoxAdd();boxSearch.value='';imageDialog.close();openBox(id);
+ }else document.getElementById('boxImageMessage').textContent='保存できませんでした。内容はこの画面に残しています。';
+};

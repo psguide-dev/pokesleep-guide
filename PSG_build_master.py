@@ -19,6 +19,8 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     '01-species-catalog.html',
     '02-home.html',
     '03-box.html',
+    'import/02-box-image-dialog.html',
+    'import/01-image-reader.html',
     '04-dex.html',
     '05-info.html',
     '06-skills.html',
@@ -69,6 +71,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     'box/03-view.html',
     'box/04-editor.html',
     'box/05-actions.html',
+    'box/07-image-import.html',
     '20-core-initialize.html',
     '13-catalog-adapter.html',
     '14-detail-controller.html',
@@ -118,6 +121,7 @@ STYLE_FILES = tuple(ROOT / 'styles' / name for name in (
     '15-swap-assist.css',
     '18-adopted-ui-icons.css',
     '19-nightcap.css',
+    '20-image-import.css',
 ))
 ART = ROOT / 'PSG_specialty_images.js'
 FACE_SHEET = ROOT / 'assets/faces/kanto_vol1_sheet.png'
@@ -461,7 +465,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v403') == 2
+    assert source.count('Review v404') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
