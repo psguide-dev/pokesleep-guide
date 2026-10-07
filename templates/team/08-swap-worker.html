@@ -21,7 +21,7 @@ function dailySwapTimedProposal(request,outgoing,id,focus,baseline){
  return best;
 }
 function createSwapWorker(signal){
- const helpers=[speciesFor,specialTeamCompatible,dailySwapCompatible,expectedStoredSkills,berryEnergyAtLevel,mealRecoveryAtEnergy,helperBoostContext,dailyMemberContext,dailyCollectionSkills,dailySpecialTeamMembers,dailySpecialSkills,dailyAdvanceLinkedMember,dailyApplySpecialRecovery,dailySwapDurationPoints,dailyTimedForecast,dailySwapDifference,dailySwapTimedProposal];
+ const helpers=[dailyExModifiers,speciesFor,specialTeamCompatible,dailySwapCompatible,expectedStoredSkills,berryEnergyAtLevel,mealRecoveryAtEnergy,helperBoostContext,dailyMemberContext,dailyCollectionSkills,dailySpecialTeamMembers,dailySpecialSkills,dailyAdvanceLinkedMember,dailyApplySpecialRecovery,dailySwapDurationPoints,dailyTimedForecast,dailySwapDifference,dailySwapTimedProposal];
  const source=`const window={};let request;const DAILY_ENERGY_SKILLS=new Set(${JSON.stringify([...DAILY_ENERGY_SKILLS])});\n`+document.getElementById('psg-special-skill-engine').textContent+'\n'+helpers.map(f=>f.toString()).join('\n')+`\nself.onmessage=event=>{try{const data=event.data;let result;if(data.kind==='init'){request=data.request;window.PS_CATALOG=request.catalog;window.PS_SPECIES=item=>request.species[item?.id]||null;result=dailyTimedForecast(request);}else result=dailySwapTimedProposal(request,data.outgoing,data.id,data.focus,data.baseline);self.postMessage({result});}catch(error){self.postMessage({error:error.message});}};`;
  const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));let worker;
  try{worker=new Worker(url);}finally{URL.revokeObjectURL(url);}

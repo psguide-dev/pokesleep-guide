@@ -1,6 +1,7 @@
 // Shared daily estimate: collection timeline and team totals.
 // Keep the unused pot argument for compatibility with PS.dailyResult callers.
-function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},_legacyPotSettings=null,memberStartingEnergies={}){
+function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},_legacyPotSettings=null,memberStartingEnergies={},exContext=null){
+ if(exContext&&(!['berry','ingredients','skill'].includes(exContext.effect)||exContext.berries.length!==3||new Set(exContext.berries).size!==3||exContext.berries.some(n=>!Object.hasOwn(catalog.berries,n))||(exContext.fieldId==='cyan_ex'&&!['モモンのみ','シーヤのみ','オレンのみ'].includes(exContext.berries[0]))))return {members:[],foods:new Map(),pendingReason:'EXの好物①（メイン）・②③（サブ）と週効果を設定してください。シアンEXのメインはモモン・シーヤ・オレンです。'};
  const interval=[1,2,4,8].includes(Number(collectionHours))?Number(collectionHours):4;
  const mealCount=threeMeals===true?3:threeMeals===false?0:Number.isInteger(threeMeals)&&threeMeals>=0&&threeMeals<=3?threeMeals:3;
  const mealTicks=[[],[0],[0,72],[0,36,72]][mealCount];
@@ -12,7 +13,7 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  const periods=[];for(let h=0;h<16;h+=interval)periods.push(Math.min(interval,16-h));
  periods.push(8); // No collection during sleep; collect at wake-up.
  const items=ids.map(id=>box.find(item=>item.id===id)).filter(Boolean);
- const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,Number.isFinite(memberStartingEnergies[item.id])?Math.max(0,Math.min(150,memberStartingEnergies[item.id])):startingEnergy));
+ const members=items.map(item=>dailyMemberContext(item,speedContext,items,catalog,Number.isFinite(memberStartingEnergies[item.id])?Math.max(0,Math.min(150,memberStartingEnergies[item.id])):startingEnergy,exContext));
  const valid=members.filter(m=>!m.missing);
  const energyLinked=dailyHasEnergyLink(valid,items,catalog);
  if(energyLinked)valid.forEach(m=>m.energyLinked=true);
@@ -32,7 +33,7 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
    const extra=Math.max(0,helps-regular);
    const triggers=Number.isFinite(member.stats.skill)&&member.skillName?expectedStoredSkills(regular,member.stats.skill,member.stockLimit):0;
    periodTriggers.set(member.id,triggers);
-   for(const slot of member.slots)member.foods.set(slot.name,(member.foods.get(slot.name)||0)+regular*member.chance*slot.qty/member.slots.length);
+   for(const slot of member.slots)member.foods.set(slot.name,(member.foods.get(slot.name)||0)+regular*member.chance*(slot.qty+(member.exIngredientAdd||0))/member.slots.length);
    member.berries+=regular*(1-member.chance)*member.stats.berryQty+extra*member.stats.berryQty;
    member.overflow+=extra*member.stats.berryQty;
   }
@@ -60,7 +61,7 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  for(const member of valid){
   member.berryEnergyBase=member.berries*berryEnergyAtLevel(member.berryBase,member.level);
   member.zoneFactor=1+Math.max(0,Math.min(24,Number(berryZones?.[member.berryName])||0))/100;
-  member.berryEnergy=member.berryEnergyBase*(favorites.has(member.berryName)?2:1)*areaFactor*member.zoneFactor;
+  member.berryEnergy=member.berryEnergyBase*(member.exFavoriteFactor||(favorites.has(member.berryName)?2:1))*areaFactor*member.zoneFactor;
  }
  const special=dailySpecialSkills(valid,items,catalog,areaFactor,favorites,berryZones);
  const foods=new Map();

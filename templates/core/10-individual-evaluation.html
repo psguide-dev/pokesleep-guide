@@ -1,6 +1,6 @@
 const INDIVIDUAL_IDEALS=new Map();
 function individualOpportunities(item,p){
- const active=SUBSKILL_LEVELS.filter(n=>n<=item.level).map((_,i)=>item.subskills?.[i]);
+ const active=SUBSKILL_LEVELS.map((n,i)=>n<=item.level&&(!p.mythicalSettings||item.mythicalState?.subskillUnlocked?.[i]===true)?item.subskills?.[i]:null);
  const bonus=active.reduce((s,n)=>s+(SUBSKILLS[n]?.effect==='teamSpeedReduction'?SUBSKILLS[n].value:0),0);
  const c=individualCorrections(item,p,bonus),h=Number.isFinite(c.speed)&&c.speed>0?3600/c.speed:null;
  return {berry:h!=null&&Number.isFinite(c.food)&&Number.isFinite(c.berryQty)?h*(1-c.food/100)*c.berryQty:null,food:h!=null&&Number.isFinite(c.food)?h*c.food/100:null,skill:h!=null&&Number.isFinite(c.skill)?h*c.skill/100:null};
@@ -41,13 +41,18 @@ function individualIdeal(p,level){
  return Object.fromEntries(Object.entries(individualFixedIdeals(p)).map(([role,ideal])=>[role,ideal?{...ideal,rate:individualOpportunities({level,nature:ideal.nature,subskills:ideal.subskills},p)[role]}:null]));
 }
 function individualEvaluation(item,p){
- const reasons=[],count=SUBSKILL_LEVELS.filter(n=>n<=item.level).length,active=(item.subskills||[]).slice(0,count);
+ const reasons=[],count=SUBSKILL_LEVELS.filter(n=>n<=item.level).length,active=SUBSKILL_LEVELS.slice(0,count).map((_,i)=>!p.mythicalSettings||item.mythicalState?.subskillUnlocked?.[i]===true?item.subskills?.[i]:null);
  if(!item.mint&&!Object.hasOwn(NATURE_EFFECTS,item.nature))reasons.push('性格を設定してください');
- for(let i=0;i<count;i++)if(!SUBSKILLS[active[i]])reasons.push(`Lv.${SUBSKILL_LEVELS[i]}のサブスキルを設定してください`);
+ for(let i=0;i<count;i++){
+  const unlocked=item.mythicalState?.subskillUnlocked?.[i];
+  if(p.mythicalSettings&&unlocked!==true&&unlocked!==false)reasons.push(`Lv.${SUBSKILL_LEVELS[i]}のサブスキル解放状態を設定してください`);
+  else if((!p.mythicalSettings||unlocked===true)&&!SUBSKILLS[active[i]])reasons.push(`Lv.${SUBSKILL_LEVELS[i]}のサブスキルを設定してください`);
+ }
  if(new Set(active.filter(Boolean)).size!==active.filter(Boolean).length)reasons.push('サブスキルの重複を修正してください');
  if(!Number.isInteger(item.level)||item.level<1||item.level>MAX_POKEMON_LEVEL)reasons.push('対応範囲内のレベルを設定してください');
  if(reasons.length)return {reasons,rows:[]};
- const rates=individualOpportunities(item,p),neutral=individualOpportunities({level:item.level,mint:true,subskills:[]},p),ideal=individualIdeal(p,item.level);
+ const rates=individualOpportunities(item,p),neutral=individualOpportunities({level:item.level,mint:true,subskills:[],mythicalState:item.mythicalState},p),ideal=individualIdeal({...p,mythicalSettings:null},item.level);
+ if(p.mythicalSettings)for(const [role,reference] of Object.entries(ideal))if(reference)reference.rate=individualOpportunities({level:item.level,nature:reference.nature,subskills:reference.subskills,mythicalState:item.mythicalState},p)[role];
  return {reasons,rows:Object.keys(rates).map(role=>({role,ideal:ideal[role],ratio:ideal[role]?.rate>0&&rates[role]!=null?rates[role]/ideal[role].rate:null,neutral:neutral[role]>0&&rates[role]!=null?rates[role]/neutral[role]:null}))};
 }
 function individualGrowthEvaluation(item,p){
@@ -67,7 +72,6 @@ function individualIdealSlots(p,level,role,ideal){
 function renderIndividualEvaluation(item,p,options={}){
  if(!p)return '<p class="psg-box-muted">姿が未確認のため評価できません。衣装・サイズを確認してください。</p>';
  if(item.level>MAX_POKEMON_LEVEL)return '<p class="psg-box-muted">未実装Lvのため、解放後の比較は未計算です。</p>';
- if(p.dailyCalculationStatus==='pending_special_skill')return '<p class="psg-box-muted">個体情報は保存できます。特殊スキルを含む個体評価は未対応です。</p>';
  const e=individualEvaluation(item,p),labels={berry:'きのみ',food:'食材おてつだい',skill:'スキル発動機会'},roles={きのみ:'berry',食材:'food',スキル:'skill'};
  const chosen=individualEvaluationRole(item,p);
 
@@ -76,7 +80,7 @@ function renderIndividualEvaluation(item,p,options={}){
   const pct=Math.min(100,r.ratio*100);
   const icons=individualIdealSlots(p,item.level,r.role,r.ideal).map((name,i)=>{
    const src=PS_IMAGE_FILES.subskills[name],unlock=SUBSKILL_LEVELS[i];
-   const locked=unlock>item.level||unlock>MAX_POKEMON_LEVEL;
+   const locked=unlock>item.level||unlock>MAX_POKEMON_LEVEL||p.mythicalSettings&&item.mythicalState?.subskillUnlocked?.[i]!==true;
    const label=`Lv.${unlock} ${name}${locked?'（未解放・比較対象外）':''}`;
    const art=src?`<img class="psg-subskill-badge" src="${boxEsc(src)}" alt="${boxEsc(name)}">`:`<span>${boxEsc(name)}</span>`;
    return `<span class="psg-ideal-slot${locked?' is-locked':''}" title="${boxEsc(label)}" aria-label="${boxEsc(label)}"><small>Lv.${unlock}</small>${art}</span>`;

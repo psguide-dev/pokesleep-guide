@@ -27,3 +27,13 @@ function helperBoostContext(effectType,effect,items,catalog){
  const bonus=effect?.[key]?.[Math.min(5,unique)];
  return {type,unique,helps:Number.isFinite(effect?.helps)&&Number.isFinite(bonus)?effect.helps+bonus:null};
 }
+
+// EX reference model; uncertain field constants remain documented as estimates.
+function dailyExModifiers(species,context){
+ const neutral={speed:1,carry:0,skillLevel:0,skillChance:1,ingredients:0,favoriteFactor:null};
+ if(!context||!['greengrass_ex','cyan_ex'].includes(context.fieldId))return neutral;
+ const favorite=context.berries.includes(species?.berry),main=context.berries[0]===species?.berry;
+ return {...neutral,speed:main?(context.fieldId==='cyan_ex'?.8:.9):favorite?1:context.fieldId==='cyan_ex'?1.35:1.15,
+ carry:main?5:0,skillLevel:main?1:0,skillChance:favorite&&context.effect==='skill'?1.25:1,
+ ingredients:favorite&&context.effect==='ingredients'?1:0,favoriteFactor:favorite?(context.effect==='berry'?2.4:2):1};
+}

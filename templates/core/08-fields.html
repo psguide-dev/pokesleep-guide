@@ -40,8 +40,8 @@ function saveCookingSettings(value){
 function syncExEffectControls(){
  const isEx=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.mode==='expert';
  const select=document.getElementById('teamExEffect');select.value=daySettings.exWeeklyEffect;select.disabled=!isEx;
- select.title=isEx?'EX効果（計算は未反映）':'EXフィールドで選択できます';
- document.getElementById('teamExEffectNote').hidden=!isEx||!daySettings.exWeeklyEffect;
+ select.title=isEx?'EXの週効果':'EXフィールドで選択できます';
+ document.getElementById('teamExEffectNote').hidden=!isEx;
 }
 function syncDayControls(){
  document.getElementById('teamCollectionInterval').value=String(daySettings.collectionHours);
@@ -77,7 +77,7 @@ const homeFieldSelect=document.getElementById('homeFieldSelect');
 const homeMealSelect=document.getElementById('homeMealSelect');
 function activeMealCategory(){return fieldProfile.meal?.weekKey===currentFieldWeek()?fieldProfile.meal.category:''}
 homeMealSelect.onchange=()=>{fieldProfile.meal=homeMealSelect.value?{weekKey:currentFieldWeek(),category:homeMealSelect.value}:null;saveFieldProfile()};
-const fieldOrder=['greengrass','cyan','taupe','snowdrop','lapis','old_gold','amber'];
+const fieldOrder=['greengrass','cyan','taupe','snowdrop','lapis','old_gold','amber','greengrass_ex','cyan_ex'];
 for(const id of fieldOrder){
  const field=window.PS_CATALOG?.fields?.[id];
  if(field){fieldSelect.add(new Option(field.name,id));homeFieldSelect.add(new Option(field.name,id))}
@@ -105,11 +105,7 @@ function renderFieldGallery(){
   if(favorites.childElementCount)label.append(favorites);button.append(label);
   button.onclick=()=>{fieldSelect.value=id;fieldSelect.dispatchEvent(new Event('change'))};host.append(button);
  }
- for(const [id,name] of [['greengrass_ex','ワカクサ本島 EX'],['cyan_ex','シアンの砂浜 EX']]){
-  const row=document.createElement('div');row.className='psg-field-choice';
-  const image=document.createElement('img');image.src=`assets/fields/${id}/image.webp`;image.alt='';image.width=76;image.height=86;row.append(image);
-  const label=document.createElement('div'),title=document.createElement('strong'),note=document.createElement('small');title.textContent=name;note.textContent='日産計算は未対応';note.className='note';note.style.display='block';label.append(title,note);row.append(label);const ranks=document.createElement('details');const summary=document.createElement('summary');summary.textContent='ランク・必要エナジー';ranks.append(summary);for(const rank of window.PS_CATALOG.fields[id]?.rankThresholds||[]){const line=document.createElement('p');line.className='note';line.textContent=`${rank.tier}${rank.level}：${rank.energy.toLocaleString()}`;window.PS_UI_ART.rank(line,rank.tier);ranks.append(line)}row.append(ranks);host.append(row);
- }
+
 }
 function renderFieldControls(){
  syncExEffectControls();
@@ -201,3 +197,8 @@ document.getElementById('teamBerryZone').onchange=event=>{
  const saved=saveFieldProfile();
  document.getElementById('teamZoneSaveStatus').textContent=saved?`マゴのみゾーン＋${percentage}％を保存しました。`:'ゾーンを保存できませんでした。';
 };
+
+function dailyExContext(){
+ const fieldId=fieldProfile.selectedFieldId;
+ return window.PS_CATALOG.fields[fieldId]?.mode==='expert'?{fieldId,berries:activeFieldBerries(),effect:daySettings.exWeeklyEffect}:null;
+}

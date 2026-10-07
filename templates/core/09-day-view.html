@@ -1,5 +1,5 @@
 function dailyCurrentForecast(ids=team){
- return dailyBaseline(ids,state.box,window.PS_CATALOG,Number(document.getElementById('teamCollectionInterval').value),teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones());
+ return dailyBaseline(ids,state.box,window.PS_CATALOG,Number(document.getElementById('teamCollectionInterval').value),teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones(),undefined,{},dailyExContext());
 }
 function renderTeamDay(){
  if(!document.getElementById('teamWhistlePanel').hidden)renderTeamWhistle();
@@ -8,7 +8,7 @@ function renderTeamDay(){
  renderFieldControls();
  const result=dailyCurrentForecast();
  host.replaceChildren();
- if(!result.members.length){const p=document.createElement('p');p.className='note';p.textContent='チームを選ぶと獲得予想を表示します。';host.append(p);return}
+ if(!result.members.length){const p=document.createElement('p');p.className='note';p.textContent=result.pendingReason||'チームを選ぶと獲得予想を表示します。';host.append(p);return}
  if(result.pendingReason){const note=document.createElement('p');note.className='note';note.textContent=result.pendingReason;host.append(note)}
  const foodTiles=(foods,summary=false)=>{
   const tiles=document.createElement('div');tiles.className='psg-day-food-list'+(summary?' psg-day-food-summary':'');
