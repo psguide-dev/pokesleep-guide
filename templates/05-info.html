@@ -2,9 +2,7 @@
 <div class="psg-info-links"><button type="button" class="card psg-info-link" data-info-page="fieldPage"><strong><img class="psg-info-icon" src="assets/ui/info_fields.webp" width="36" height="36" alt=""> フィールド</strong><span>フィールド情報を見る</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="recipePage"><strong><img class="psg-info-icon" src="assets/ui/info_cooking.webp" width="36" height="36" alt=""> 料理</strong><span>食材からレシピを探す</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="ingredientPage"><strong><img class="psg-info-icon" src="assets/ui/info_ingredients.webp" width="36" height="36" alt=""> 食材</strong><span>基本エナジー・日産量・担当を見る</span><b aria-hidden="true">›</b></button>
-<button type="button" class="card psg-info-link" data-info-page="typeRankingPage"><strong>タイプ別きのみ効率</strong><span>同条件での上位5体を見る</span><b aria-hidden="true">›</b></button>
-<button type="button" class="card psg-info-link" data-info-page="skillEnergyRankingPage"><strong>スキル込みエナジー（試作）</strong><span>タイプ別の上位5体・共通参考を見る</span><b aria-hidden="true">›</b></button>
-<button type="button" class="card psg-info-link" data-info-page="ingredientRankingPage"><strong>食材別収集効率（試作）</strong><span>通常・スキル込み・食材得意限定を比較</span><b aria-hidden="true">›</b></button>
+<button type="button" class="card psg-info-link" data-info-page="rankingPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/ranking.webp" width="36" height="36" alt=""> ランキング</strong><span>タイプ別・島別・スキル込み・食材別を比較</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="skillPage"><strong><img class="psg-info-icon" src="assets/ui/info_skills.webp" width="36" height="36" alt=""> スキル</strong><span>効果とレベルを見る</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="accountPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_account.png" width="36" height="36" alt=""> アカウント</strong><span>画像・鍋容量・GO Plus＋を設定する</span><b aria-hidden="true">›</b></button>
 <button type="button" class="card psg-info-link" data-info-page="bookshelfPage"><strong><img loading="lazy" decoding="async" class="psg-info-icon" src="assets/ui/PSN_menu_bookshelf.png" width="36" height="36" alt=""> 本棚</strong><span>説明・計算の前提・資料を見る</span><b aria-hidden="true">›</b></button>
@@ -33,6 +31,7 @@
 <details><summary>日産の計算条件</summary><p>16時間活動・8時間睡眠で試算します。食材枠は等確率、満杯は期待値で判定し、満杯後は食材・スキル抽選を止めてきのみを集計します。</p><p>Boxの単体予想はチーム画面の回収条件を使い、他個体からの補正は含みません。</p></details>
 <details id="swapPredictionBasis"><summary>交代比較の詳細</summary><p>起床から控えを1匹入れ、回収後に元の個体へ戻す時間を探索します。回収間隔の時点を16時間まで順に試し、24時間の交代も比較します。表示時間は選んだ食材1食分に届く最初の探索点です。届かない場合は不足が最も少ない案を表示します。</p><p>収量は戻した後を含む24時間分です。ほかの必要食材が不足する場合も表示します。残る4匹のげんき・進行中のおてつだい・編成補正と、たくわえる・ばけのかわの状態を引き継ぎます。Boxで待つ個体のげんき・進行中のおてつだいは停止するモデルです。</p><p>交代前に回収する前提。時間比較はおてつだい完了ごとに進めるため、通常の日産の10分刻みの期待値計算と端数の差があります。基準チームも同じ時計で計算します。回収間隔・食事・キャンプ・入力ゾーンは上の設定を使い、控えの起点げんきは個別に指定します。</p><p>届く案は交代時間の短い順、同じ時間では他の必要食材の不足が少ない順に上位10案を表示します。届かない案は対象食材の不足が少ない順です。好物きのみが未確定の場合はエナジー差を順位に使いません。EX・複数枠の交代・任意の開始時刻は未対応です。厳密な最短時間や入手保証ではありません。</p></details>
 </details>
+<details><summary>EXフィールドの参考予想</summary><p>好物①がメイン、②③がサブ。週効果は好物を拾う個体だけに適用。きのみは2.4倍、スキルは抽選確率1.25倍、食材は通常のおてつだいで1個追加する参考モデルです。食材とくいの追加2個の確率は未確定のため、追加1個で試算します。スキルによる追加おてつだいには食材追加を適用しません。</p><p>メインはワカクサEXで時間×0.9、シアンEXで×0.8、スキルLv＋1（上限まで）、所持数＋5。非好物はワカクサEXで時間×1.15、シアンEXで×1.35。シアンのメイン補正、ワカクサの所持数＋5、所持数とキャンプの適用順などは未確定の参考値です。EX補正はおてボ上限の計算後に適用します。スキル生成きのみの週効果とゾーン併用の厳密な端数処理は未反映。ホイッスル・交代比較はEX未対応です。</p></details>
 <details id="bookshelfSkills" class="psg-bookshelf-section"><summary>メインスキル</summary>
 <p>計算対象の効果を発動回数に基づいて加算します。食材セレクトは回数・候補・1回の個数、ゆびをふる・スキルコピーは回数を表示します。</p>
 <details><summary>食材セレクト・抽選・コピー</summary><p>食材セレクトは候補から必要な食材を判断してください。抽選結果を種類別合計や料理判定に仮配分しません。通常版の候補は種族の3食材、きょううん・かいりきバサミは固定候補です。</p><p>きょううんの食材・かけら、かいりきバサミの大成功は結果を決め打ちしません。ゆびをふる・スキルコピーの抽選先の効果量は合計に含めません。</p></details>
@@ -59,7 +58,7 @@
 </div></section>
 <section id="expPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">経験値</h2><div id="expContent" class="card"></div></section>
 
-<details><summary>EXフィールドの参考予想</summary><p>好物①がメイン、②③がサブ。週効果は好物を拾う個体だけに適用。きのみは2.4倍、スキルは抽選確率1.25倍、食材は通常のおてつだいで1個追加する参考モデルです。食材とくいの追加2個の確率は未確定のため、追加1個で試算します。スキルによる追加おてつだいには食材追加を適用しません。</p><p>メインはワカクサEXで時間×0.9、シアンEXで×0.8、スキルLv＋1（上限まで）、所持数＋5。非好物はワカクサEXで時間×1.15、シアンEXで×1.35。シアンのメイン補正、ワカクサの所持数＋5、所持数とキャンプの適用順などは未確定の参考値です。EX補正はおてボ上限の計算後に適用します。スキル生成きのみの週効果とゾーン併用の厳密な端数処理は未反映。ホイッスル・交代比較はEX未対応です。</p></details>
+
 
 <section id="sourcesPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">出典</h2><div id="sourcesContent" class="card"></div></section>
 
@@ -68,3 +67,6 @@
 <section id="skillEnergyRankingPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">スキル込みエナジー（試作）</h2><div id="skillEnergyRankingContent" class="card"></div></section>
 
 <section id="ingredientRankingPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">食材別収集効率（試作）</h2><div id="ingredientRankingContent" class="card"></div></section>
+
+<section id="rankingPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">ランキング</h2><div class="psg-info-links"><button type="button" class="card psg-info-link" data-info-page="typeRankingPage"><strong>タイプ別きのみ効率</strong><span>同条件での上位5体を見る</span><b aria-hidden="true">›</b></button><button type="button" class="card psg-info-link" data-info-page="islandRankingPage"><strong>島別ランキング</strong><span>きのみ効率とスキル込みエナジーを見る</span><b aria-hidden="true">›</b></button><button type="button" class="card psg-info-link" data-info-page="skillEnergyRankingPage"><strong>スキル込みエナジー（試作）</strong><span>タイプ別の上位5体・共通参考を見る</span><b aria-hidden="true">›</b></button><button type="button" class="card psg-info-link" data-info-page="ingredientRankingPage"><strong>食材別収集効率（試作）</strong><span>通常・スキル込み・食材得意限定を比較</span><b aria-hidden="true">›</b></button></div></section>
+<section id="islandRankingPage" class="screen"><button type="button" class="btn" data-back>‹ 戻る</button><h2 class="psg-screen-title">島別ランキング</h2><div id="islandRankingContent" class="card"></div></section>

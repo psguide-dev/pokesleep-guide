@@ -12,7 +12,7 @@ function go(id,push=true){
  if(id==='dex'&&dexListDirty)renderDex();
  if(id==='box'&&boxListDirty)renderBox();
  if(id==='home'&&teamViewDirty)renderTeam();
- const activeTab=['recipePage','ingredientPage','skillPage','fieldPage','nightcapPage','accountPage','bookshelfPage','expPage','sourcesPage','typeRankingPage','skillEnergyRankingPage','ingredientRankingPage'].includes(id)?'info':id;
+ const activeTab=['recipePage','ingredientPage','skillPage','fieldPage','nightcapPage','accountPage','bookshelfPage','expPage','sourcesPage','rankingPage','islandRankingPage','typeRankingPage','skillEnergyRankingPage','ingredientRankingPage'].includes(id)?'info':id;
  tabs.forEach(b=>b.classList.toggle('active',b.dataset.tab===activeTab));
  window.scrollTo(0,0);
  window.PS_PAGE_RENDERERS?.[id]?.();

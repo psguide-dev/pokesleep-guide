@@ -57,10 +57,12 @@
   "expType": 600,
   "sources": [
     "https://wikiwiki.jp/poke_sleep/モロバレル",
-    "https://wikiwiki.jp/poke_sleep/ポケモンの一覧/食材確率・スキル発動確率の推定値一覧"
+    "https://wikiwiki.jp/poke_sleep/ポケモンの一覧/食材確率・スキル発動確率の推定値一覧",
+    "https://www.pokexperto.net/index2.php?n=amoonguss&seccion=pokemonsleep/pokemon",
+    "https://game8.jp/pokemonsleep/818882"
   ],
   "verifiedAt": "2026-10-07",
-  "dataStatus": "ユーザー提供値と攻略・検証Wikiの能力資料。食材確率20.4%は受領ランキングの推定値。スキル確率・寝顔・出現情報は未収録。",
+  "dataStatus": "基礎能力はユーザー確認・公開資料照合。食材・スキル確率は推定値。寝顔名は攻略ページ本文照合、正式ID・画像対応・必要ねむけパワーは未照合。",
   "evolutionNotes": [
     "タマゲタケ",
     "↓ Lv.29＋タマゲタケのアメ×40",
@@ -69,8 +71,43 @@
   "evolution": [],
   "dataNotes": [
     "所持数はユーザー確認の基礎14。タマゲタケからの進化入手で＋5。Wiki記載19を基礎値として二重加算しない。",
-    "おてつだい時間・食材構成・フレンドポイント・進化条件はユーザー提供値。"
+    "おてつだい時間・食材構成・フレンドポイント・進化条件はユーザー提供値。",
+    "確率は検証Wikiの推定値を計算入力へ使用。RaenonXへの参照記載はあるが、今回RaenonX本体は取得エラーで直接確認できていない。",
+    "Pokéxpertoの食材確率は20.41%。本案は既存の1桁推定値を採用し、精度を無断で変更しない。",
+    "基礎所持14と進化加算+5を分離。Game8・Pokéxperto・Serebiiは14、検証Wikiは19。今回19を基礎値として採用しない。"
   ],
   "foodRate": 20.4,
-  "rateStatus": "推定"
+  "rateStatus": "推定",
+  "skillRate": 4.7,
+  "transferCandy": 7,
+  "sleepNameReferences": [
+    {
+      "stars": 1,
+      "name": "ぎたい寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
+    },
+    {
+      "stars": 2,
+      "name": "さそい寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
+    },
+    {
+      "stars": 3,
+      "name": "ほうしとばし寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
+    },
+    {
+      "stars": 4,
+      "name": "おなかのうえ寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
+    }
+  ]
 }

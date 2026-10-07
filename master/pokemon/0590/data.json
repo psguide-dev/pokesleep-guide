@@ -56,10 +56,13 @@
   "friendPoints": 5,
   "expType": 600,
   "sources": [
-    "https://wikiwiki.jp/poke_sleep/タマゲタケ"
+    "https://wikiwiki.jp/poke_sleep/タマゲタケ",
+    "https://wikiwiki.jp/poke_sleep/ポケモンの一覧/食材確率・スキル発動確率の推定値一覧",
+    "https://www.pokexperto.net/index2.php?n=foongus&seccion=pokemonsleep/pokemon",
+    "https://game8.jp/pokemonsleep/818870"
   ],
   "verifiedAt": "2026-10-07",
-  "dataStatus": "ユーザー提供値と攻略・検証Wikiの能力資料。確率・寝顔・出現情報は未収録。",
+  "dataStatus": "基礎能力はユーザー確認・公開資料照合。食材・スキル確率は推定値。寝顔名は攻略ページ本文照合、正式ID・画像対応・必要ねむけパワーは未照合。",
   "evolutionNotes": [
     "タマゲタケ",
     "↓ Lv.29＋タマゲタケのアメ×40",
@@ -74,6 +77,45 @@
       ],
       "level": 29,
       "candy": 40
+    }
+  ],
+  "foodRate": 17.4,
+  "skillRate": 3.5,
+  "rateStatus": "推定",
+  "transferCandy": 5,
+  "dataNotes": [
+    "確率は検証Wikiの推定値を計算入力へ使用。RaenonXへの参照記載はあるが、今回RaenonX本体は取得エラーで直接確認できていない。",
+    "Pokéxpertoの食材確率は17.39%。本案は既存の1桁推定値を採用し、精度を無断で変更しない。",
+    "基礎所持12はユーザー画像・Game8・検証Wiki・Pokéxpertoと一致。Serebiiの13は異なるため上書きしない。"
+  ],
+  "sleepNameReferences": [
+    {
+      "stars": 1,
+      "name": "ぎたい寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
+    },
+    {
+      "stars": 2,
+      "name": "かさふり寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
+    },
+    {
+      "stars": 3,
+      "name": "ほうしふきだし寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
+    },
+    {
+      "stars": 4,
+      "name": "おなかのうえ寝",
+      "sleepStyleId": null,
+      "image": null,
+      "requiredDrowsyPower": null
     }
   ]
 }

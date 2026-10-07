@@ -1,0 +1,89 @@
+{
+  "version": 425,
+  "checkedAt": "2026-10-08",
+  "source": "Biblo current handoff v15",
+  "condition": "h4_base",
+  "input": {
+    "species": 250,
+    "computedSpecies": 249,
+    "configurations": 1970,
+    "ingredientGroups": 19,
+    "decomposition": true,
+    "generatedNonnegative": true
+  },
+  "energyValidation": {
+    "formulaDecomposition": true,
+    "clockSameForOnOff": true,
+    "globalRows": 250,
+    "globalComputed": 249,
+    "islandComputed": 249
+  },
+  "foodSourceSha256": "19805ca7e7d2ec8b3d78f38ce77d4f8aead41e92576900f1b0cc1d2f48878ff2",
+  "energySourceSha256": "9d6a0ee36b95a7f61a557aea70cad63767448fb85a253e32ba3d9ea42b632c83",
+  "iconSha256": "4805f52e2c376467aaf2f05a974823e21a6a5345491b00a30287d0e716280251",
+  "sleepNameReferences": {
+    "checkedAt": "2026-10-08",
+    "verification": "攻略ページ本文照合・ゲーム内スクショ未照合",
+    "species": [
+      {
+        "speciesId": "0590_default",
+        "name": "タマゲタケ",
+        "source": "https://game8.jp/pokemonsleep/818870",
+        "styles": [
+          {
+            "stars": 1,
+            "name": "ぎたい寝",
+            "sleepStyleId": null
+          },
+          {
+            "stars": 2,
+            "name": "かさふり寝",
+            "sleepStyleId": null
+          },
+          {
+            "stars": 3,
+            "name": "ほうしふきだし寝",
+            "sleepStyleId": null
+          },
+          {
+            "stars": 4,
+            "name": "おなかのうえ寝",
+            "sleepStyleId": null
+          }
+        ]
+      },
+      {
+        "speciesId": "0591_default",
+        "name": "モロバレル",
+        "source": "https://game8.jp/pokemonsleep/818882",
+        "styles": [
+          {
+            "stars": 1,
+            "name": "ぎたい寝",
+            "sleepStyleId": null
+          },
+          {
+            "stars": 2,
+            "name": "さそい寝",
+            "sleepStyleId": null
+          },
+          {
+            "stars": 3,
+            "name": "ほうしとばし寝",
+            "sleepStyleId": null
+          },
+          {
+            "stars": 4,
+            "name": "おなかのうえ寝",
+            "sleepStyleId": null
+          }
+        ]
+      }
+    ]
+  },
+  "unchangedFixedEnergy81Rankings": true,
+  "changedDisplayedEnergyData": false,
+  "changedFoodGroups": [
+    "とくせんエッグ"
+  ]
+}

@@ -18,7 +18,7 @@
    if(!styles.length){
      const empty=document.createElement('p');empty.className='psg-sleep-empty';
      empty.textContent='寝顔データ未登録。確認できた寝顔をマスターデータに追加すると、ここに★順で表示します。';
-     sleep.appendChild(empty);renderPendingSleepArtwork(m);return;
+     if(!m.sleepNameReferences?.length)sleep.appendChild(empty);renderSleepNameReferences(m);renderPendingSleepArtwork(m);return;
    }
    const grid=document.createElement('div');grid.className='psg-sleep-grid';
    styles.forEach(style=>{
@@ -47,6 +47,11 @@
      caption.append(stars,name);card.appendChild(caption);grid.appendChild(card);
    });
    sleep.appendChild(grid);renderPendingSleepArtwork(m);
+ }
+ function renderSleepNameReferences(m){
+   const rows=m.sleepNameReferences||[];if(!rows.length)return;
+   const heading=document.createElement('h3');heading.textContent='寝顔名';sleep.append(heading);
+   const list=document.createElement('ul');for(const row of rows){const item=document.createElement('li');item.textContent=`★${row.stars} ${row.name}`;list.append(item)}sleep.append(list);
  }
  function renderPendingSleepArtwork(m){
    const sid=m.speciesId||`${String(m.no).padStart(4,'0')}_default`;
