@@ -58,6 +58,7 @@ jobs:
           node tests/check_ingredient_import.cjs
           node tests/check_fragment_assembly.cjs
           node tests/check_rankings.cjs
+          node tests/check_home_calendar.cjs
           node tests/check_daily_calculator.cjs
           node tests/check_ex_daily.cjs
           node tests/check_special_skills.cjs

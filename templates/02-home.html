@@ -1,4 +1,4 @@
-<section id="startPage" class="screen active"><h2 class="psg-screen-title">ホーム</h2><div class="card"><div class="psg-calendar-heading"><button type="button" id="calendarPrev" class="btn" aria-label="前の月">‹</button><strong id="calendarMonth"></strong><button type="button" id="calendarNext" class="btn" aria-label="次の月">›</button></div><div id="gameCalendar" class="psg-game-calendar"></div><div id="gameEvents"></div></div><div class="card psg-start-intro"><img class="psg-start-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></div><div class="psg-start-links"><button type="button" class="card psg-start-link" data-screen="home"><img src="assets/ui/menu_team.png" width="56" height="56" alt=""><strong>チーム</strong></button><button type="button" class="card psg-start-link" data-screen="box"><img src="assets/ui/menu_box.png" width="56" height="56" alt=""><strong>ボックス</strong></button><button type="button" class="card psg-start-link" data-screen="dex"><img src="assets/ui/menu_dex.png" width="56" height="56" alt=""><strong>図鑑</strong></button><button type="button" class="card psg-start-link" data-screen="info"><img src="assets/ui/menu_info.png" width="56" height="56" alt=""><strong>情報</strong></button></div><div class="card"><div class="section-title">更新履歴</div><div id="homeUpdates"></div></div></section>
+<section id="startPage" class="screen active"><h2 class="psg-screen-title">ホーム</h2><div class="card"><div class="psg-calendar-heading"><button type="button" id="calendarPrev" class="btn" aria-label="前の週">‹</button><strong id="calendarMonth"></strong><button type="button" id="calendarNext" class="btn" aria-label="次の週">›</button></div><div id="gameCalendar" class="psg-game-calendar" aria-labelledby="calendarMonth"></div><button type="button" id="calendarToday" class="btn psg-calendar-reset" hidden>今週に戻る</button><div id="gameEvents"></div></div><div class="card psg-start-intro"><img class="psg-start-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></div><div class="psg-start-links"><button type="button" class="card psg-start-link" data-screen="home"><img src="assets/ui/menu_team.png" width="56" height="56" alt=""><strong>チーム</strong></button><button type="button" class="card psg-start-link" data-screen="box"><img src="assets/ui/menu_box.png" width="56" height="56" alt=""><strong>ボックス</strong></button><button type="button" class="card psg-start-link" data-screen="dex"><img src="assets/ui/menu_dex.png" width="56" height="56" alt=""><strong>図鑑</strong></button><button type="button" class="card psg-start-link" data-screen="info"><img src="assets/ui/menu_info.png" width="56" height="56" alt=""><strong>情報</strong></button></div><div class="card"><div class="section-title">更新履歴</div><div id="homeUpdates"></div></div></section>
 <script id="psg-site-brand">
 {
  const rareLogo=Math.random()<0.1;
@@ -19,32 +19,48 @@
 </section>
 
 <style>
-.psg-calendar-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.psg-game-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.psg-calendar-day{min-height:40px;text-align:center;padding:7px 2px;border-radius:8px;background:#f4f7f5}.psg-calendar-day.is-event{background:#e1edff;color:#255894;font-weight:700}.psg-calendar-day.is-today{outline:2px solid #508d72}.psg-calendar-weekday{text-align:center;color:#69766f;font-size:12px}.psg-calendar-event{font-size:13px;margin:12px 0}.psg-update-entry{border-top:1px solid #e2e8e4;padding:10px 0}.psg-update-entry small{color:#69766f}
+.psg-calendar-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.psg-game-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.psg-calendar-day{min-height:40px;text-align:center;padding:7px 2px;border-radius:8px;background:#f4f7f5}.psg-calendar-day.is-focus-week{background:#e7f2e9}.psg-calendar-day.is-event{background:#e1edff;color:#255894;font-weight:700}.psg-calendar-day.is-today{outline:2px solid #508d72}.psg-calendar-day.is-focus-week.is-event{background:#cfdef5}.psg-calendar-reset{margin-top:8px}.psg-calendar-weekday{text-align:center;color:#69766f;font-size:12px}.psg-calendar-event{font-size:13px;margin:12px 0}.psg-update-entry{border-top:1px solid #e2e8e4;padding:10px 0}.psg-update-entry small{color:#69766f}.psg-update-heading{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.psg-update-category{font-size:11px;padding:2px 7px;border-radius:6px;background:#edf3ef;color:#415c4a}.psg-update-history{margin-top:10px}.psg-update-history summary{cursor:pointer;font-weight:700}
 </style>
 <script id="psg-home-calendar">
 (()=>{
  window.PS_GAME_EVENTS=[{title:'デカ盛り！料理ウィーク vol.3',start:'2026-10-05T04:00:00+09:00',end:'2026-10-12T03:59:00+09:00',source:'https://www.pokemonsleep.net/news/343430323735323935393230393739393731/'}];
  const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date());
- let year=Number(today.slice(0,4)),month=Number(today.slice(5,7))-1;
- const dateKey=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+ const todayDate=new Date(today+'T00:00:00Z');
+ const addDays=(date,days)=>{const result=new Date(date);result.setUTCDate(result.getUTCDate()+days);return result};
+ const currentMonday=addDays(todayDate,-((todayDate.getUTCDay()+6)%7));
+ const dateKey=date=>date.toISOString().slice(0,10);
+ const dateLabel=date=>`${date.getUTCFullYear()}/${date.getUTCMonth()+1}/${date.getUTCDate()}`;
+ let weekOffset=0;
  function render(){
-  document.getElementById('calendarMonth').textContent=`${year}年${month+1}月`;
+  const monday=addDays(currentMonday,weekOffset*7),firstDay=addDays(monday,-7),lastDay=addDays(monday,13);
+  document.getElementById('calendarMonth').textContent=`${dateLabel(monday)}〜${dateLabel(addDays(monday,6))} ${weekOffset===0?'今週':'の週'}`;
+  document.getElementById('calendarToday').hidden=weekOffset===0;
   const host=document.getElementById('gameCalendar');host.replaceChildren();
-  for(const name of ['日','月','火','水','木','金','土']){const el=document.createElement('span');el.className='psg-calendar-weekday';el.textContent=name;host.append(el)}
-  const offset=new Date(Date.UTC(year,month,1)).getUTCDay(),days=new Date(Date.UTC(year,month+1,0)).getUTCDate();
-  for(let i=0;i<offset;i++)host.append(document.createElement('span'));
-  for(let day=1;day<=days;day++){
-   const key=dateKey(year,month,day),events=window.PS_GAME_EVENTS.filter(e=>key>=e.start.slice(0,10)&&key<=e.end.slice(0,10));
-   const el=document.createElement('div');el.className='psg-calendar-day'+(events.length?' is-event':'')+(key===today?' is-today':'');el.textContent=String(day);el.title=events.map(e=>e.title).join('・');el.setAttribute('aria-label',`${month+1}月${day}日${events.length?' '+events.map(e=>e.title).join('・'):''}`);host.append(el);
+  for(const name of ['月','火','水','木','金','土','日']){const el=document.createElement('span');el.className='psg-calendar-weekday';el.textContent=name;host.append(el)}
+  for(let i=0;i<21;i++){
+   const date=addDays(firstDay,i),key=dateKey(date),events=window.PS_GAME_EVENTS.filter(e=>key>=e.start.slice(0,10)&&key<=e.end.slice(0,10));
+   const el=document.createElement('div');el.className='psg-calendar-day'+(i>=7&&i<14?' is-focus-week':'')+(events.length?' is-event':'')+(key===today?' is-today':'');el.dataset.date=key;
+   el.textContent=i%7===0||date.getUTCDate()===1?`${date.getUTCMonth()+1}/${date.getUTCDate()}`:String(date.getUTCDate());el.title=events.map(e=>e.title).join('・');el.setAttribute('aria-label',`${dateLabel(date)}${key===today?' 今日':''}${events.length?' '+events.map(e=>e.title).join('・'):''}`);if(key===today)el.setAttribute('aria-current','date');host.append(el);
   }
   const list=document.getElementById('gameEvents');list.replaceChildren();
-  const first=dateKey(year,month,1),last=dateKey(year,month,days),events=window.PS_GAME_EVENTS.filter(e=>e.start.slice(0,10)<=last&&e.end.slice(0,10)>=first);
+  const first=dateKey(firstDay),last=dateKey(lastDay),events=window.PS_GAME_EVENTS.filter(e=>e.start.slice(0,10)<=last&&e.end.slice(0,10)>=first);
   for(const event of events){const line=document.createElement('p');line.className='psg-calendar-event';const title=document.createElement('strong');title.textContent=event.title;const dates=document.createElement('span');dates.textContent=`${event.start.slice(5,10).replace('-','/')} 4:00〜${event.end.slice(5,10).replace('-','/')} 3:59`;line.append(title,document.createElement('br'),dates);list.append(line)}
   if(!events.length){const line=document.createElement('p');line.className='note';line.textContent='登録されているゲームの予定はありません。';list.append(line)}
  }
- document.getElementById('calendarPrev').onclick=()=>{month--;if(month<0){month=11;year--}render()};
- document.getElementById('calendarNext').onclick=()=>{month++;if(month>11){month=0;year++}render()};render();
- const updates=[['v425','2026/10/08','情報にランキングを集約。食材の構成漏れを訂正し、タマゲタケ系の推定確率・寝顔名を追加。'],['v424','2026/10/08','常時表示のEX参考説明を削除し、本棚へ集約。'],['v423','2026/10/08','スキル画像をピカソ新版へ差し替え、旧版画像・対応表を削除。'],['v422','2026/10/07','非表示のフィールド描画を省略し、ランキング表の遅延描画と出典表示の再利用で軽量化。'],['v421','2026/10/07','スキル込みエナジー・食材別収集効率の試作ランキングを追加。'],['v420','2026/10/07','寝顔の画像照合中表記を削除し、タマゲタケ・モロバレルの能力を追加。'],['v419','2026/10/07','情報にタイプ別、フィールドに島別のきのみ効率ランキングを追加。'],['v418','2026/10/07','図鑑カード画像の重複する名前を削除。'],['v417','2026/10/07','画像OFF時の画像枠をコンパクト化し、代替文字の表示を修正。'],['v416','2026/10/07','ポケモン画像と寝顔画像の自動読み込み設定を追加。'],['v415','2026/10/07','ホームにゲーム予定カレンダーと更新履歴を追加。'],['v414','2026/10/07','情報ページに出典を集約。'],['v413','2026/10/07','EXフィールドの1日予想と特殊個体の評価に対応。']];
- const host=document.getElementById('homeUpdates');for(const [version,date,text] of updates){const row=document.createElement('div');row.className='psg-update-entry';const title=document.createElement('strong');title.textContent=version+' ';const time=document.createElement('small');time.textContent=date;const description=document.createElement('p');description.textContent=text;row.append(title,time,description);host.append(row)}
+ document.getElementById('calendarPrev').onclick=()=>{weekOffset--;render()};
+ document.getElementById('calendarNext').onclick=()=>{weekOffset++;render()};
+ document.getElementById('calendarToday').onclick=()=>{weekOffset=0;render()};render();
+ const updates=[["v426","2026/10/08","カレンダーを今週中心の3週間に変更。更新履歴を最新3件と開閉式にし、分類を追加。","表示・軽量化"],["v425","2026/10/08","情報にランキングを集約。食材の構成漏れを訂正し、タマゲタケ系の推定確率・寝顔名を追加。","データ・情報"],["v424","2026/10/08","常時表示のEX参考説明を削除し、本棚へ集約。","表示・軽量化"],["v423","2026/10/08","スキル画像をピカソ新版へ差し替え、旧版画像・対応表を削除。","画像"],["v422","2026/10/07","非表示のフィールド描画を省略し、ランキング表の遅延描画と出典表示の再利用で軽量化。","表示・軽量化"],["v421","2026/10/07","スキル込みエナジー・食材別収集効率の試作ランキングを追加。","データ・情報"],["v420","2026/10/07","寝顔の画像照合中表記を削除し、タマゲタケ・モロバレルの能力を追加。","データ・情報"],["v419","2026/10/07","情報にタイプ別、フィールドに島別のきのみ効率ランキングを追加。","データ・情報"],["v418","2026/10/07","図鑑カード画像の重複する名前を削除。","表示・軽量化"],["v417","2026/10/07","画像OFF時の画像枠をコンパクト化し、代替文字の表示を修正。","表示・軽量化"],["v416","2026/10/07","ポケモン画像と寝顔画像の自動読み込み設定を追加。","機能・計算"],["v415","2026/10/07","ホームにゲーム予定カレンダーと更新履歴を追加。","機能・計算"],["v414","2026/10/07","情報ページに出典を集約。","データ・情報"],["v413","2026/10/07","EXフィールドの1日予想と特殊個体の評価に対応。","機能・計算"]];
+ const host=document.getElementById('homeUpdates');host.replaceChildren();
+ function updateRow([version,date,description,category],target){
+  const row=document.createElement('div');row.className='psg-update-entry';const heading=document.createElement('div');heading.className='psg-update-heading';
+  const title=document.createElement('strong');title.textContent=version;const time=document.createElement('small');time.textContent=date;const badge=document.createElement('span');badge.className='psg-update-category';badge.textContent=category;
+  const text=document.createElement('p');text.textContent=description;heading.append(title,time,badge);row.append(heading,text);target.append(row);
+ }
+ updates.slice(0,3).forEach(row=>updateRow(row,host));
+ if(updates.length>3){
+  const history=document.createElement('details');history.className='psg-update-history';const summary=document.createElement('summary');summary.textContent=`過去の更新（${updates.length-3}件）`;history.append(summary);host.append(history);
+  let built=false;history.addEventListener('toggle',()=>{if(history.open&&!built){built=true;updates.slice(3).forEach(row=>updateRow(row,history))}});
+ }
 })();
 </script>
