@@ -7,6 +7,7 @@ const explicit=window.PS_IMAGE_FILES;
 const lookup=new Map();
 function exists(path){
   if(!path)return Promise.resolve(false);
+  if((/pokemon/.test(path)&&!window.PS_IMAGE_LOADING.allowed('pokemon'))||(/sleep/.test(path)&&!window.PS_IMAGE_LOADING.allowed('sleep')))return Promise.resolve(false);
   if(lookup.has(path))return lookup.get(path);
   const task=new Promise(resolve=>{
     const image=new Image();

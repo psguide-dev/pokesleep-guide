@@ -11,7 +11,7 @@ function teamFace(individual){
  const species=speciesFor(individual);
  const src=species?.faceImage||species?.image;
  if(!src){art.textContent='No image';return art}
- const img=document.createElement('img');img.src=src;img.alt='';img.onerror=()=>{img.remove();art.textContent='No image'};
+ const img=document.createElement('img');window.PS_IMAGE_LOADING.set(img,src,'pokemon');img.alt='';img.onerror=()=>{img.remove();art.textContent='No image'};
  art.append(img);return art;
 }
 function subskillCardBadges(individual){

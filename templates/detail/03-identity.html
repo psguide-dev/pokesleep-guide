@@ -66,7 +66,7 @@
      const img=document.createElement('img');
      const role=m.image&&m.image===m.faceImage?'face':'full';
      const expected=preview.path('pokemon',m.no,role);
-     img.src=m.image||preview.preview(expected);
+     window.PS_IMAGE_LOADING.set(img,m.image||preview.preview(expected),'pokemon');
      img.alt=m.name;
      img.classList.toggle('psg-asset-preview',!m.image);
      img.title=preview.title(expected);

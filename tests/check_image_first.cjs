@@ -25,7 +25,7 @@ class Node{
 }
 const markup=read('templates/09-dex-detail.html'),nodes=new Map([...markup.matchAll(/id="([^"]+)"/g)].map(m=>[m[1],new Node()]));
 const sleep=new Node(),field=new Node(),icon=new Node(),count=new Node(),tab=new Node();tab.querySelector=()=>count;
-const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:()=>icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
+const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:()=>icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{},PS_IMAGE_LOADING:{set:(img,src)=>{img.src=src}}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
 vm.createContext(c);
 for(const file of ['04-food','05-skill','06-evolution','02-sleep-and-fields'])vm.runInContext(read(`templates/detail/${file}.html`),c);
 // Open a known skill, then incomplete variants: stale effects and levels must clear.

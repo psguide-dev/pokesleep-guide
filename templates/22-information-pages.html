@@ -8,6 +8,8 @@
  }};
  window.PS_PAGE_RENDERERS??={};
  window.PS_PAGE_RENDERERS.accountPage=()=>{
+  for(const [id,kind] of [['autoPokemonImages','pokemon'],['autoSleepImages','sleep']]){const input=document.getElementById(id);input.checked=window.PS_IMAGE_LOADING.allowed(kind);input.onchange=()=>{const ok=window.PS_IMAGE_LOADING.save({[kind]:input.checked});document.getElementById('imageLoadingStatus').textContent=ok?'保存しました。再読み込みで適用します。':'設定を保存できませんでした。';}}
+  document.getElementById('applyImageLoading').onclick=()=>location.reload();
   const select=document.getElementById('teamPotBase');
   if(select.options.length===1)for(const row of window.PS_CATALOG.cooking.pot['拡張表']){const option=document.createElement('option');option.value=String(row['容量']);option.textContent=`${row['容量']}個`;select.append(option)}
   const base=window.PS.cookingContext().base;select.value=base===null?'':String(base);

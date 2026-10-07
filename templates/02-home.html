@@ -44,7 +44,7 @@
  }
  document.getElementById('calendarPrev').onclick=()=>{month--;if(month<0){month=11;year--}render()};
  document.getElementById('calendarNext').onclick=()=>{month++;if(month>11){month=0;year++}render()};render();
- const updates=[['v415','2026/10/07','ホームにゲーム予定カレンダーと更新履歴を追加。'],['v414','2026/10/07','情報ページに出典を集約。'],['v413','2026/10/07','EXフィールドの1日予想と特殊個体の評価に対応。']];
+ const updates=[['v416','2026/10/07','ポケモン画像と寝顔画像の自動読み込み設定を追加。'],['v415','2026/10/07','ホームにゲーム予定カレンダーと更新履歴を追加。'],['v414','2026/10/07','情報ページに出典を集約。'],['v413','2026/10/07','EXフィールドの1日予想と特殊個体の評価に対応。']];
  const host=document.getElementById('homeUpdates');for(const [version,date,text] of updates){const row=document.createElement('div');row.className='psg-update-entry';const title=document.createElement('strong');title.textContent=version+' ';const time=document.createElement('small');time.textContent=date;const description=document.createElement('p');description.textContent=text;row.append(title,time,description);host.append(row)}
 })();
 </script>
