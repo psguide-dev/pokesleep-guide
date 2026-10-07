@@ -1,4 +1,4 @@
-<section id="startPage" class="screen active"><h2 class="psg-screen-title">ホーム</h2><div class="card psg-start-intro"><img class="psg-start-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></div><div class="psg-start-links"><button type="button" class="card psg-start-link" data-screen="home"><img src="assets/ui/menu_team.png" width="56" height="56" alt=""><strong>チーム</strong></button><button type="button" class="card psg-start-link" data-screen="box"><img src="assets/ui/menu_box.png" width="56" height="56" alt=""><strong>ボックス</strong></button><button type="button" class="card psg-start-link" data-screen="dex"><img src="assets/ui/menu_dex.png" width="56" height="56" alt=""><strong>図鑑</strong></button><button type="button" class="card psg-start-link" data-screen="info"><img src="assets/ui/menu_info.png" width="56" height="56" alt=""><strong>情報</strong></button></div></section>
+<section id="startPage" class="screen active"><h2 class="psg-screen-title">ホーム</h2><div class="card"><div class="psg-calendar-heading"><button type="button" id="calendarPrev" class="btn" aria-label="前の月">‹</button><strong id="calendarMonth"></strong><button type="button" id="calendarNext" class="btn" aria-label="次の月">›</button></div><div id="gameCalendar" class="psg-game-calendar"></div><div id="gameEvents"></div></div><div class="card psg-start-intro"><img class="psg-start-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></div><div class="psg-start-links"><button type="button" class="card psg-start-link" data-screen="home"><img src="assets/ui/menu_team.png" width="56" height="56" alt=""><strong>チーム</strong></button><button type="button" class="card psg-start-link" data-screen="box"><img src="assets/ui/menu_box.png" width="56" height="56" alt=""><strong>ボックス</strong></button><button type="button" class="card psg-start-link" data-screen="dex"><img src="assets/ui/menu_dex.png" width="56" height="56" alt=""><strong>図鑑</strong></button><button type="button" class="card psg-start-link" data-screen="info"><img src="assets/ui/menu_info.png" width="56" height="56" alt=""><strong>情報</strong></button></div><div class="card"><div class="section-title">更新履歴</div><div id="homeUpdates"></div></div></section>
 <script id="psg-site-brand">
 {
  const rareLogo=Math.random()<0.1;
@@ -17,3 +17,34 @@
 </details><div class="psg-swap-actions"><button type="button" id="swapCalculate">不足と候補を見る</button><button type="button" id="swapCancel" hidden>中止</button></div><p id="swapStatus" class="note" role="status" aria-live="polite"></p><div id="swapResults" class="psg-swap-result"></div>
 <details><summary>この予測の前提</summary><p class="note">在庫なし。料理1食分と24時間の獲得予測を比較します。選んだ控えと現チームの各個体を入れ替え、残る4匹へのおてボ・回復・対応済みスキルも同じ日産モデルで再計算します。起床から1匹を交代し、回収時点で元へ戻す時間を探索します。戻した後も1日の終わりまで計算します。上の回収間隔・食事・キャンプと入力済みゾーンを使用。EXは未対応。種類未指定のランダム食材は必要食材へ割り当てません。未対応のスキル追加効果・対象抽選の相関・発動保証は含まず、料理エナジーを差分に加算しません。保存チーム・在庫は変更しません。</p><button type="button" id="swapBasisLink">詳しい前提を見る</button></details></div>
 </section>
+
+<style>
+.psg-calendar-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.psg-game-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.psg-calendar-day{min-height:40px;text-align:center;padding:7px 2px;border-radius:8px;background:#f4f7f5}.psg-calendar-day.is-event{background:#e1edff;color:#255894;font-weight:700}.psg-calendar-day.is-today{outline:2px solid #508d72}.psg-calendar-weekday{text-align:center;color:#69766f;font-size:12px}.psg-calendar-event{font-size:13px;margin:12px 0}.psg-update-entry{border-top:1px solid #e2e8e4;padding:10px 0}.psg-update-entry small{color:#69766f}
+</style>
+<script id="psg-home-calendar">
+(()=>{
+ window.PS_GAME_EVENTS=[{title:'デカ盛り！料理ウィーク vol.3',start:'2026-10-05T04:00:00+09:00',end:'2026-10-12T03:59:00+09:00',source:'https://www.pokemonsleep.net/news/343430323735323935393230393739393731/'}];
+ const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date());
+ let year=Number(today.slice(0,4)),month=Number(today.slice(5,7))-1;
+ const dateKey=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+ function render(){
+  document.getElementById('calendarMonth').textContent=`${year}年${month+1}月`;
+  const host=document.getElementById('gameCalendar');host.replaceChildren();
+  for(const name of ['日','月','火','水','木','金','土']){const el=document.createElement('span');el.className='psg-calendar-weekday';el.textContent=name;host.append(el)}
+  const offset=new Date(Date.UTC(year,month,1)).getUTCDay(),days=new Date(Date.UTC(year,month+1,0)).getUTCDate();
+  for(let i=0;i<offset;i++)host.append(document.createElement('span'));
+  for(let day=1;day<=days;day++){
+   const key=dateKey(year,month,day),events=window.PS_GAME_EVENTS.filter(e=>key>=e.start.slice(0,10)&&key<=e.end.slice(0,10));
+   const el=document.createElement('div');el.className='psg-calendar-day'+(events.length?' is-event':'')+(key===today?' is-today':'');el.textContent=String(day);el.title=events.map(e=>e.title).join('・');el.setAttribute('aria-label',`${month+1}月${day}日${events.length?' '+events.map(e=>e.title).join('・'):''}`);host.append(el);
+  }
+  const list=document.getElementById('gameEvents');list.replaceChildren();
+  const first=dateKey(year,month,1),last=dateKey(year,month,days),events=window.PS_GAME_EVENTS.filter(e=>e.start.slice(0,10)<=last&&e.end.slice(0,10)>=first);
+  for(const event of events){const line=document.createElement('p');line.className='psg-calendar-event';const title=document.createElement('strong');title.textContent=event.title;const dates=document.createElement('span');dates.textContent=`${event.start.slice(5,10).replace('-','/')} 4:00〜${event.end.slice(5,10).replace('-','/')} 3:59`;line.append(title,document.createElement('br'),dates);list.append(line)}
+  if(!events.length){const line=document.createElement('p');line.className='note';line.textContent='登録されているゲームの予定はありません。';list.append(line)}
+ }
+ document.getElementById('calendarPrev').onclick=()=>{month--;if(month<0){month=11;year--}render()};
+ document.getElementById('calendarNext').onclick=()=>{month++;if(month>11){month=0;year++}render()};render();
+ const updates=[['v415','2026/10/07','ホームにゲーム予定カレンダーと更新履歴を追加。'],['v414','2026/10/07','情報ページに出典を集約。'],['v413','2026/10/07','EXフィールドの1日予想と特殊個体の評価に対応。']];
+ const host=document.getElementById('homeUpdates');for(const [version,date,text] of updates){const row=document.createElement('div');row.className='psg-update-entry';const title=document.createElement('strong');title.textContent=version+' ';const time=document.createElement('small');time.textContent=date;const description=document.createElement('p');description.textContent=text;row.append(title,time,description);host.append(row)}
+})();
+</script>

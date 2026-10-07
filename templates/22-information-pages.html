@@ -62,6 +62,7 @@
   }
   const labels={pokemon:'ポケモン',forms:'姿違い',sleepStyles:'寝顔',fields:'フィールド・EX',skills:'スキル',ingredients:'食材',recipes:'料理',cooking:'料理・鍋',growth:'育成・経験値',researchRanks:'リサーチ',recipeEvaluation:'料理評価',dailySupply:'食材予想'};
   for(const [key,value] of Object.entries(window.PS_CATALOG))scan(value,labels[key]||'計算・補助情報');
+  scan(window.PS_GAME_EVENTS,'ゲームの予定');
   const staticSources=[{"url": "https://www.pokemongoplusplus.com/sleep/", "title": "公式説明", "category": "計算・補助情報"}, {"url": "https://www.fireyoshida.com/entry/2023/10/20/133854", "title": "能力表の参照資料", "category": "計算・補助情報"}, {"url": "https://wikiwiki.jp/poke_sleep/メインスキル/食材セレクト", "title": "食材セレクトの仕様参照", "category": "計算・補助情報"}, {"url": "https://namakemono289.hatenablog.com/entry/2025/12/23/011054", "title": "ホイッスルの効果検証", "category": "計算・補助情報"}];
   staticSources.forEach(s=>add(s.category,s.url,s.title));
   for(const [category,entries] of groups){
