@@ -260,7 +260,7 @@
     "表記ルール": "~は前行・見出しの継承、>は結合セル。表中の数値は無補正の基礎効果。",
     "状態": "数値表収集済み。計算用スキーマへの変換・条件分岐の実装は未実施。"
   },
-  "iconAsset": "assets/skill-icons/plus_ingredient_magnet_s.webp",
+  "iconAsset": "assets/skill-icons/v423/plain/plus.webp",
   "effectRules": {
     "skillId": "plus_ingredient_magnet_s",
     "name": "プラス(食材ゲットS)",

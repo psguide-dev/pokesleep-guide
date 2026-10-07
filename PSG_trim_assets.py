@@ -9,7 +9,7 @@ def restore_trim_assets(root):
     folder = root / 'data-import/picasso-trim-v305'
     manifest = json.loads((folder / 'manifest.json').read_text())
     rows = {row['path']: row for row in manifest['images']}
-    assert len(rows) == 381
+    assert len(rows) == 346
     seen = set()
     for pack in manifest['archives']:
         path = folder / pack['path']

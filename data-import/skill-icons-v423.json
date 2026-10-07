@@ -1,0 +1,204 @@
+{
+  "receivedAt": "2026-10-08",
+  "source": "PSN_skill_icons_variants_20261007.zip (Biblo v14)",
+  "webpEncoding": "quality90 method6; original lossless/PNG and rank parts retained in Biblo",
+  "repairedPlain": [
+    "cooking_assist",
+    "dream_shard_magnet",
+    "energizing_cheer"
+  ],
+  "icons": [
+    {
+      "path": "assets/skill-icons/v423/M/energy_charge_m.webp",
+      "sha256": "4bfdf6eb2e9f975c530c8ba331c7183b08264b24f209ce65d88488edc2706105"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/cooking_chance_s.webp",
+      "sha256": "8db75204fe9d4ad1f0a3a3af7a2fee17306af4e6593e6fffaf8d6a964cc7a42d"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/cooking_power_up_s.webp",
+      "sha256": "faa752e07d1d88955b377c85bbc118099ca7535d7e5ad6bd0cc7feeac8d06932"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/dream_shard_magnet_s.webp",
+      "sha256": "59bdf47ac802c1f35baf249192a6432eacd185415761d45acc3af57257c63528"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/energizing_cheer_s.webp",
+      "sha256": "00d4f66d4a0efd1e75888269920bbe587d7c7df3e9463f5e89524d6769b5c010"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/energy_all_s.webp",
+      "sha256": "1a3a6f142878db4a8fb054cd851b36cca364ad93eff2e382f0b08f73a7af30ab"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/energy_charge_s.webp",
+      "sha256": "d287b3237aa9cb3d1ace4ad8f4da1ce574fc310bc1e64edc5e199a008f99633a"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/energy_cheer_s.webp",
+      "sha256": "922e81bce68f09df50e66da608beaac32ffd5a1e81be2cf4856b146157a22ba3"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/helper_support_s.webp",
+      "sha256": "2510e5206c7bb1537285ea37e14d6a3fff92d799f23d16c54b3737062548e4ef"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/ingredient_magnet_s.webp",
+      "sha256": "98ba30d6245df9e9610d38a1f7a990b39d5da9577ed02e02aed17cb58fec7cc8"
+    },
+    {
+      "path": "assets/skill-icons/v423/S/ingredient_select_s.webp",
+      "sha256": "e9a413b4be37ed1113853b5cd57d7dbc087ed5483a669b85ebc98e7b660375f4"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/all_mighty.webp",
+      "sha256": "6d3204c5684bb654525704f1077a2c160dd2f6d318d33be337305c3b6edf19e0"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/aura_sphere.webp",
+      "sha256": "126fbcf500bca3fafcd3e2e85fa9b927eb00d831685454e5dae1afef65d99e87"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/berry_burst.webp",
+      "sha256": "ff8ca713e6698a580033527f43679702efc469fe719b7d27448a70eb80839dc6"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/berry_juice.webp",
+      "sha256": "bce3267b0f37800ec2ee2de51e1971a3dfedb86fa1ec9b22aa58215441fa33fc"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/berry_zone.webp",
+      "sha256": "49a1b907e133202fc437c806391e2ecc4f2b09821f0cea21859c56bb8b3ab330"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/bulk_up.webp",
+      "sha256": "fbf92ba4e9c4bbb8a87037489f5a7928ad507455a3286472d61355ae3e5e55bd"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/cheek_rub.webp",
+      "sha256": "8f84de03296f1049772be5ba120510ff2d55934cc24b2369bff4c9b63adf40f8"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/cooking_assist.webp",
+      "sha256": "acb1339534b56b4c810a5a55ee945c0db2f91fa5f560c4ac4217d8ed813b1c6f"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/cooking_chance.webp",
+      "sha256": "d8354b2782db962235bd7b98d03b7975c9f79df30d0690d86482ddb7f6842c3a"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/cooking_power_up.webp",
+      "sha256": "b3fa80c1365053274c498b2d7abbacaafaf1ce311bdb88155827a90cc2ebb16e"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/disguise.webp",
+      "sha256": "b9c3032581d8f3d5674ccba2fbe17ef9a0c2ab5c5646a99665b4ae4d743e9fbf"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/draco_meteor.webp",
+      "sha256": "ab032912358da51cf5ca604fb23f8e841b6c57621ddd0bea0f7e507aef53ecc2"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/dream_shard_magnet.webp",
+      "sha256": "ff876d64a65183be969f37ab0c414f42a191d7b551c7e1c66f26e7864562c964"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/energizing_cheer.webp",
+      "sha256": "84f95e67ac7d826ec8a634d80a238bd81023eaaa0cdb9c91cac01b151b781c68"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/energy_all.webp",
+      "sha256": "7aae184e165bd4b044158b873b9ba138382f85cb922db9fe09216a712251cd5c"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/energy_charge.webp",
+      "sha256": "a29d4f3dcc4df8b0607d301b2ef07ff572780ed277e6ebaf3d9d6b4eddd3e6e8"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/energy_cheer.webp",
+      "sha256": "573d2225542c5a56ee6c328f0ecb9eb46922eb309e485e7f8bb2b6eb5ff12ed3"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/heal_pulse.webp",
+      "sha256": "ac78734cdc19047e19b985b69811087170cdd5e9375206d9ef53dcfc60486f68"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/helper_boost_electric.webp",
+      "sha256": "46ca196ab4716734aa6534751d33eedbdab1fd2dfd37c9ba301ba18edda605e2"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/helper_boost_fire.webp",
+      "sha256": "ecf130851912e552d3bbcd84ae0da3fa1c0c0e78d5f1e808daa34ffa7faa408c"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/helper_boost_water.webp",
+      "sha256": "38d0824953ac4178797ce7f7db8b59ceae5de7054aa3de0b038469637def8049"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/helper_support.webp",
+      "sha256": "959f4bc30d289b5f482ed2ef9cd582b223e7857f4c6b85d9c531f8a6b81ea750"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/hyper_cutter.webp",
+      "sha256": "a65339eb8e1c20af8a86aa550ac4e5519a97ad6207339e2026439e57b0153d16"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/ingredient_magnet.webp",
+      "sha256": "b8ae139d990ae4b79606b008b2690b0aa8fcdea0dde42dd81301a50bb69b5d18"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/ingredient_select.webp",
+      "sha256": "5c1fe3ebf10bbf207f9708a014f97c274ccf674e5c06fec9ccc616c175caf603"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/lunar_blessing.webp",
+      "sha256": "975f371e7a2bc4c8b2a35f036b66e45e03f9b090c17ad55bf6cea5d0a58d3f57"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/metronome.webp",
+      "sha256": "aa4ba33c4943463026d3642fbc6d5d80b096dd693b3f8231e38515d7571deb8c"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/mimic.webp",
+      "sha256": "97d8e723a68505258064f6117621633dc994bd558490a6501fa3ca38e7225ff0"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/minus.webp",
+      "sha256": "dfd1b75996b8a22b4b497ed84d070771b164562b47adc1a092da13ab4157b08d"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/moonlight.webp",
+      "sha256": "a800c0b98e8c142010781925252ce69757c8317693d765c6a721de9613596a6c"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/nightmare.webp",
+      "sha256": "370ac2ffef7b1f3cb9abdb5eccb775762d94ab1b1a8e8896b546dba10206e8f6"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/plus.webp",
+      "sha256": "9bc0702b64e886b5a0369832ed2543a38f135d58da6dac49dae6d2cdad5f1765"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/present.webp",
+      "sha256": "fe0ae981afcfe295a3a8bb34fa0e8c3705a70a507800c672787f4ca45c17ad50"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/psystrike.webp",
+      "sha256": "a4d140d8614f482a9523b33262af53abd6387749f051031038e481c77de6e08c"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/stockpile.webp",
+      "sha256": "56375313337f5511a61a009281770b0bf585a96b258959457061ee712e7c37f7"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/super_luck.webp",
+      "sha256": "4c884cd8ccafd5932d375602ffd4eb2dc3ffefc01bda345b89b5a4c83c84bfd7"
+    },
+    {
+      "path": "assets/skill-icons/v423/plain/transform.webp",
+      "sha256": "ab5d029d9f13177caca02cf1c4187f67b1124c886d36007848c0ea02664d9853"
+    }
+  ]
+}

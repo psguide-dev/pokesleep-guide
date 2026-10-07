@@ -39,5 +39,5 @@
   "calculationStatus": "基本効果のみ対応・追加効果は未対応",
   "calculationNote": "追加ジュースの入手確率・使用効果は日産計算に含めていません。",
   "displayNote": "追加ジュースの入手確率・使用効果は日産計算に含めていません。",
-  "iconAsset": "assets/skill-icons/berry_juice_energy_for_everyone.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/berry_juice.webp"
 }

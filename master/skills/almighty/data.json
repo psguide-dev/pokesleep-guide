@@ -217,7 +217,7 @@
     "表記ルール": "~は前行・見出しの継承、>は結合セル。表中の数値は無補正の基礎効果。",
     "状態": "数値表収集済み。計算用スキーマへの変換・条件分岐の実装は未実施。"
   },
-  "iconAsset": "assets/skill-icons/almighty.webp",
+  "iconAsset": "assets/skill-icons/v423/plain/all_mighty.webp",
   "effectRules": {
     "skillId": "almighty",
     "name": "オールマイティー",

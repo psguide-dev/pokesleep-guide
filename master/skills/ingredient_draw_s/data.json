@@ -37,5 +37,5 @@
       "description": "特定の食材からランダムで1種類を18個ゲットする"
     }
   },
-  "iconAsset": "assets/skill-icons/ingredient_draw_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/ingredient_select_s.webp"
 }

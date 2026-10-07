@@ -50,5 +50,5 @@
   "calculationStatus": "基本効果のみ対応・追加効果は未対応",
   "calculationNote": "追加アメの発生確率と対象の抽選は未確定。アメの期待値は計算に含めていません。",
   "displayNote": "追加アメの発生確率と対象の抽選は未確定。アメの期待値は計算に含めていません。",
-  "iconAsset": "assets/skill-icons/present_ingredient_magnet_s.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/present.webp"
 }
