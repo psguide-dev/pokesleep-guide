@@ -1,0 +1,18 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const html=fs.readFileSync('templates/01-shell-head.html','utf8');
+const script=html.match(/<script id="psg-image-loading">([\s\S]*?)<\/script>/)[1];
+const listeners={},controls=[],images=[];
+const img={alt:'ラッタ',dataset:{},classList:{add(){},remove(){}},setAttribute(){},removeAttribute(){},after(control){controls.push(control)},};
+const document={body:{},addEventListener(type,fn){listeners[type]=fn},querySelectorAll(){return images.filter(i=>i.dataset.manualSrc)},createElement(){return {setAttribute(){},remove(){this.removed=true}}}};
+const context={document,window:{},localStorage:{getItem(){return JSON.stringify({pokemon:false,sleep:true})}},MutationObserver:class{observe(){}}};
+vm.runInNewContext(script,context);
+const api=context.window.PS_IMAGE_LOADING;
+api.set(img,'test.webp','pokemon');images.push(img);
+assert.equal(img.src,undefined);assert(api.attrs('sleep.webp','sleep').includes('src='));
+listeners.DOMContentLoaded();assert.equal(controls.length,1);assert.equal(controls[0].textContent,'画像');
+assert.equal(controls[0]['_manualImage'],img);
+listeners.click({target:{closest(selector){return selector==='.psg-image-load-control'?controls[0]:null}},preventDefault(){},stopImmediatePropagation(){}});
+assert.equal(img.src,'test.webp');assert.equal(img.dataset.manualSrc,undefined);assert(controls[0].removed);
+assert(html.includes('img[data-manual-src]{display:none!important}'));
+assert(html.includes('.dex-art:has(>img[data-manual-src])'));
+console.log('Deferred images remain unloaded, compact controls restore one image, alt text stays hidden.');
