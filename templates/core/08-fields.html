@@ -128,6 +128,7 @@ function renderFieldControls(){
  if(!berries.filter(Boolean).length)berryRow.textContent='未設定';
  summary.replaceChildren(heading);
  renderFieldEncounters(field);
+ window.PS_RENDER_FIELD_RANKING?.(fieldProfile.selectedFieldId);
 }
 function renderFieldEncounters(field){
  const host=document.getElementById('fieldEncounterList');if(!host)return;
