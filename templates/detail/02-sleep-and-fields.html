@@ -29,10 +29,6 @@
        const img=document.createElement('img');window.PS_IMAGE_LOADING.set(img,style.image,'sleep');img.alt=style.name||'寝顔';img.loading='lazy';
        img.onerror=()=>{img.remove();photo.appendChild(fallback)};
        photo.appendChild(img);
-       const sid=m.speciesId||`${String(m.no).padStart(4,'0')}_default`;
-       if(V.sleepArtworkStatus?.[sid]?.[style.id]==='provisional'){
-         const note=document.createElement('small');note.className='psg-sleep-art-status';note.textContent='画像照合中';photo.append(note);
-       }
      }else photo.appendChild(fallback);
      const toggle=document.createElement('button');toggle.type='button';toggle.className='psg-sleep-toggle';
      toggle.setAttribute('aria-pressed',sleepFound[style.id]?'true':'false');

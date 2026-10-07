@@ -1,0 +1,76 @@
+{
+  "no": 591,
+  "name": "モロバレル",
+  "type": "どく",
+  "sleepType": "うとうと",
+  "specialty": "食材",
+  "berry": "カゴのみ",
+  "berryQty": 1,
+  "help": 3500,
+  "carry": 14,
+  "mainSkillId": "energy_charge_s_fixed",
+  "dexVisible": true,
+  "ingredientSlotStatus": "verified",
+  "ingredientSlots": [
+    {
+      "unlock": 1,
+      "candidates": [
+        {
+          "ingredientId": "tasty_mushroom",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "unlock": 30,
+      "candidates": [
+        {
+          "ingredientId": "tasty_mushroom",
+          "qty": 5
+        },
+        {
+          "ingredientId": "fancy_egg",
+          "qty": 7
+        }
+      ]
+    },
+    {
+      "unlock": 60,
+      "candidates": [
+        {
+          "ingredientId": "tasty_mushroom",
+          "qty": 7
+        },
+        {
+          "ingredientId": "fancy_egg",
+          "qty": 10
+        },
+        {
+          "ingredientId": "tomato",
+          "qty": 11
+        }
+      ]
+    }
+  ],
+  "sleepStyles": [],
+  "friendPoints": 12,
+  "expType": 600,
+  "sources": [
+    "https://wikiwiki.jp/poke_sleep/モロバレル",
+    "https://wikiwiki.jp/poke_sleep/ポケモンの一覧/食材確率・スキル発動確率の推定値一覧"
+  ],
+  "verifiedAt": "2026-10-07",
+  "dataStatus": "ユーザー提供値と攻略・検証Wikiの能力資料。食材確率20.4%は受領ランキングの推定値。スキル確率・寝顔・出現情報は未収録。",
+  "evolutionNotes": [
+    "タマゲタケ",
+    "↓ Lv.29＋タマゲタケのアメ×40",
+    "モロバレル"
+  ],
+  "evolution": [],
+  "dataNotes": [
+    "所持数はユーザー確認の基礎14。タマゲタケからの進化入手で＋5。Wiki記載19を基礎値として二重加算しない。",
+    "おてつだい時間・食材構成・フレンドポイント・進化条件はユーザー提供値。"
+  ],
+  "foodRate": 20.4,
+  "rateStatus": "推定"
+}

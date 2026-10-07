@@ -1,0 +1,79 @@
+{
+  "no": 590,
+  "name": "タマゲタケ",
+  "type": "どく",
+  "sleepType": "うとうと",
+  "specialty": "食材",
+  "berry": "カゴのみ",
+  "berryQty": 1,
+  "help": 5700,
+  "carry": 12,
+  "mainSkillId": "energy_charge_s_fixed",
+  "dexVisible": true,
+  "ingredientSlotStatus": "verified",
+  "ingredientSlots": [
+    {
+      "unlock": 1,
+      "candidates": [
+        {
+          "ingredientId": "tasty_mushroom",
+          "qty": 2
+        }
+      ]
+    },
+    {
+      "unlock": 30,
+      "candidates": [
+        {
+          "ingredientId": "tasty_mushroom",
+          "qty": 5
+        },
+        {
+          "ingredientId": "fancy_egg",
+          "qty": 7
+        }
+      ]
+    },
+    {
+      "unlock": 60,
+      "candidates": [
+        {
+          "ingredientId": "tasty_mushroom",
+          "qty": 7
+        },
+        {
+          "ingredientId": "fancy_egg",
+          "qty": 10
+        },
+        {
+          "ingredientId": "tomato",
+          "qty": 11
+        }
+      ]
+    }
+  ],
+  "sleepStyles": [],
+  "friendPoints": 5,
+  "expType": 600,
+  "sources": [
+    "https://wikiwiki.jp/poke_sleep/タマゲタケ"
+  ],
+  "verifiedAt": "2026-10-07",
+  "dataStatus": "ユーザー提供値と攻略・検証Wikiの能力資料。確率・寝顔・出現情報は未収録。",
+  "evolutionNotes": [
+    "タマゲタケ",
+    "↓ Lv.29＋タマゲタケのアメ×40",
+    "モロバレル"
+  ],
+  "evolution": [
+    {
+      "toNo": 591,
+      "to": "モロバレル",
+      "conditions": [
+        "Lv.29＋タマゲタケのアメ×40"
+      ],
+      "level": 29,
+      "candy": 40
+    }
+  ]
+}

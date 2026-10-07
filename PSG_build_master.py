@@ -218,7 +218,7 @@ def catalog_and_images():
             assert hi > 0 and (lo is None or 0 <= lo < hi)
             assert row['exactThreshold'] == (hi if lo is not None and hi - lo == 1 else None)
     catalog['friendship'] = json.loads((MASTER / 'friendship/data.json').read_text())
-    assert len(catalog['friendship']['medals']['ポケモン']) == 248
+    assert len(catalog['friendship']['medals']['ポケモン']) == 250
     assert len(catalog['friendship']['normalSpeciesMapping']) == len(kinds['pokemon'])
     validate_cooking(catalog['cooking'])
     catalog['recipeEvaluation'] = json.loads((MASTER / 'cooking/evaluation.json').read_text())
@@ -402,7 +402,7 @@ def catalog_and_images():
     # The old catalog entries may contain pending numbers. New records are authoritative.
     forms = json.loads((MASTER / 'forms/data.json').read_text())
     assert len(forms['detailFormGroups']) == 5 and len(forms['species']) == 32
-    assert len(kinds['pokemon']) + len(forms['species']) == 248
+    assert len(kinds['pokemon']) + len(forms['species']) == 250
     assert all(record.get('boxEligible') is True for record in forms['species'])
     assert len(set(record['speciesId'] for record in forms['species'])) == 32
     for record in forms['species']:
@@ -466,7 +466,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v419') == 2
+    assert source.count('Review v420') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
