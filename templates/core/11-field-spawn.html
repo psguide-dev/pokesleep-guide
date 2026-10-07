@@ -12,10 +12,10 @@ function renderFieldSpawn(){
   const bounds=spawnEnergyBounds(row,score),line=document.createElement('div');line.className='psg-spawn-row';
   const title=document.createElement('strong');title.textContent=`${row.count}匹：ねむけパワー ${row.displayEstimate.toLocaleString()}${row.exactThreshold===null?'前後（目安）':'（共同検証表上特定）'}`;
   const energy=document.createElement('p');energy.className='note';energy.textContent=`スコア${score}で必要エナジー ${bounds.estimate.toLocaleString()}${row.exactThreshold===null?'前後（目安）':''}`;
-  const detail=document.createElement('details'),summary=document.createElement('summary');summary.textContent='観測範囲・出典';detail.append(summary);
+  const detail=document.createElement('details'),summary=document.createElement('summary');summary.textContent='観測範囲';detail.append(summary);
   const range=document.createElement('p');range.textContent=`真の境目：${row.observedPreviousMax===null?'下限未確認':row.observedPreviousMax.toLocaleString()+'より大きい'}、${row.observedNextMin.toLocaleString()}以下。必要エナジーの境目は${bounds.lower===null?'下限未確認、上限':bounds.lower.toLocaleString()+'〜'}${bounds.upper.toLocaleString()}。`;detail.append(range);
   if(row.note){const note=document.createElement('p');note.textContent=row.note;detail.append(note)}
-  const link=document.createElement('a');link.href=row.sourceUrl;link.target='_blank';link.rel='noopener';link.textContent='共同検証の出典';detail.append(link);line.append(title,energy,detail);host.append(line);
+  line.append(title,energy,detail);host.append(line);
  }
 }
 document.getElementById('fieldSpawnSelect').onchange=renderFieldSpawn;

@@ -63,4 +63,3 @@
  addNote('鍋はイベント倍率 → 日曜倍率 → スキル加算 → キャンプ倍率の順で試算します。途中丸めはせず、結果2桁・表示1桁の共通規格を使用します。ゲーム内の端数処理例外は未採用です。通常容量の上限81。');
  addNote('料理の取得EXPは総エナジー。Lv倍率はレシピ部分に適用し、追加食材には適用しません。上限時の余剰EXP保存、レベルアップした料理への倍率遡及は未確定。');
  addNote('比較Lvは表示用で個別の育成記録ではありません。実測・掲載値のないLvはLv1×倍率を丸めずに計算した推定値。Lv70掲載値との端数不一致は補正せず保持します。');
- for(const url of new Set([...cooking.pot['出典'],...cooking.levels['出典']])){const p=document.createElement('p');p.className='note';const link=document.createElement('a');link.href=url;link.textContent=url;link.target='_blank';link.rel='noopener';p.append(link);reference.append(p)}

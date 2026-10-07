@@ -59,4 +59,3 @@
  for(const row of supply.sensitivitySummary['集計']){const p=document.createElement('p');p.className='note';const match=/collect(\d)h_meals(\d)/.exec(row['シナリオ']);p.textContent=`回収${match[1]}時間・料理回復${match[2]==='1'?'あり':'なし'}・Lv${row['Lv']}：ティア変化 ${row['ティア変化食材数']}/19食材`;sensitivity.append(p)}
  referenceContent.append(sensitivity);
  supplyNote(`資料確認日 ${supply.conditions['確認日']}。独自計算の検算であり、ゲーム内実測ではありません。`);
- for(const url of supply.conditions['出典']){const p=document.createElement('p');p.className='note';const a=document.createElement('a');a.href=url;a.textContent=url;a.target='_blank';a.rel='noopener';p.append(a);referenceContent.append(p)}

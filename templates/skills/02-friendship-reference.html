@@ -22,8 +22,6 @@
   paragraph('手元での進化：'+rules['直接入手した進化個体']['手元で進化させる場合']);
   paragraph(rules['特殊個体']);
   paragraph('通常個体の正確な抽選重み・各枠の独立性・再抽選順序は未確認。参考観測は2023年の資料で、現行の確率として固定しません。');
-  const sources=document.createElement('details');const summary=document.createElement('summary');summary.textContent='出典';sources.append(summary);
-  for(const url of new Set([...medals['出典'],...rules['出典']])){const p=document.createElement('p'),a=document.createElement('a');a.href=url;a.textContent=url;a.target='_blank';a.rel='noopener noreferrer';a.style.overflowWrap='anywhere';p.append(a);sources.append(p)}reference.append(sources);
  }
 })();
 </script>

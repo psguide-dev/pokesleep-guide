@@ -63,4 +63,3 @@
  const differences=Object.values(catalog.recipeEvaluation.rounding).filter(item=>item.difference!==0).length;
  basisText(`Lv70の掲載値と四捨五入の参考式に${differences}件の差があります。掲載値を保持し、端数処理は未確定とします。近い値の順位は端数処理によって変わる可能性があります。`);
  basisText(`資料確認日：${catalog.recipeEvaluation.checkedAt}。食材基本エナジー19種類は資料確認。料理評価はゲーム内実測ではありません。`);
- for(const url of catalog.recipeEvaluation.sources){const p=document.createElement('p');p.className='note';const a=document.createElement('a');a.href=url;a.textContent=url;a.target='_blank';a.rel='noopener';p.append(a);basis.append(p)}

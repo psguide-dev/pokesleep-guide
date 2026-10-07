@@ -21,7 +21,7 @@
    group.append(links);body.append(group);
   }
   const source=document.createElement('p');source.className='note';source.textContent=`基本エナジー：${food.baseEnergyStatus||'未確認'}${food.baseEnergyCheckedAt?`（${food.baseEnergyCheckedAt}）`:''}`;
-  if(food.baseEnergySource){const link=document.createElement('a');link.href=food.baseEnergySource;link.textContent=' 出典';link.target='_blank';link.rel='noopener';source.append(link)}body.append(source);
+  body.append(source);
   return body;
  }
  function renderDailyTiers(){
