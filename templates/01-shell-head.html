@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>P Sleep Nexus — Review v421</title>
+<title>P Sleep Nexus — Review v422</title>
 
 
 
@@ -31,14 +31,15 @@
   save(next){settings={...settings,...next};this.settings=settings;try{localStorage.setItem(key,JSON.stringify(settings));return true}catch{return false}}
  };
  function compact(root){
-  for(const img of root.querySelectorAll('img[data-manual-src]')){
+  const images=root.matches?.('img[data-manual-src]')?[root]:root.querySelectorAll('img[data-manual-src]');
+  for(const img of images){
    if(img._manualControl)continue;
    const control=document.createElement('span');control.className='psg-image-load-control';control.textContent='画像';control.tabIndex=0;control.setAttribute('role','button');control.setAttribute('aria-label',`${img.alt||''}の画像を読み込む`);control.title='画像を読み込む';control._manualImage=img;img._manualControl=control;img.removeAttribute('tabindex');img.removeAttribute('role');img.after(control);
   }
  }
  function load(event){const control=event.target.closest?.('.psg-image-load-control');const img=control?control._manualImage:event.target.closest?.('[data-manual-src]');if(!img)return;if(event.type==='keydown'&&!['Enter',' '].includes(event.key))return;event.preventDefault();event.stopImmediatePropagation();const src=img.dataset.manualSrc;delete img.dataset.manualSrc;img.classList.remove('psg-manual-image');img.removeAttribute('role');img.removeAttribute('tabindex');img.title='';img._manualControl?.remove();delete img._manualControl;img.src=src;}
  document.addEventListener('click',load,true);document.addEventListener('keydown',load,true);
- document.addEventListener('DOMContentLoaded',()=>{compact(document);const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node.nodeType===1){if(node.matches('img[data-manual-src]'))compact(node.parentNode);else compact(node)}});observer.observe(document.body,{childList:true,subtree:true});});
+ document.addEventListener('DOMContentLoaded',()=>{if(settings.pokemon&&settings.sleep)return;compact(document);const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node.nodeType===1){compact(node)}});observer.observe(document.body,{childList:true,subtree:true});});
 })();
 </script>
 <style>
@@ -257,5 +258,5 @@ window.PS_UI_ART={
 </script>
 </head>
 <body>
-<header class="psg-app-header"><span class="psg-app-title"><img class="psg-header-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></span><small class="psg-app-version">Review v421</small></header>
+<header class="psg-app-header"><span class="psg-app-title"><img class="psg-header-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></span><small class="psg-app-version">Review v422</small></header>
 <main>

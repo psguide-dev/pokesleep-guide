@@ -110,8 +110,7 @@ function renderFieldGallery(){
 function renderFieldControls(){
  syncExEffectControls();
  document.getElementById('teamBerryZone').value=String(activeBerryZones()['マゴのみ']||0);
- renderFieldSpawn();
- renderFieldGallery();
+ if(state.screen==='fieldPage'){renderFieldSpawn();renderFieldGallery();}
  fieldSelect.value=fieldProfile.selectedFieldId;
  homeFieldSelect.value=fieldProfile.selectedFieldId;
  homeMealSelect.value=activeMealCategory();
@@ -127,8 +126,7 @@ function renderFieldControls(){
  for(const berry of berries.filter(Boolean)){const icon=berryIcon(berry);if(icon)berryRow.append(icon);else berryRow.append(document.createTextNode(berry+' '))}
  if(!berries.filter(Boolean).length)berryRow.textContent='未設定';
  summary.replaceChildren(heading);
- renderFieldEncounters(field);
- window.PS_RENDER_FIELD_RANKING?.(fieldProfile.selectedFieldId);
+ if(state.screen==='fieldPage'){renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldProfile.selectedFieldId);}
 }
 function renderFieldEncounters(field){
  const host=document.getElementById('fieldEncounterList');if(!host)return;
@@ -187,7 +185,7 @@ areaBonusInput.onchange=()=>{
  fieldProfile.areaBonuses[fieldProfile.selectedFieldId]=Math.max(0,Math.min(200,Number(areaBonusInput.value)||0));
  saveFieldProfile();
 };
-document.getElementById('teamFieldLink').onclick=()=>{renderFieldControls();go('fieldPage')};
+document.getElementById('teamFieldLink').onclick=()=>go('fieldPage');
 renderFieldControls();
 
 document.getElementById('teamBerryZone').onchange=event=>{
