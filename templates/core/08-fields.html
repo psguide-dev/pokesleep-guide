@@ -41,7 +41,6 @@ function syncExEffectControls(){
  const isEx=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.mode==='expert';
  const select=document.getElementById('teamExEffect');select.value=daySettings.exWeeklyEffect;select.disabled=!isEx;
  select.title=isEx?'EXの週効果':'EXフィールドで選択できます';
- document.getElementById('teamExEffectNote').hidden=!isEx;
 }
 function syncDayControls(){
  document.getElementById('teamCollectionInterval').value=String(daySettings.collectionHours);
