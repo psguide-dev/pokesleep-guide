@@ -7,7 +7,7 @@ for(const s of scripts)new vm.Script(s);
 const c={window:{},console};vm.createContext(c);
 for(const marker of ['window.PS_IMAGE_FILES = {','window.PS_CATALOG=','// Resolve form identity'])vm.runInContext(scripts.find(s=>s.includes(marker)),c);
 const catalog=c.window.PS_CATALOG,forms=c.window.PS_FORMS,files=c.window.PS_IMAGE_FILES;
-assert.equal(forms.records.size,34);assert.equal(manifest.images.filter(r=>r.role==='sleep').length,944);
+assert.equal(forms.records.size,32);assert.equal(manifest.images.filter(r=>r.role==='sleep').length,944);
 const retired=new Set(JSON.parse(fs.readFileSync(path.join(root,'data-import/retired-pokemon-images-v352.json'))).images.map(r=>r.path));
 for(const row of manifest.images)assert.equal(fs.existsSync(path.join(root,row.path)),!retired.has(row.path),row.path);
 for(const [sid,bindings] of Object.entries(manifest.sleepBindings))for(const [id,image] of Object.entries(bindings)){
@@ -21,9 +21,9 @@ for(const sid of ['0025_captain','0025_halloween_23','0025_halloween_24','0025_h
 assert.notEqual(forms.resolve('0025_halloween_23').faceImage,forms.resolve('0025_halloween_24').faceImage);
 for(const no of [590,591]){
  const p=forms.resolve(`${String(no).padStart(4,'0')}_default`);assert(p.image&&p.faceImage);assert.equal(p.type,'どく');assert.equal(p.sleepType,'うとうと');
- assert.equal(p.boxEligible,false);assert.equal(p.mainSkillId,null);assert.equal(p.help,null);
- assert(forms.dexEntries.some(row=>row.no===no));assert(!c.window.PS_SPECIES_CATALOG.box().some(row=>row.no===no));
- assert.equal(p.sleepStyles.length,0);const photos=catalog.pendingSleepArtwork[p.speciesId];assert.equal(photos.length,4);assert.deepEqual(Array.from(photos,r=>r.stars),[1,2,3,4]);
+ assert.equal(p.boxEligible,true);assert.equal(p.mainSkillId,'energy_charge_s_fixed');assert.equal(p.help,no===590?5700:3500);
+ assert(catalog.pokemon[no].dexVisible);assert.equal(c.window.PS_SPECIES_CATALOG.box().filter(row=>row.no===no).length,1);
+ assert.equal(catalog.sleepStyles[no].length,0);const photos=catalog.pendingSleepArtwork[`${String(no).padStart(4,'0')}_default`];assert.equal(photos.length,4);assert.deepEqual(Array.from(photos,r=>r.stars),[1,2,3,4]);
  assert(photos.every(row=>!row.id));
 }
 const old=JSON.parse(fs.readFileSync(path.join(root,'data-import/picasso-sleep-v281/manifest.json')));

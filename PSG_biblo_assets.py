@@ -38,11 +38,20 @@ def restore_biblo_assets(root, catalog, images):
     assert seen == set(rows) - set(retired_images(root))
     previews = json.loads((folder / 'new-species.json').read_text())
     assert len(previews) == 2 and all(p['boxEligible'] is False for p in previews)
-    catalog['forms']['species'].extend(previews)
-    catalog['forms']['independentDexEntries'].extend(p['speciesId'] for p in previews)
+    pending_previews = [p for p in previews if str(p['no']) not in catalog['pokemon']]
+    catalog['forms']['species'].extend(pending_previews)
+    catalog['forms']['independentDexEntries'].extend(p['speciesId'] for p in pending_previews)
     for kind, bindings in manifest['bindings'].items():
         assert set(bindings.values()) <= seen
         images[kind].update(bindings)
+    # Promote image-first species once normal ability records are available.
+    for preview in previews:
+        no, sid = str(preview['no']), preview['speciesId']
+        if no in catalog['pokemon']:
+            catalog['pokemon'][no]['boxEligible'] = True
+            for target, source in [('pokemon', 'pokemonBySpecies'), ('pokemonFaces', 'pokemonFacesBySpecies')]:
+                if sid in images.get(source, {}):
+                    images[target][no] = images[source][sid]
     # Replace photographs only, leaving permanent style/discovery IDs unchanged.
     catalog['sleepArtworkStatus'] = manifest['sleepBindingStatus']
     catalog['pendingSleepArtwork'] = manifest['pendingSleepArtwork']

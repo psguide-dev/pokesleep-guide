@@ -14,7 +14,7 @@ for(const p of [...Object.values(c.window.PS_CATALOG.pokemon),...c.window.PS_FOR
  assert(p.image&&p.faceImage,`${p.name}: current face/body missing`);check(p.image);check(p.faceImage);
 }
 for(const sid of ['0590_default','0591_default']){
- const p=c.window.PS_FORMS.resolve(sid);assert.equal(p.boxEligible,false);
+ const p=c.window.PS_FORMS.resolve(sid);assert.equal(p.boxEligible,true);
  const pending=c.window.PS_CATALOG.pendingSleepArtwork[sid];assert.equal(pending.length,4);pending.forEach(r=>check(r.image));
 }
 console.log('1165 retired paths absent; every runtime image exists; all current faces/bodies and 8 pending Foongus-family sleep images preserved');
