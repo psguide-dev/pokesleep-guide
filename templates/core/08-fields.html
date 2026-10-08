@@ -91,9 +91,10 @@ function berryIcon(name){
  const image=document.createElement('img');image.className='psg-master-berry-icon';image.src=src;image.alt=name;image.title=name;image.width=28;image.height=28;return image;
 }
 function renderFieldGallery(){
- const host=document.getElementById('fieldGallery');host.replaceChildren();
+ const host=document.getElementById('fieldGallery');host.replaceChildren();let exHeadingAdded=false;
  for(const id of fieldOrder){
   const field=window.PS_CATALOG.fields[id];if(!field)continue;
+  if(field.mode==='expert'&&!exHeadingAdded){const heading=document.createElement('h3');heading.className='psg-field-ex-heading';heading.textContent='EXフィールド';host.append(heading);exHeadingAdded=true;}
   const button=document.createElement('button');button.type='button';button.className='psg-field-choice';button.dataset.fieldId=id;
   button.setAttribute('aria-pressed',String(id===fieldProfile.selectedFieldId));
   const image=window.PS_IMAGE_FILES.fields[id];

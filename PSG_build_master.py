@@ -276,7 +276,7 @@ def catalog_and_images():
         assert [(rank.get('tier'),rank.get('level')) for rank in ranks] == expected_ranks, f'{key}: invalid rank order'
         assert ranks[0]['energy'] == 0 and all(isinstance(rank['energy'],int) and rank['energy'] > ranks[i-1]['energy'] for i,rank in enumerate(ranks) if i), f'{key}: invalid energy thresholds'
         catalog['fields'][key] = field
-        image = image_path(ROOT, folder,'image')
+        image = image_path(ROOT, folder,'image') or image_path(ROOT, ROOT / 'assets/fields' / key, 'image')
         if image:
             images['fields'][key] = image
     for key,(berry,folder) in kinds['berries'].items():
@@ -467,7 +467,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v428') == 2
+    assert source.count('Review v429') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
