@@ -6,8 +6,10 @@ function recipeCollectionPanel(recipe){
  for(const n of [1,3]){const option=new Option(`${n}食分`,String(n));meals.add(option)}label.append(meals);
  const stock=readRecipeStock(),stockInputs=new Map(),inputs=add('div');inputs.className='psg-recipe-stock-inputs';
  const output=add('div');output.setAttribute('aria-live','polite');
+ const validStock=()=>[...inputs.querySelectorAll('input')].every(input=>input.checkValidity());
+ const swap=recipeSwapPanel(recipe,stock,meals,validStock);section.append(swap);
  const render=()=>{
-  output.replaceChildren();
+  swap.invalidateRecipeSwap();output.replaceChildren();
   if([...inputs.querySelectorAll('input')].some(input=>!input.checkValidity())){output.textContent='在庫は0以上の整数で入力してください';return}
   const line=copy=>{const p=document.createElement('p');p.className='note';p.textContent=copy;output.append(p)};
   try{
@@ -23,7 +25,7 @@ function recipeCollectionPanel(recipe){
  };
  for(const item of recipe.ingredients){
   const label=document.createElement('label');label.textContent=item.name+' 在庫 ';const input=document.createElement('input');input.type='number';input.min='0';input.step='1';input.inputMode='numeric';input.value=String(stock[item.name]||0);input.setAttribute('aria-label',item.name+'の在庫数');label.append(input);inputs.append(label);stockInputs.set(item.name,input);
-  input.oninput=()=>{const value=Number(input.value);input.setCustomValidity(input.value.trim()===''||!Number.isInteger(value)||value<0?'0以上の整数を入力してください':'');if(!input.checkValidity()){output.textContent='在庫は0以上の整数で入力してください';return}stock[item.name]=value;try{const current=readRecipeStock();localStorage.setItem(RECIPE_STOCK_KEY,JSON.stringify({...current,[item.name]:value}))}catch{output.textContent='在庫を保存できませんでした';return}render()};
+  input.oninput=()=>{swap.invalidateRecipeSwap();const value=Number(input.value);input.setCustomValidity(input.value.trim()===''||!Number.isInteger(value)||value<0?'0以上の整数を入力してください':'');if(!input.checkValidity()){swap.invalidateRecipeSwap();output.textContent='在庫は0以上の整数で入力してください';return}stock[item.name]=value;try{const current=readRecipeStock();localStorage.setItem(RECIPE_STOCK_KEY,JSON.stringify({...current,[item.name]:value}))}catch{output.textContent='在庫を保存できませんでした';return}render()};
  }
  meals.onchange=render;render();
  section.refreshRecipeTime=()=>{const current=readRecipeStock();for(const [name,input] of stockInputs){stock[name]=current[name]??0;input.value=String(stock[name]);input.setCustomValidity('')}render()};

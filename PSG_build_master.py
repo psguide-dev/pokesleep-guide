@@ -41,6 +41,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     'team/09-recipe-time-calculation.html',
     'team/10-recipe-stock.html',
     'team/11-recipe-time-panel.html',
+    'team/12-recipe-swap.html',
     'team/02-food-view.html',
     'team/03-cards.html',
     'team/04-face-dock.html',
@@ -103,6 +104,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     'recipes/03-evaluation.html',
     'recipes/04-list-view.html',
     'recipes/05-events.html',
+    'rankings/00-conditions.html',
     'information/01-reference-data.html',
     'information/02-reference-pages.html',
     'rankings/04-trial-data.html',
@@ -478,7 +480,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v450') == 2
+    assert source.count('Review v451') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'

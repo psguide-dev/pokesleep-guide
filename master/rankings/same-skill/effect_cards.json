@@ -1,0 +1,1047 @@
+{
+  "status": "display_metadata_not_integrated",
+  "sourceInputSha256": "d75ac81340bf3799345ae5d5307147bb73638d71b41fbd3881d70b845e93b118",
+  "cards": {
+    "aura_sphere_dream_shards": {
+      "skillId": "aura_sphere_dream_shards",
+      "skillName": "はどうだん(ゆめのかけらゲットS)",
+      "purpose": "エナジー",
+      "effectType": "fixed_dream_shards_energy",
+      "level": 8,
+      "effectRow": {
+        "shards": 2500,
+        "energy": 2042,
+        "description": "ゆめのかけらを2500個ゲットし、カビゴンのエナジーを2042増やす"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "ゆめのかけらを2500個ゲットし、カビゴンのエナジーを2042増やす",
+      "quantityFields": {
+        "shards": 2500,
+        "energy": 2042
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "berry_burst": {
+      "skillId": "berry_burst",
+      "skillName": "きのみバースト",
+      "purpose": "きのみ・特殊",
+      "effectType": "berry_burst",
+      "level": 6,
+      "effectRow": {
+        "selfBerries": 30,
+        "teamBerriesEach": 5,
+        "description": "自分のきのみを30個、チーム内のポケモンのきのみを各5個獲得する"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "自分のきのみを30個、チーム内のポケモンのきのみを各5個獲得する",
+      "quantityFields": {
+        "selfBerries": 30,
+        "teamBerriesEach": 5
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "berry_juice_energy_for_everyone": {
+      "skillId": "berry_juice_energy_for_everyone",
+      "skillName": "きのみジュース(げんきオールS)",
+      "purpose": "げんき・支援",
+      "effectType": "team_energy_recovery",
+      "level": 6,
+      "effectRow": {
+        "recovery": 18.1,
+        "description": "チーム全員のげんきを18.1回復する。ときどき、きのみジュースを入手する。"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チーム全員のげんきを18.1回復する。ときどき、きのみジュースを入手する。",
+      "quantityFields": {
+        "recovery": 18.1
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "bulk_up_cooking_assist_s": {
+      "skillId": "bulk_up_cooking_assist_s",
+      "skillName": "ビルドアップ(料理アシストS)",
+      "purpose": "食材",
+      "effectType": "cooking_assist",
+      "level": 7,
+      "effectRow": {
+        "amount": 24,
+        "chanceBonus": 5,
+        "description": "ランダムな食材を24個ゲットし、料理の大成功確率を5%上げる"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "ランダムな食材を24個ゲットし、料理の大成功確率を5%上げる",
+      "quantityFields": {
+        "amount": 24,
+        "chanceBonus": 5
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "cooking_chance_s": {
+      "skillId": "cooking_chance_s",
+      "skillName": "料理チャンスS",
+      "purpose": "料理支援",
+      "effectType": "cooking_tasty_chance",
+      "level": 6,
+      "effectRow": {
+        "chancePercent": 10,
+        "description": "料理の大成功確率を10%上げる"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "料理の大成功確率を10%上げる",
+      "quantityFields": {
+        "chancePercent": 10
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "cooking_power_up_s": {
+      "skillId": "cooking_power_up_s",
+      "skillName": "料理パワーアップS",
+      "purpose": "料理支援",
+      "effectType": "cooking_pot_capacity",
+      "level": 7,
+      "effectRow": {
+        "capacity": 31,
+        "description": "次回の料理でなべの容量を31個増やす"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "次回の料理でなべの容量を31個増やす",
+      "quantityFields": {
+        "capacity": 31
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "disguise_berry_burst": {
+      "skillId": "disguise_berry_burst",
+      "skillName": "ばけのかわ(きのみバースト)",
+      "purpose": "きのみ・特殊",
+      "effectType": "reference_only",
+      "level": 6,
+      "effectRow": {
+        "description": "きのみ：自分21個・他の各匹5個／大成功時は各3倍",
+        "referenceValues": [
+          "21",
+          "5",
+          "41",
+          "123"
+        ],
+        "sourceRow": [
+          "~",
+          "6",
+          "21",
+          "5",
+          "41",
+          "123"
+        ],
+        "namedValues": {
+          "selfBerries": 21,
+          "berriesPerOtherMember": 5,
+          "totalForFiveMemberTeam": 41,
+          "greatSuccessTotalForFiveMemberTeam": 123
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "きのみ：自分21個・他の各匹5個／大成功時は各3倍",
+      "quantityFields": {
+        "namedValues": {
+          "selfBerries": 21,
+          "berriesPerOtherMember": 5,
+          "totalForFiveMemberTeam": 41,
+          "greatSuccessTotalForFiveMemberTeam": 123
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "draco_meteor_berry_burst": {
+      "skillId": "draco_meteor_berry_burst",
+      "skillName": "りゅうせいぐん(きのみバースト)",
+      "purpose": "きのみ・特殊",
+      "effectType": "reference_only",
+      "level": 6,
+      "effectRow": {
+        "description": "きのみ：自分 48／50／55／55／58個／他の各匹 3／4／4／5／5個／条件成立時は自分＋10個",
+        "referenceValues": [
+          "48",
+          "50",
+          "55",
+          "55",
+          "58",
+          "3",
+          "4",
+          "4",
+          "5",
+          "5",
+          "60",
+          "66",
+          "71",
+          "75",
+          "78",
+          "+10"
+        ],
+        "sourceRow": [
+          "6",
+          "48",
+          "50",
+          "55",
+          "55",
+          "58",
+          "3",
+          "4",
+          "4",
+          "5",
+          "5",
+          "60",
+          "66",
+          "71",
+          "75",
+          "78",
+          "+10"
+        ],
+        "namedValues": {
+          "selfBerriesByDistinctCount": {
+            "1": 48,
+            "2": 50,
+            "3": 55,
+            "4": 55,
+            "5": 58
+          },
+          "berriesPerOtherMemberByDistinctCount": {
+            "1": 3,
+            "2": 4,
+            "3": 4,
+            "4": 5,
+            "5": 5
+          },
+          "totalForFiveMemberTeamByDistinctCount": {
+            "1": 60,
+            "2": 66,
+            "3": 71,
+            "4": 75,
+            "5": 78
+          },
+          "conditionalExtraSelfBerries": 10
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "きのみ：自分 48／50／55／55／58個／他の各匹 3／4／4／5／5個／条件成立時は自分＋10個",
+      "quantityFields": {
+        "namedValues": {
+          "selfBerriesByDistinctCount": {
+            "1": 48,
+            "2": 50,
+            "3": 55,
+            "4": 55,
+            "5": 58
+          },
+          "berriesPerOtherMemberByDistinctCount": {
+            "1": 3,
+            "2": 4,
+            "3": 4,
+            "4": 5,
+            "5": 5
+          },
+          "totalForFiveMemberTeamByDistinctCount": {
+            "1": 60,
+            "2": 66,
+            "3": 71,
+            "4": 75,
+            "5": 78
+          },
+          "conditionalExtraSelfBerries": 10
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "dream_shard_magnet_s": {
+      "skillId": "dream_shard_magnet_s",
+      "skillName": "ゆめのかけらゲットS",
+      "purpose": "ゆめのかけら",
+      "effectType": "fixed_dream_shards",
+      "level": 8,
+      "effectRow": {
+        "shards": 2500,
+        "description": "ゆめのかけらを2500個ゲットする"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "ゆめのかけらを2500個ゲットする",
+      "quantityFields": {
+        "shards": 2500
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "dream_shard_magnet_s_variable": {
+      "skillId": "dream_shard_magnet_s_variable",
+      "skillName": "ゆめのかけらゲットS（ランダム）",
+      "purpose": "ゆめのかけら",
+      "effectType": "variable_dream_shards",
+      "level": 8,
+      "effectRow": {
+        "min": 1150,
+        "max": 4600,
+        "description": "ゆめのかけらを1150～4600個ゲットする"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "ゆめのかけらを1150～4600個ゲットする",
+      "quantityFields": {
+        "min": 1150,
+        "max": 4600
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "energy_charge_m": {
+      "skillId": "energy_charge_m",
+      "skillName": "エナジーチャージM",
+      "purpose": "エナジー",
+      "effectType": "fixed_energy",
+      "level": 7,
+      "effectRow": {
+        "energy": 6858,
+        "description": "カビゴンのエナジーを6858増やす"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "カビゴンのエナジーを6858増やす",
+      "quantityFields": {
+        "energy": 6858
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "energy_charge_s_fixed": {
+      "skillId": "energy_charge_s_fixed",
+      "skillName": "エナジーチャージS",
+      "purpose": "エナジー",
+      "effectType": "fixed_energy",
+      "level": 7,
+      "effectRow": {
+        "energy": 3212,
+        "description": "カビゴンのエナジーを3212増やす"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "カビゴンのエナジーを3212増やす",
+      "quantityFields": {
+        "energy": 3212
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "energy_charge_s_self": {
+      "skillId": "energy_charge_s_self",
+      "skillName": "げんきチャージS",
+      "purpose": "げんき・支援",
+      "effectType": "self_energy_recovery",
+      "level": 6,
+      "effectRow": {
+        "recovery": 43,
+        "description": "自分のげんきを43回復する"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "自分のげんきを43回復する",
+      "quantityFields": {
+        "recovery": 43
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "energy_charge_s_variable": {
+      "skillId": "energy_charge_s_variable",
+      "skillName": "エナジーチャージS（ランダム）",
+      "purpose": "エナジー",
+      "effectType": "variable_energy",
+      "level": 7,
+      "effectRow": {
+        "min": 1606,
+        "max": 6424
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": null,
+      "quantityFields": {
+        "min": 1606,
+        "max": 6424
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "energy_cheer_s": {
+      "skillId": "energy_cheer_s",
+      "skillName": "げんきエールS",
+      "purpose": "げんき・支援",
+      "effectType": "ally_energy_recovery",
+      "level": 6,
+      "effectRow": {
+        "recovery": 44,
+        "description": "チームのポケモン1匹のげんきを44回復する"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チームのポケモン1匹のげんきを44回復する",
+      "quantityFields": {
+        "recovery": 44
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "energy_for_everyone_s": {
+      "skillId": "energy_for_everyone_s",
+      "skillName": "げんきオールS",
+      "purpose": "げんき・支援",
+      "effectType": "team_energy_recovery",
+      "level": 6,
+      "effectRow": {
+        "recovery": 18
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": null,
+      "quantityFields": {
+        "recovery": 18
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "extra_helpful_s": {
+      "skillId": "extra_helpful_s",
+      "skillName": "おてつだいサポートS",
+      "purpose": "おてつだい支援",
+      "effectType": "extra_help",
+      "level": 7,
+      "effectRow": {
+        "helps": 12,
+        "description": "チームのポケモン1匹のおてつだい12回分がすぐに完了する"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チームのポケモン1匹のおてつだい12回分がすぐに完了する",
+      "quantityFields": {
+        "helps": 12
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "healing_pulse_energy_cheer_s": {
+      "skillId": "healing_pulse_energy_cheer_s",
+      "skillName": "いやしのはどう(げんきエールS)",
+      "purpose": "げんき・支援",
+      "effectType": "reference_only",
+      "level": 6,
+      "effectRow": {
+        "description": "2匹それぞれのげんき＋22・おてつだい4回／条件成立時さらに3回",
+        "referenceValues": [
+          "22",
+          "4",
+          "+3"
+        ],
+        "sourceRow": [
+          "~",
+          "6",
+          "22",
+          "4",
+          "+3"
+        ],
+        "namedValues": {
+          "recoveryPerTarget": 22,
+          "instantHelpsPerTarget": 4,
+          "conditionalAdditionalHelpsPerTarget": 3
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "2匹それぞれのげんき＋22・おてつだい4回／条件成立時さらに3回",
+      "quantityFields": {
+        "namedValues": {
+          "recoveryPerTarget": 22,
+          "instantHelpsPerTarget": 4,
+          "conditionalAdditionalHelpsPerTarget": 3
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "helper_boost_electric": {
+      "skillId": "helper_boost_electric",
+      "skillName": "おてつだいブースト（でんき）",
+      "purpose": "おてつだい支援",
+      "effectType": "helper_boost_electric",
+      "level": 6,
+      "effectRow": {
+        "helps": 5,
+        "description": "チーム全員が各5回分すぐにおてつだい。異なるでんきタイプ2～5種で各1／3／4／6回を追加",
+        "bonusByUniqueElectric": [
+          0,
+          0,
+          1,
+          3,
+          4,
+          6
+        ]
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チーム全員が各5回分すぐにおてつだい。異なるでんきタイプ2～5種で各1／3／4／6回を追加",
+      "quantityFields": {
+        "helps": 5,
+        "bonusByUniqueElectric": [
+          0,
+          0,
+          1,
+          3,
+          4,
+          6
+        ]
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "helper_boost_fire": {
+      "skillId": "helper_boost_fire",
+      "skillName": "おてつだいブースト（ほのお）",
+      "purpose": "おてつだい支援",
+      "effectType": "helper_boost_fire",
+      "level": 6,
+      "effectRow": {
+        "helps": 5,
+        "bonusByUniqueFire": [
+          0,
+          0,
+          1,
+          3,
+          4,
+          6
+        ],
+        "description": "チーム全員が各5回分すぐにおてつだい。異なるほのおタイプ2～5種で各1／3／4／6回を追加"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チーム全員が各5回分すぐにおてつだい。異なるほのおタイプ2～5種で各1／3／4／6回を追加",
+      "quantityFields": {
+        "helps": 5,
+        "bonusByUniqueFire": [
+          0,
+          0,
+          1,
+          3,
+          4,
+          6
+        ]
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "helper_boost_water": {
+      "skillId": "helper_boost_water",
+      "skillName": "おてつだいブースト（みず）",
+      "purpose": "おてつだい支援",
+      "effectType": "helper_boost_water",
+      "level": 6,
+      "effectRow": {
+        "helps": 5,
+        "bonusByUniqueWater": [
+          0,
+          0,
+          1,
+          3,
+          4,
+          6
+        ],
+        "description": "チーム全員が各5回分すぐにおてつだい。異なるみずタイプ2～5種で各1／3／4／6回を追加"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チーム全員が各5回分すぐにおてつだい。異なるみずタイプ2～5種で各1／3／4／6回を追加",
+      "quantityFields": {
+        "helps": 5,
+        "bonusByUniqueWater": [
+          0,
+          0,
+          1,
+          3,
+          4,
+          6
+        ]
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "hyper_cutter_ingredient_select_s": {
+      "skillId": "hyper_cutter_ingredient_select_s",
+      "skillName": "かいりきバサミ(食材セレクトS)",
+      "purpose": "食材",
+      "effectType": "conditional_ingredient_select",
+      "level": 7,
+      "effectRow": {
+        "amount": 18,
+        "bonusAmount": 18,
+        "description": "候補の食材を18個ゲットする。大成功時はさらに18個ゲットする。"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "候補の食材を18個ゲットする。大成功時はさらに18個ゲットする。",
+      "quantityFields": {
+        "amount": 18,
+        "bonusAmount": 18
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "ingredient_draw_s": {
+      "skillId": "ingredient_draw_s",
+      "skillName": "食材セレクトS",
+      "purpose": "食材",
+      "effectType": "select_ingredients",
+      "level": 7,
+      "effectRow": {
+        "amount": 18,
+        "description": "特定の食材からランダムで1種類を18個ゲットする"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "特定の食材からランダムで1種類を18個ゲットする",
+      "quantityFields": {
+        "amount": 18
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "ingredient_magnet_s": {
+      "skillId": "ingredient_magnet_s",
+      "skillName": "食材ゲットS",
+      "purpose": "食材",
+      "effectType": "random_ingredients",
+      "level": 7,
+      "effectRow": {
+        "amount": 24
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": null,
+      "quantityFields": {
+        "amount": 24
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "lunar_blessing_energy_for_everyone_s": {
+      "skillId": "lunar_blessing_energy_for_everyone_s",
+      "skillName": "みかづきのいのり(げんきオールS)",
+      "purpose": "げんき・支援",
+      "effectType": "reference_only",
+      "level": 6,
+      "effectRow": {
+        "description": "全員のげんき＋11／きのみ：自分 25／29／30／31／32個／他の各匹 1／2／4／6／9個",
+        "referenceValues": [
+          "11",
+          "25",
+          "29",
+          "30",
+          "31",
+          "32",
+          "1",
+          "2",
+          "4",
+          "6",
+          "9",
+          "29",
+          "37",
+          "46",
+          "55",
+          "68"
+        ],
+        "sourceRow": [
+          "6",
+          "11",
+          "25",
+          "29",
+          "30",
+          "31",
+          "32",
+          "1",
+          "2",
+          "4",
+          "6",
+          "9",
+          "29",
+          "37",
+          "46",
+          "55",
+          "68"
+        ],
+        "namedValues": {
+          "recoveryPerTeamMember": 11,
+          "selfBerriesByDistinctCount": {
+            "1": 25,
+            "2": 29,
+            "3": 30,
+            "4": 31,
+            "5": 32
+          },
+          "berriesPerOtherMemberByDistinctCount": {
+            "1": 1,
+            "2": 2,
+            "3": 4,
+            "4": 6,
+            "5": 9
+          },
+          "totalForFiveMemberTeamByDistinctCount": {
+            "1": 29,
+            "2": 37,
+            "3": 46,
+            "4": 55,
+            "5": 68
+          }
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "全員のげんき＋11／きのみ：自分 25／29／30／31／32個／他の各匹 1／2／4／6／9個",
+      "quantityFields": {
+        "namedValues": {
+          "recoveryPerTeamMember": 11,
+          "selfBerriesByDistinctCount": {
+            "1": 25,
+            "2": 29,
+            "3": 30,
+            "4": 31,
+            "5": 32
+          },
+          "berriesPerOtherMemberByDistinctCount": {
+            "1": 1,
+            "2": 2,
+            "3": 4,
+            "4": 6,
+            "5": 9
+          },
+          "totalForFiveMemberTeamByDistinctCount": {
+            "1": 29,
+            "2": 37,
+            "3": 46,
+            "4": 55,
+            "5": 68
+          }
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "metronome": {
+      "skillId": "metronome",
+      "skillName": "ゆびをふる",
+      "purpose": "コピー・抽選",
+      "effectType": "random_main_skill",
+      "level": 7,
+      "effectRow": {
+        "description": "たくさんのメインスキルの中からどれか1つをくりだす"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "たくさんのメインスキルの中からどれか1つをくりだす",
+      "quantityFields": {},
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "mimic_skill_copy": {
+      "skillId": "mimic_skill_copy",
+      "skillName": "ものまね(スキルコピー)",
+      "purpose": "コピー・抽選",
+      "effectType": "team_skill_copy",
+      "level": 7,
+      "effectRow": {
+        "description": "チーム内の他のポケモンのメインスキルからランダムで1つをくりだす"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チーム内の他のポケモンのメインスキルからランダムで1つをくりだす",
+      "quantityFields": {},
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "minus_cooking_power_up_s": {
+      "skillId": "minus_cooking_power_up_s",
+      "skillName": "マイナス(料理パワーアップS)",
+      "purpose": "料理支援",
+      "effectType": "reference_only",
+      "level": 7,
+      "effectRow": {
+        "description": "鍋＋24個／条件成立時：1匹のげんき＋35",
+        "referenceValues": [
+          "24",
+          "35"
+        ],
+        "sourceRow": [
+          "~",
+          "7",
+          "24",
+          "35"
+        ],
+        "namedValues": {
+          "potIncrease": 24,
+          "conditionalRecovery": 35
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "鍋＋24個／条件成立時：1匹のげんき＋35",
+      "quantityFields": {
+        "namedValues": {
+          "potIncrease": 24,
+          "conditionalRecovery": 35
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "moonlight_energy_charge_s": {
+      "skillId": "moonlight_energy_charge_s",
+      "skillName": "つきのひかり（げんきチャージS）",
+      "purpose": "げんき・支援",
+      "effectType": "moonlight_energy_recovery",
+      "level": 6,
+      "effectRow": {
+        "selfRecovery": 43.4,
+        "bonusRecovery": 22.8,
+        "description": "自分のげんきを43.4回復する。大成功時は、さらにチームのポケモン1匹のげんきを22.8回復する。"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "自分のげんきを43.4回復する。大成功時は、さらにチームのポケモン1匹のげんきを22.8回復する。",
+      "quantityFields": {
+        "selfRecovery": 43.4,
+        "bonusRecovery": 22.8
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "nightmare_energy_charge_m": {
+      "skillId": "nightmare_energy_charge_m",
+      "skillName": "ナイトメア(エナジーチャージM)",
+      "purpose": "エナジー",
+      "effectType": "reference_only",
+      "level": 7,
+      "effectRow": {
+        "description": "エナジー 18,515／あく以外の各匹のげんき−12",
+        "referenceValues": [
+          "18,515"
+        ],
+        "sourceRow": [
+          "~",
+          "7",
+          "18,515"
+        ],
+        "namedValues": {
+          "directEnergy": 18515,
+          "energyLossPerNonDarkMember": 12
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "エナジー 18,515／あく以外の各匹のげんき−12",
+      "quantityFields": {
+        "namedValues": {
+          "directEnergy": 18515,
+          "energyLossPerNonDarkMember": 12
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "nuzzle_energy_cheer_s": {
+      "skillId": "nuzzle_energy_cheer_s",
+      "skillName": "ほっぺすりすり(げんきエールS)",
+      "purpose": "げんき・支援",
+      "effectType": "reference_only",
+      "level": 6,
+      "effectRow": {
+        "description": "1匹のげんき＋35.0／対象のスキルを7回抽選",
+        "referenceValues": [
+          "35.0",
+          "35",
+          "7"
+        ],
+        "sourceRow": [
+          "~",
+          "6",
+          "35.0",
+          "35",
+          "7"
+        ],
+        "namedValues": {
+          "recovery": 35,
+          "displayRecovery": 35,
+          "bonusDrawCount": 7
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "1匹のげんき＋35.0／対象のスキルを7回抽選",
+      "quantityFields": {
+        "namedValues": {
+          "recovery": 35,
+          "displayRecovery": 35,
+          "bonusDrawCount": 7
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "plus_ingredient_magnet_s": {
+      "skillId": "plus_ingredient_magnet_s",
+      "skillName": "プラス(食材ゲットS)",
+      "purpose": "食材",
+      "effectType": "reference_only",
+      "level": 7,
+      "effectRow": {
+        "description": "ランダム食材 18個／条件成立時：プラスルはコーヒー＋12個、ストリンダーはミルク＋14個",
+        "referenceValues": [
+          "18",
+          "12",
+          "14"
+        ],
+        "sourceRow": [
+          "~",
+          "7",
+          "18",
+          "12",
+          "14"
+        ],
+        "namedValues": {
+          "randomIngredientTotalBase": 18,
+          "additionalByFirstIngredient": {
+            "coffee": 12,
+            "moomoo_milk": 14
+          }
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "ランダム食材 18個／条件成立時：プラスルはコーヒー＋12個、ストリンダーはミルク＋14個",
+      "quantityFields": {
+        "namedValues": {
+          "randomIngredientTotalBase": 18,
+          "additionalByFirstIngredient": {
+            "coffee": 12,
+            "moomoo_milk": 14
+          }
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "present_ingredient_magnet_s": {
+      "skillId": "present_ingredient_magnet_s",
+      "skillName": "プレゼント(食材ゲットS)",
+      "purpose": "食材",
+      "effectType": "random_ingredients",
+      "level": 7,
+      "effectRow": {
+        "amount": 17,
+        "description": "ランダムな食材を17個ゲットする。ときどき、チームの1匹のアメを4個ゲットする。",
+        "bonusCandy": 4
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "ランダムな食材を17個ゲットする。ときどき、チームの1匹のアメを4個ゲットする。",
+      "quantityFields": {
+        "amount": 17,
+        "bonusCandy": 4
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "psystrike_berry_zone": {
+      "skillId": "psystrike_berry_zone",
+      "skillName": "サイコブレイク(きのみゾーン)",
+      "purpose": "エナジー",
+      "effectType": "reference_only",
+      "level": 6,
+      "effectRow": {
+        "description": "エナジー 7,274／ゾーン＋2.0%",
+        "referenceValues": [
+          "7274",
+          "2.0"
+        ],
+        "sourceRow": [
+          "~",
+          "6",
+          "7274",
+          "2.0"
+        ],
+        "namedValues": {
+          "directEnergy": 7274,
+          "zoneIncreasePercentagePoints": 2
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "エナジー 7,274／ゾーン＋2.0%",
+      "quantityFields": {
+        "namedValues": {
+          "directEnergy": 7274,
+          "zoneIncreasePercentagePoints": 2
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "stockpile_energy_charge_s": {
+      "skillId": "stockpile_energy_charge_s",
+      "skillName": "たくわえる(エナジーチャージS)",
+      "purpose": "エナジー",
+      "effectType": "reference_only",
+      "level": 7,
+      "effectRow": {
+        "description": "はきだすエナジー（0〜10回）：4,502／7,653／11,255／15,307／19,809／24,761／30,163／36,916／48,621／66,629／90,940",
+        "referenceValues": [
+          "4,502",
+          "7,653",
+          "11,255",
+          "15,307",
+          "19,809",
+          "24,761",
+          "30,163",
+          "36,916",
+          "48,621",
+          "66,629",
+          "90,940"
+        ],
+        "sourceRow": [
+          "~",
+          "7",
+          "4,502",
+          "7,653",
+          "11,255",
+          "15,307",
+          "19,809",
+          "24,761",
+          "30,163",
+          "36,916",
+          "48,621",
+          "66,629",
+          "90,940"
+        ],
+        "namedValues": {
+          "spitEnergyByStoredCount": [
+            4502,
+            7653,
+            11255,
+            15307,
+            19809,
+            24761,
+            30163,
+            36916,
+            48621,
+            66629,
+            90940
+          ]
+        }
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "はきだすエナジー（0〜10回）：4,502／7,653／11,255／15,307／19,809／24,761／30,163／36,916／48,621／66,629／90,940",
+      "quantityFields": {
+        "namedValues": {
+          "spitEnergyByStoredCount": [
+            4502,
+            7653,
+            11255,
+            15307,
+            19809,
+            24761,
+            30163,
+            36916,
+            48621,
+            66629,
+            90940
+          ]
+        }
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "super_luck_ingredient_select_s": {
+      "skillId": "super_luck_ingredient_select_s",
+      "skillName": "きょううん(食材セレクトS)",
+      "purpose": "食材",
+      "effectType": "conditional_ingredient_select",
+      "level": 7,
+      "effectRow": {
+        "amount": 18,
+        "shardsSmall": 4000,
+        "shardsLarge": 20000,
+        "description": "候補の食材を18個、またはゆめのかけらを4,000個か20,000個ゲットする。"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "候補の食材を18個、またはゆめのかけらを4,000個か20,000個ゲットする。",
+      "quantityFields": {
+        "amount": 18,
+        "shardsSmall": 4000,
+        "shardsLarge": 20000
+      },
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    },
+    "transform_skill_copy": {
+      "skillId": "transform_skill_copy",
+      "skillName": "へんしん(スキルコピー)",
+      "purpose": "コピー・抽選",
+      "effectType": "team_skill_copy",
+      "level": 7,
+      "effectRow": {
+        "description": "チーム内の他のポケモンのメインスキルからランダムで1つをくりだす"
+      },
+      "effectRowStatus": "受領済みマスターの掲載効果。独立実機検証ではない。",
+      "displayEffect": "チーム内の他のポケモンのメインスキルからランダムで1つをくりだす",
+      "quantityFields": {},
+      "evaluationNote": "発動回数の順位。1回効果の条件分岐・対象・上限・追加効果を含む実チーム評価は別計算。"
+    }
+  }
+}

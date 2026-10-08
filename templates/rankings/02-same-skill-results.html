@@ -2,6 +2,14 @@
     output.replaceChildren();
     try{
      const result=selector.selectSkillRanking(data,{scenario:scenario.value,skillId:skill.value,scope:scope.value});
+     const card=effects.cards[skill.value];if(!card)throw Error('スキル効果が未登録です');
+     const effect=add(output,'section');effect.className='psg-skill-effect-card';
+     add(effect,'h3',`${card.skillName}・上限Lv.${card.level}`);
+     add(effect,'p',card.purpose).className='note';
+     const row=card.effectRow,n=window.PS_NUMBERS.display;
+     const description=card.displayEffect||(card.effectType==='variable_energy'?`カビゴンのエナジーを${n(row.min)}〜${n(row.max)}増やす`:card.effectType==='team_energy_recovery'?`チーム全員のげんきを${n(row.recovery)}回復する`:card.effectType==='random_ingredients'?`ランダムな食材を${n(row.amount)}個ゲットする`:'1回分の効果は未確認');
+     add(effect,'p','1回分：'+description);
+     add(effect,'p','発動回数と、編成で得られる効果の大きさは別に比較します。条件付きの追加効果・対象・上限は効果文を確認してください。食材の種類別収集量や料理時間へ直接換算しません。').className='note';
      add(output,'p',`対象 ${result.totalCandidates}体・上位5位（境界の同順位を含む）`).className='note';
      if(!result.entries.length)add(output,'p',result.emptyMessage);
      else{

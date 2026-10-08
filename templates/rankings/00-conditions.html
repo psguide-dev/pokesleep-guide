@@ -1,0 +1,14 @@
+<script>
+(()=>{
+const copies={"berry_type":{"id":"berry_type","profile":"berry","title":"タイプ別きのみ効率","summary":"げんき81以上を保ち、満杯前に回収する条件で、通常きのみのエナジーを比較します。","chips":["Lv.60","げんき81以上","随時回収","スキルなし"],"unit":"エナジー／時間","details":["無補正・サブスキルなし・FB0%・キャンプなし・リボンなし。","好物補正なし。食材収集分はきのみ産出から差し引きます。","所持満杯後や1日のげんき低下を含む日産予想とは条件が異なります。"]},"berry_island":{"id":"berry_island","profile":"berry","title":"島別きのみ効率","summary":"げんき81以上・随時回収の通常きのみ効率を、島の好物補正込みで比較します。","chips":["Lv.60","げんき81以上","随時回収","好物×2"],"unit":"エナジー／時間","details":["通常の固定好物6島が対象。FB0%・スキルなし。","ワカクサとEXは週条件が変わるため固定順位の対象外。"]},"energy_daily":{"id":"energy_daily","profile":"energy","title":"スキル込みエナジー（試作）","summary":"通常きのみ、スキルのエナジー、参照チームへの増減を合わせた1日分の評価です。","chips":["Lv.60","開始げんき100","回収4時間ごと","スキル上限Lv"],"unit":"1日評価エナジー÷24／時間","details":["覚醒16時間・睡眠8時間（睡眠中は回収なし）・3食。AAA・基礎所持・無補正・サブスキルなし・FB0%。","参照4体の基礎産出は含めません。食材や料理のエナジー、育成コストは評価外です。","共通/タイプ別と島別では参照チーム・好物条件が異なります。支援効果や未加算の効果があり、総合的な強さではありません。","食材/スキル確率と一部特殊効果は推定を含みます。発動保証は未計算。"]},"ingredients_normal":{"id":"ingredients_normal","profile":"ingredients","title":"食材収集効率・通常（試作）","summary":"スキルを使わず、その食材を集める通常収集量を比較します。","chips":["Lv.60","開始げんき100","回収4時間ごと","食材構成別"],"unit":"個／日","details":["覚醒16時間・睡眠8時間・3食・基礎所持・無補正・サブスキルなし。","食材ごとに最良構成を採用。同じ個体で全食材の最良値を同時に出せるとは限りません。","確率と食材枠の選択割合は推定モデルを含みます。所持満杯後は通常食材が増えない計算です。"]},"ingredients_skill":{"id":"ingredients_skill","profile":"ingredients","title":"食材収集効率・スキル込み（試作）","summary":"本人の通常収集、スキルで生成する食材、参照チームの収集増減を合わせて比較します。","chips":["Lv.60","開始げんき100","回収4時間ごと","スキル上限Lv"],"unit":"個／日（参照編成での貢献量）","details":["ライチュウ4体・AAA・参照4体のスキル停止。参照4体の基礎収集は含めません。","支援効果は編成に依存します。この値を5体分足して実チームの収集量にしないでください。","種類別の配分が未確認のランダム/選択食材効果などは未加算です。"]},"ingredients_specialists":{"id":"ingredients_specialists","profile":"ingredients","title":"食材収集効率・食材得意限定（試作）","summary":"通常収集の比較対象を、食材得意のポケモンに絞った順位です。","chips":["Lv.60","通常収集","食材得意のみ","食材構成別"],"unit":"個／日","details":["通常モードと同じ日産条件。スキル込みモードを絞った順位ではありません。"]}};
+window.PS_RANK_CONDITIONS=(host,id)=>{
+ const copy=copies[id];if(!copy)throw Error('比較条件がありません');
+ const add=(parent,tag,text)=>{const el=document.createElement(tag);el.textContent=text;parent.append(el);return el};
+ add(host,'p',copy.summary).className='note';
+ add(host,'p',copy.chips.join('・')).className='psg-condition-chips';
+ const details=add(host,'details','');add(details,'summary','比較範囲と単位');
+ add(details,'p','単位：'+copy.unit).className='note';
+ for(const text of copy.details)add(details,'p',text).className='note';
+};
+})();
+</script>

@@ -181,7 +181,7 @@ function renderFieldDetail(){
  const name=document.getElementById('fieldDetailName');name.textContent=field.name;
  document.getElementById('fieldDetailBonus').value=String(fieldProfile.areaBonuses[fieldDetailId]||0);
  const art=document.getElementById('fieldDetailArt');art.replaceChildren();
- const src=window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=96;image.height=112;art.append(image);}
+ const src=fieldDetailId==='greengrass'?'assets/fields/detail/wakakusa_main_detail.webp':window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=fieldDetailId==='greengrass'?732:96;image.height=fieldDetailId==='greengrass'?432:112;art.append(image);}
  const ids=new Set((field.encounters||[]).map(x=>x.sleepStyleId)),found=readSleepBackup();
  const discovered=[...ids].filter(id=>found[id]).length,summary=document.getElementById('fieldDetailSleepSummary');
  summary.textContent=`寝顔 ${discovered} / ${ids.size}`;summary.setAttribute('aria-label',`寝顔：発見済み${discovered}種類／収録${ids.size}種類`);

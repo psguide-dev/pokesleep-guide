@@ -1,0 +1,240 @@
+{
+  "status": "metadata_and_copy_only_not_applied",
+  "sharedConditions": {
+    "level": 60,
+    "nature": "無補正",
+    "subskills": [],
+    "areaBonus": 0,
+    "goodCamp": false,
+    "ribbon": false
+  },
+  "profiles": {
+    "berry": {
+      "conditionId": "berry_fixed_energy_v1",
+      "sourceFile": "PSG_Enigma_to_Biblo_rankings_20261007/rankings.json",
+      "sha256": "2db69d8fcf596c93f552c4c500e1ff5c45ec9447527342bb37038a36a934207a",
+      "originalConditions": {
+        "level": 60,
+        "nature": "無補正",
+        "subskills": [],
+        "energy": "81以上を維持",
+        "energyTimeFactor": 0.45,
+        "areaBonus": 0,
+        "goodCamp": false,
+        "ribbon": false,
+        "skills": false,
+        "inventory": "満杯前・随時回収",
+        "typeFavoriteMultiplier": 1,
+        "islandFavoriteMultiplier": 2,
+        "forms": "衣装・リージョン・サイズを別姿として含む",
+        "ex": "週の好物・効果が未指定のため固定順位を出さない"
+      },
+      "definition": "floor(基礎おてつだい時間×(1−(Lv−1)×0.002))をLv補正時間とし、3600÷(Lv補正時間×0.45)×(1−食材確率/100)×きのみ個数×max(基礎きのみエナジー+Lv−1,基礎きのみエナジー×1.025^(Lv−1))×好物倍率。PSG現行式に合わせ、きのみエナジーの途中丸めは入れない。",
+      "verification": "受領済み研究/採用資料の条件を抽出。公開最新版コードは未照合。"
+    },
+    "energy": {
+      "conditionId": "energy_daily_h4_base_v1",
+      "sourceFile": "PSG_Enigma_explanation_revision_20261008/ranking_sensitivity_20261008/h4_base_energy.json",
+      "sha256": "85b77f9a098314e87b95599524cd113b09315fabc2d4ff043efb4c561a189175",
+      "originalConditions": {
+        "level": 60,
+        "startingEnergy": 100,
+        "collectionHours": 4,
+        "sleepHours": 8,
+        "mealHours": [
+          0,
+          6,
+          12
+        ],
+        "subskills": [],
+        "nature": "無補正",
+        "areaBonus": 0,
+        "goodCamp": false,
+        "ribbon": false,
+        "carry": "基礎所持・追加進化補正なし",
+        "ingredients": "各解放枠の先頭候補（通常AAA）",
+        "skillLevel": "各スキルの上限",
+        "comparison": "候補1体＋固定参照4体。参照4体のスキルを停止して候補の効果を分離。",
+        "clock": "全員・スキルON/OFFとも同じ離散おてつだい時計。切替で時計方式を変えない。",
+        "zone": 0,
+        "stockpileInitial": 0,
+        "disguiseEligible": true
+      },
+      "definition": "候補本人の通常きのみ＋候補のスキルで得られる直接／全員のきのみエナジー＋参照4体の通常きのみ増減。24時間合計÷24。参照4体の基礎産出そのものはスコアに加えない。",
+      "verification": "受領済み研究/採用資料の条件を抽出。公開最新版コードは未照合。",
+      "scopeNotes": [
+        "食材・料理のエナジー換算は含まない",
+        "候補1体のきのみ＋直接スキル/全員のきのみ効果＋参照4体の通常きのみ増減",
+        "共通/タイプ別はスキル停止のライチュウ4体、島別は資料内の島ごとの参照4体",
+        "基礎所持を使用、実個体の進化入手ボーナスは別条件",
+        "食材AAA、各スキル上限Lv、ゾーン0、たくわえる0開始",
+        "翌起床回収スキルの直接エナジーを当日台帳に含むが、その回復で当日の収集を遡って増やさない"
+      ]
+    },
+    "ingredients": {
+      "conditionId": "ingredients_daily_h4_base_v1",
+      "sourceFile": "PSG_Enigma_explanation_revision_20261008/ranking_sensitivity_20261008/h4_base_ingredients.json",
+      "sha256": "996fd3164c9a2e534b82932a218cd77f2a0f807be27969c11d4c90bd31d5acb3",
+      "originalConditions": {
+        "level": 60,
+        "startingEnergy": 100,
+        "collectionHours": 4,
+        "sleepHours": 8,
+        "mealHours": [
+          0,
+          6,
+          12
+        ],
+        "subskills": [],
+        "nature": "無補正",
+        "areaBonus": 0,
+        "goodCamp": false,
+        "ribbon": false,
+        "carry": "基礎所持・追加進化補正なし",
+        "ingredients": "Lv.60で選べる全構成を比較。食材ごとに最良の構成を種族・姿1件につき1件採用。",
+        "skillLevel": "各スキルの上限",
+        "comparison": "候補1体＋固定参照4体。参照4体のスキルを停止して候補の効果を分離。",
+        "clock": "全員・スキルON/OFFとも同じ離散おてつだい時計。切替で時計方式を変えない。",
+        "zone": 0,
+        "stockpileInitial": 0,
+        "disguiseEligible": true,
+        "referenceTeam": "ライチュウ4体、AAA、スキル停止、好み補正なし"
+      },
+      "definition": "食材貢献＝本人の通常収集（スキルON）＋候補スキルで生成された全員の食材＋参照4体の通常収集ON-OFF差。参照4体の基礎収集は除外。",
+      "verification": "受領済み研究/採用資料の条件を抽出。公開最新版コードは未照合。",
+      "scopeNotes": [
+        "通常はスキルOFF、スキル込みは候補本人＋候補から全員への生成＋参照4体の通常収集増減",
+        "食材ごとに同じ種族・姿で最良構成を1件採用。1体で全食材の最高値を同時達成する意味ではない",
+        "候補の全構成1970件、250姿入力/249姿計算、ミュウ未設定除外",
+        "ライチュウ4体AAA・スキル停止で仲間増減を評価",
+        "食材セレクト等の種類配分が未確認の効果は食材別順位へ未加算",
+        "食材得意限定モードは通常収集を食材得意だけに絞る"
+      ]
+    }
+  },
+  "displayCopy": [
+    {
+      "id": "berry_type",
+      "profile": "berry",
+      "title": "タイプ別きのみ効率",
+      "summary": "げんき81以上を保ち、満杯前に回収する条件で、通常きのみのエナジーを比較します。",
+      "chips": [
+        "Lv.60",
+        "げんき81以上",
+        "随時回収",
+        "スキルなし"
+      ],
+      "unit": "エナジー／時間",
+      "details": [
+        "無補正・サブスキルなし・FB0%・キャンプなし・リボンなし。",
+        "好物補正なし。食材収集分はきのみ産出から差し引きます。",
+        "所持満杯後や1日のげんき低下を含む日産予想とは条件が異なります。"
+      ]
+    },
+    {
+      "id": "berry_island",
+      "profile": "berry",
+      "title": "島別きのみ効率",
+      "summary": "げんき81以上・随時回収の通常きのみ効率を、島の好物補正込みで比較します。",
+      "chips": [
+        "Lv.60",
+        "げんき81以上",
+        "随時回収",
+        "好物×2"
+      ],
+      "unit": "エナジー／時間",
+      "details": [
+        "通常の固定好物6島が対象。FB0%・スキルなし。",
+        "ワカクサとEXは週条件が変わるため固定順位の対象外。"
+      ]
+    },
+    {
+      "id": "energy_daily",
+      "profile": "energy",
+      "title": "スキル込みエナジー（試作）",
+      "summary": "通常きのみ、スキルのエナジー、参照チームへの増減を合わせた1日分の評価です。",
+      "chips": [
+        "Lv.60",
+        "開始げんき100",
+        "回収4時間ごと",
+        "スキル上限Lv"
+      ],
+      "unit": "1日評価エナジー÷24／時間",
+      "details": [
+        "覚醒16時間・睡眠8時間（睡眠中は回収なし）・3食。AAA・基礎所持・無補正・サブスキルなし・FB0%。",
+        "参照4体の基礎産出は含めません。食材や料理のエナジー、育成コストは評価外です。",
+        "共通/タイプ別と島別では参照チーム・好物条件が異なります。支援効果や未加算の効果があり、総合的な強さではありません。",
+        "食材/スキル確率と一部特殊効果は推定を含みます。発動保証は未計算。"
+      ]
+    },
+    {
+      "id": "ingredients_normal",
+      "profile": "ingredients",
+      "title": "食材収集効率・通常（試作）",
+      "summary": "スキルを使わず、その食材を集める通常収集量を比較します。",
+      "chips": [
+        "Lv.60",
+        "開始げんき100",
+        "回収4時間ごと",
+        "食材構成別"
+      ],
+      "unit": "個／日",
+      "details": [
+        "覚醒16時間・睡眠8時間・3食・基礎所持・無補正・サブスキルなし。",
+        "食材ごとに最良構成を採用。同じ個体で全食材の最良値を同時に出せるとは限りません。",
+        "確率と食材枠の選択割合は推定モデルを含みます。所持満杯後は通常食材が増えない計算です。"
+      ]
+    },
+    {
+      "id": "ingredients_skill",
+      "profile": "ingredients",
+      "title": "食材収集効率・スキル込み（試作）",
+      "summary": "本人の通常収集、スキルで生成する食材、参照チームの収集増減を合わせて比較します。",
+      "chips": [
+        "Lv.60",
+        "開始げんき100",
+        "回収4時間ごと",
+        "スキル上限Lv"
+      ],
+      "unit": "個／日（参照編成での貢献量）",
+      "details": [
+        "ライチュウ4体・AAA・参照4体のスキル停止。参照4体の基礎収集は含めません。",
+        "支援効果は編成に依存します。この値を5体分足して実チームの収集量にしないでください。",
+        "種類別の配分が未確認のランダム/選択食材効果などは未加算です。"
+      ]
+    },
+    {
+      "id": "ingredients_specialists",
+      "profile": "ingredients",
+      "title": "食材収集効率・食材得意限定（試作）",
+      "summary": "通常収集の比較対象を、食材得意のポケモンに絞った順位です。",
+      "chips": [
+        "Lv.60",
+        "通常収集",
+        "食材得意のみ",
+        "食材構成別"
+      ],
+      "unit": "個／日",
+      "details": [
+        "通常モードと同じ日産条件。スキル込みモードを絞った順位ではありません。"
+      ]
+    }
+  ],
+  "alternativeScenarios": [
+    {
+      "id": "h2_base",
+      "status": "感度比較のみ。現在の4時間/基礎所持の順位へ自動置換しない。"
+    },
+    {
+      "id": "h4_evolved",
+      "status": "感度比較のみ。現在の4時間/基礎所持の順位へ自動置換しない。"
+    },
+    {
+      "id": "h2_evolved",
+      "status": "感度比較のみ。現在の4時間/基礎所持の順位へ自動置換しない。"
+    }
+  ],
+  "teamRecipeRelationship": "料理時間は実個体・現在の在庫・全チーム予想を使用。単体順位の合算や食材ごとの別構成最高値の寄せ集めは使用しない。",
+  "boxRelationship": "固定条件化の具体値・実装は別作業。ランキング条件を無断で流用しない。",
+  "rounding": "途中と合算は無丸め。結果2桁/表示1桁の四捨五入は元値から別々に作成。floorの暫定互換処理は変更しない。"
+}

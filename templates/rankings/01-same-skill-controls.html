@@ -6,8 +6,8 @@
   if(host.dataset.ready==='true')return;
   host.textContent='比較資料を読み込み中…';
   try{
-   loading??=Promise.all([fetch('master/rankings/same-skill/same_skill_top5.json').then(r=>{if(!r.ok)throw Error('資料を取得できませんでした');return r.json()}),import('./master/rankings/same-skill/selector.mjs')]).catch(e=>{loading=null;throw e});
-   const [data,selector]=await loading;
+   loading??=Promise.all([fetch('master/rankings/same-skill/same_skill_top5.json').then(r=>{if(!r.ok)throw Error('資料を取得できませんでした');return r.json()}),import('./master/rankings/same-skill/selector.mjs'),fetch('master/rankings/same-skill/effect_cards.json').then(r=>{if(!r.ok)throw Error('効果資料を取得できませんでした');return r.json()})]).catch(e=>{loading=null;throw e});
+   const [data,selector,effects]=await loading;
    if(host.dataset.ready==='true')return;
    host.replaceChildren();host.dataset.ready='true';
    const add=(parent,tag,copy)=>{const el=document.createElement(tag);if(copy!==undefined)el.textContent=copy;parent.append(el);return el};

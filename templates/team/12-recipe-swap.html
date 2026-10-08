@@ -1,0 +1,61 @@
+// Whole-team replacement comparison using the same unrounded daily kernel.
+function recipeForecastConditions(){
+ return structuredClone({interval:Number(document.getElementById('teamCollectionInterval').value),energy:teamInitialEnergy,camp:teamGoodCamp,meals:teamMeals,favorites:activeFieldBerries(),areaBonus:fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,zones:activeBerryZones(),fieldId:fieldProfile.selectedFieldId,ex:dailyExContext()});
+}
+function recipeWholeTeamForecast(memberIds,conditions,box,catalog,foodNames){
+ const special=[];
+ if(!memberIds.length||memberIds.length>5||new Set(memberIds).size!==memberIds.length)throw Error('異なる個体を1〜5匹選んでください');
+ for(const id of memberIds){
+  const item=box.find(x=>x.id===id),species=speciesFor(item,catalog);
+  if(!item||!species)throw Error('個体データが未確認です');
+  if(species.specialTeamLimited){if(!specialTeamCompatible(species,special))throw Error('特別なポケモンの編成制限を確認してください');special.push(species)}
+ }
+ const c=conditions,r=dailyBaseline(memberIds,box,catalog,c.interval,c.energy,c.camp,c.meals,c.favorites,c.areaBonus,c.zones,undefined,{},c.ex);
+ const complete=!r.pendingReason&&r.members.length===memberIds.length&&r.members.every(m=>!m.missing);
+ // Explicit zero is safe only after all requested members were calculated.
+ const foodsPerDay=Object.fromEntries(foodNames.map(name=>[name,complete?(r.foods.has(name)?r.foods.get(name):0):null]));
+ return {memberIds:[...memberIds],conditions:structuredClone(conditions),complete,foodsPerDay};
+}
+let recipeTimeModule=null;
+function recipeSwapPanel(recipe,stock,meals,validStock){
+ const panel=document.createElement('details'),summary=document.createElement('summary');summary.textContent='控えと1体交代して比べる';panel.append(summary);
+ const controls=document.createElement('div');controls.className='psg-comparison-controls';panel.append(controls);
+ const select=(title)=>{const label=document.createElement('label');label.textContent=title;const el=document.createElement('select');el.setAttribute('aria-label',title);label.append(el);controls.append(label);return el};
+ const outgoing=select('交代するチーム個体'),incoming=select('入れる控え個体');
+ const fill=(el,items)=>{el.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent='選択してください';el.append(blank);for(const item of items){const o=document.createElement('option');o.value=item.id;o.textContent=`${item.name} Lv.${item.level}`;el.append(o)}};
+ const button=document.createElement('button');button.type='button';button.className='btn';button.textContent='収集時間を比較';panel.append(button);
+ const output=document.createElement('div');output.setAttribute('aria-live','polite');panel.append(output);
+ let generation=0;
+ const line=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;output.append(p)};
+ const signature=()=>JSON.stringify({ids:team.filter(Boolean),box:state.box,conditions:recipeForecastConditions(),stock,meals:meals.value});
+ const invalidate=()=>{generation++;button.disabled=false;output.replaceChildren()};
+ panel.invalidateRecipeSwap=()=>{invalidate();const ids=team.filter(Boolean);fill(outgoing,ids.map(id=>state.box.find(x=>x.id===id)).filter(Boolean));fill(incoming,state.box.filter(x=>!ids.includes(x.id)))};
+ outgoing.onchange=invalidate;incoming.onchange=invalidate;
+ button.onclick=async()=>{
+  invalidate();const currentGeneration=generation;
+  if(!validStock()){line('在庫は0以上の整数で入力してください');return}
+  if(!outgoing.value||!incoming.value){line('交代する個体と控えを選んでください');return}
+  const ids=team.filter(Boolean),box=structuredClone(state.box),conditions=recipeForecastConditions(),stamp=signature(),requirements=Object.fromEntries(recipe.ingredients.map(x=>[x.name,x.qty]));
+  const n=window.PS_NUMBERS.display,removeId=outgoing.value,addId=incoming.value;
+  button.disabled=true;line('比較中…');
+  try{
+   recipeTimeModule??=import('./master/calculations/recipe-time.mjs').catch(e=>{recipeTimeModule=null;throw e});
+   const module=await recipeTimeModule;
+   if(generation!==currentGeneration)return;
+   const comparison=await module.evaluateRecipe({requirements,memberIds:ids,conditions,stock:structuredClone(stock),meals:Number(meals.value),swaps:[{removeId,addId}],forecastTeam:({memberIds,conditions})=>recipeWholeTeamForecast(memberIds,conditions,box,window.PS_CATALOG,Object.keys(requirements))});
+   if(generation!==currentGeneration)return;
+   output.replaceChildren();
+   if(stamp!==signature()){line('条件が変わりました。もう一度比較してください');return}
+   const alternative=comparison.alternatives[0],before=comparison.current,after=alternative.result;
+   const text=result=>result.status==='available'?'在庫で食材が揃う':result.status==='estimate'?`約${n(result.hours)}時間`:result.status==='unavailable'?'種類別予想では集まらない':'収集時間は未確認';
+   line(`現在：${text(before)} → 交代後：${text(after)}`);
+   if(alternative.hoursSaved!==null)line(alternative.hoursSaved>0?`約${n(alternative.hoursSaved)}時間短縮（目安）`:alternative.hoursSaved<0?`約${n(-alternative.hoursSaved)}時間長くなる（目安）`:'収集時間は同じ');
+   line('最後に揃う食材：'+(before.bottlenecks.join('・')||'なし／未確認')+' → '+(after.bottlenecks.join('・')||'なし／未確認'));
+   for(const row of after.foods)line(`${row.food}：あと${n(row.deficit)}個／交代後の日産 ${row.perDay===null?'未確認':n(row.perDay)+'個'}`);
+   line(`交代後の全チームを同じ条件で1日再計算。控えも起床げんき${conditions.energy}で試算。開始時点で交代して編成を維持した場合の比較で、交代する時刻の探索ではありません。`);
+   line('平均収集量からの目安。回収・鍋・調理時刻は別判定。チームへの登録変更は行いません。');
+  }catch(e){if(generation===currentGeneration){output.replaceChildren();line('比較は未確認：'+e.message)}}
+  finally{if(generation===currentGeneration)button.disabled=false}
+ };
+ panel.invalidateRecipeSwap();return panel;
+}

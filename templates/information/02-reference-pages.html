@@ -16,6 +16,7 @@
 
  const rankings=window.PS_BERRY_RANKINGS;
  function rankConditions(host,island){
+  window.PS_RANK_CONDITIONS(host,island?'berry_island':'berry_type');
   const note=document.createElement('p');note.className='note';note.textContent=`暫定のきのみエナジー／時。Lv60・性格無補正・サブスキルなし・げんき81以上維持・FB0％・満杯前の随時回収。${island?'通常の好物3種を2倍で比較。':'好物補正なし。'}キャンチケ・リボン・イベント・メインスキル・料理は含みません。`;host.append(note);
   const details=document.createElement('details'),title=document.createElement('summary');title.textContent='比較条件・未確定事項';details.append(title);
   const p=document.createElement('p');p.textContent='2026/10/07の資料。登録248姿＋ユーザー提供モロバレルの249姿から比較。確率は推定を含み、全実装種の網羅は未確認。タマゲタケは入力不足で除外。1日予想を24で割った値ではありません。同値は同順位、掲載境界の同値も表示します。Lv補正後のおてつだい時間は資料の秒単位切り捨てを採用していますが、ゲーム仕様としての根拠は未確認です。';details.append(p);host.append(details);
