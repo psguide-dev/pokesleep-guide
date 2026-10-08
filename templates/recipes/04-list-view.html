@@ -35,6 +35,7 @@
    const populateDetail=()=>{
     if(populated)return;populated=true;
     detail.append(min);
+    detail.append(window.PS.recipeCollectionPanel(recipe));
     const levelNote=document.createElement('p');levelNote.className='note';const level=selectedLevel();levelNote.textContent=`比較Lv.${level['レベル']}・倍率×${level['倍率']}・累計 ${level['Lv1からの累計EXP'].toLocaleString()} EXP（資料確認）。実測・掲載値のないLvは暫定切り捨ての推定。レシピ本体のみ。`;detail.append(levelNote);
     const energyNote=document.createElement('p');energyNote.className='note';energyNote.textContent=[recipe.energy?.note,recipe.energy?.conditions].filter(Boolean).join('。');detail.append(energyNote);
     if(recipeMode==='evaluation'){
@@ -48,7 +49,7 @@
    };
    card.append(detail);card.addEventListener('toggle',()=>{
     chevron.textContent=card.open?'閉じる ▲':'詳細 ▼';
-    if(card.open){populateDetail();list.querySelectorAll('.psg-recipe-entry').forEach(other=>{if(other!==card)other.open=false})}
+    if(card.open){populateDetail();detail.querySelectorAll('.psg-recipe-team-time').forEach(panel=>panel.refreshRecipeTime());list.querySelectorAll('.psg-recipe-entry').forEach(other=>{if(other!==card)other.open=false})}
    });
    list.append(card);
   }

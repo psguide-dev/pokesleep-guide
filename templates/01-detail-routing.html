@@ -10,7 +10,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
  if(isDetail)document.documentElement.classList.add('psg-pokemon-page');
  function read(){try{const value=JSON.parse(sessionStorage.getItem(KEY)||'null');return value&&typeof value==='object'?value:null}catch{return null}}
  function write(value){try{sessionStorage.setItem(KEY,JSON.stringify(value))}catch{}}
- const screens=new Set(['startPage','dex','home','box','info','recipePage','skillPage','fieldPage','fieldDetail','ingredientPage','nightcapPage','accountPage','bookshelfPage','expPage','sourcesPage','rankingPage','islandRankingPage','typeRankingPage','skillEnergyRankingPage','ingredientRankingPage']);
+ const screens=new Set(['startPage','dex','home','box','info','recipePage','skillPage','fieldPage','fieldDetail','ingredientPage','nightcapPage','accountPage','bookshelfPage','expPage','sourcesPage','rankingPage','islandRankingPage','typeRankingPage','skillEnergyRankingPage','ingredientRankingPage','sameSkillRankingPage']);
  // This runs before the default home markup is parsed, preventing a home flash
  // while the destination, filters and scroll position are restored.
  if(!isDetail&&screens.has(new URLSearchParams(location.search).get('screen')))document.documentElement.classList.add('psg-route-pending');

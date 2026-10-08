@@ -1,0 +1,279 @@
+{
+  "species": [
+    {
+      "no": 700,
+      "name": "ニンフィア",
+      "type": "フェアリー",
+      "sleepType": "すやすや",
+      "specialty": "スキル",
+      "berry": "モモンのみ",
+      "berryQty": 1,
+      "help": 2600,
+      "carry": 20,
+      "foodRate": 17.8,
+      "skillRate": 4,
+      "rateStatus": "推定",
+      "mainSkillId": "energy_for_everyone_s",
+      "dexVisible": true,
+      "ingredientSlotStatus": "verified",
+      "ingredientSlots": [
+        {
+          "unlock": 1,
+          "candidates": [
+            {
+              "ingredientId": "moomoo_milk",
+              "qty": 1,
+              "name": "モーモーミルク"
+            }
+          ]
+        },
+        {
+          "unlock": 30,
+          "candidates": [
+            {
+              "ingredientId": "moomoo_milk",
+              "qty": 2,
+              "name": "モーモーミルク"
+            },
+            {
+              "ingredientId": "soothing_cacao",
+              "qty": 1,
+              "name": "リラックスカカオ"
+            }
+          ]
+        },
+        {
+          "unlock": 60,
+          "candidates": [
+            {
+              "ingredientId": "moomoo_milk",
+              "qty": 4,
+              "name": "モーモーミルク"
+            },
+            {
+              "ingredientId": "soothing_cacao",
+              "qty": 2,
+              "name": "リラックスカカオ"
+            },
+            {
+              "ingredientId": "bean_meat",
+              "qty": 3,
+              "name": "マメミート"
+            }
+          ]
+        }
+      ],
+      "sleepStyles": [
+        {
+          "id": "0700_01",
+          "name": "まるまり寝",
+          "stars": 1
+        },
+        {
+          "id": "0700_02",
+          "name": "ふんばり寝",
+          "stars": 2
+        },
+        {
+          "id": "0700_03",
+          "name": "リボンからまり寝",
+          "stars": 3
+        },
+        {
+          "id": "0700_04",
+          "name": "おなかのうえ寝",
+          "stars": 4
+        }
+      ],
+      "sleepStyleCount": 4,
+      "sources": [
+        "https://wiki.pokesleep.com/ja/pokemon/sylveon",
+        "https://wikiwiki.jp/poke_sleep/ニンフィア",
+        "https://wikiwiki.jp/poke_sleep/ポケモンの一覧/食材確率・スキル発動確率の推定値一覧",
+        "https://wikiwiki.jp/poke_sleep/%E3%83%8B%E3%83%B3%E3%83%95%E3%82%A3%E3%82%A2"
+      ],
+      "verifiedAt": "2026-09-30",
+      "friendPoints": 20,
+      "expType": 600,
+      "transferCandy": 10,
+      "canTransfer": true,
+      "acquisitionSource": {
+        "file": "PSG_pokemon_master_248.json",
+        "recordId": "0700_ニンフィア",
+        "url": "https://wikiwiki.jp/poke_sleep/%E3%83%8B%E3%83%B3%E3%83%95%E3%82%A3%E3%82%A2",
+        "checkedAt": "2026-10-01",
+        "status": "攻略・検証Wiki記載値（ゲーム内全件照合未実施）",
+        "transferCandyStatus": "資料確認"
+      },
+      "speciesId": "0700_default"
+    },
+    {
+      "no": 591,
+      "name": "モロバレル",
+      "type": "どく",
+      "sleepType": "うとうと",
+      "specialty": "食材",
+      "berry": "カゴのみ",
+      "berryQty": 1,
+      "help": 3500,
+      "carry": 14,
+      "mainSkillId": "energy_charge_s_fixed",
+      "dexVisible": true,
+      "ingredientSlotStatus": "verified",
+      "ingredientSlots": [
+        {
+          "unlock": 1,
+          "candidates": [
+            {
+              "ingredientId": "tasty_mushroom",
+              "qty": 2,
+              "name": "あじわいキノコ"
+            }
+          ]
+        },
+        {
+          "unlock": 30,
+          "candidates": [
+            {
+              "ingredientId": "tasty_mushroom",
+              "qty": 5,
+              "name": "あじわいキノコ"
+            },
+            {
+              "ingredientId": "fancy_egg",
+              "qty": 7,
+              "name": "とくせんエッグ"
+            }
+          ]
+        },
+        {
+          "unlock": 60,
+          "candidates": [
+            {
+              "ingredientId": "tasty_mushroom",
+              "qty": 7,
+              "name": "あじわいキノコ"
+            },
+            {
+              "ingredientId": "fancy_egg",
+              "qty": 10,
+              "name": "とくせんエッグ"
+            },
+            {
+              "ingredientId": "tomato",
+              "qty": 11,
+              "name": "あんみんトマト"
+            }
+          ]
+        }
+      ],
+      "sleepStyles": [],
+      "friendPoints": 12,
+      "expType": 600,
+      "sources": [
+        "https://wikiwiki.jp/poke_sleep/モロバレル",
+        "https://wikiwiki.jp/poke_sleep/ポケモンの一覧/食材確率・スキル発動確率の推定値一覧",
+        "https://www.pokexperto.net/index2.php?n=amoonguss&seccion=pokemonsleep/pokemon",
+        "https://game8.jp/pokemonsleep/818882"
+      ],
+      "verifiedAt": "2026-10-07",
+      "dataStatus": "基礎能力はユーザー確認・公開資料照合。食材確率/スキル確率は公開推定値。寝顔名/ID・必要ねむけパワー・画像対応は別途照合。",
+      "evolutionNotes": [
+        "タマゲタケ",
+        "↓ Lv.29＋タマゲタケのアメ×40",
+        "モロバレル"
+      ],
+      "evolution": [],
+      "dataNotes": [
+        "所持数はユーザー確認の基礎14。タマゲタケからの進化入手で＋5。Wiki記載19を基礎値として二重加算しない。",
+        "おてつだい時間・食材構成・フレンドポイント・進化条件はユーザー提供値。",
+        "確率は検証Wikiの推定値を計算入力へ使用。RaenonXへの参照記載はあるが、今回RaenonX本体は取得エラーで直接確認できていない。",
+        "Pokéxpertoの食材確率は20.41%。本案は既存の1桁推定値を採用し、精度を無断で変更しない。",
+        "基礎所持14と進化加算+5を分離。Game8・Pokéxperto・Serebiiは14、検証Wikiは19。今回19を基礎値として採用しない。"
+      ],
+      "foodRate": 20.4,
+      "rateStatus": "推定",
+      "skillRate": 4.7,
+      "transferCandy": 7,
+      "speciesId": "0591_default"
+    }
+  ],
+  "skills": {
+    "energy_charge_s_fixed": {
+      "id": "energy_charge_s_fixed",
+      "name": "エナジーチャージS",
+      "maxLevel": 7,
+      "tags": [
+        "エナジー",
+        "固定"
+      ],
+      "effectType": "fixed_energy",
+      "levels": {
+        "1": {
+          "energy": 400,
+          "description": "カビゴンのエナジーを400増やす"
+        },
+        "2": {
+          "energy": 569,
+          "description": "カビゴンのエナジーを569増やす"
+        },
+        "3": {
+          "energy": 785,
+          "description": "カビゴンのエナジーを785増やす"
+        },
+        "4": {
+          "energy": 1083,
+          "description": "カビゴンのエナジーを1083増やす"
+        },
+        "5": {
+          "energy": 1496,
+          "description": "カビゴンのエナジーを1496増やす"
+        },
+        "6": {
+          "energy": 2066,
+          "description": "カビゴンのエナジーを2066増やす"
+        },
+        "7": {
+          "energy": 3212,
+          "description": "カビゴンのエナジーを3212増やす"
+        }
+      },
+      "iconAsset": "assets/skill-icons/energy_charge_s_variable.webp"
+    },
+    "energy_for_everyone_s": {
+      "id": "energy_for_everyone_s",
+      "name": "げんきオールS",
+      "maxLevel": 6,
+      "tags": [
+        "げんき",
+        "チーム"
+      ],
+      "effectType": "team_energy_recovery",
+      "levels": {
+        "1": {
+          "recovery": 5
+        },
+        "2": {
+          "recovery": 7
+        },
+        "3": {
+          "recovery": 9
+        },
+        "4": {
+          "recovery": 11
+        },
+        "5": {
+          "recovery": 15
+        },
+        "6": {
+          "recovery": 18
+        }
+      },
+      "iconAsset": "assets/skill-icons/energy_for_everyone_s.webp"
+    }
+  },
+  "berries": {
+    "モモンのみ": 26,
+    "カゴのみ": 32
+  }
+}

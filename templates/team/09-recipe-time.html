@@ -1,0 +1,55 @@
+// Convert the unrounded whole-team daily forecast into a constant-flow collection estimate.
+function recipeCollectionEstimate(requirements,forecast,stock={},meals=1){
+ if(![1,3].includes(meals))throw Error('食数を確認してください');
+ const ids=forecast.members.map(m=>m.id);
+ if(ids.length>5||new Set(ids).size!==ids.length)throw Error('同じ個体を重複して編成できません');
+ const incomplete=!ids.length||forecast.pendingReason||forecast.members.some(m=>m.missing);
+ const rows=requirements.map(item=>{
+  const available=stock[item.name]??0;
+  if(!Number.isFinite(available)||available<0||!Number.isFinite(item.qty)||item.qty<0)throw Error('在庫・必要数を確認してください');
+  const deficit=Math.max(0,item.qty*meals-available);
+  // An absent food is zero only after every team member has a complete forecast.
+  const daily=incomplete?null:(forecast.foods.has(item.name)?forecast.foods.get(item.name):0);
+  if(daily!==null&&(!Number.isFinite(daily)||daily<0))throw Error('日産量を確認してください');
+  const status=deficit===0?'available':daily===null?'unconfirmed':daily===0?'not_produced':'estimate';
+  return {name:item.name,deficit,daily,status,hours:deficit===0?0:status==='estimate'?24*deficit/daily:null};
+ });
+ const unknown=rows.some(r=>r.status==='unconfirmed'),unavailable=rows.some(r=>r.status==='not_produced');
+ const hours=unknown||unavailable?null:Math.max(0,...rows.map(r=>r.hours));
+ return {rows,hours,status:unknown?'unconfirmed':unavailable?'unavailable':hours===0?'available':'estimate',bottlenecks:hours>0?rows.filter(r=>Math.abs(r.hours-hours)<=1e-12*Math.max(1,hours)).map(r=>r.name):[]};
+}
+const RECIPE_STOCK_KEY='psn-recipe-stock-v1';
+function readRecipeStock(){
+ try{const raw=JSON.parse(localStorage.getItem(RECIPE_STOCK_KEY)||'{}');return Object.fromEntries(Object.entries(raw).filter(([,v])=>Number.isFinite(v)&&v>=0))}catch{return {}}
+}
+function recipeCollectionPanel(recipe){
+ const section=document.createElement('section');section.className='psg-recipe-team-time';
+ const add=(tag,copy)=>{const el=document.createElement(tag);if(copy!==undefined)el.textContent=copy;section.append(el);return el};
+ add('h3','現在のチームで集める時間');
+ const label=add('label','作る食数 '),meals=document.createElement('select');meals.setAttribute('aria-label','収集目安の食数');
+ for(const n of [1,3]){const option=new Option(`${n}食分`,String(n));meals.add(option)}label.append(meals);
+ const stock=readRecipeStock(),stockInputs=new Map(),inputs=add('div');inputs.className='psg-recipe-stock-inputs';
+ const output=add('div');output.setAttribute('aria-live','polite');
+ const render=()=>{
+  output.replaceChildren();
+  if([...inputs.querySelectorAll('input')].some(input=>!input.checkValidity())){output.textContent='在庫は0以上の整数で入力してください';return}
+  const line=copy=>{const p=document.createElement('p');p.className='note';p.textContent=copy;output.append(p)};
+  try{
+   const forecast=dailyCurrentForecast(),result=recipeCollectionEstimate(recipe.ingredients,forecast,stock,Number(meals.value));
+   line(`回収${forecast.interval||daySettings.collectionHours}時間・起床げんき${teamInitialEnergy}・食事${teamMeals}回。チーム画面の現在条件を使用。`);
+   const title=document.createElement('strong');title.textContent=result.status==='available'?'在庫で食材が揃います':result.status==='unconfirmed'?'収集時間は未確認':result.status==='unavailable'?'この編成の種類別予想では集まりません':`約${window.PS_NUMBERS.display(result.hours)}時間`;output.append(title);
+   for(const row of result.rows)line(`${row.name}：あと${window.PS_NUMBERS.display(row.deficit)}個${row.status==='unconfirmed'?'（日産未確認）':row.status==='not_produced'?'（種類別日産0）':row.deficit===0?'（在庫あり）':`／約${window.PS_NUMBERS.display(row.hours)}時間`}`);
+   if(result.bottlenecks.length)line('最後に揃う食材：'+result.bottlenecks.join('・'));
+   const capacity=cookingContext().capacity,required=recipe.ingredients.reduce((sum,r)=>sum+r.qty,0);
+   line(capacity===null?'鍋容量は未設定':required>capacity?`1食の鍋容量不足：あと${window.PS_NUMBERS.display(required-capacity)}個`:`1食の必要数${required}個は現在の鍋容量内`);
+   line('平均収集量からの目安（推定）。実際の回収時刻・成功確率・朝昼晩に調理できるかは判定しません。種類未指定のランダム食材は加算しません。在庫は消費・獲得後に手動更新してください。');
+  }catch(e){line(e.message)}
+ };
+ for(const item of recipe.ingredients){
+  const label=document.createElement('label');label.textContent=item.name+' 在庫 ';const input=document.createElement('input');input.type='number';input.min='0';input.step='1';input.inputMode='numeric';input.value=String(stock[item.name]||0);input.setAttribute('aria-label',item.name+'の在庫数');label.append(input);inputs.append(label);stockInputs.set(item.name,input);
+  input.oninput=()=>{const value=Number(input.value);input.setCustomValidity(input.value.trim()===''||!Number.isInteger(value)||value<0?'0以上の整数を入力してください':'');if(!input.checkValidity()){output.textContent='在庫は0以上の整数で入力してください';return}stock[item.name]=value;try{const current=readRecipeStock();localStorage.setItem(RECIPE_STOCK_KEY,JSON.stringify({...current,[item.name]:value}))}catch{output.textContent='在庫を保存できませんでした';return}render()};
+ }
+ meals.onchange=render;render();
+ section.refreshRecipeTime=()=>{const current=readRecipeStock();for(const [name,input] of stockInputs){stock[name]=current[name]??0;input.value=String(stock[name]);input.setCustomValidity('')}render()};
+ return section;
+}

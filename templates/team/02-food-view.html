@@ -17,6 +17,7 @@ function renderTeamFood(){
  }
  document.getElementById('teamPotCapacity').textContent=pot.capacity===null?'（鍋未設定）':`（鍋${window.PS_NUMBERS.display(pot.capacity)}個）`;
  const {confirmed,unconfirmed}=teamFoodContext();
+ const collectionForecast=dailyCurrentForecast(),recipeStock=readRecipeStock();
  const areaBonus=Math.max(0,Math.min(200,Number(fieldProfile.areaBonuses[fieldProfile.selectedFieldId])||0));
  const areaFactor=1+areaBonus/100;
  const catalogRecipes=Object.values(window.PS_CATALOG?.recipes||{});
@@ -52,7 +53,9 @@ function renderTeamFood(){
    potStatus.classList.toggle('is-over-capacity',pot.capacity!==null&&required>pot.capacity);
    const ingredients=document.createElement('span');ingredients.className='psg-team-recipe-ingredients';
    for(const item of recipe.ingredients){const tile=document.createElement('span');tile.className='psg-team-recipe-ingredient';tile.title=`${item.name} 1食 ${item.qty}個／3食 ${item.qty*3}個`;tile.setAttribute('aria-label',tile.title);tile.classList.toggle('is-covered',confirmed.has(item.name));const amount=document.createElement('strong');amount.className='psg-team-recipe-ingredient-amount';amount.textContent=`${item.qty}／${item.qty*3}`;tile.append(teamFoodIcon(item.name),amount);ingredients.append(tile)}
-   nameLine.append(name,potStatus);copy.append(meta,base);
+   const collection=recipeCollectionEstimate(recipe.ingredients,collectionForecast,recipeStock,1);
+   const time=document.createElement('span');time.className='psg-team-recipe-base-energy';time.textContent=collection.status==='available'?'在庫で食材が揃う':collection.status==='estimate'?`1食分 約${window.PS_NUMBERS.display(collection.hours)}時間（目安）`:collection.status==='unavailable'?'種類別予想では集まらない':'収集時間は未確認';
+   nameLine.append(name,potStatus);copy.append(meta,base,time);
    for(let slot=recipe.ingredients.length;slot<4;slot++){const empty=document.createElement('span');empty.className='psg-team-recipe-ingredient is-empty';empty.setAttribute('aria-hidden','true');ingredients.append(empty)}
    row.append(nameLine,image,copy,ingredients);
    row.setAttribute('aria-label',`${recipe.name}、${meta.textContent}、${potStatus.textContent}、${status.textContent}、料理の詳細へ`);

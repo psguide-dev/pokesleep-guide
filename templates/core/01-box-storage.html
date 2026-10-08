@@ -22,6 +22,7 @@ function normalizeBox(raw){
     subskills:Array.isArray(x.subskills)?x.subskills.slice(0,5).map(s=>String(s||'').slice(0,80)):[],
     nature:String(x.nature||'').slice(0,40),mint:x.mint===true,
     ...(normalizeMythicalState(x.mythicalState,speciesFor(x))?{mythicalState:normalizeMythicalState(x.mythicalState,speciesFor(x))}:{}),
+    evolutionCount:[0,1,2].includes(x.evolutionCount)?x.evolutionCount:0,
     skillLevel:Number.isInteger(x.skillLevel)?Math.max(1,Math.min(window.PS_CATALOG?.skills?.[speciesFor(x)?.mainSkillId]?.maxLevel||7,x.skillLevel)):1,
     role:String(x.role||defaultIndividualRole(speciesFor(x))).slice(0,40),favorite:x.favorite===true,training:x.training===true,ribbonHours:[0,200,500,1000,2000].includes(x.ribbonHours)?x.ribbonHours:0}));
 }

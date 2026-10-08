@@ -1,0 +1,21 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const ctx={};vm.createContext(ctx);vm.runInContext(fs.readFileSync('templates/team/09-recipe-time.html','utf8'),ctx);
+const req=[{name:'a',qty:24},{name:'b',qty:12}];
+const forecast={members:[{id:'one'},{id:'two'}],foods:new Map([['a',24],['b',12]])};
+const run=(f=forecast,stock={b:6},meals=1)=>ctx.recipeCollectionEstimate(req,f,stock,meals);
+assert.equal(run().hours,24);assert.equal(run().bottlenecks[0],'a');
+assert.equal(run({...forecast,foods:new Map([['a',48],['b',12]])}).hours,12);
+assert.equal(run(forecast,{a:24,b:12}).status,'available');
+assert.equal(run(forecast,{},3).hours,72);
+assert.equal(run({...forecast,foods:new Map([['a',0],['b',12]])}).status,'unavailable');
+assert.equal(run({...forecast,members:[{id:'one',missing:true}]}).status,'unconfirmed');
+assert.equal(run({...forecast,members:[]}).status,'unconfirmed');
+assert.equal(run({...forecast,pendingReason:'EX not set'}).status,'unconfirmed');
+assert.equal(run({...forecast,members:[{id:'one',missing:true}]},{a:24,b:12}).status,'available');
+assert.throws(()=>run({...forecast,members:[{id:'one'},{id:'one'}]}),/重複/);
+assert.throws(()=>run(forecast,{a:-1}),/在庫/);
+assert.equal(run({...forecast,randomIngredients:100,foods:new Map()}).status,'unavailable','unallocated random food never satisfies a requirement');
+const raw=24/1.23456;assert.equal(run({...forecast,foods:new Map([['a',1.23456],['b',12]])}).hours,24*raw,'no intermediate rounding');
+console.log('Recipe time: stock, 1/3 meals, bottlenecks, unknown vs zero, partial/empty team, duplicate individual and raw arithmetic passed.');
+
+assert.equal(run({...forecast,foods:new Map([['a',null],['b',12]])}).status,'unconfirmed','explicit null remains unknown');

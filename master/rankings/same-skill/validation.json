@@ -1,0 +1,12 @@
+{
+  "sourceSHA256": "39d40e155d22c3c148193c120b75a182413e16c9dd26fe7b4ee60b90a86fa739",
+  "groupCount": 148,
+  "skillIdCount": 37,
+  "scenarioCount": 4,
+  "sourceTopFiveMatch": true,
+  "allRanksChecked": true,
+  "sourceTrialNumbersChanged": false,
+  "fullSimulationRerun": false,
+  "externalSourceResearch": false,
+  "selectorChecks": "148 groups x 2 scopes, tie boundary and invalid input passed"
+}

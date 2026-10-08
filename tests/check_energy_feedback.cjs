@@ -12,6 +12,9 @@ function run(id,{dark=false,energy=0,carry=10000,rate=100,selected}={}){
 // Same clock and reward fixture with/without healing, isolating the feedback itself.
 vm.runInContext("tables.skills.find(s=>s.skillId==='healing_pulse_energy_cheer_s').levels[5].recoveryPerTarget=0",ctx);
 const noHeal=run('healing_pulse_energy_cheer_s');
+const noRecoverySkill=run('normal'),skillsOff=run('healing_pulse_energy_cheer_s',{rate:0});
+assert.deepEqual(noHeal.members.map(m=>m.normalHelps),noRecoverySkill.members.map(m=>m.normalHelps),'skill category must not change help clock');
+assert.deepEqual(noHeal.members.map(m=>m.normalHelps),skillsOff.members.map(m=>m.normalHelps),'skill OFF must retain the same clock');
 vm.runInContext("tables.skills.find(s=>s.skillId==='healing_pulse_energy_cheer_s').levels[5].recoveryPerTarget=22",ctx);
 const heal=run('healing_pulse_energy_cheer_s');assert(heal.members[1].normalHelps>noHeal.members[1].normalHelps);assert(heal.members[0].skillTriggers>noHeal.members[0].skillTriggers);assert(heal.foods.get('coffee')>noHeal.foods.get('coffee'));
 const immune=run('nightmare_energy_charge_m',{dark:true,energy:80}),nightmare=run('nightmare_energy_charge_m',{energy:80});assert(nightmare.members[1].normalHelps<immune.members[1].normalHelps);assert.equal(nightmare.members[0].normalHelps,immune.members[0].normalHelps);assert(nightmare.members.every(m=>m.energy>=0));

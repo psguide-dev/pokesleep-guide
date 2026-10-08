@@ -1,4 +1,4 @@
-const backupBoxFields=({id,no,speciesId,level,ingredients,subskills,nature,mint,skillLevel,role,favorite,training,ribbonHours,mythicalState})=>({id,no,...(speciesId?{speciesId}:{}),level,ingredients,subskills,nature,mint,skillLevel,role,favorite,training,ribbonHours,...(mythicalState?{mythicalState}:{} )});
+const backupBoxFields=({id,no,speciesId,level,ingredients,subskills,nature,mint,skillLevel,evolutionCount,role,favorite,training,ribbonHours,mythicalState})=>({id,no,...(speciesId?{speciesId}:{}),level,ingredients,subskills,nature,mint,skillLevel,evolutionCount,role,favorite,training,ribbonHours,...(mythicalState?{mythicalState}:{} )});
 const knownSleepIds=new Set([...Object.values(window.PS_CATALOG?.sleepStyles||{}).flat(),...Object.values(window.PS_CATALOG?.forms?.sleepStyleGroups||{}).flatMap(g=>g.styles||[])].map(s=>s.id));
 function normalizeSleepFound(raw){
  if(!raw||typeof raw!=='object'||Array.isArray(raw))return {};

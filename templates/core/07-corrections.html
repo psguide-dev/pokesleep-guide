@@ -36,7 +36,7 @@ function individualCorrections(item,p,teamSpeedReduction=0){
  const speed=speedBase==null?null:speedBase*(1-speedReduction);
  const foodFactor=natureFactor('food')*(1+sum('foodRateBonus'));
  const skillFactor=natureFactor('skill')*(1+sum('skillRateBonus'));
- const carry=Number.isFinite(p?.carry)&&ribbon.capacity!==null?p.carry+sum('carryBonus')+ribbon.capacity:null;
+ const carry=Number.isFinite(p?.carry)&&ribbon.capacity!==null?p.carry+5*([0,1,2].includes(item.evolutionCount)?item.evolutionCount:0)+sum('carryBonus')+ribbon.capacity:null;
  const food=Number.isFinite(p?.foodRate)?Math.min(100,p.foodRate*foodFactor):null;
  const skill=Number.isFinite(p?.skillRate)?Math.min(100,p.skillRate*skillFactor):null;
  const unknown=[...active.filter(name=>!SUBSKILL_NAMES.includes(name)),...(!item.mint&&item.nature&&!NATURE_EFFECTS[item.nature]?[item.nature]:[])];

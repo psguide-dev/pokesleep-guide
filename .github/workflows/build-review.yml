@@ -60,6 +60,9 @@ jobs:
           node tests/check_rankings.cjs
           node tests/check_home_calendar.cjs
           node tests/check_detail_routing.cjs
+          node tests/check_daily_audit.cjs
+          node tests/check_recipe_team_time.cjs
+          node tests/check_same_skill.cjs
           node tests/check_daily_calculator.cjs
           node tests/check_berry_picker.cjs
           node tests/check_field_detail.cjs

@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "id": "floor",
+      "status": "暫定コード互換・正式根拠未確定",
+      "impact": "速度と回収等の境界",
+      "handling": "今回変更なし。局所誤差は別ファイル。日産の全誤差は未試算。"
+    },
+    {
+      "id": "skillGuarantee",
+      "status": "発動保証未計算",
+      "impact": "発動回数の予測",
+      "handling": "Poisson近似とストック上限の試作表示を維持"
+    },
+    {
+      "id": "additionalEffects",
+      "status": "未加算",
+      "impact": "コピー/抽選先・追加発動・ゾーン・追加回復等",
+      "handling": "元JSON各行notesとlimitationsを表示。0効果確定としない"
+    },
+    {
+      "id": "randomFoodDistribution",
+      "status": "種類別配分未確認",
+      "impact": "食材種別順位",
+      "handling": "種類別未加算。食材セレクトを指定食材として扱わない"
+    },
+    {
+      "id": "sleepStyleMapping",
+      "status": "名前は攻略本文確認、実機ID/画像/必要NP未照合",
+      "impact": "寝顔管理・報酬",
+      "handling": "対応null・報酬公開保留"
+    },
+    {
+      "id": "selectionProbability",
+      "status": "未算出",
+      "impact": "厳選成功率/捕獲数/総合難度",
+      "handling": "許容構成比を確率へ換算しない"
+    },
+    {
+      "id": "boxFixedConditions",
+      "status": "具体値未確定・別実装作業",
+      "impact": "ボックス個別予想",
+      "handling": "ランキング4条件を無断流用しない"
+    }
+  ]
+}

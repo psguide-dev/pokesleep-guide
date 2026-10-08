@@ -17,9 +17,9 @@ ctx.window={PS_CATALOG:{pokemon:{1:{ingredientSlots:[{unlock:1,candidates:[{name
 ctx.teamSpeedContext=()=>({members:new Map([['one',{speed:3600,carry:10000,food:50,berryQty:1,skill:10,energyFactor:1}]])});
 const run=effect=>ctx.dailyBaseline(ctx.team,ctx.state.box,ctx.window.PS_CATALOG,4,0,false,false,['main','sub','third'],0,{},undefined,{},effect?{fieldId:'greengrass_ex',berries:['main','sub','third'],effect}:null);
 const normal=run(null),berry=run('berry'),food=run('ingredients'),skill=run('skill');
-assert(Math.abs(berry.members[0].normalHelps-normal.members[0].normalHelps/.9)<1e-8);
-assert(Math.abs(berry.berryEnergy/normal.berryEnergy-1.2/.9)<1e-8);
-assert(Math.abs(food.foods.get('food')/normal.foods.get('food')-1.5/.9)<1e-8);
+assert.equal(normal.members[0].normalHelps,24);assert.equal(berry.members[0].normalHelps,26,'86400 / 3240 seconds: 26 completed helps');
+assert(Math.abs(berry.berryEnergy/normal.berryEnergy-1.2*26/24)<1e-8);
+assert(Math.abs(food.foods.get('food')/normal.foods.get('food')-1.5*26/24)<1e-8);
 assert.equal(berry.members[0].skillLevel,2);assert(skill.members[0].skillTriggers>berry.members[0].skillTriggers);
 assert.equal(ctx.state.box[0].skillLevel,1);
 assert(run(null).berryEnergy===normal.berryEnergy);

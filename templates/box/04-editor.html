@@ -18,6 +18,7 @@ function fillBoxEditor(item,p){
  form.elements.appearance.value=p?speciesKey(p):'';
  fillBoxEvolution(form,p);
  form.elements.appearance.onchange=()=>{const chosen=window.PS_FORMS.resolve(form.elements.appearance.value);fillBoxEvolution(form,chosen);fillBoxIngredients(item,chosen);fillBoxSkillLevel(form,chosen,Number(form.elements.skillLevel.value)||1)};
+ form.elements.evolutionCount.value=String(item.evolutionCount||0);
  form.elements.ribbonHours.value=String(item.ribbonHours||0);
  const ribbonPreview=document.getElementById('boxRibbonPreview');
  const updateRibbonPreview=()=>{ribbonPreview.innerHTML=window.PS_UI_ART.icon('ribbons',form.elements.ribbonHours.value)};
