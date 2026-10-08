@@ -18,13 +18,14 @@ body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 #fieldDetail>.psg-field-detail-sticky{position:sticky;top:var(--psg-header-height);z-index:69;background:#fff;margin:0 -12px;padding:0 12px}
 #fieldDetail .psg-field-detail-sticky>.psg-subpage-head{height:var(--psg-page-header-height);margin:0 -12px;padding:0 12px;background:#fff;border-bottom:0}
 #fieldDetail .psg-field-detail-sticky>.psg-field-detail-overview{height:calc(3 * var(--psg-ui-unit));margin:0 -12px;padding:0;align-items:center}
-#fieldDetail .psg-field-detail-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:calc(2 * var(--psg-ui-unit)) var(--psg-ui-unit);height:100%}
+#fieldDetail .psg-field-detail-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,calc(1.5 * var(--psg-ui-unit)));height:100%}
 #fieldDetail .psg-field-detail-heading{display:flex;flex:1;align-items:center;gap:6px;min-width:0}
 #fieldDetail .psg-field-detail-settings{flex:0 0 80px;width:80px}
-#fieldDetailBerries{grid-column:1/-1;box-sizing:border-box;min-width:0;height:calc(2 * var(--psg-ui-unit))}
+#fieldDetail #fieldDetailSleepSummary{height:calc(1.5 * var(--psg-ui-unit))}
+#fieldDetailBerries{grid-column:1/-1;box-sizing:border-box;min-width:0;height:calc(1.5 * var(--psg-ui-unit))}
 .psg-field-detail-berry-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;height:100%}
 .psg-field-detail-berry{display:flex;align-items:center;justify-content:center;min-width:0;height:100%;font-size:10px;text-align:center}
-.psg-field-detail-berry img,.psg-field-detail-berry svg{width:min(100%,calc(1.5 * var(--psg-ui-unit)))!important;height:calc(1.5 * var(--psg-ui-unit))!important;object-fit:contain}
+.psg-field-detail-berry img,.psg-field-detail-berry svg{width:100%!important;height:calc(1.5 * var(--psg-ui-unit))!important;object-fit:contain}
 #fieldDetail .psg-field-detail-sticky>.psg-field-detail-tabs{box-sizing:border-box;height:var(--psg-ui-unit);margin:0;background:#fff}
 #fieldDetail .psg-field-detail-tabs button{height:100%;min-height:0;padding:0 2px}
 #fieldDetail [role="tabpanel"]{padding-top:8px;scroll-margin-top:calc(var(--psg-header-height) + 5.5 * var(--psg-ui-unit))}
