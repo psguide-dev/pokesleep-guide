@@ -1,4 +1,8 @@
-/* Shared page heading height includes borders and padding. */
+/* Shared page heading height includes borders and padding.
+   White is the default through the page/back row; explicit page themes may override. */
+.screen .psg-subpage-head,#dexDetail .detail-head,#boxDetail .detail-head,#dex .psg-screen-toolbar,#box .psg-screen-toolbar,.screen>.psg-screen-title,#home .psg-home-heading>h2{
+ background:#fff;box-shadow:-12px 0 #fff,12px 0 #fff;
+}
 :root{--psg-page-header-height:calc(1.5 * var(--psg-ui-unit))}
 .screen .psg-subpage-head,#dexDetail .detail-head,#boxDetail .detail-head,#dex .psg-screen-toolbar,#box .psg-screen-toolbar,.screen>.psg-screen-title{
  box-sizing:border-box!important;height:var(--psg-page-header-height)!important;min-height:var(--psg-page-header-height)!important;max-height:var(--psg-page-header-height)!important;padding-block:0!important;margin-block:0!important;
@@ -11,14 +15,16 @@
 }
 .screen>.psg-screen-title{display:flex;align-items:center;margin:0}
 #home .psg-home-heading{grid-template-rows:var(--psg-page-header-height) var(--home-row-height);margin-top:0}
+#home .psg-home-heading{background:linear-gradient(#fff 0 var(--psg-page-header-height),var(--bg) var(--psg-page-header-height) 100%)}
 #home .psg-home-heading>h2{box-sizing:border-box;height:var(--psg-page-header-height)}
 #home #teamManagerToggle{height:var(--home-row-height)}
 .psg-recipe-sticky{padding-top:0}
 
-#skillPage>.psg-skill-header{position:sticky;top:var(--psg-header-height);z-index:69;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2fr);gap:0;margin-inline:-12px;padding-inline:12px;background:var(--bg)}
+#skillPage>.psg-skill-header{position:sticky;top:var(--psg-header-height);z-index:69;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-inline:-12px;padding-inline:12px;background:#fff}
 #skillPage .psg-skill-header>[data-back]{justify-content:flex-start}
 #skillPage .psg-skill-header h2{text-align:left;font-size:clamp(12px,3.6vw,18px);white-space:nowrap}
-#skillSearch{display:block;min-width:0;width:100%;height:var(--psg-ui-unit);margin:0;padding:0 10px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:16px}
+#skillSearch,#skillTag{display:block;min-width:0;width:100%;height:var(--psg-ui-unit);margin:0;padding:0 6px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:16px}
+#skillTag{font-size:12px}
 #skillIndexCount{margin:8px 0}
 .psg-skill-entry>summary{display:grid;grid-template-columns:36px minmax(0,1fr) minmax(0,.65fr);gap:10px;min-height:calc(2 * var(--psg-ui-unit));text-align:left}
 .psg-skill-entry>summary strong{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-size:clamp(14px,4vw,18px);line-height:1.35}

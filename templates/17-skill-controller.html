@@ -1,8 +1,9 @@
 <script id="psg-skill-index-controller">
 (()=>{'use strict';
  const catalog=window.PS_CATALOG;
- const input=document.getElementById('skillSearch'),list=document.getElementById('skillIndexList'),count=document.getElementById('skillIndexCount');
+ const input=document.getElementById('skillSearch'),tag=document.getElementById('skillTag'),list=document.getElementById('skillIndexList'),count=document.getElementById('skillIndexCount');
  if(!catalog||!input||!list)return;
+ if(tag)for(const value of [...new Set(Object.values(catalog.skills||{}).flatMap(skill=>skill.tags||[]))].sort((a,b)=>a.localeCompare(b,'ja'))){const option=document.createElement('option');option.value=value;option.textContent=value;tag.append(option)}
  const effects=(skill,level)=>{
   const value=skill.levels?.[level];
   if(skill.displayNote&&value?.description)return value.description;
@@ -15,7 +16,7 @@
  function render(){
   const query=input.value.trim().toLocaleLowerCase('ja');
   const all=Object.values(catalog.skills||{});
-  const matches=all.filter(s=>[s.name,...(s.tags||[]),...(s.nativeSpecies||[]).map(p=>p.name)].some(value=>String(value).toLocaleLowerCase('ja').includes(query)));
+  const matches=all.filter(s=>(!tag?.value||(s.tags||[]).includes(tag.value))&&[s.name,...(s.tags||[]),...(s.nativeSpecies||[]).map(p=>p.name)].some(value=>String(value).toLocaleLowerCase('ja').includes(query)));
   count.textContent=`${matches.length} / ${all.length} スキル`;
   list.replaceChildren();
   if(!matches.length){const empty=document.createElement('p');empty.className='note';empty.textContent='該当するスキルはありません。';list.append(empty);return}
@@ -58,5 +59,6 @@
   });
  }
  input.addEventListener('input',render);
+ tag?.addEventListener('change',render);
  window.PS_PAGE_RENDERERS??={};let skillListReady=false;
  window.PS_PAGE_RENDERERS.skillPage=()=>{if(!skillListReady){render();skillListReady=true}};
