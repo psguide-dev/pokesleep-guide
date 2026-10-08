@@ -1,7 +1,7 @@
 /* Shared page heading height includes borders and padding. */
 :root{--psg-page-header-height:calc(1.5 * var(--psg-ui-unit))}
 .screen .psg-subpage-head,#dexDetail .detail-head,#boxDetail .detail-head,#dex .psg-screen-toolbar,#box .psg-screen-toolbar,.screen>.psg-screen-title{
- box-sizing:border-box!important;height:var(--psg-page-header-height)!important;min-height:var(--psg-page-header-height)!important;max-height:var(--psg-page-header-height)!important;padding-block:0!important;
+ box-sizing:border-box!important;height:var(--psg-page-header-height)!important;min-height:var(--psg-page-header-height)!important;max-height:var(--psg-page-header-height)!important;padding-block:0!important;margin-block:0!important;
 }
 .screen .psg-subpage-head{gap:8px}
 .screen .psg-subpage-head h2{min-width:0;font-size:clamp(12px,3.6vw,18px);line-height:1.2}
@@ -9,9 +9,11 @@
 .screen .psg-subpage-head>[data-back],#dexDetail .detail-head>[data-back],#boxDetail .detail-head>[data-back],.psg-field-detail-back{
  display:flex;align-items:center;justify-content:center;box-sizing:border-box;font:inherit;font-size:12px!important;font-weight:700!important;line-height:1!important;white-space:nowrap;flex:0 0 auto!important;width:auto!important;height:var(--psg-page-header-height)!important;min-height:var(--psg-page-header-height)!important;max-height:var(--psg-page-header-height)!important;padding:0 8px!important;color:#1768a6!important;background:transparent!important;border:0!important;border-radius:0!important;text-decoration:none;
 }
-.screen>.psg-screen-title{display:flex;align-items:center;margin:0 0 8px}
-#home .psg-home-heading{grid-template-rows:var(--psg-page-header-height) var(--home-row-height)}
-#home .psg-home-heading>.psg-screen-title,#home #teamManagerToggle{box-sizing:border-box;height:var(--psg-page-header-height)}
+.screen>.psg-screen-title{display:flex;align-items:center;margin:0}
+#home .psg-home-heading{grid-template-rows:var(--psg-page-header-height) var(--home-row-height);margin-top:0}
+#home .psg-home-heading>h2{box-sizing:border-box;height:var(--psg-page-header-height)}
+#home #teamManagerToggle{height:var(--home-row-height)}
+.psg-recipe-sticky{padding-top:0}
 
 main:has(#fieldDetail.active){padding-top:0}
 body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
