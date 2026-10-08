@@ -56,3 +56,7 @@
 ## スキル一覧と育成資料の表示
 
 `17-skill-controller.html` は情報タブのスキル検索・レベル効果・所有種リンク、`skills/02-friendship-reference.html` はフレンドメダル検索・保証仕様・サブスキル育成資料の表示を担当する。同じスクリプト内へこの順で連結し、既存の初期化条件と共有catalogを維持する。独立scriptタグで囲まない。v355は処理内容・実行順を変えず分離のみ。
+
+## 図鑑詳細の見出し
+
+`templates/detail/03-identity.html` の `renderDexHeading` が番号・名前・衣装/サイズ選択・前後移動をまとめて描画する。`detail/07-navigation.html` はURL移動・履歴と文書タイトルのみを扱い、描画済みのh2を名前だけで上書きしない。画像再表示でも同じ見出し関数を使う。スマホのタイトルは番号＋名前の行と選択欄を縦に配置する。戻るの表示・押せる範囲は `styles/10-page-headers.css` の共通指定を維持する。

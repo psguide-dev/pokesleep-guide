@@ -27,7 +27,8 @@ blocked=true;const locked=setup('https://example.test/guide/review.html');assert
 // Execute the detail navigation renderer with lightweight view stubs, verifying
 // that ordinary links navigate and local boot/refresh do not navigate again.
 let selected,rendered=[];const w={PS_POKEMON_PAGE:true,PS:{state:{screen:'dexDetail'}},PS_DEX_ROUTE:{open:(...x)=>selected=x},addEventListener:()=>{},scrollTo:()=>{}};
-const doc={title:'',querySelector:s=>s.includes('h2')?{textContent:''}:null,getElementById:id=>id==='dexPreviewNotice'?{}:null,addEventListener:()=>{}};
+const heading={get textContent(){return 'No.001 フシギダネ'},set textContent(value){throw Error('Navigation must not overwrite the rendered identity heading')}};
+const doc={title:'',querySelector:s=>s.includes('h2')?heading:null,getElementById:id=>id==='dexPreviewNotice'?{}:null,addEventListener:()=>{}};
 const ctx={window:w,document:doc,location:new URL('https://example.test/guide/pokemon.html?species=0001_default'),byNo:n=>n==='unknown'?null:{no:1,name:'フシギダネ',type:'くさ'},detailKey:()=> '0001_default',currentNo:1,currentSpeciesId:null,currentTab:'ability',detailOrigin:'dex',detailHistory:[],detailForward:[],setTheme:()=>{},show:()=>{},header:()=>{},renderStats:()=>{},renderFood:()=>{},renderSkill:()=>{},renderEvolution:()=>{},renderSleepStyles:()=>rendered.push('sleep'),renderPokemonFields:()=>{},switchTab:()=>{},updateDexStickyTop:()=>{},ability:{prepend:()=>{}},getComputedStyle:()=>({}),history:{},Number,parseFloat};
 vm.runInNewContext(fs.readFileSync('templates/detail/07-navigation.html','utf8').replace(/\}\)\(\);\s*<\/script>\s*$/,''),ctx);
 assert.equal(w.openPokemonDetail('0001_default'),true);assert.equal(selected[0],'0001_default');assert.equal(rendered.length,0);selected=null;
