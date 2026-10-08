@@ -178,7 +178,7 @@ function openFieldDetail(id){
 }
 function renderFieldDetail(){
  const field=window.PS_CATALOG.fields[fieldDetailId];if(!field)return;
- const name=document.getElementById('fieldDetailName');name.textContent=field.name;name.setAttribute('style',`--field-name-length:${[...field.name].reduce((n,c)=>n+(/[^\x00-\x7F]/.test(c)?1:.6),0)+.5}`);
+ const name=document.getElementById('fieldDetailName');name.textContent=field.name;
  document.getElementById('fieldDetailBonus').value=String(fieldProfile.areaBonuses[fieldDetailId]||0);
  const art=document.getElementById('fieldDetailArt');art.replaceChildren();
  const src=window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=96;image.height=112;art.append(image);}

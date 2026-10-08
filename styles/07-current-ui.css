@@ -346,12 +346,11 @@
 .psg-berry-details[open]>.psg-berry-options{margin-top:6px}
 
 .psg-field-gallery-title{font-size:16px;margin:16px 0 8px}
-.psg-field-detail-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));align-items:stretch;gap:0 6px;box-sizing:border-box;height:calc(2 * var(--psg-ui-unit));padding:0 8px}
-.psg-field-detail-back{grid-column:1;grid-row:1;box-sizing:border-box;height:100%;min-height:0;padding:0 4px;align-self:center}
-#fieldDetailArt{grid-column:2;grid-row:1;height:100%;min-width:0;position:relative}
+.psg-field-detail-overview{display:grid;grid-template-columns:minmax(102px,34%) minmax(0,1fr);align-items:start;gap:7px;box-sizing:border-box;padding:7px;border-radius:18px}
+#fieldDetailArt{aspect-ratio:1;min-width:0;position:relative;margin-bottom:34px}
 #fieldDetailArt>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain}
-.psg-field-detail-info{grid-column:3;grid-row:1 / 3;min-width:0;display:grid;grid-template-rows:repeat(2,minmax(0,1fr));container-type:inline-size}
-#fieldDetailName{display:flex;align-items:center;justify-content:center;font-size:min(16px,calc(100cqw / var(--field-name-length,12)));line-height:1.2;margin:0;min-width:0;white-space:nowrap}
+.psg-field-detail-info{min-width:0}
+#fieldDetailName{flex:1;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:950;line-height:1.08;margin:0;min-width:0;white-space:nowrap}
 .psg-field-detail-settings{display:grid;grid-template-columns:minmax(0,1fr);align-items:center;min-width:0}
 #fieldDetailSleepSummary{display:block;font-size:13px;line-height:1.4;margin:6px 0;white-space:nowrap}
 
@@ -363,5 +362,5 @@
 .psg-field-detail-tabs button:focus-visible{outline:2px solid #2f80c9;outline-offset:-2px}
 #fieldDetail [role="tabpanel"][hidden]{display:none}
 
-.psg-field-detail-settings .psg-field-percent{height:100%;max-height:var(--psg-ui-unit)}
+.psg-field-detail-settings .psg-field-percent{height:var(--psg-ui-unit);max-width:120px}
 #fieldDetailBonus{height:100%}
