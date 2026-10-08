@@ -23,9 +23,12 @@
    const species=window.PS_SPECIES_CATALOG.all(catalog).filter(p=>p.dexVisible&&p.mainSkillId===skill.id);
    const item=document.createElement('details');item.className='psg-skill-entry';
    const summary=document.createElement('summary');
-   const title=document.createElement('strong');title.textContent=skill.name;
+   const title=document.createElement('strong');
+   const nameParts=skill.name.match(/^(.*?)([（(].*[）)])$/);
+   if(nameParts){const main=document.createElement('span'),qualifier=document.createElement('span');main.textContent=nameParts[1];qualifier.textContent=nameParts[2];qualifier.className='psg-skill-qualifier';title.append(main,qualifier)}else title.textContent=skill.name;
    const tags=document.createElement('span');tags.className='psg-skill-tags';tags.textContent=(skill.tags||[]).join(' · ');
-   const iconSrc=window.PS_IMAGE_FILES?.skills?.[skill.id];if(iconSrc){const icon=document.createElement('img');icon.src=iconSrc;icon.alt='';icon.width=36;icon.height=36;icon.style.objectFit='contain';summary.append(icon)}
+   const iconSlot=document.createElement('span');iconSlot.className='psg-skill-entry-icon';
+   const iconSrc=window.PS_IMAGE_FILES?.skills?.[skill.id];if(iconSrc){const icon=document.createElement('img');icon.src=iconSrc;icon.alt='';icon.width=36;icon.height=36;icon.style.objectFit='contain';iconSlot.append(icon)}summary.append(iconSlot);
    summary.append(title,tags);item.append(summary);
    const rows=document.createElement('div');rows.className='psg-skill-levels';
    for(let level=1;level<=Math.min(10,Number(skill.maxLevel)||0);level++){

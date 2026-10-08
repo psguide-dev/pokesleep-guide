@@ -15,6 +15,18 @@
 #home #teamManagerToggle{height:var(--home-row-height)}
 .psg-recipe-sticky{padding-top:0}
 
+#skillPage>.psg-skill-header{position:sticky;top:var(--psg-header-height);z-index:69;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2fr);gap:0;margin-inline:-12px;padding-inline:12px;background:var(--bg)}
+#skillPage .psg-skill-header>[data-back]{justify-content:flex-start}
+#skillPage .psg-skill-header h2{text-align:left;font-size:clamp(12px,3.6vw,18px);white-space:nowrap}
+#skillSearch{display:block;min-width:0;width:100%;height:var(--psg-ui-unit);margin:0;padding:0 10px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:16px}
+#skillIndexCount{margin:8px 0}
+.psg-skill-entry>summary{display:grid;grid-template-columns:36px minmax(0,1fr) minmax(0,.65fr);gap:10px;min-height:calc(2 * var(--psg-ui-unit));text-align:left}
+.psg-skill-entry>summary strong{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-size:clamp(14px,4vw,18px);line-height:1.35}
+.psg-skill-qualifier{font-size:.8em}
+.psg-skill-entry-icon{display:flex;align-items:center;justify-content:center;width:36px;height:36px}
+.psg-skill-entry-icon img{display:block;width:36px;height:36px;object-fit:contain}
+.psg-skill-entry>summary .psg-skill-tags{min-width:0;font-size:clamp(10px,2.8vw,13px);overflow-wrap:anywhere}
+
 main:has(#fieldDetail.active){padding-top:0}
 body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 #fieldDetail>.psg-field-detail-sticky{position:sticky;top:var(--psg-header-height);z-index:69;background:#fff;margin:0 -12px;padding:0 12px}
