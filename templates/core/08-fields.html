@@ -91,15 +91,16 @@ function berryIcon(name){
  const image=document.createElement('img');image.className='psg-master-berry-icon';image.src=src;image.alt=name;image.title=name;image.width=28;image.height=28;return image;
 }
 let favoriteBerrySlot=0,favoriteBerryField=null;
+const favoriteBerryTypes=new Map(Object.values(window.PS_CATALOG.pokemon).map(p=>[p.berry,p.type]));
 function favoriteBerryValues(){const berries=activeFieldBerries();return [0,1,2].map(i=>berries[i]||'')}
 function saveFavoriteBerryValues(values){
  fieldProfile.weekly[fieldProfile.selectedFieldId]={weekKey:currentFieldWeek(),berries:values};
- saveFieldProfile();
+ saveFieldProfile({berryOnly:true});
 }
 function chooseFavoriteBerry(name){
  if(!knownBerryNames.has(name))return;
  const values=favoriteBerryValues(),existing=values.indexOf(name);
- if(existing>=0){favoriteBerrySlot=existing;renderFavoriteBerryPicker();return;}
+ if(existing>=0){values[existing]='';favoriteBerrySlot=existing;saveFavoriteBerryValues(values);return;}
  values[favoriteBerrySlot]=name;
  const next=[1,2,3].map(n=>(favoriteBerrySlot+n)%3).find(i=>!values[i]);
  favoriteBerrySlot=next??0;saveFavoriteBerryValues(values);
@@ -113,7 +114,7 @@ function renderFavoriteBerryPicker(){
  const values=favoriteBerryValues();
  if(favoriteBerryField!==fieldProfile.selectedFieldId){favoriteBerryField=fieldProfile.selectedFieldId;favoriteBerrySlot=Math.max(0,values.findIndex(x=>!x));}
  const slots=document.getElementById('fieldBerrySlots');slots.replaceChildren();
- const berryType=name=>Object.values(window.PS_CATALOG.pokemon).find(p=>p.berry===name)?.type||'';
+ const berryType=name=>favoriteBerryTypes.get(name)||'';
  function appendBerry(button,name){const icon=berryIcon(name);if(icon)button.append(icon);const type=berryType(name),label=document.createElement('span');label.textContent=type||name||'未選択';button.append(label);}
  for(let i=0;i<3;i++){
   const button=document.createElement('button');button.type='button';button.className='psg-berry-slot';
@@ -127,7 +128,7 @@ function renderFavoriteBerryPicker(){
  const options=document.getElementById('fieldBerryOptions');options.replaceChildren();
  for(const name of knownBerryNames){
   const button=document.createElement('button');button.type='button';button.className='psg-berry-option';button.title=name;
-  const selected=values.indexOf(name);button.setAttribute('aria-pressed',String(selected>=0));button.setAttribute('aria-label',`${name}・${berryType(name)}${selected>=0?`・${['①','②','③'][selected]}に選択済み`:''}`);
+  const selected=values.indexOf(name);button.setAttribute('aria-pressed',String(selected>=0));button.setAttribute('aria-label',`${name}・${berryType(name)}${selected>=0?`・${['①','②','③'][selected]}に選択済み。押すと解除`:''}`);
   if(selected>=0){const badge=document.createElement('b');badge.className='psg-berry-order';badge.textContent=['①','②','③'][selected];button.append(badge);}
   appendBerry(button,name);button.onclick=()=>chooseFavoriteBerry(name);options.append(button);
  }
@@ -149,10 +150,10 @@ function renderFieldGallery(){
  }
 
 }
-function renderFieldControls(){
+function renderFieldControls({berryOnly=false}={}){
  syncExEffectControls();
  document.getElementById('teamBerryZone').value=String(activeBerryZones()['マゴのみ']||0);
- if(state.screen==='fieldPage'){renderFieldSpawn();renderFieldGallery();}
+ if(state.screen==='fieldPage'&&!berryOnly){renderFieldSpawn();renderFieldGallery();}
  fieldSelect.value=fieldProfile.selectedFieldId;
  homeFieldSelect.value=fieldProfile.selectedFieldId;
  homeMealSelect.value=activeMealCategory();
@@ -170,7 +171,7 @@ function renderFieldControls(){
  for(const berry of berries.filter(Boolean)){const icon=berryIcon(berry);if(icon)berryRow.append(icon);else berryRow.append(document.createTextNode(berry+' '))}
  if(!berries.filter(Boolean).length)berryRow.textContent='未設定';
  summary.replaceChildren(heading);
- if(state.screen==='fieldPage'){renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldProfile.selectedFieldId);}
+ if(state.screen==='fieldPage'&&!berryOnly){renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldProfile.selectedFieldId);}
 }
 function renderFieldEncounters(field){
  const host=document.getElementById('fieldEncounterList');if(!host)return;
@@ -224,7 +225,7 @@ function renderFieldEncounters(field){
 function selectField(id){if(id!==fieldProfile.selectedFieldId){fieldProfile.berryZone=null;document.getElementById('teamZoneSaveStatus').textContent='フィールド変更によりゾーンを0％に戻しました。'}fieldProfile.selectedFieldId=id;document.getElementById('fieldRankFilter').value='';saveFieldProfile()}
 fieldSelect.onchange=()=>selectField(fieldSelect.value);
 homeFieldSelect.onchange=()=>selectField(homeFieldSelect.value);
-document.getElementById('fieldFavoriteReset').onclick=()=>{favoriteBerrySlot=0;delete fieldProfile.weekly[fieldProfile.selectedFieldId];saveFieldProfile()};
+document.getElementById('fieldFavoriteReset').onclick=()=>{favoriteBerrySlot=0;delete fieldProfile.weekly[fieldProfile.selectedFieldId];saveFieldProfile({berryOnly:true})};
 areaBonusInput.onchange=()=>{
  fieldProfile.areaBonuses[fieldProfile.selectedFieldId]=Math.max(0,Math.min(200,Number(areaBonusInput.value)||0));
  saveFieldProfile();

@@ -44,7 +44,12 @@ function activeBerryZones(){
  const zone=fieldProfile.berryZone;
  return zone?.fieldId===fieldProfile.selectedFieldId&&zone.weekKey===currentFieldWeek()?zone.values:{};
 }
-function saveFieldProfile(){
- try{localStorage.setItem(FIELD_STORAGE_KEY,JSON.stringify(fieldProfile));renderFieldControls();renderTeamDay();renderTeamFood();return true}
- catch{fieldProfile=readFieldProfile();renderFieldControls();renderTeamFood();alert('フィールド設定を保存できませんでした。');return false}
+function saveFieldProfile({berryOnly=false}={}){
+ function refresh(){
+  renderFieldControls({berryOnly});
+  if(berryOnly&&state.screen!=='home'){teamViewDirty=true;return;}
+  renderTeamDay();renderTeamFood();
+ }
+ try{localStorage.setItem(FIELD_STORAGE_KEY,JSON.stringify(fieldProfile));refresh();return true}
+ catch{fieldProfile=readFieldProfile();refresh();alert('フィールド設定を保存できませんでした。');return false}
 }
