@@ -266,7 +266,7 @@ function renderFieldEncounters(field){
     link.title=description;link.setAttribute('aria-label',description);link.dataset.sleepStyleId=item.sleepStyleId;
     const art=document.createElement('span');art.className='psg-field-rank-face-art';
     const src=pokemon.faceImage||pokemon.image;
-    if(src){const image=document.createElement('img');image.alt=pokemon.name;image.width=40;image.height=40;image.loading='lazy';image.decoding='async';window.PS_IMAGE_LOADING.set(image,src,'pokemon');image.onerror=()=>{image.remove();art.textContent=pokemon.name};art.append(image)}else art.textContent=pokemon.name;
+    if(src){const image=document.createElement('img');image.alt=pokemon.name;image.width=40;image.height=40;image.loading='lazy';image.decoding='async';const fallback=pokemon.image&&pokemon.image!==src?pokemon.image:null;let retried=false;image.onerror=()=>{if(fallback&&!retried){retried=true;image.loading='eager';image.src=fallback;return}image.remove();art.textContent=pokemon.name};window.PS_IMAGE_LOADING.set(image,src,'pokemon');art.append(image)}else art.textContent=pokemon.name;
     const star=document.createElement('span');star.textContent=stars;link.append(art,star);
     link.onclick=event=>{if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();window.openPokemonDetail?.(pokemon.no)};
     grid.append(link);
