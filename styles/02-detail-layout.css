@@ -184,10 +184,13 @@
 .psg-day-field-link span{min-width:0}.psg-day-field-link b{font-size:1.4em}
 #teamFieldSummary{flex:1;text-align:center;display:flex;flex-direction:column;gap:5px}
 .psg-day-field-berries{display:flex;align-items:center;justify-content:center;gap:10px}
-.psg-field-settings>label{display:block;margin:12px 0 5px;font-weight:700}
-.psg-field-settings>select{width:100%;font:inherit;padding:9px;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:10px}
-.psg-field-percent{display:flex;align-items:center;gap:6px}
-#fieldAreaBonus{font:inherit;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:9px;padding:8px;width:5.5em;text-align:right}
+.psg-field-selection-row{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:8px;align-items:end;margin-top:10px}
+.psg-field-selection-row>select{min-width:0;width:100%;box-sizing:border-box;min-height:40px;font:inherit;padding:8px;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:10px}
+.psg-field-bonus{min-width:0}
+.psg-field-bonus>label{display:block;margin-bottom:4px;font-weight:700;font-size:.85em}
+.psg-field-percent{display:flex;align-items:center;gap:2px;min-width:0}
+.psg-field-percent>span{font-size:.85em;flex-shrink:0}
+#fieldAreaBonus{min-width:0;width:100%;flex:1;box-sizing:border-box;min-height:40px;font:inherit;color:#111;background:#fff;border:1px solid #d7e0da;border-radius:9px;padding:8px 4px;text-align:right}
 .psg-field-week{margin:15px 0 5px;color:#617269;font-size:.85em}
 .psg-field-settings .psg-day-field{margin:8px 0}.psg-field-settings .psg-day-berries{margin-bottom:0}
 .psg-field-reset{margin-top:8px;color:#316caa}.psg-field-reset[hidden]{display:none}
