@@ -16,10 +16,10 @@
 main:has(#fieldDetail.active){padding-top:0}
 body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 #fieldDetail>.psg-field-detail-sticky{position:sticky;top:var(--psg-header-height);z-index:69;background:#fff;margin:0 -12px;padding:0 12px}
-#fieldDetail .psg-field-detail-sticky>.psg-subpage-head{height:var(--psg-page-header-height);margin:0 -12px;padding:0 12px;background:#fff;border-bottom:0}
+#fieldDetail .psg-field-detail-sticky>.psg-subpage-head{display:grid;grid-template-columns:80px minmax(0,1fr) 80px;gap:0;height:var(--psg-page-header-height);margin:0 -12px;padding:0 12px;background:#fff;border-bottom:0}
 #fieldDetail .psg-field-detail-sticky>.psg-field-detail-overview{height:calc(3 * var(--psg-ui-unit));margin:0 -12px;padding:0;align-items:center}
 #fieldDetail .psg-field-detail-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,calc(1.5 * var(--psg-ui-unit)));height:100%}
-#fieldDetail .psg-field-detail-heading{display:flex;flex:1;align-items:center;gap:6px;min-width:0}
+#fieldDetail .psg-field-detail-heading{display:contents}
 #fieldDetail .psg-field-detail-settings{flex:0 0 80px;width:80px}
 #fieldDetail #fieldDetailSleepSummary{height:calc(1.5 * var(--psg-ui-unit))}
 #fieldDetailBerries{grid-column:1/-1;box-sizing:border-box;min-width:0;height:calc(1.5 * var(--psg-ui-unit))}
