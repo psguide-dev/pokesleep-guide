@@ -179,13 +179,23 @@ function openFieldDetail(id){
 function renderFieldDetail(){
  const field=window.PS_CATALOG.fields[fieldDetailId];if(!field)return;
  document.getElementById('fieldDetailName').textContent=field.name;
+ document.getElementById('fieldDetailBonus').value=String(fieldProfile.areaBonuses[fieldDetailId]||0);
  const art=document.getElementById('fieldDetailArt');art.replaceChildren();
  const src=window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=96;image.height=112;art.append(image);}
  const ids=new Set((field.encounters||[]).map(x=>x.sleepStyleId)),found=readSleepBackup();
- document.getElementById('fieldDetailSleepSummary').textContent=`収録寝顔：${ids.size}種類 ／ 発見済み：${[...ids].filter(id=>found[id]).length}種類`;
+ const discovered=[...ids].filter(id=>found[id]).length,summary=document.getElementById('fieldDetailSleepSummary');
+ summary.textContent=`寝顔 ${discovered} / ${ids.size}`;summary.setAttribute('aria-label',`寝顔：発見済み${discovered}種類／収録${ids.size}種類`);
  renderFieldSpawn();renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldDetailId);
 }
-window.PS_FIELD_DETAIL={open:openFieldDetail,url:fieldDetailURL,get fieldId(){return fieldDetailId}};
+function saveFieldDetailBonus(value){
+ if(!fieldDetailId||!window.PS_CATALOG.fields[fieldDetailId])return false;
+ const input=document.getElementById('fieldDetailBonus');
+ if(String(value).trim()===''||!Number.isFinite(Number(value))){input.value=String(fieldProfile.areaBonuses[fieldDetailId]||0);return false;}
+ fieldProfile.areaBonuses[fieldDetailId]=Math.max(0,Math.min(200,Number(value)));
+ const saved=saveFieldProfile({berryOnly:true});input.value=String(fieldProfile.areaBonuses[fieldDetailId]||0);return saved;
+}
+document.getElementById('fieldDetailBonus').onchange=event=>saveFieldDetailBonus(event.currentTarget.value);
+window.PS_FIELD_DETAIL={open:openFieldDetail,url:fieldDetailURL,setBonus:saveFieldDetailBonus,get fieldId(){return fieldDetailId}};
 window.PS_PAGE_RENDERERS??={};window.PS_PAGE_RENDERERS.fieldDetail=renderFieldDetail;
 function renderFieldEncounters(field){
  const host=document.getElementById('fieldEncounterList');if(!host)return;
