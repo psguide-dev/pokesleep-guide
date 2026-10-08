@@ -355,3 +355,9 @@
 #fieldDetailSleepSummary{font-size:13px;line-height:1.4;white-space:nowrap;text-align:center}
 
 .psg-field-rank-section{border-top:1px solid #dde5df;padding:10px 0}.psg-field-rank-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;margin:0}.psg-field-rank-faces{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:8px}.psg-field-rank-face{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:5px 2px;border:1px solid #dde5df;border-radius:8px;color:inherit;text-decoration:none;font-size:12px}.psg-field-rank-face-art{display:flex;align-items:center;justify-content:center;width:100%;min-height:40px;font-size:10px;text-align:center;overflow-wrap:anywhere}.psg-field-rank-face-art img{width:40px;height:40px;object-fit:contain}
+
+.psg-field-detail-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:12px 0;border-bottom:1px solid #cbd5e1}
+.psg-field-detail-tabs button{font:inherit;font-size:14px;font-weight:700;min-height:44px;padding:8px 2px;border:0;border-bottom:3px solid transparent;background:transparent;color:#64748b;cursor:pointer;white-space:nowrap}
+.psg-field-detail-tabs button[aria-selected="true"]{color:#1768a6;border-bottom-color:#2f80c9;background:#f1f7ff}
+.psg-field-detail-tabs button:focus-visible{outline:2px solid #2f80c9;outline-offset:-2px}
+#fieldDetail [role="tabpanel"][hidden]{display:none}
