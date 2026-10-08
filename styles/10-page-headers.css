@@ -24,7 +24,7 @@ body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 #fieldDetailBerries{grid-column:1/-1;box-sizing:border-box;min-width:0;height:calc(2 * var(--psg-ui-unit))}
 .psg-field-detail-berry-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;height:100%}
 .psg-field-detail-berry{display:flex;align-items:center;justify-content:center;min-width:0;height:100%;font-size:10px;text-align:center}
-.psg-field-detail-berry img,.psg-field-detail-berry svg{width:100%;height:100%;object-fit:contain}
+.psg-field-detail-berry img,.psg-field-detail-berry svg{width:100%!important;height:100%!important;object-fit:contain}
 #fieldDetail .psg-field-detail-sticky>.psg-field-detail-tabs{box-sizing:border-box;height:var(--psg-ui-unit);margin:0;background:#fff}
 #fieldDetail .psg-field-detail-tabs button{height:100%;min-height:0;padding:0 2px}
 #fieldDetail [role="tabpanel"]{padding-top:8px;scroll-margin-top:calc(var(--psg-header-height) + 5.5 * var(--psg-ui-unit))}
