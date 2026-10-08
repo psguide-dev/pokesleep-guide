@@ -14,5 +14,12 @@
 #home .psg-home-heading>.psg-screen-title,#home #teamManagerToggle{box-sizing:border-box;height:var(--psg-page-header-height)}
 
 main:has(#fieldDetail.active){padding-top:0}
-#fieldDetail>.psg-subpage-head{position:sticky;top:var(--psg-header-height);z-index:69;background:#fff;margin:0 -12px 3px;padding:0 12px;border-bottom:1px solid var(--line)}
 body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
+#fieldDetail>.psg-field-detail-sticky{position:sticky;top:var(--psg-header-height);z-index:69;background:var(--bg);margin:0 -12px;padding:0 12px}
+#fieldDetail .psg-field-detail-sticky>.psg-subpage-head{height:var(--psg-page-header-height);margin:0 -12px;padding:0 12px;background:#fff;border-bottom:1px solid var(--line)}
+#fieldDetail .psg-field-detail-sticky>.psg-field-detail-overview{height:calc(3 * var(--psg-ui-unit));margin:0;padding:0 7px;align-items:center}
+#fieldDetail .psg-field-detail-info{display:flex;align-items:center;height:100%}
+#fieldDetail .psg-field-detail-settings{width:100%}
+#fieldDetail .psg-field-detail-sticky>.psg-field-detail-tabs{box-sizing:border-box;height:var(--psg-ui-unit);margin:0;background:var(--bg)}
+#fieldDetail .psg-field-detail-tabs button{height:100%;min-height:0;padding:0 2px}
+#fieldDetail [role="tabpanel"]{padding-top:8px;scroll-margin-top:calc(var(--psg-header-height) + 5.5 * var(--psg-ui-unit))}
