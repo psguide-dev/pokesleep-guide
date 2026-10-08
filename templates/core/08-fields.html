@@ -182,6 +182,14 @@ function renderFieldDetail(){
  document.getElementById('fieldDetailBonus').value=String(fieldProfile.areaBonuses[fieldDetailId]||0);
  const art=document.getElementById('fieldDetailArt');art.replaceChildren();
  const src=fieldDetailId==='greengrass'?'assets/fields/detail/wakakusa_main_detail.webp':window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=fieldDetailId==='greengrass'?732:96;image.height=fieldDetailId==='greengrass'?432:112;art.append(image);}
+ const berryHost=document.getElementById('fieldDetailBerries');berryHost.replaceChildren();
+ const berryTitle=document.createElement('span');berryTitle.className='psg-field-detail-berry-title';berryTitle.textContent='好みきのみ';berryHost.append(berryTitle);
+ const berryRow=document.createElement('div');berryRow.className='psg-field-detail-berry-row';berryHost.append(berryRow);
+ const entry=fieldProfile.weekly[fieldDetailId],berries=entry?.weekKey===currentFieldWeek()?entry.berries:(field.favoriteBerries||[]);
+ for(let i=0;i<3;i++){
+  const name=berries[i],slot=document.createElement('span');slot.className='psg-field-detail-berry';slot.setAttribute('aria-label',`${i+1}：${name||'未設定'}${field.mode==='expert'&&i===0?'（メイン）':''}`);
+  const icon=name?berryIcon(name):null;if(icon)slot.append(icon);else slot.textContent=name||'未設定';berryRow.append(slot);
+ }
  const ids=new Set((field.encounters||[]).map(x=>x.sleepStyleId)),found=readSleepBackup();
  const discovered=[...ids].filter(id=>found[id]).length,summary=document.getElementById('fieldDetailSleepSummary');
  summary.textContent=`寝顔 ${discovered} / ${ids.size}`;summary.setAttribute('aria-label',`寝顔：発見済み${discovered}種類／収録${ids.size}種類`);
