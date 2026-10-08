@@ -346,11 +346,11 @@
 .psg-berry-details[open]>.psg-berry-options{margin-top:6px}
 
 .psg-field-gallery-title{font-size:16px;margin:16px 0 8px}
-.psg-field-detail-overview{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3fr);align-items:center;gap:10px}
-#fieldDetailArt{aspect-ratio:4/5;min-width:0;position:relative}
+.psg-field-detail-overview{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3fr);align-items:stretch;gap:10px;box-sizing:border-box;height:calc(2 * var(--psg-ui-unit));padding:0 8px}
+#fieldDetailArt{height:100%;min-width:0;position:relative}
 #fieldDetailArt>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain}
-.psg-field-detail-info{min-width:0}
-#fieldDetailName{font-size:16px;line-height:1.35;margin:0 0 8px;overflow-wrap:anywhere}
+.psg-field-detail-info{min-width:0;display:grid;grid-template-rows:repeat(2,minmax(0,1fr))}
+#fieldDetailName{display:flex;align-items:center;font-size:16px;line-height:1.2;margin:0;min-width:0;white-space:nowrap}
 .psg-field-detail-settings{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:center;gap:6px}
 #fieldDetailSleepSummary{font-size:13px;line-height:1.4;white-space:nowrap;text-align:center}
 
@@ -361,3 +361,6 @@
 .psg-field-detail-tabs button[aria-selected="true"]{color:#1768a6;border-bottom-color:#2f80c9;background:#f1f7ff}
 .psg-field-detail-tabs button:focus-visible{outline:2px solid #2f80c9;outline-offset:-2px}
 #fieldDetail [role="tabpanel"][hidden]{display:none}
+
+.psg-field-detail-settings .psg-field-percent{height:100%;max-height:var(--psg-ui-unit)}
+#fieldDetailBonus{height:100%}
