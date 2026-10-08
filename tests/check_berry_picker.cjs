@@ -32,7 +32,7 @@ assert(html.includes('.psg-berry-options{display:grid;grid-template-columns:repe
 console.log('Toggle on/off and deferred hidden-team calculation with storage rollback passed');
 const fieldSource=fs.readFileSync('templates/core/08-fields.html','utf8');const controlSource=fieldSource.slice(fieldSource.indexOf('function renderFieldControls('),fieldSource.indexOf('function renderFieldEncounters('));
 let heavy=0;const controlNodes={};const controls={state:{screen:'fieldPage'},fieldProfile:{selectedFieldId:'greengrass',weekly:{},areaBonuses:{}},window:{PS_CATALOG:{fields:{greengrass:{favoriteMode:'weekly_random'}}},PS_RENDER_FIELD_RANKING:()=>heavy++},document:{getElementById:id=>controlNodes[id]??=new Node(),createElement:()=>new Node(),createTextNode:x=>x},fieldSelect:{},homeFieldSelect:{},homeMealSelect:{},areaBonusInput:{},berryChoices:[{},{},{}],syncExEffectControls:()=>{},activeBerryZones:()=>({}),renderFieldSpawn:()=>heavy++,renderFieldGallery:()=>heavy++,renderFieldEncounters:()=>heavy++,activeMealCategory:()=>'',activeFieldBerries:()=>['A','B','C'],renderFavoriteBerryPicker:()=>{},currentFieldWeek:()=> '2026-10-05',berryIcon:()=>null};
-vm.createContext(controls);vm.runInContext(controlSource,controls);controls.renderFieldControls({berryOnly:true});assert.equal(heavy,0);controls.renderFieldControls();assert.equal(heavy,4);
+vm.createContext(controls);vm.runInContext(controlSource,controls);controls.renderFieldControls({berryOnly:true});assert.equal(heavy,0);controls.renderFieldControls();assert.equal(heavy,1);
 console.log('Berry-only refresh skips spawn/gallery/encounter/ranking work; full field refresh retains it');
 
 assert(!html.includes('id="fieldWeekLabel"'));assert(!html.includes('id="fieldBerryPickerStatus"'));

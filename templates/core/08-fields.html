@@ -136,22 +136,22 @@ function renderFieldGallery(){
  for(const id of fieldOrder){
   const field=window.PS_CATALOG.fields[id];if(!field)continue;
   if(field.mode==='expert'&&!exHeadingAdded){const heading=document.createElement('h3');heading.className='psg-field-ex-heading';heading.textContent='EXフィールド';host.append(heading);exHeadingAdded=true;}
-  const button=document.createElement('button');button.type='button';button.className='psg-field-choice';button.dataset.fieldId=id;
-  button.setAttribute('aria-pressed',String(id===fieldProfile.selectedFieldId));
+  const button=document.createElement('a');button.href=fieldDetailURL(id);button.className='psg-field-choice';button.dataset.fieldId=id;
+  button.setAttribute('aria-label',field.name+'の詳細を見る');
   const image=window.PS_IMAGE_FILES.fields[id];
   if(image){const img=document.createElement('img');img.src=image;img.alt='';img.width=76;img.height=86;button.append(img)}
   const label=document.createElement('div'),name=document.createElement('strong');name.textContent=field.name;label.append(name);
   const favorites=document.createElement('div');favorites.className='psg-field-berry-icons';
   for(const berry of field.favoriteBerries||[]){const icon=berryIcon(berry);if(icon)favorites.append(icon)}
   if(favorites.childElementCount)label.append(favorites);button.append(label);
-  button.onclick=()=>{fieldSelect.value=id;fieldSelect.dispatchEvent(new Event('change'))};host.append(button);
+  button.onclick=event=>{if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();openFieldDetail(id);};host.append(button);
  }
 
 }
 function renderFieldControls({berryOnly=false}={}){
  syncExEffectControls();
  document.getElementById('teamBerryZone').value=String(activeBerryZones()['マゴのみ']||0);
- if(state.screen==='fieldPage'&&!berryOnly){renderFieldSpawn();renderFieldGallery();}
+ if(state.screen==='fieldPage'&&!berryOnly)renderFieldGallery();
  fieldSelect.value=fieldProfile.selectedFieldId;
  homeFieldSelect.value=fieldProfile.selectedFieldId;
  homeMealSelect.value=activeMealCategory();
@@ -168,8 +168,25 @@ function renderFieldControls({berryOnly=false}={}){
  for(const berry of berries.filter(Boolean)){const icon=berryIcon(berry);if(icon)berryRow.append(icon);else berryRow.append(document.createTextNode(berry+' '))}
  if(!berries.filter(Boolean).length)berryRow.textContent='未設定';
  summary.replaceChildren(heading);
- if(state.screen==='fieldPage'&&!berryOnly){renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldProfile.selectedFieldId);}
 }
+let fieldDetailId=null;
+function fieldDetailURL(id){const target=new URL('review.html',location.href);target.searchParams.set('screen','fieldDetail');target.searchParams.set('field',id);return target.href;}
+function openFieldDetail(id){
+ if(!window.PS_CATALOG.fields[id])return false;
+ if(fieldDetailId!==id)document.getElementById('fieldRankFilter').value='';
+ fieldDetailId=id;window.PS.go('fieldDetail');return true;
+}
+function renderFieldDetail(){
+ const field=window.PS_CATALOG.fields[fieldDetailId];if(!field)return;
+ document.getElementById('fieldDetailName').textContent=field.name;
+ const art=document.getElementById('fieldDetailArt');art.replaceChildren();
+ const src=window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=96;image.height=112;art.append(image);}
+ const ids=new Set((field.encounters||[]).map(x=>x.sleepStyleId)),found=readSleepBackup();
+ document.getElementById('fieldDetailSleepSummary').textContent=`収録寝顔：${ids.size}種類 ／ 発見済み：${[...ids].filter(id=>found[id]).length}種類`;
+ renderFieldSpawn();renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldDetailId);
+}
+window.PS_FIELD_DETAIL={open:openFieldDetail,url:fieldDetailURL,get fieldId(){return fieldDetailId}};
+window.PS_PAGE_RENDERERS??={};window.PS_PAGE_RENDERERS.fieldDetail=renderFieldDetail;
 function renderFieldEncounters(field){
  const host=document.getElementById('fieldEncounterList');if(!host)return;
  host.replaceChildren();
@@ -219,7 +236,7 @@ function renderFieldEncounters(field){
  }
  if(!visible.length){const p=document.createElement('p');p.className='note';p.textContent='このランクまでに収録済みの寝顔はありません。';host.append(p)}
 }
-function selectField(id){if(id!==fieldProfile.selectedFieldId){fieldProfile.berryZone=null;document.getElementById('teamZoneSaveStatus').textContent='フィールド変更によりゾーンを0％に戻しました。'}fieldProfile.selectedFieldId=id;document.getElementById('fieldRankFilter').value='';saveFieldProfile()}
+function selectField(id){if(id!==fieldProfile.selectedFieldId){fieldProfile.berryZone=null;document.getElementById('teamZoneSaveStatus').textContent='フィールド変更によりゾーンを0％に戻しました。'}fieldProfile.selectedFieldId=id;saveFieldProfile()}
 fieldSelect.onchange=()=>selectField(fieldSelect.value);
 homeFieldSelect.onchange=()=>selectField(homeFieldSelect.value);
 document.getElementById('fieldFavoriteReset').onclick=()=>{favoriteBerrySlot=0;delete fieldProfile.weekly[fieldProfile.selectedFieldId];saveFieldProfile({berryOnly:true})};

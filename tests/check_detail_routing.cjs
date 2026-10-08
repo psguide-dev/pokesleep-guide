@@ -49,3 +49,10 @@ const goSource=navSource.slice(navSource.indexOf('function go('),navSource.index
 const navContext={state:{screen:'dex',history:[]},window:{PS_DEX_ROUTE:stale.route,scrollTo:()=>{}},screens:[],tabs:[],teamViewDirty:false,dexListDirty:false,boxListDirty:false,renderFieldControls:()=>{},renderDex:()=>{},renderBox:()=>{},renderTeam:()=>{},requestAnimationFrame:()=>{}};
 vm.createContext(navContext);vm.runInContext(goSource,navContext);navContext.go('info');assert.equal(stale.location.searchParams.get('screen'),'info');
 console.log('Current-page URL synchronization, reload after Dex return, information subpages and Box reload fallback passed');
+
+const fieldRoute=setup('https://example.test/guide/review.html?screen=fieldDetail&field=cyan_ex');
+fieldRoute.window.PS_FIELD_DETAIL={fieldId:'cyan_ex',open:id=>{fieldRoute.window.PS_FIELD_DETAIL.fieldId=id;fieldRoute.window.PS.go('fieldDetail');return true}};
+fieldRoute.listeners.DOMContentLoaded();assert.equal(fieldRoute.window.PS.state.screen,'fieldDetail');assert.equal(fieldRoute.location.searchParams.get('field'),'cyan_ex');fieldRoute.route.capture();
+const pokemonFromField=setup('https://example.test/guide/pokemon.html?species=0001_default');pokemonFromField.route.returnToApp();assert.equal(pokemonFromField.assigned[0],'https://example.test/guide/review.html?screen=fieldDetail&restore=dex&field=cyan_ex');
+fieldRoute.window.PS.go('fieldPage');assert.equal(fieldRoute.location.searchParams.has('field'),false);
+console.log('Field detail direct URL, reload target and return from Pokémon detail preserve browsed field');

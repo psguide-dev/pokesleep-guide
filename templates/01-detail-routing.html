@@ -10,7 +10,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
  if(isDetail)document.documentElement.classList.add('psg-pokemon-page');
  function read(){try{const value=JSON.parse(sessionStorage.getItem(KEY)||'null');return value&&typeof value==='object'?value:null}catch{return null}}
  function write(value){try{sessionStorage.setItem(KEY,JSON.stringify(value))}catch{}}
- const screens=new Set(['startPage','dex','home','box','info','recipePage','skillPage','fieldPage','ingredientPage','nightcapPage','accountPage','bookshelfPage','expPage','sourcesPage','rankingPage','islandRankingPage','typeRankingPage','skillEnergyRankingPage','ingredientRankingPage']);
+ const screens=new Set(['startPage','dex','home','box','info','recipePage','skillPage','fieldPage','fieldDetail','ingredientPage','nightcapPage','accountPage','bookshelfPage','expPage','sourcesPage','rankingPage','islandRankingPage','typeRankingPage','skillEnergyRankingPage','ingredientRankingPage']);
  // This runs before the default home markup is parsed, preventing a home flash
  // while the destination, filters and scroll position are restored.
  if(!isDetail&&screens.has(new URLSearchParams(location.search).get('screen')))document.documentElement.classList.add('psg-route-pending');
@@ -18,7 +18,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   if(isDetail)return;
   const ps=window.PS;if(!ps)return;
   const filters=ps.state.filters;
-  write({origin:screens.has(origin||ps.state.screen)?origin||ps.state.screen:'dex',search:document.getElementById('dexSearch').value,types:[...filters.types],ingredients:[...filters.ingredients],specs:[...filters.specs],scroll:Math.max(0,window.scrollY||0),history:ps.state.history.filter(x=>screens.has(x)),savedAt:Date.now()});
+  write({origin:screens.has(origin||ps.state.screen)?origin||ps.state.screen:'dex',search:document.getElementById('dexSearch').value,types:[...filters.types],ingredients:[...filters.ingredients],specs:[...filters.specs],scroll:Math.max(0,window.scrollY||0),history:ps.state.history.filter(x=>screens.has(x)),field:ps.state.screen==='fieldDetail'?window.PS_FIELD_DETAIL?.fieldId:null,savedAt:Date.now()});
  }
  function url(species,tab='ability'){
   const target=new URL('pokemon.html',location.href);target.searchParams.set('species',String(species));
@@ -31,7 +31,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
  }
  function returnToApp(screen){
   const target=new URL('review.html',location.href);target.searchParams.set('screen',screens.has(screen)?screen:read()?.origin||'dex');
-  target.searchParams.set('restore','dex');location.assign(target.href);
+  target.searchParams.set('restore','dex');if(target.searchParams.get('screen')==='fieldDetail'&&read()?.field)target.searchParams.set('field',read().field);location.assign(target.href);
  }
  function syncScreen(screen){
   if(isDetail)return;
@@ -40,6 +40,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   if(!screens.has(screen))return;
   const target=new URL(location.href);target.searchParams.set('screen',screen);
   if(screen!=='dex')target.searchParams.delete('restore');
+  if(screen==='fieldDetail'&&window.PS_FIELD_DETAIL?.fieldId)target.searchParams.set('field',window.PS_FIELD_DETAIL.fieldId);else target.searchParams.delete('field');
   if(target.href!==location.href)history.replaceState(history.state,'',target.href);
  }
  function restore(){
@@ -65,7 +66,8 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   }else{
    const screen=params.get('screen');if(!screens.has(screen))return;
    const saved=params.get('restore')==='dex'?restore():null;
-   window.PS.go(screen,false);if(screen===saved?.origin)restorePosition(saved);
+   if(screen==='fieldDetail'){if(!window.PS_FIELD_DETAIL?.open(params.get('field')))window.PS.go('fieldPage',false);}else window.PS.go(screen,false);
+   if(screen===saved?.origin)restorePosition(saved);
   }
   }finally{
    // Release after the queued scroll restoration, before the next paint.

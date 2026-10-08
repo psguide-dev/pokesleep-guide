@@ -247,7 +247,7 @@
 /* Field portraits reuse the approved September 29 pixel artwork. */
 .psg-field-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:16px}
 .psg-field-ex-heading{grid-column:1/-1;margin:8px 0 0;padding-top:12px;border-top:1px solid #dce7df;font-size:15px;color:#253c30}
-.psg-field-choice{display:flex;align-items:center;gap:7px;min-width:0;width:100%;padding:8px;text-align:left;border:1px solid #dce7df;border-radius:16px;background:#fff;color:#253c30;font:inherit;cursor:pointer}
+.psg-field-choice{display:flex;text-decoration:none;box-sizing:border-box;align-items:center;gap:7px;min-width:0;width:100%;padding:8px;text-align:left;border:1px solid #dce7df;border-radius:16px;background:#fff;color:#253c30;font:inherit;cursor:pointer}
 .psg-field-choice>img{width:48px;height:64px;object-fit:contain;flex-shrink:0;image-rendering:auto}
 .psg-field-choice>div{min-width:0}
 .psg-field-choice strong{font-size:12px;overflow-wrap:anywhere;line-height:1.35;display:block}
@@ -344,3 +344,8 @@
 .psg-berry-details{margin-top:8px}
 .psg-berry-details>summary{cursor:pointer;min-height:32px;line-height:32px;color:#316caa;font-size:.85em}
 .psg-berry-details[open]>.psg-berry-options{margin-top:6px}
+
+.psg-field-gallery-title{font-size:16px;margin:16px 0 8px}
+.psg-field-detail-overview{display:flex;align-items:center;gap:12px}
+#fieldDetailArt>img{display:block;width:72px;height:88px;object-fit:contain}
+#fieldDetailSleepSummary{font-size:14px;line-height:1.6}
