@@ -1,0 +1,6 @@
+   for(const control of [skill,scope,scenario])control.onchange=render;
+   render();
+  }catch(e){host.textContent=e.message;const retry=document.createElement('button');retry.type='button';retry.className='btn';retry.textContent='再読み込み';retry.onclick=()=>window.PS_PAGE_RENDERERS.sameSkillRankingPage();host.append(retry)}
+ };
+})();
+</script>

@@ -1,0 +1,4 @@
+const RECIPE_STOCK_KEY='psn-recipe-stock-v1';
+function readRecipeStock(){
+ try{const raw=JSON.parse(localStorage.getItem(RECIPE_STOCK_KEY)||'{}');return Object.fromEntries(Object.entries(raw).filter(([,v])=>Number.isFinite(v)&&v>=0))}catch{return {}}
+}

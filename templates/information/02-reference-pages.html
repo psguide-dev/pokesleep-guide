@@ -1,0 +1,102 @@
+(()=>{
+ window.PS_BOOKSHELF={openReference(id){
+  const reference=document.getElementById(id);if(!reference)return;
+  window.PS.go('bookshelfPage');
+  for(let node=reference;node&&node.id!=='bookshelfContent';node=node.parentElement)if(node.tagName==='DETAILS')node.open=true;
+  reference.scrollIntoView({block:'start'});
+ }};
+ window.PS_PAGE_RENDERERS??={};
+ window.PS_PAGE_RENDERERS.accountPage=()=>{
+  for(const [id,kind] of [['autoPokemonImages','pokemon'],['autoSleepImages','sleep']]){const input=document.getElementById(id);input.checked=window.PS_IMAGE_LOADING.allowed(kind);input.onchange=()=>{const ok=window.PS_IMAGE_LOADING.save({[kind]:input.checked});document.getElementById('imageLoadingStatus').textContent=ok?'保存しました。再読み込みで適用します。':'設定を保存できませんでした。';}}
+  document.getElementById('applyImageLoading').onclick=()=>location.reload();
+  const select=document.getElementById('teamPotBase');
+  if(select.options.length===1)for(const row of window.PS_CATALOG.cooking.pot['拡張表']){const option=document.createElement('option');option.value=String(row['容量']);option.textContent=`${row['容量']}個`;select.append(option)}
+  const base=window.PS.cookingContext().base;select.value=base===null?'':String(base);
+ };
+
+ const rankings=window.PS_BERRY_RANKINGS;
+ function rankConditions(host,island){
+  const note=document.createElement('p');note.className='note';note.textContent=`暫定のきのみエナジー／時。Lv60・性格無補正・サブスキルなし・げんき81以上維持・FB0％・満杯前の随時回収。${island?'通常の好物3種を2倍で比較。':'好物補正なし。'}キャンチケ・リボン・イベント・メインスキル・料理は含みません。`;host.append(note);
+  const details=document.createElement('details'),title=document.createElement('summary');title.textContent='比較条件・未確定事項';details.append(title);
+  const p=document.createElement('p');p.textContent='2026/10/07の資料。登録248姿＋ユーザー提供モロバレルの249姿から比較。確率は推定を含み、全実装種の網羅は未確認。タマゲタケは入力不足で除外。1日予想を24で割った値ではありません。同値は同順位、掲載境界の同値も表示します。Lv補正後のおてつだい時間は資料の秒単位切り捨てを採用していますが、ゲーム仕様としての根拠は未確認です。';details.append(p);host.append(details);
+ }
+ function rankTable(host,entries){
+  if(host.tagName==='DETAILS'&&!host.open){host.addEventListener('toggle',()=>{if(host.open&&!host._rankingBuilt){host._rankingBuilt=true;rankTable(host,entries)}});return;}
+  const wrap=document.createElement('div');wrap.className='psg-cooking-table-wrap';const table=document.createElement('table');table.className='psg-cooking-table';
+  const head=document.createElement('thead'),tr=document.createElement('tr');for(const label of ['順位','ポケモン','エナジー／時']){const th=document.createElement('th');th.scope='col';th.textContent=label;tr.append(th)}head.append(tr);table.append(head);
+  const body=document.createElement('tbody');for(const entry of entries){const row=document.createElement('tr');for(const value of [entry.rank,entry.name,window.PS_NUMBERS.display(entry.energyPerHour)]){const td=document.createElement('td');td.textContent=value;row.append(td)}body.append(row)}table.append(body);wrap.append(table);host.append(wrap);
+ }
+ window.PS_PAGE_RENDERERS.typeRankingPage=()=>{
+  const host=document.getElementById('typeRankingContent');if(host.childElementCount)return;host.replaceChildren();rankConditions(host,false);
+  for(const group of rankings.types){const section=document.createElement('details');section.className='psg-bookshelf-section';const title=document.createElement('summary');title.textContent=group.type+' 上位5体';section.append(title);rankTable(section,group.entries);host.append(section)}
+ };
+ window.PS_RENDER_FIELD_RANKING=(id,target)=>{
+  const host=target||document.getElementById('fieldRankingContent');if(!host)return;host.replaceChildren();
+  const group=rankings.islands.find(g=>g.id===id);
+  if(!group){const p=document.createElement('p');p.className='note';p.textContent=id.endsWith('_ex')?'EXは週の好物と効果で変わるため、固定ランキングは未掲載です。':'ワカクサ本島は週の好物で変わるため、固定ランキングは未掲載です。';host.append(p);return}
+  const heading=document.createElement('h3');heading.textContent=group.name+' 上位10体';host.append(heading);rankConditions(host,true);rankTable(host,group.entries);window.PS_RENDER_FIELD_TRIAL?.(id,host);
+ };
+
+ let ready=false;
+ window.PS_PAGE_RENDERERS.expPage=()=>{
+  if(ready)return;
+  const catalog=window.PS_CATALOG,host=document.getElementById('expContent');
+  if(!catalog?.growth){host.textContent='経験値資料は未登録です。';return;}
+  function section(title){const details=document.createElement('details');details.className='psg-exp-section';const summary=document.createElement('summary');summary.textContent=title;details.append(summary);host.append(details);return details;}
+  function note(parent,text){const p=document.createElement('p');p.className='note';p.textContent=text;parent.append(p);}
+  function source(){}
+  function table(parent,columns,rows){
+   const wrap=document.createElement('div');wrap.className='psg-cooking-table-wrap';const element=document.createElement('table');element.className='psg-cooking-table';
+   const head=document.createElement('thead'),tr=document.createElement('tr');for(const name of columns){const th=document.createElement('th');th.scope='col';th.textContent=name;tr.append(th)}head.append(tr);element.append(head);
+   const body=document.createElement('tbody');element.append(body);wrap.append(element);parent.append(wrap);
+   const update=values=>{body.replaceChildren();for(const row of values){const tr=document.createElement('tr');for(const value of row){const td=document.createElement('td');td.textContent=value==null?'未確認':typeof value==='number'?value.toLocaleString('ja-JP'):value;tr.append(td)}body.append(tr)}};
+   update(rows);return update;
+  }
+  const data=catalog.growth,pokemon=section('ポケモンの経験値・ゆめのかけら');
+  const label=document.createElement('label');label.textContent='必要EXPタイプ ';
+  const select=document.createElement('select');select.setAttribute('aria-label','必要EXPタイプ');
+  for(const [type,multiplier]of Object.entries(data.expTypeMultipliers)){const option=document.createElement('option');option.value=type;option.textContent=`${type}（通常の${multiplier}倍）`;select.append(option)}label.append(select);pokemon.append(label);
+  note(pokemon,'通常アメ・性格無補正。かけらはアメ1個に必要な費用。育成の合計費用はボックスの個体詳細で確認できます。');
+  const update=table(pokemon,['Lv','次LvまでのEXP','次Lvの累計EXP','アメ1個のEXP','アメ1個のかけら'],[]);
+  const render=()=>update(data.rows.filter(r=>r.target_level<=data.levelCap).map(row=>{
+   const conflict=data.sourceTableConflicts?.some(c=>String(c.exp_type)===select.value&&c.target_level===row.target_level);
+   const exp=row.exp_types?.[select.value]?.exp_to_next;
+   return [`${row.current_level} → ${row.target_level}`,conflict&&exp!=null?`${exp.toLocaleString('ja-JP')} ※`:exp,row.exp_types?.[select.value]?.cumulative_exp_at_target,row.candy_exp?.neutral,row.dream_shards_per_candy_at_current_level];
+  }));select.onchange=render;render();
+  note(pokemon,'※ 資料の表と累計丸めによる値に差があります。現在は登録済みの累計丸め値を表示しています。');source(pokemon,data.sources?.level);source(pokemon,data.sources?.exp_type);
+  const user=section('ユーザーの経験値（リサーチEXP）'),ranks=catalog.researchRanks;
+  if(ranks){table(user,['ランク','必要EXP','累計EXP'],ranks.rows.map(r=>[r.rank,r.expToReach,r.cumulativeExp]));note(user,`ランク到達に必要なEXP。攻略・検証資料の参考値（確認日 ${ranks.checkedAt}）。`);source(user,ranks.source)}else note(user,'リサーチEXP資料は未登録です。');
+  const pot=section('鍋容量の拡張コスト'),potData=catalog.cooking?.pot;
+  if(potData){table(pot,['容量','寝顔種類','拡張のかけら','累計かけら'],potData['拡張表'].map(r=>[r['容量'],r['必要寝顔種類数'],r['拡張1回のゆめのかけら'],r['初期からの累計ゆめのかけら']]));note(pot,`通常鍋の容量。資料確認日 ${potData['確認日']}。`);for(const url of potData['出典']||[])source(pot,url)}else note(pot,'鍋の拡張費用は未登録です。');
+  ready=true;
+ };
+
+ window.PS_PAGE_RENDERERS.sourcesPage=()=>{
+  const host=document.getElementById('sourcesContent');if(host.childElementCount)return;host.replaceChildren();
+  const groups=new Map();
+  function add(category,url,title){
+   if(typeof url!=='string'||!/^https?:\/\//.test(url)||/\.(png|webp|jpg|jpeg|gif|svg)(\?|$)/i.test(url))return;
+   const entries=groups.get(category)||new Map();if(!entries.has(url))entries.set(url,title||url);groups.set(category,entries);
+  }
+  function scan(value,category,key=''){
+   if(typeof value==='string'){if(/source|出典|url|reference/i.test(key))add(category,value);return;}
+   if(!value||typeof value!=='object')return;
+   if(value.url)add(category,value.url,value.title||value.name);
+   if(Array.isArray(value)){value.forEach(v=>scan(v,category,key));return;}
+   for(const [k,v] of Object.entries(value))if(!/image|icon|asset|visual/i.test(k))scan(v,category,/source|出典|reference/i.test(key)?key:k);
+  }
+  const labels={pokemon:'ポケモン',forms:'姿違い',sleepStyles:'寝顔',fields:'フィールド・EX',skills:'スキル',ingredients:'食材',recipes:'料理',cooking:'料理・鍋',growth:'育成・経験値',researchRanks:'リサーチ',recipeEvaluation:'料理評価',dailySupply:'食材予想'};
+  for(const [key,value] of Object.entries(window.PS_CATALOG))scan(value,labels[key]||'計算・補助情報');
+  scan(window.PS_GAME_EVENTS,'ゲームの予定');
+  scan(window.PS_BERRY_RANKINGS,'きのみ効率ランキング');scan(window.PS_TRIAL_RANKINGS,'試作ランキング');
+  const staticSources=[{"url": "https://www.pokemongoplusplus.com/sleep/", "title": "公式説明", "category": "計算・補助情報"}, {"url": "https://www.fireyoshida.com/entry/2023/10/20/133854", "title": "能力表の参照資料", "category": "計算・補助情報"}, {"url": "https://wikiwiki.jp/poke_sleep/メインスキル/食材セレクト", "title": "食材セレクトの仕様参照", "category": "計算・補助情報"}, {"url": "https://namakemono289.hatenablog.com/entry/2025/12/23/011054", "title": "ホイッスルの効果検証", "category": "計算・補助情報"}];
+  staticSources.forEach(s=>add(s.category,s.url,s.title));
+  for(const [category,entries] of groups){
+   const section=document.createElement('details'),heading=document.createElement('summary');heading.textContent=category+'（'+entries.size+'件）';section.append(heading);
+   for(const [url,title] of entries){const p=document.createElement('p'),a=document.createElement('a');a.href=url;a.textContent=title;a.target='_blank';a.rel='noopener noreferrer';a.style.overflowWrap='anywhere';p.append(a);section.append(p)}host.append(section);
+  }
+  if(!groups.size)host.textContent='出典は未登録です。';
+ };
+})();
+</script>
+

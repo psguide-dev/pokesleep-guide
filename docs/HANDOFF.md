@@ -1,3 +1,9 @@
+## v450 コード整理（2026-10-08）
+
+料理収集時間をteam/09-recipe-time-calculation（純粋計算）、10-recipe-stock（保存）、11-recipe-time-panel（表示）へ分割。情報ページはinformation/01-reference-dataと02-reference-pages、既存試作ランキングはrankings/04-trial-dataと05-trial-pages、同スキルランキングはrankings/01-same-skill-controls・02-same-skill-results・03-same-skill-eventsへ分割。全て同じクロージャ・実行順を維持。旧結合ファイル3個を削除。
+
+版と更新履歴を変える前の生成review.htmlはv449とバイト単位で完全一致。機能・表示・計算式・数値・保存キーは変更なし。CI30件成功。ソースの責務分割であり、配信サイズや計算速度の改善を主張しない。
+
 ## v449 日産点検・同スキル比較・料理収集時間（2026-10-08）
 
 ユーザー「123やろう」により実装。v448のフィールド詳細固定UIを維持。フィールド新画像は詳細画面用・正式受領待ち。

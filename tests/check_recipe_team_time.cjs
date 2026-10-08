@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const ctx={};vm.createContext(ctx);vm.runInContext(fs.readFileSync('templates/team/09-recipe-time.html','utf8'),ctx);
+const ctx={};vm.createContext(ctx);vm.runInContext(fs.readFileSync('templates/team/09-recipe-time-calculation.html','utf8'),ctx);
 const req=[{name:'a',qty:24},{name:'b',qty:12}];
 const forecast={members:[{id:'one'},{id:'two'}],foods:new Map([['a',24],['b',12]])};
 const run=(f=forecast,stock={b:6},meals=1)=>ctx.recipeCollectionEstimate(req,f,stock,meals);

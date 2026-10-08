@@ -1,0 +1,19 @@
+<script>
+(()=>{
+ let loading=null;
+ window.PS_PAGE_RENDERERS.sameSkillRankingPage=async()=>{
+  const host=document.getElementById('sameSkillRankingContent');
+  if(host.dataset.ready==='true')return;
+  host.textContent='比較資料を読み込み中…';
+  try{
+   loading??=Promise.all([fetch('master/rankings/same-skill/same_skill_top5.json').then(r=>{if(!r.ok)throw Error('資料を取得できませんでした');return r.json()}),import('./master/rankings/same-skill/selector.mjs')]).catch(e=>{loading=null;throw e});
+   const [data,selector]=await loading;
+   if(host.dataset.ready==='true')return;
+   host.replaceChildren();host.dataset.ready='true';
+   const add=(parent,tag,copy)=>{const el=document.createElement(tag);if(copy!==undefined)el.textContent=copy;parent.append(el);return el};
+   const controls=add(host,'div');controls.className='psg-comparison-controls';
+   const select=(labelText,options)=>{const label=add(controls,'label',labelText),el=add(label,'select');for(const [value,copy] of options){const o=add(el,'option',copy);o.value=value}return el};
+   const skills=[...new Map(data.groups.map(g=>[g.skillId,g.skillName])).entries()].sort((a,b)=>a[1].localeCompare(b[1],'ja'));
+   const skill=select('スキル',skills),scope=select('対象',[['all','全得意'],['skillSpecialists','スキル得意のみ']]);
+   const scenario=select('回収・所持条件',Object.entries(data.scenarios).map(([id,s])=>[id,s.label]));scenario.value=data.defaultScenario;
+   const output=add(host,'div');output.setAttribute('aria-live','polite');

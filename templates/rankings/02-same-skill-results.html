@@ -1,0 +1,18 @@
+   const render=()=>{
+    output.replaceChildren();
+    try{
+     const result=selector.selectSkillRanking(data,{scenario:scenario.value,skillId:skill.value,scope:scope.value});
+     add(output,'p',`対象 ${result.totalCandidates}体・上位5位（境界の同順位を含む）`).className='note';
+     if(!result.entries.length)add(output,'p',result.emptyMessage);
+     else{
+      const table=add(output,'table');table.className='psg-cooking-table';
+      const header=add(add(table,'thead'),'tr');for(const title of ['順位','ポケモン','得意','回／日'])add(header,'th',title).scope='col';
+      const body=add(table,'tbody');
+      for(const row of result.entries){const tr=add(body,'tr');add(tr,'td',String(row.rank));const link=add(add(tr,'td'),'a',row.name);link.href=window.PS_DEX_ROUTE.url(row.speciesId);add(tr,'td',row.specialty);add(tr,'td',window.PS_NUMBERS.display(row.skillTriggersPerDay));}
+     }
+     add(output,'p','Lv60・無補正・サブスキルなし・スキル上限Lv。睡眠8時間中は回収なし。推定値。順位は未丸め値で判定し、効果量の強さとは別に比較します。').className='note';
+     const details=add(output,'details');add(details,'summary','詳しい比較条件');
+     for(const [key,label] of [['carry','所持数'],['ingredients','食材'],['comparison','編成'],['clock','時計']])add(details,'p',`${label}：${result.conditions[key]}`).className='note';
+     add(details,'p','起床げんき100、食事は起床直後・6時間後・12時間後。FB・キャンプ・リボン・ゾーン補正なし。発動保証や未確定の追加効果は含みません。2026年10月8日の研究資料に基づく共通条件の比較で、登録個体・現在のチームとは連動しません。').className='note';
+    }catch(e){add(output,'p',`比較できません：${e.message}`)}
+   };
