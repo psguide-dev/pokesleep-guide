@@ -181,7 +181,8 @@ function renderFieldDetail(){
  const name=document.getElementById('fieldDetailName');name.textContent=field.name;
  document.getElementById('fieldDetailBonus').value=String(fieldProfile.areaBonuses[fieldDetailId]||0);
  const art=document.getElementById('fieldDetailArt');art.replaceChildren();
- const src=fieldDetailId==='greengrass'?'assets/fields/detail/wakakusa_main_detail.webp':window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=fieldDetailId==='greengrass'?732:96;image.height=fieldDetailId==='greengrass'?432:112;art.append(image);}
+ const detailImages={"greengrass":"assets/fields/detail/wakakusa_main_detail.webp","cyan":"assets/fields/detail/cyan_beach_detail.webp","taupe":"assets/fields/detail/taupe_hollow_detail.webp","snowdrop":"assets/fields/detail/snowdrop_tundra_detail.webp","lapis":"assets/fields/detail/lapis_lakeside_detail.webp","old_gold":"assets/fields/detail/old_gold_power_plant_detail.webp","amber":"assets/fields/detail/amber_canyon_detail.webp","greengrass_ex":"assets/fields/detail/greengrass_isle_ex_detail.webp","cyan_ex":"assets/fields/detail/cyan_beach_ex_detail.webp"};
+ const detailSrc=detailImages[fieldDetailId],src=detailSrc||window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=detailSrc?732:96;image.height=detailSrc?432:112;art.append(image);}
  const berryHost=document.getElementById('fieldDetailBerries');berryHost.replaceChildren();
  const berryRow=document.createElement('div');berryRow.className='psg-field-detail-berry-row';berryHost.append(berryRow);
  const entry=fieldProfile.weekly[fieldDetailId],berries=entry?.weekKey===currentFieldWeek()?entry.berries:(field.favoriteBerries||[]);

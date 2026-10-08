@@ -1,0 +1,50 @@
+{
+  "cyan": {
+    "path": "assets/fields/detail/cyan_beach_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "6557cc34ae26269d60d5e32292f28deb6504fb860830c9f4916f4b1fe30a3ab1"
+  },
+  "taupe": {
+    "path": "assets/fields/detail/taupe_hollow_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "732597050b94c0d4596cd8fa117518c154e634948dca21a103fcfedf71ee970c"
+  },
+  "snowdrop": {
+    "path": "assets/fields/detail/snowdrop_tundra_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "56705d967e13982b79727d000aa6e40a326de20a1ab02e8f04bf62615ce7ad2b"
+  },
+  "lapis": {
+    "path": "assets/fields/detail/lapis_lakeside_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "e29a698cad3b16b96108ae25d5c93ca48441371c6a651de8f6fad209a0884809"
+  },
+  "old_gold": {
+    "path": "assets/fields/detail/old_gold_power_plant_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "822ea0d296083193ffa5d292bc2104020ac7041a7df4f226229e91d29154d2d1"
+  },
+  "amber": {
+    "path": "assets/fields/detail/amber_canyon_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "63eb35f08610159ff93b2ee419e329209cd97633526660e2885f4b22d0f15d09"
+  },
+  "greengrass_ex": {
+    "path": "assets/fields/detail/greengrass_isle_ex_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "69cca5614b2108eaf6b32095fab833f3530b31fcdf5926a8c68bb04fd5458dbe"
+  },
+  "cyan_ex": {
+    "path": "assets/fields/detail/cyan_beach_ex_detail.webp",
+    "width": 732,
+    "height": 432,
+    "sha256": "1c7506b21d611de316c7d3b12fc8de2bde4eaa0895fd34333f1942b47118e491"
+  }
+}
