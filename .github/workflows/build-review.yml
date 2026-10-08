@@ -63,6 +63,7 @@ jobs:
           node tests/check_daily_calculator.cjs
           node tests/check_berry_picker.cjs
           node tests/check_field_detail.cjs
+          node tests/check_field_ranks.cjs
           node tests/check_ex_daily.cjs
           node tests/check_special_skills.cjs
           node tests/check_energy_feedback.cjs

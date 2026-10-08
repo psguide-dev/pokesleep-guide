@@ -212,12 +212,8 @@ function renderFieldEncounters(field){
  if(!rankFilter.value)rankFilter.value='';
  rankFilter.onchange=()=>renderFieldEncounters(field);
  const selected=rankOptions.find(([value])=>value===rankFilter.value)?.[1];
- document.getElementById('fieldRankEnergy').textContent=selected?`${selected.tier}${selected.level}に必要なカビゴンエナジー：${selected.energy.toLocaleString()}`:'ランクを選ぶと必要なカビゴンエナジーを表示します。';
- if(selected)window.PS_UI_ART.rank(document.getElementById('fieldRankEnergy'),selected.tier);
- const rankList=document.getElementById('fieldRankThresholdList');rankList.replaceChildren();
- for(const [,rank] of rankOptions){const line=document.createElement('div');line.className='psg-field-encounter-row';const label=document.createElement('span');label.textContent=`${rank.tier}${rank.level}`;const energy=document.createElement('strong');energy.textContent=rank.energy.toLocaleString();window.PS_UI_ART.rank(label,rank.tier);line.append(label,energy);rankList.append(line)}
- if(!encounters.length){document.getElementById('fieldEncounterCount').textContent='';const p=document.createElement('p');p.className='note';p.textContent='このフィールドの出現データは未投入です。';host.append(p);return}
- const visible=selected?encounters.filter(item=>rankValue(item.rank)<=rankValue(selected)):encounters;
+ const visibleRanks=rankOptions.map(([,rank])=>rank).filter(rank=>!selected||rankValue(rank)<=rankValue(selected));
+ const visible=encounters.filter(item=>!selected||rankValue(item.rank)<=rankValue(selected));
  document.getElementById('fieldEncounterCount').textContent=`${visible.length} / ${encounters.length} 件の収録済み寝顔`;
  const grouped=new Map();
  for(const item of visible){
@@ -225,26 +221,35 @@ function renderFieldEncounters(field){
   const pokemon=window.PS_CATALOG.pokemon?.[no];
   const style=window.PS_CATALOG.sleepStyles?.[no]?.find(row=>row.id===item.sleepStyleId);
   if(!pokemon||!style)continue;
-  if(!grouped.has(no))grouped.set(no,{pokemon,rows:[]});
-  grouped.get(no).rows.push({item,style});
+  const key=`${item.rank.tier}:${item.rank.level}`;
+  if(!grouped.has(key))grouped.set(key,[]);
+  grouped.get(key).push({item,style,pokemon});
  }
- for(const {pokemon,rows} of [...grouped.values()].sort((a,b)=>a.pokemon.no-b.pokemon.no)){
-  const section=document.createElement('section');section.className='psg-field-species';
-  const title=document.createElement('button');title.type='button';title.className='psg-field-species-name';
-  title.textContent=`No.${String(pokemon.no).padStart(3,'0')} ${pokemon.name} ›`;
-  title.onclick=()=>window.openPokemonDetail?.(pokemon.no);
-  section.append(title);
-  for(const {item,style} of rows.sort((a,b)=>a.style.stars-b.style.stars)){
-   const row=document.createElement('div');row.className='psg-field-encounter-row';
-   const name=document.createElement('span');name.textContent=`★${style.stars} ${style.name}`;
-   const rank=document.createElement('strong');rank.textContent=`${item.rank.tier}${item.rank.level}から${Number.isFinite(item.unlockEnergy)?`・エナジー${item.unlockEnergy.toLocaleString()}`:''}`;
-   window.PS_UI_ART.rank(rank,item.rank.tier);
-       const condition=document.createElement('small');condition.className='note';condition.style.display='block';condition.textContent=`必要ねむけパワー：${Number.isFinite(item.drowsyPower)?item.drowsyPower.toLocaleString():'未確認'}${item.eventOnly?'・イベント条件あり':''}`;name.append(condition);
-   row.append(name,rank);section.append(row);
+ for(const rank of visibleRanks){
+  const section=document.createElement('section');section.className='psg-field-rank-section';
+  const heading=document.createElement('h3');heading.className='psg-field-rank-heading';
+  const label=document.createElement('span');label.textContent=`${rank.tier}${rank.level}`;window.PS_UI_ART.rank(label,rank.tier);
+  const energy=document.createElement('strong');energy.textContent=Number.isFinite(rank.energy)?rank.energy.toLocaleString():'未確認';energy.setAttribute('aria-label',`必要エナジー：${energy.textContent}`);heading.append(label,energy);section.append(heading);
+  const rows=grouped.get(`${rank.tier}:${rank.level}`)||[];
+  if(rows.length){
+   const grid=document.createElement('div');grid.className='psg-field-rank-faces';
+   for(const {item,style,pokemon} of rows.sort((a,b)=>a.pokemon.no-b.pokemon.no||(a.style.stars||0)-(b.style.stars||0))){
+    const link=document.createElement('a');link.className='psg-field-rank-face';link.href=window.PS_DEX_ROUTE.url(pokemon.speciesId||`${String(pokemon.no).padStart(4,'0')}_default`);
+    const stars=Number.isFinite(style.stars)?`★${style.stars}`:'★未確認';
+    const description=`${pokemon.name}・${stars} ${style.name}・必要ねむけパワー：${Number.isFinite(item.drowsyPower)?item.drowsyPower.toLocaleString():'未確認'}${item.eventOnly?'・イベント条件あり':''}`;
+    link.title=description;link.setAttribute('aria-label',description);link.dataset.sleepStyleId=item.sleepStyleId;
+    const art=document.createElement('span');art.className='psg-field-rank-face-art';
+    const src=pokemon.faceImage||pokemon.image;
+    if(src){const image=document.createElement('img');image.alt=pokemon.name;image.width=40;image.height=40;image.loading='lazy';image.decoding='async';window.PS_IMAGE_LOADING.set(image,src,'pokemon');image.onerror=()=>{image.remove();art.textContent=pokemon.name};art.append(image)}else art.textContent=pokemon.name;
+    const star=document.createElement('span');star.textContent=stars;link.append(art,star);
+    link.onclick=event=>{if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();window.openPokemonDetail?.(pokemon.no)};
+    grid.append(link);
+   }
+   section.append(grid);
   }
   host.append(section);
  }
- if(!visible.length){const p=document.createElement('p');p.className='note';p.textContent='このランクまでに収録済みの寝顔はありません。';host.append(p)}
+ if(!encounters.length){const note=document.createElement('p');note.className='note';note.textContent='このフィールドの出現データは未投入です。';host.append(note)}
 }
 function selectField(id){if(id!==fieldProfile.selectedFieldId){fieldProfile.berryZone=null;document.getElementById('teamZoneSaveStatus').textContent='フィールド変更によりゾーンを0％に戻しました。'}fieldProfile.selectedFieldId=id;saveFieldProfile()}
 fieldSelect.onchange=()=>selectField(fieldSelect.value);
