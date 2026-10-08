@@ -7,10 +7,10 @@ class Node{constructor(){this.children=[];this.classList={add:()=>{}};this.value
 function setup(address,deferFrames=false){
  const listeners={},hosts={},classes=[],calls=[],assigned=[],frames=[];const location=new URL(address);location.assign=url=>assigned.push(url);
  const document={documentElement:{classList:{add:x=>classes.push(x),remove:x=>{const i=classes.indexOf(x);if(i>=0)classes.splice(i,1)}}},getElementById:id=>hosts[id]??=new Node(),createElement:()=>new Node()};
- const window={scrollY:850,addEventListener:(key,fn)=>listeners[key]=fn,scrollTo:(x,y)=>calls.push(['scroll',y]),PS:{state:{screen:'dex',history:['startPage'],filters:{types:new Set(['ほのお']),ingredients:new Set(['あまいミツ']),specs:new Set(['食材'])}},refreshAssetViews:()=>calls.push(['refresh']),go:(screen,push)=>{window.PS.state.screen=screen;calls.push(['go',screen,push])}}};
+ const window={scrollY:850,addEventListener:(key,fn)=>listeners[key]=fn,scrollTo:(x,y)=>calls.push(['scroll',y]),PS:{state:{screen:'dex',history:['startPage'],filters:{types:new Set(['ほのお']),ingredients:new Set(['あまいミツ']),specs:new Set(['食材'])}},refreshAssetViews:()=>calls.push(['refresh']),go:(screen,push)=>{window.PS.state.screen=screen;window.PS_DEX_ROUTE?.syncScreen(screen);calls.push(['go',screen,push])}}};
  const sessionStorage={getItem:key=>{if(blocked)throw Error('blocked');return storage.get(key)||null},setItem:(key,value)=>{if(blocked)throw Error('blocked');storage.set(key,value)},removeItem:key=>storage.delete(key)};
- vm.runInNewContext(script,{window,location,document,sessionStorage,URL,URLSearchParams,Date,Set,requestAnimationFrame:fn=>deferFrames?frames.push(fn):fn()});
- return {window,route:window.PS_DEX_ROUTE,document,hosts,calls,assigned,listeners,classes,frames};
+ vm.runInNewContext(script,{window,location,document,sessionStorage,URL,URLSearchParams,Date,Set,history:{state:null,replaceState:(state,title,url)=>{location.href=url;calls.push(['replace',url])}},requestAnimationFrame:fn=>deferFrames?frames.push(fn):fn()});
+ return {window,route:window.PS_DEX_ROUTE,document,hosts,calls,assigned,listeners,classes,frames,location};
 }
 const app=setup('https://example.test/guide/review.html');app.document.getElementById('dexSearch').value='ほげ';app.route.capture('dex');
 const saved=JSON.parse(storage.get('psg-dex-return-v1'));assert.equal(saved.search,'ほげ');assert.deepEqual(saved.types,['ほのお']);assert.equal(saved.scroll,850);
@@ -34,3 +34,18 @@ assert.equal(w.openPokemonDetail('0001_default'),true);assert.equal(selected[0],
 assert.equal(w.openPokemonDetail('0001_default',{local:true}),true);assert.equal(selected,null);assert.equal(rendered.length,1);assert.equal(doc.title,'フシギダネ｜ポケモン図鑑｜P Sleep Nexus');w.PSG_REFRESH_DEX_DETAIL();assert.equal(selected,null);assert.equal(rendered.length,2);assert.equal(w.openPokemonDetail('unknown'),false);
 const list=fs.readFileSync('templates/core/06-lists.html','utf8');assert(list.includes('<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}"'));assert(list.includes("window.PS_DEX_ROUTE.capture('dex')"));
 console.log('Individual detail URLs, real document navigation, native links, form/tab targets, list filter/scroll restoration, bfcache, blocked storage and invalid species passed');
+
+// Reproduce returning from Dex, navigating elsewhere and then reloading.
+const stale=setup('https://example.test/guide/review.html?screen=dex&restore=dex');stale.listeners.DOMContentLoaded();
+for(const screen of ['fieldPage','home','startPage','accountPage','rankingPage','ingredientRankingPage']){
+ stale.window.PS.go(screen,false);assert.equal(stale.location.searchParams.get('screen'),screen);assert.equal(stale.location.searchParams.has('restore'),false);
+ const refreshed=setup(stale.location.href);refreshed.listeners.DOMContentLoaded();assert.equal(refreshed.window.PS.state.screen,screen);
+}
+const oldDetailURL=detail.location.href;detail.route.syncScreen('home');assert.equal(detail.location.href,oldDetailURL,'species URL stays independent');
+stale.route.syncScreen('boxDetail');assert.equal(stale.location.searchParams.get('screen'),'box');
+// Verify that the actual app navigation invokes synchronization.
+const navSource=fs.readFileSync('templates/core/05-navigation-and-filters.html','utf8');
+const goSource=navSource.slice(navSource.indexOf('function go('),navSource.indexOf("document.querySelectorAll('[data-screen]')"));
+const navContext={state:{screen:'dex',history:[]},window:{PS_DEX_ROUTE:stale.route,scrollTo:()=>{}},screens:[],tabs:[],teamViewDirty:false,dexListDirty:false,boxListDirty:false,renderFieldControls:()=>{},renderDex:()=>{},renderBox:()=>{},renderTeam:()=>{},requestAnimationFrame:()=>{}};
+vm.createContext(navContext);vm.runInContext(goSource,navContext);navContext.go('info');assert.equal(stale.location.searchParams.get('screen'),'info');
+console.log('Current-page URL synchronization, reload after Dex return, information subpages and Box reload fallback passed');

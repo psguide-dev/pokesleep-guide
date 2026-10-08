@@ -8,6 +8,7 @@ function go(id,push=true){
  if(window.PS_POKEMON_PAGE&&id!=='dexDetail'){window.PS_DEX_ROUTE.returnToApp(id);return;}
  if(push&&state.screen!==id)state.history.push(state.screen);
  state.screen=id;
+ window.PS_DEX_ROUTE?.syncScreen(id);
  if(id==='fieldPage')renderFieldControls();
  screens.forEach(s=>s.classList.toggle('active',s.id===id));
  if(id==='dex'&&dexListDirty)renderDex();

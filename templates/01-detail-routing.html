@@ -10,7 +10,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
  if(isDetail)document.documentElement.classList.add('psg-pokemon-page');
  function read(){try{const value=JSON.parse(sessionStorage.getItem(KEY)||'null');return value&&typeof value==='object'?value:null}catch{return null}}
  function write(value){try{sessionStorage.setItem(KEY,JSON.stringify(value))}catch{}}
- const screens=new Set(['startPage','dex','home','box','info','recipePage','skillPage','fieldPage','ingredientPage']);
+ const screens=new Set(['startPage','dex','home','box','info','recipePage','skillPage','fieldPage','ingredientPage','nightcapPage','accountPage','bookshelfPage','expPage','sourcesPage','rankingPage','islandRankingPage','typeRankingPage','skillEnergyRankingPage','ingredientRankingPage']);
  // This runs before the default home markup is parsed, preventing a home flash
  // while the destination, filters and scroll position are restored.
  if(!isDetail&&screens.has(new URLSearchParams(location.search).get('screen')))document.documentElement.classList.add('psg-route-pending');
@@ -32,6 +32,15 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
  function returnToApp(screen){
   const target=new URL('review.html',location.href);target.searchParams.set('screen',screens.has(screen)?screen:read()?.origin||'dex');
   target.searchParams.set('restore','dex');location.assign(target.href);
+ }
+ function syncScreen(screen){
+  if(isDetail)return;
+  // Individual Box records have no independent URL; reload returns to Box.
+  if(screen==='boxDetail')screen='box';
+  if(!screens.has(screen))return;
+  const target=new URL(location.href);target.searchParams.set('screen',screen);
+  if(screen!=='dex')target.searchParams.delete('restore');
+  if(target.href!==location.href)history.replaceState(history.state,'',target.href);
  }
  function restore(){
   const saved=read(),ps=window.PS;if(!saved||!ps)return null;
@@ -63,7 +72,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
    requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.remove('psg-route-pending')));
   }
  }
- window.PS_DEX_ROUTE={capture,url,open,returnToApp,boot};
+ window.PS_DEX_ROUTE={capture,url,open,returnToApp,syncScreen,boot};
  window.addEventListener('DOMContentLoaded',boot,{once:true});
  window.addEventListener('pageshow',event=>{if(!isDetail&&event.persisted){const saved=restore();if(saved&&window.PS.state.screen===saved.origin){window.PS.go(saved.origin,false);restorePosition(saved)}}});
 })();
