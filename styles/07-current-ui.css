@@ -330,9 +330,17 @@
 .psg-berry-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 .psg-berry-slot,.psg-berry-option{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:66px;padding:8px 4px;border:1px solid #d7e0da;border-radius:10px;background:#fff;color:#253c30;font:inherit;cursor:pointer}
 .psg-berry-slot strong{font-size:12px}.psg-berry-slot span,.psg-berry-option span{font-size:12px;line-height:1.25;white-space:nowrap}
-.psg-berry-slot[aria-pressed="true"]{border:2px solid #438463;background:#edf8ee}
+.psg-berry-slot{box-sizing:border-box;height:88px;min-height:88px;border-width:2px}
+.psg-berry-slot-art{display:grid;place-items:center;height:28px;min-height:28px;width:28px}
+.psg-berry-slot[aria-pressed="true"]{border-color:#438463;background:#edf8ee}
 .psg-berry-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:10px}
 .psg-berry-option[aria-pressed="true"]{background:#edf8ee;border-color:#65a382}
 .psg-berry-order{position:absolute;right:2px;top:1px;color:#24583d;font-size:13px}
 .psg-berry-slot:focus-visible,.psg-berry-option:focus-visible{outline:2px solid #438463;outline-offset:2px}
 
+
+.psg-field-berries{margin-top:12px}
+.psg-field-berries-title{font-weight:700;margin-bottom:8px}
+.psg-berry-details{margin-top:8px}
+.psg-berry-details>summary{cursor:pointer;min-height:32px;line-height:32px;color:#316caa;font-size:.85em}
+.psg-berry-details[open]>.psg-berry-options{margin-top:6px}

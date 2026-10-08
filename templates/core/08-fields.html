@@ -115,16 +115,14 @@ function renderFavoriteBerryPicker(){
  if(favoriteBerryField!==fieldProfile.selectedFieldId){favoriteBerryField=fieldProfile.selectedFieldId;favoriteBerrySlot=Math.max(0,values.findIndex(x=>!x));}
  const slots=document.getElementById('fieldBerrySlots');slots.replaceChildren();
  const berryType=name=>favoriteBerryTypes.get(name)||'';
- function appendBerry(button,name){const icon=berryIcon(name);if(icon)button.append(icon);const type=berryType(name),label=document.createElement('span');label.textContent=type||name||'未選択';button.append(label);}
+ function appendBerry(button,name,reserveImage=false){const icon=berryIcon(name);if(reserveImage){const art=document.createElement('span');art.className='psg-berry-slot-art';if(icon)art.append(icon);button.append(art);}else if(icon)button.append(icon);const type=berryType(name),label=document.createElement('span');label.textContent=type||name||'未選択';button.append(label);}
  for(let i=0;i<3;i++){
   const button=document.createElement('button');button.type='button';button.className='psg-berry-slot';
   const label=['①','②','③'][i]+(isEx?(i===0?' メイン':' サブ'):'');
-  const number=document.createElement('strong');number.textContent=label;button.append(number);appendBerry(button,values[i]);
+  const number=document.createElement('strong');number.textContent=label;button.append(number);appendBerry(button,values[i],true);
   button.setAttribute('aria-pressed',String(i===favoriteBerrySlot));button.setAttribute('aria-label',`${label}：${values[i]||'未選択'}。この枠を変更`);
-  button.onclick=()=>{favoriteBerrySlot=i;renderFavoriteBerryPicker()};slots.append(button);
+  button.onclick=()=>{favoriteBerrySlot=i;document.getElementById('fieldBerryDetails').open=true;renderFavoriteBerryPicker()};slots.append(button);
  }
- const complete=values.every(Boolean),target=['①','②','③'][favoriteBerrySlot];
- document.getElementById('fieldBerryPickerStatus').textContent=complete?`3種類を選択済み。${target}を変更するきのみを選んでください。`:`${target}${isEx&&favoriteBerrySlot===0?'（メイン）':''}のきのみを選んでください。`;
  const options=document.getElementById('fieldBerryOptions');options.replaceChildren();
  for(const name of knownBerryNames){
   const button=document.createElement('button');button.type='button';button.className='psg-berry-option';button.title=name;
@@ -162,7 +160,6 @@ function renderFieldControls({berryOnly=false}={}){
  berryChoices.forEach((choice,index)=>{choice.value=berries[index]||''});
  renderFavoriteBerryPicker();
  const field=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId];
- document.getElementById('fieldWeekLabel').textContent=`今週：${currentFieldWeek()}開始（端末の現地時間・月曜4時切替）・${field?.favoriteMode==='fixed'?'通常は固定3種':'毎週ランダム'}`;
  document.getElementById('fieldFavoriteReset').textContent=field?.favoriteMode==='weekly_random'||field?.mode==='expert'?'選び直す':'通常設定に戻す';
  document.getElementById('fieldFavoriteReset').hidden=fieldProfile.weekly[fieldProfile.selectedFieldId]?.weekKey!==currentFieldWeek();
  const summary=document.getElementById('teamFieldSummary');

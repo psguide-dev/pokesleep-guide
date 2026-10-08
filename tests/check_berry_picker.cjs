@@ -7,7 +7,7 @@ function setup(profile={selectedFieldId:'greengrass',weekly:{}}){
 }
 const {ctx,nodes}=setup();assert.equal(nodes.fieldBerryPicker.hidden,false);assert.equal(nodes.fieldBerrySelects.hidden,true);
 ctx.chooseFavoriteBerry('A');ctx.chooseFavoriteBerry('B');ctx.chooseFavoriteBerry('C');
-assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','B','C']));assert(nodes.fieldBerryPickerStatus.textContent.includes('3種類を選択済み'));
+assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','B','C']));
 nodes.fieldBerrySlots.children[1].onclick();ctx.chooseFavoriteBerry('D');assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','D','C']));
 ctx.chooseFavoriteBerry('A');assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['','D','C']),'second tap clears only its slot');ctx.chooseFavoriteBerry('A');assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','D','C']),'third tap selects the empty slot');
 ctx.chooseFavoriteBerry('unknown');assert.equal(ctx.fieldProfile.weekly.greengrass.berries[0],'A');
@@ -34,3 +34,12 @@ const fieldSource=fs.readFileSync('templates/core/08-fields.html','utf8');const 
 let heavy=0;const controlNodes={};const controls={state:{screen:'fieldPage'},fieldProfile:{selectedFieldId:'greengrass',weekly:{},areaBonuses:{}},window:{PS_CATALOG:{fields:{greengrass:{favoriteMode:'weekly_random'}}},PS_RENDER_FIELD_RANKING:()=>heavy++},document:{getElementById:id=>controlNodes[id]??=new Node(),createElement:()=>new Node(),createTextNode:x=>x},fieldSelect:{},homeFieldSelect:{},homeMealSelect:{},areaBonusInput:{},berryChoices:[{},{},{}],syncExEffectControls:()=>{},activeBerryZones:()=>({}),renderFieldSpawn:()=>heavy++,renderFieldGallery:()=>heavy++,renderFieldEncounters:()=>heavy++,activeMealCategory:()=>'',activeFieldBerries:()=>['A','B','C'],renderFavoriteBerryPicker:()=>{},currentFieldWeek:()=> '2026-10-05',berryIcon:()=>null};
 vm.createContext(controls);vm.runInContext(controlSource,controls);controls.renderFieldControls({berryOnly:true});assert.equal(heavy,0);controls.renderFieldControls();assert.equal(heavy,4);
 console.log('Berry-only refresh skips spawn/gallery/encounter/ranking work; full field refresh retains it');
+
+assert(!html.includes('id="fieldWeekLabel"'));assert(!html.includes('id="fieldBerryPickerStatus"'));
+assert(html.includes('<details id="fieldBerryDetails"'));assert(html.includes('class="psg-field-percent"><label for="fieldAreaBonus">FB</label>'));
+assert.equal(nodes.fieldBerrySlots.children[0].children[1].className,'psg-berry-slot-art');
+assert(html.includes('.psg-berry-slot{box-sizing:border-box;height:88px;min-height:88px;border-width:2px}'));
+// The static details container survives all selection redraws and stays closed.
+const detailNode=nodes.fieldBerryDetails;detailNode.open=false;ctx.fieldProfile.selectedFieldId='greengrass';ctx.renderFavoriteBerryPicker();ctx.chooseFavoriteBerry('B');assert.equal(detailNode.open,false);
+nodes.fieldBerrySlots.children[0].onclick();assert.equal(detailNode.open,true);
+console.log('Compact FB, removed helper text, constant slot image space and collapsible list state passed');
