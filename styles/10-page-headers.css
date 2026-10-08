@@ -13,7 +13,7 @@
 /* Back controls use one quarter of the row, including their border. */
 .screen .psg-subpage-head,.screen .detail-head{container-type:inline-size}
 .screen [data-back],.screen .psg-field-detail-back{
- display:flex;align-items:center;justify-content:center!important;box-sizing:border-box;font:inherit;font-size:clamp(18px,7cqw,32px)!important;font-weight:800!important;line-height:1!important;white-space:nowrap;flex:0 0 25%!important;width:25%!important;min-width:0!important;height:var(--psg-page-header-height)!important;min-height:var(--psg-page-header-height)!important;max-height:var(--psg-page-header-height)!important;padding:0 2px!important;color:#1768a6!important;background:#fff!important;border:1px solid var(--line)!important;border-radius:10px!important;text-align:center;text-decoration:none;
+ display:flex;align-items:center;justify-content:center!important;box-sizing:border-box;font:inherit;font-size:clamp(16px,5cqw,20px)!important;font-weight:800!important;line-height:1!important;white-space:nowrap;flex:0 0 25%!important;width:25%!important;min-width:0!important;height:var(--psg-page-header-height)!important;min-height:var(--psg-page-header-height)!important;max-height:var(--psg-page-header-height)!important;padding:0 2px!important;color:#1768a6!important;background:#fff!important;border:1px solid var(--line)!important;border-radius:10px!important;text-align:center;text-decoration:none;
 }
 .screen>.psg-screen-title{display:flex;align-items:center;margin:0}
 #home .psg-home-heading{grid-template-rows:var(--psg-page-header-height) var(--home-row-height);margin-top:0}
