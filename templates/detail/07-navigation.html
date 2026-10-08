@@ -1,5 +1,7 @@
  function openPokemonDetail(no,opts={}){
-   const m=byNo(no);if(!m)return;
+   const m=byNo(no);if(!m)return false;
+   if(!opts.local){window.PS_DEX_ROUTE.open(detailKey(m),{tab:currentTab,keepScroll:opts.keepScroll});return true;}
+   if(opts.tab)currentTab=opts.tab;
    if(['skillPage','recipePage'].includes(window.PS?.state?.screen))detailOrigin=window.PS.state.screen;
    if(opts.pushHistory&&currentNo&&(currentSpeciesId||currentNo)!==(m.speciesId||m.no)){detailHistory.push(currentSpeciesId||currentNo);detailForward.length=0}
    const scroll=window.scrollY;
@@ -11,9 +13,12 @@
    renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);renderPokemonFields(m);switchTab(currentTab||"ability");
    updateDexStickyTop();
    if(opts.keepScroll)window.scrollTo(0,scroll);
+   document.title=`${m.name}｜ポケモン図鑑｜P Sleep Nexus`;
+   document.querySelector('#dexDetail .detail-head h2').textContent=m.name;
+   return true;
  }
  window.openPokemonDetail=openPokemonDetail;
- window.PSG_REFRESH_DEX_DETAIL=()=>openPokemonDetail(currentSpeciesId||currentNo,{keepScroll:true});
+ window.PSG_REFRESH_DEX_DETAIL=()=>openPokemonDetail(currentSpeciesId||currentNo,{keepScroll:true,local:true});
 
  // v57: one explicit entry point for every Dex card.
  // renderDex calls this directly, so there is no capture/bubble race with the legacy handler.
@@ -23,7 +28,7 @@
    if(byNo(no)){openPokemonDetail(no);return;}
  };
 
- // Line-1 previous/next navigation also participates in the same reversible detail history.
+ // Previous/next species open their own document and participate in browser history.
  document.addEventListener("click",e=>{
    const b=e.target.closest?.("#v12Prev,#v12Next");
    if(!b||b.disabled)return;
@@ -35,22 +40,25 @@
 
  const back=document.querySelector("#dexDetail [data-back]");
  function leaveDetail(){
+   if(window.PS_POKEMON_PAGE){window.PS_DEX_ROUTE.returnToApp();return true;}
    show(detailOrigin||"dex");currentNo=null;
    detailHistory.length=0;detailForward.length=0;
    return true;
  }
  function backDetail(){
+   if(window.PS_POKEMON_PAGE){let ref;try{ref=new URL(document.referrer)}catch{}if(ref?.origin===location.origin&&/\/(review|pokemon)\.html$/.test(ref.pathname))history.back();else window.PS_DEX_ROUTE.returnToApp();return true;}
    const previous=detailHistory.pop();
    if(previous){detailForward.push(currentSpeciesId||currentNo);openPokemonDetail(previous);return true}
    return leaveDetail();
  }
  function forwardDetail(){
+   if(window.PS_POKEMON_PAGE){history.forward();return true;}
    const next=detailForward.pop();
    if(!next)return false;
    if(currentNo)detailHistory.push(currentSpeciesId||currentNo);
    openPokemonDetail(next);return true;
  }
- // The visible button exits to the originating list. Inner-screen swipes navigate detail history.
+ // The visible button returns to the saved list; swipes use browser history.
  if(back)back.addEventListener("click",e=>{e.preventDefault();e.stopImmediatePropagation();leaveDetail()},true);
  window.PS_DETAIL_NAV={back:backDetail,forward:forwardDetail};
 

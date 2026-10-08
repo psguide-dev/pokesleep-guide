@@ -5,6 +5,7 @@
 const screens=[...document.querySelectorAll('.screen')],tabs=[...document.querySelectorAll('nav button')];
 
 function go(id,push=true){
+ if(window.PS_POKEMON_PAGE&&id!=='dexDetail'){window.PS_DEX_ROUTE.returnToApp(id);return;}
  if(push&&state.screen!==id)state.history.push(state.screen);
  state.screen=id;
  if(id==='fieldPage')renderFieldControls();

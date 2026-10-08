@@ -9,15 +9,16 @@ function renderDex(){
  document.querySelector('[data-menu="dex-type"]>.filter-main')?.classList.toggle('active',state.filters.types.size>0);
  document.querySelector('[data-menu="dex-ing"]>.filter-main')?.classList.toggle('active',state.filters.ingredients.size>0);
  dexCount.textContent=`${a.length} / ${all.length}`;
- dexGrid.innerHTML=a.map(p=>`<article class="poke dex-card ${p.specialTeamLimited===true?'psg-special-card':''} type-${typeClass(p.type)}" data-no="${p.no}" data-species-id="${p.speciesId||''}" role="button" tabindex="0" aria-label="No.${String(p.no).padStart(3,'0')} ${p.name}の詳細を見る">
+ dexGrid.innerHTML=a.map(p=>`<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}" class="poke dex-card ${p.specialTeamLimited===true?'psg-special-card':''} type-${typeClass(p.type)}" data-no="${p.no}" data-species-id="${p.speciesId||''}" aria-label="No.${String(p.no).padStart(3,'0')} ${p.name}の詳細を見る">
    <div class="dex-heading"><div class="dex-identity"><div class="dex-number-row"><span class="dex-no">No.${String(p.no).padStart(3,'0')}</span><span class="dex-discovery" aria-label="寝顔登録数 ${discoveryLabel(p)}">${discoveryLabel(p)}</span></div><span class="dex-name">${cardDisplayName(p.name)}</span></div></div>
    <div class="dex-art">${p.detailPreviewOnly&&!p.faceImage?'<small>No image</small>':window.PS_DEV_ASSETS.image(p.faceImage||p.image,'pokemon',p.no,'face','')}</div><div class="dex-bottom"><span title="得意: ${p.specialty||'未確認'}">${specIcon(p.specialty)}</span>${[0,1,2].map(i=>`<span title="食材${['A','B','C'][i]}: ${p.ingredients?.[i]?.name||'未確認'}">${ingIcon(p.ingredients?.[i])}</span>`).join('')}</div>
-  </article>`).join('');
+  </a>`).join('');
  hydrateSpecialtyIcons(dexGrid);
  dexEmpty.style.display=a.length?'none':'block';
  dexGrid.querySelectorAll('[data-no]').forEach(c=>{
-   c.onclick=()=>{if(Date.now()<(window.PS?.ignoreCardClicksUntil||0))return;window.openDexCard?.(c.dataset.speciesId||+c.dataset.no)};
-   c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();c.click()}};
+   c.onpointerdown=()=>window.PS_DEX_ROUTE.capture('dex');
+   c.onclick=e=>{if(Date.now()<(window.PS?.ignoreCardClicksUntil||0)){e.preventDefault();return;}window.PS_DEX_ROUTE.capture('dex')};
+   c.onkeydown=e=>{if(e.key===' '){e.preventDefault();c.click()}};
  });
 }
 function val(v,suffix=''){return v===null||v===undefined?'未確認':`${v}${suffix}`}

@@ -128,3 +128,11 @@ v268：Boxは受領248レコードに対応。ミュウ/ダークライのmythic
 - `skills/02-friendship-reference.html`：フレンドメダルの名前検索、保証仕様、サブスキルの育成資料・出典。
 - 2ファイルは同じクロージャの断片として順に連結する。スクリプトを個別に開閉しない。
 - v354の笛計算は `whistle/01-calculator.html`（収量）、`02-additive-recommendation.html`（加算型編成）、`03-balanced-recommendation.html`（割合バランス編成）を編集する。
+
+### v427 図鑑の個別ページ
+
+- `01-detail-routing.html`: `pokemon.html?species=種族・姿ID` のURL、移動前の検索/タイプ/食材/得意と位置をsessionStorageへ保存し、一覧へ戻った時に復元。
+- `detail/07-navigation.html`: 通常の詳細呼び出しは別HTMLへ移動。初回表示と画像更新だけ `local:true` で同じページを描画。寝顔/フィールドタブはURLの `tab` に保持。
+- 図鑑カードは通常のリンク。長押し・別タブ・ブラウザーの戻る/進むに対応。ボックス個体編集は変更しない。
+- ビルドは共通テンプレートから `review.html` と `pokemon.html` を生成し、workflowで両方配信。生成HTMLを手編集しない。
+- この版はページと履歴の分離。カタログ・計算コードは共用しており、初回転送サイズの削減やSEO最適化を実施済みとは扱わない。広告枠は未追加。

@@ -3,7 +3,7 @@
  const V=window.PS_CATALOG;if(!V)return;
  const detailEsc=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
  let currentNo=1,currentSpeciesId=null,currentTab="ability";
- const byNo=n=>V.pokemon[Number(n)]||window.PS_FORMS?.resolve(String(n))||window.PS_FORMS?.dexEntries.find(p=>p.no===Number(n))||null;
+ const byNo=n=>V.pokemon[Number(String(n).replace(/_default$/, ''))]||window.PS_FORMS?.resolve(String(n))||window.PS_FORMS?.dexEntries.find(p=>p.no===Number(n))||null;
  const detailKey=p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`;
  const neighborOf=(current,direction)=>{
    const known=[...Object.values(V.pokemon),...(window.PS_FORMS?.dexEntries||[])]
@@ -33,7 +33,7 @@
    if(window.PS?.state)window.PS.state.screen=id;
    window.scrollTo(0,0);
  }
- // v30: app-local detail history. Keeps evolution jumps reversible without relying on browser history.
+ // Legacy local navigation fallback. Public detail entries use pokemon.html.
  const detailHistory=[],detailForward=[];
  let detailOrigin="dex";
  const info=document.querySelector("#dexDetail .hero-info");

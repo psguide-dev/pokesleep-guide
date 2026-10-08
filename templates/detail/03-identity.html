@@ -1,5 +1,6 @@
  function switchTab(tab){
    currentTab=tab;
+   if(window.PS_POKEMON_PAGE&&window.PS?.state?.screen==='dexDetail'){const url=new URL(location.href);if(tab==='ability')url.searchParams.delete('tab');else url.searchParams.set('tab',tab);history.replaceState(history.state,'',url.href);}
    [["ability",ability],["sleep",sleep],["field",field]].forEach(([k,p])=>p.classList.toggle("active",k===tab));
    tabs.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.v12tab===tab));
  }

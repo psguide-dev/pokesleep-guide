@@ -59,6 +59,7 @@ jobs:
           node tests/check_fragment_assembly.cjs
           node tests/check_rankings.cjs
           node tests/check_home_calendar.cjs
+          node tests/check_detail_routing.cjs
           node tests/check_daily_calculator.cjs
           node tests/check_ex_daily.cjs
           node tests/check_special_skills.cjs
@@ -80,7 +81,7 @@ jobs:
       - name: Assemble site, keeping the current main page
         run: |
           mkdir -p public
-          cp index.html review.html public/
+          cp index.html review.html pokemon.html public/
           if [ -d assets ]; then cp -R assets public/; fi
           cp -R master public/
       - uses: actions/configure-pages@v5

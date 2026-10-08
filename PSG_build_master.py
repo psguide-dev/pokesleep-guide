@@ -17,6 +17,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     '01-shell-head.html',
     '00-number-format.html',
     '01-species-catalog.html',
+    '01-detail-routing.html',
     '02-home.html',
     '03-box.html',
     'import/02-box-image-dialog.html',
@@ -466,7 +467,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v426') == 2
+    assert source.count('Review v427') == 2
     js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
@@ -485,6 +486,7 @@ def build():
     html = html.replace('</head>', '<script>'+trim_script+'</script></head>',1)
     assert MARKER not in html
     PREVIEW.write_text(html)
+    (ROOT / 'pokemon.html').write_text(html)
     print(f'{len(catalog["pokemon"])} pokemon, {len(catalog["sleepStyles"])} sleep groups, '
           f'{len(catalog["recipes"])} recipes: {len(html)} characters')
 
