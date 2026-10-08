@@ -90,6 +90,48 @@ function berryIcon(name){
  const src=window.PS_IMAGE_FILES?.berries?.[name];if(!src)return null;
  const image=document.createElement('img');image.className='psg-master-berry-icon';image.src=src;image.alt=name;image.title=name;image.width=28;image.height=28;return image;
 }
+let favoriteBerrySlot=0,favoriteBerryField=null;
+function favoriteBerryValues(){const berries=activeFieldBerries();return [0,1,2].map(i=>berries[i]||'')}
+function saveFavoriteBerryValues(values){
+ fieldProfile.weekly[fieldProfile.selectedFieldId]={weekKey:currentFieldWeek(),berries:values};
+ saveFieldProfile();
+}
+function chooseFavoriteBerry(name){
+ if(!knownBerryNames.has(name))return;
+ const values=favoriteBerryValues(),existing=values.indexOf(name);
+ if(existing>=0){favoriteBerrySlot=existing;renderFavoriteBerryPicker();return;}
+ values[favoriteBerrySlot]=name;
+ const next=[1,2,3].map(n=>(favoriteBerrySlot+n)%3).find(i=>!values[i]);
+ favoriteBerrySlot=next??0;saveFavoriteBerryValues(values);
+}
+function renderFavoriteBerryPicker(){
+ const field=window.PS_CATALOG.fields[fieldProfile.selectedFieldId],isEx=field?.mode==='expert';
+ const enabled=field?.favoriteMode==='weekly_random'||isEx;
+ document.getElementById('fieldBerryPicker').hidden=!enabled;
+ document.getElementById('fieldBerrySelects').hidden=enabled;
+ if(!enabled)return;
+ const values=favoriteBerryValues();
+ if(favoriteBerryField!==fieldProfile.selectedFieldId){favoriteBerryField=fieldProfile.selectedFieldId;favoriteBerrySlot=Math.max(0,values.findIndex(x=>!x));}
+ const slots=document.getElementById('fieldBerrySlots');slots.replaceChildren();
+ const berryType=name=>Object.values(window.PS_CATALOG.pokemon).find(p=>p.berry===name)?.type||'';
+ function appendBerry(button,name){const icon=berryIcon(name);if(icon)button.append(icon);const type=berryType(name),label=document.createElement('span');label.textContent=type||name||'未選択';button.append(label);}
+ for(let i=0;i<3;i++){
+  const button=document.createElement('button');button.type='button';button.className='psg-berry-slot';
+  const label=['①','②','③'][i]+(isEx?(i===0?' メイン':' サブ'):'');
+  const number=document.createElement('strong');number.textContent=label;button.append(number);appendBerry(button,values[i]);
+  button.setAttribute('aria-pressed',String(i===favoriteBerrySlot));button.setAttribute('aria-label',`${label}：${values[i]||'未選択'}。この枠を変更`);
+  button.onclick=()=>{favoriteBerrySlot=i;renderFavoriteBerryPicker()};slots.append(button);
+ }
+ const complete=values.every(Boolean),target=['①','②','③'][favoriteBerrySlot];
+ document.getElementById('fieldBerryPickerStatus').textContent=complete?`3種類を選択済み。${target}を変更するきのみを選んでください。`:`${target}${isEx&&favoriteBerrySlot===0?'（メイン）':''}のきのみを選んでください。`;
+ const options=document.getElementById('fieldBerryOptions');options.replaceChildren();
+ for(const name of knownBerryNames){
+  const button=document.createElement('button');button.type='button';button.className='psg-berry-option';button.title=name;
+  const selected=values.indexOf(name);button.setAttribute('aria-pressed',String(selected>=0));button.setAttribute('aria-label',`${name}・${berryType(name)}${selected>=0?`・${['①','②','③'][selected]}に選択済み`:''}`);
+  if(selected>=0){const badge=document.createElement('b');badge.className='psg-berry-order';badge.textContent=['①','②','③'][selected];button.append(badge);}
+  appendBerry(button,name);button.onclick=()=>chooseFavoriteBerry(name);options.append(button);
+ }
+}
 function renderFieldGallery(){
  const host=document.getElementById('fieldGallery');host.replaceChildren();let exHeadingAdded=false;
  for(const id of fieldOrder){
@@ -117,8 +159,10 @@ function renderFieldControls(){
  areaBonusInput.value=String(fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0);
  const berries=activeFieldBerries();
  berryChoices.forEach((choice,index)=>{choice.value=berries[index]||''});
+ renderFavoriteBerryPicker();
  const field=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId];
  document.getElementById('fieldWeekLabel').textContent=`今週：${currentFieldWeek()}開始（端末の現地時間・月曜4時切替）・${field?.favoriteMode==='fixed'?'通常は固定3種':'毎週ランダム'}`;
+ document.getElementById('fieldFavoriteReset').textContent=field?.favoriteMode==='weekly_random'||field?.mode==='expert'?'選び直す':'通常設定に戻す';
  document.getElementById('fieldFavoriteReset').hidden=fieldProfile.weekly[fieldProfile.selectedFieldId]?.weekKey!==currentFieldWeek();
  const summary=document.getElementById('teamFieldSummary');
  const heading=document.createElement('span');heading.textContent=`FB＋${areaBonusInput.value}%`;
@@ -180,7 +224,7 @@ function renderFieldEncounters(field){
 function selectField(id){if(id!==fieldProfile.selectedFieldId){fieldProfile.berryZone=null;document.getElementById('teamZoneSaveStatus').textContent='フィールド変更によりゾーンを0％に戻しました。'}fieldProfile.selectedFieldId=id;document.getElementById('fieldRankFilter').value='';saveFieldProfile()}
 fieldSelect.onchange=()=>selectField(fieldSelect.value);
 homeFieldSelect.onchange=()=>selectField(homeFieldSelect.value);
-document.getElementById('fieldFavoriteReset').onclick=()=>{delete fieldProfile.weekly[fieldProfile.selectedFieldId];saveFieldProfile()};
+document.getElementById('fieldFavoriteReset').onclick=()=>{favoriteBerrySlot=0;delete fieldProfile.weekly[fieldProfile.selectedFieldId];saveFieldProfile()};
 areaBonusInput.onchange=()=>{
  fieldProfile.areaBonuses[fieldProfile.selectedFieldId]=Math.max(0,Math.min(200,Number(areaBonusInput.value)||0));
  saveFieldProfile();
