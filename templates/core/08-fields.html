@@ -183,7 +183,6 @@ function renderFieldDetail(){
  const art=document.getElementById('fieldDetailArt');art.replaceChildren();
  const src=fieldDetailId==='greengrass'?'assets/fields/detail/wakakusa_main_detail.webp':window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=fieldDetailId==='greengrass'?732:96;image.height=fieldDetailId==='greengrass'?432:112;art.append(image);}
  const berryHost=document.getElementById('fieldDetailBerries');berryHost.replaceChildren();
- const berryTitle=document.createElement('span');berryTitle.className='psg-field-detail-berry-title';berryTitle.textContent='好みきのみ';berryHost.append(berryTitle);
  const berryRow=document.createElement('div');berryRow.className='psg-field-detail-berry-row';berryHost.append(berryRow);
  const entry=fieldProfile.weekly[fieldDetailId],berries=entry?.weekKey===currentFieldWeek()?entry.berries:(field.favoriteBerries||[]);
  for(let i=0;i<3;i++){

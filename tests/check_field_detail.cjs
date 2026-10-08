@@ -19,9 +19,9 @@ assert(html.includes('id="fieldDetailName"'));assert(html.includes('id="fieldDet
 console.log('Field detail dex-sized identity layout and independent FB/count passed');
 
 fields.cyan.favoriteBerries=['fixed-a','fixed-b','fixed-c'];context.window.PS_FIELD_DETAIL.open('cyan');
-assert.equal(nodes.fieldDetailBerries.children[1].children[0].textContent,'fixed-a');
+assert.equal(nodes.fieldDetailBerries.children[0].children[0].textContent,'fixed-a');
 profile.weekly.greengrass_ex={weekKey:'2026-10-05',berries:['weekly-a','weekly-b','weekly-c']};context.window.PS_FIELD_DETAIL.open('greengrass_ex');
-assert.equal(nodes.fieldDetailBerries.children[1].children[0].textContent,'weekly-a');
-profile.weekly.greengrass_ex.weekKey='old';context.window.PS_FIELD_DETAIL.open('greengrass_ex');assert.equal(nodes.fieldDetailBerries.children[1].children[0].textContent,'未設定');
+assert.equal(nodes.fieldDetailBerries.children[0].children[0].textContent,'weekly-a');
+profile.weekly.greengrass_ex.weekKey='old';context.window.PS_FIELD_DETAIL.open('greengrass_ex');assert.equal(nodes.fieldDetailBerries.children[0].children[0].textContent,'未設定');
 assert.equal(profile.selectedFieldId,'cyan');
 console.log('Viewed-field fixed/weekly/stale berry display, unchanged selected field and relocated FB/sleep count passed');
