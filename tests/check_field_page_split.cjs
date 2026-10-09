@@ -36,3 +36,5 @@ fields.window.PS.go(fields.state.history.pop(),false);assert(fields.assigned.at(
 blocked=true;assert.doesNotThrow(()=>main.route.open('fieldDetail','cyan_ex'));assert(main.assigned.at(-1).includes('field=cyan_ex'));
 assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp -R data public/'));
 console.log('Page-specific code/data, shared team settings, field boot/back, saved filters/scroll, direct URLs, blocked storage and deployment assets passed');
+
+assert(fs.readFileSync('templates/08-fields.html','utf8').includes('class="btn psg-field-detail-back" data-back'));
