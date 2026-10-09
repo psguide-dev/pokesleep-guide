@@ -30,7 +30,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   location.assign(url(species,tab));
  }
  function returnToApp(screen){
-  if(screen===undefined&&isDetail&&read()?.returnURL===document.referrer){history.back();return;}
+  if(screen===undefined&&isDetail&&history.length>1&&read()?.returnURL===document.referrer){history.back();return;}
   const destination=screens.has(screen)?screen:read()?.origin||'dex';
   const target=new URL(['fieldPage','fieldDetail'].includes(destination)?'fields.html':'review.html',location.href);target.searchParams.set('screen',destination);
   target.searchParams.set('restore','dex');if(target.searchParams.get('screen')==='fieldDetail'&&read()?.field)target.searchParams.set('field',read().field);location.assign(target.href);
