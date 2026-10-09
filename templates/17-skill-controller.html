@@ -26,6 +26,35 @@
   if(skill.effectType==='variable_energy'&&Number.isFinite(value?.min)&&Number.isFinite(value?.max))return `カビゴンのエナジーを${value.min.toLocaleString()}～${value.max.toLocaleString()}増やす`;
   return typeof value?.description==='string'&&value.description.trim()?value.description:'効果データ未確認';
  };
+ const range=values=>{const numbers=Object.values(values).filter(Number.isFinite),min=Math.min(...numbers),max=Math.max(...numbers);return min===max?min.toLocaleString():min.toLocaleString()+'〜'+max.toLocaleString()};
+ function previewEffect(skill){
+  const x=skill.levels?.[1]||{},n=x.namedValues||{},type=skill.effectType;
+  if(n.spitEnergyByStoredCount)return `エナジー ${range(n.spitEnergyByStoredCount)}`;
+  if(n.selfBerriesByDistinctCount)return (n.recoveryPerTeamMember!=null?`全員のげんき＋${n.recoveryPerTeamMember}／`:'')+`きのみ：自分 ${range(n.selfBerriesByDistinctCount)}個／他の各匹 ${range(n.berriesPerOtherMemberByDistinctCount)}個`;
+  if(skill.id==='disguise_berry_burst')return `きのみ：自分 ${n.selfBerries}個／他の各匹 ${n.berriesPerOtherMember}個（大成功3倍）`;
+  if(n.directEnergy!=null)return `エナジー ${n.directEnergy.toLocaleString()}`+(n.zoneIncreasePercentagePoints!=null?`／ゾーン＋${n.zoneIncreasePercentagePoints}%`:`／あく以外のげんき−${n.energyLossPerNonDarkMember}`);
+  if(n.randomIngredientTotalBase!=null)return `食材 ${n.randomIngredientTotalBase}個／条件で追加 ${range(n.additionalByFirstIngredient)}個`;
+  if(n.potIncrease!=null)return `鍋＋${n.potIncrease}個／条件でげんき＋${n.conditionalRecovery}`;
+  if(n.recoveryPerTarget!=null)return `2匹のげんき＋${n.recoveryPerTarget}／おてつだい${n.instantHelpsPerTarget}〜${n.instantHelpsPerTarget+n.conditionalAdditionalHelpsPerTarget}回`;
+  if(n.bonusDrawCount!=null)return `1匹のげんき＋${n.displayRecovery}／スキルを${n.bonusDrawCount}回抽選`;
+  if(n.baseCandy!=null)return `セットしたスキル＋アメ${n.baseCandy}個`;
+  if(type==='variable_energy')return `エナジー ${x.min.toLocaleString()}〜${x.max.toLocaleString()}`;
+  if(type==='variable_dream_shards')return `ゆめのかけら ${x.min.toLocaleString()}〜${x.max.toLocaleString()}個`;
+  if(type==='fixed_dream_shards_energy')return `ゆめのかけら ${x.shards}個／エナジー ${x.energy}`;
+  if(x.energy!=null)return `エナジー ${x.energy.toLocaleString()}`;
+  if(x.selfRecovery!=null)return `自分のげんき＋${x.selfRecovery}／大成功で1匹のげんき＋${x.bonusRecovery}`;
+  if(x.recovery!=null)return `${type==='self_energy_recovery'?'自分':type==='ally_energy_recovery'?'1匹':'全員'}のげんき＋${x.recovery}`+(skill.id==='berry_juice_energy_for_everyone'?'／きのみジュース':'');
+  if(type==='berry_burst')return `きのみ：自分 ${x.selfBerries}個／他の各匹 ${x.teamBerriesEach}個`;
+  if(type?.startsWith('helper_boost_')){const bonus=Object.entries(x).find(([key])=>key.startsWith('bonusByUnique'))?.[1]||[0];return `全員のおてつだい${x.helps}〜${x.helps+Math.max(...bonus)}回`}
+  if(x.helps!=null)return `1匹のおてつだい${x.helps}回`;
+  if(x.capacity!=null)return `鍋＋${x.capacity}個`;
+  if(x.chancePercent!=null)return `大成功確率を${x.chancePercent}%追加`;
+  if(x.shards!=null)return `ゆめのかけら ${x.shards}個`;
+  if(type==='random_main_skill')return 'メインスキルをランダム発動';
+  if(type==='team_skill_copy')return '仲間のスキルをランダム発動';
+  if(x.amount!=null)return `食材 ${x.amount}個`+(x.bonusCandy!=null?`／ときどきアメ${x.bonusCandy}個`:x.chanceBonus!=null?`／大成功確率を${x.chanceBonus}%追加`:x.shardsSmall!=null?` または ゆめのかけら ${x.shardsSmall.toLocaleString()}個か${x.shardsLarge.toLocaleString()}個`:x.bonusAmount!=null?`／大成功で追加${x.bonusAmount}個`:'');
+  return effects(skill,1);
+ }
  function render(){
   const query=input.value.trim().toLocaleLowerCase('ja');
   const all=Object.values(catalog.skills||{});
@@ -48,8 +77,10 @@
    const preview=document.createElement('span');preview.className='psg-skill-effect-preview';
    const previewLevel=document.createElement('span');previewLevel.className='psg-skill-preview-level';previewLevel.textContent='Lv.1';
    const previewCopy=document.createElement('span');
-   if(window.PS_SKILL_DESCRIPTION)previewCopy.innerHTML=window.PS_SKILL_DESCRIPTION(skill,skill.levels?.[1]);else previewCopy.textContent=effects(skill,1);
+   const compactEffect=previewEffect(skill);
+   if(window.PS_SKILL_DESCRIPTION)previewCopy.innerHTML=window.PS_SKILL_DESCRIPTION(skill,{description:compactEffect});else previewCopy.textContent=compactEffect;
    preview.append(previewLevel,previewCopy);summary.append(identity,preview);item.append(summary);
+   const detailHeading=document.createElement('div');detailHeading.className='psg-skill-detail-heading';detailHeading.textContent='スキルの詳細';item.append(detailHeading);
    const rows=document.createElement('div');rows.className='psg-skill-levels';
    for(let level=1;level<=Math.min(10,Number(skill.maxLevel)||0);level++){
     const row=document.createElement('div');row.className='psg-skill-level';

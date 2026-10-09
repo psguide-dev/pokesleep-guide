@@ -521,7 +521,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v485') == 2
+    assert source.count('Review v486') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
