@@ -88,7 +88,6 @@
     const description=document.createElement('span');if(window.PS_SKILL_DESCRIPTION)description.innerHTML=window.PS_SKILL_DESCRIPTION(skill,skill.levels?.[level]);else description.textContent=effects(skill,level);
     row.append(label,description);rows.append(row);
    }
-   item.append(rows);
    if(skill.displayNote){const note=document.createElement('p');note.className='note';note.textContent=skill.displayNote;item.append(note)}
    if(skill.ruleNotes?.length){
     const conditions=document.createElement('details');conditions.className='psg-skill-conditions';
@@ -98,6 +97,7 @@
     if(skill.effectRules?.unknowns?.length){const heading=document.createElement('b');heading.textContent='未確認の項目';conditions.append(heading);for(const text of skill.effectRules.unknowns){const p=document.createElement('p');p.className='note';p.textContent=text;conditions.append(p)}}
     item.append(conditions);
    }
+   item.append(rows);
    const heading=document.createElement('div');heading.className='psg-skill-species-label';heading.textContent='このスキルを持つポケモン';item.append(heading);
    const links=document.createElement('div');links.className='psg-skill-species';
    if(!species.length&&!skill.nativeSpecies?.length){const empty=document.createElement('span');empty.textContent='現在の図鑑に登録なし';links.append(empty)}
