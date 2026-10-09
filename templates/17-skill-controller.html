@@ -3,6 +3,19 @@
  const catalog=window.PS_CATALOG;
  const input=document.getElementById('skillSearch'),tag=document.getElementById('skillTag'),list=document.getElementById('skillIndexList'),count=document.getElementById('skillIndexCount');
  if(!catalog||!input||!list)return;
+ // Keep base skills and their variants together by the effect they provide.
+ const effectGroups=[
+  ['energy_charge_s_fixed','energy_charge_s_variable','stockpile_energy_charge_s','energy_charge_m','nightmare_energy_charge_m'],
+  ['energy_charge_s_self','moonlight_energy_charge_s','energy_cheer_s','healing_pulse_energy_cheer_s','nuzzle_energy_cheer_s','energy_for_everyone_s','berry_juice_energy_for_everyone','lunar_blessing_energy_for_everyone_s'],
+  ['ingredient_magnet_s','plus_ingredient_magnet_s','present_ingredient_magnet_s','ingredient_draw_s','super_luck_ingredient_select_s','hyper_cutter_ingredient_select_s'],
+  ['berry_burst','disguise_berry_burst','draco_meteor_berry_burst','psystrike_berry_zone'],
+  ['extra_helpful_s','helper_boost_electric','helper_boost_fire','helper_boost_water'],
+  ['cooking_power_up_s','minus_cooking_power_up_s','cooking_chance_s','bulk_up_cooking_assist_s'],
+  ['dream_shard_magnet_s','dream_shard_magnet_s_variable','aura_sphere_dream_shards'],
+  ['metronome','mimic_skill_copy','transform_skill_copy'],
+  ['almighty']
+ ];
+ const effectOrder=new Map(effectGroups.flat().map((id,index)=>[id,index]));
  if(tag)for(const value of [...new Set(Object.values(catalog.skills||{}).flatMap(skill=>skill.tags||[]))].sort((a,b)=>a.localeCompare(b,'ja'))){const option=document.createElement('option');option.value=value;option.textContent=value;tag.append(option)}
  const effects=(skill,level)=>{
   const value=skill.levels?.[level];
@@ -17,6 +30,7 @@
   const query=input.value.trim().toLocaleLowerCase('ja');
   const all=Object.values(catalog.skills||{});
   const matches=all.filter(s=>(!tag?.value||(s.tags||[]).includes(tag.value))&&[s.name,...(s.tags||[]),...(s.nativeSpecies||[]).map(p=>p.name)].some(value=>String(value).toLocaleLowerCase('ja').includes(query)));
+  matches.sort((a,b)=>(effectOrder.get(a.id)??Infinity)-(effectOrder.get(b.id)??Infinity)||a.name.localeCompare(b.name,'ja'));
   count.textContent=`${matches.length} / ${all.length}`;
   list.replaceChildren();
   if(!matches.length){const empty=document.createElement('p');empty.className='note';empty.textContent='該当するスキルはありません。';list.append(empty);return}
