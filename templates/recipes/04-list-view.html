@@ -22,7 +22,8 @@
    const max=document.createElement('strong');max.className='psg-recipe-energy-max';
    const shown=energyAtLevel(recipe);
    max.innerHTML=Number.isFinite(shown?.value)?`<small>Lv.${shown.level}</small> ${shown.status==='推定'?window.PS_NUMBERS.display(shown.value):shown.value.toLocaleString()} <span>エナジー</span>`:'エナジー未確認';
-   const min=document.createElement('small');min.className='psg-recipe-energy-min';min.textContent=Number.isFinite(recipe.energy?.min?.value)?`（Lv.${recipe.energy.min.level} ${recipe.energy.min.value.toLocaleString()} エナジー）`:'（Lv.1・Lv.70 未確認）';
+   const min=document.createElement('small');min.className='psg-recipe-energy-min';min.textContent=Number.isFinite(recipe.energy?.min?.value)?`（Lv.${recipe.energy.min.level} ${recipe.energy.min.value.toLocaleString()}）`:'（Lv.1 未確認）';
+   max.append(document.createTextNode(' '),min);
    energy.append(max);
    const ingredientRow=document.createElement('div');ingredientRow.className='psg-recipe-ingredients';
    for(const item of recipe.ingredients){const chip=document.createElement('span');chip.className='psg-recipe-chip';chip.title=item.name;chip.setAttribute('aria-label',`${item.name} ${item.qty}個`);chip.append(icon(item.name));const qty=document.createElement('b');qty.textContent=`×${item.qty}`;chip.append(qty);ingredientRow.append(chip)}
@@ -34,7 +35,7 @@
    let populated=false;
    const populateDetail=()=>{
     if(populated)return;populated=true;
-    detail.append(min);
+    if(recipeMode==='evaluation')detail.append(min);
     const levelNote=document.createElement('p');levelNote.className='note';const level=selectedLevel();levelNote.textContent=`比較Lv.${level['レベル']}・倍率×${level['倍率']}・累計 ${level['Lv1からの累計EXP'].toLocaleString()} EXP（資料確認）。実測・掲載値のないLvは暫定切り捨ての推定。レシピ本体のみ。`;detail.append(levelNote);
     const energyNote=document.createElement('p');energyNote.className='note';energyNote.textContent=[recipe.energy?.note,recipe.energy?.conditions].filter(Boolean).join('。');detail.append(energyNote);
     if(recipeMode==='evaluation'){
