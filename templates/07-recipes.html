@@ -1,4 +1,4 @@
-<section id="recipePage" class="screen"><div class="psg-recipe-sticky"><div class="psg-subpage-head"><button class="btn" data-back>‹ 戻る</button><h2>料理</h2><div class="psg-recipe-mode" role="group" aria-label="料理の表示"><button type="button" data-recipe-mode="recipe" class="active" aria-pressed="true">レシピ</button><button type="button" data-recipe-mode="evaluation" aria-pressed="false">評価</button></div></div>
+<section id="recipePage" class="screen"><div class="psg-recipe-sticky"><div class="psg-subpage-head"><button class="btn" data-back>‹ 戻る</button><h2>料理 <small id="recipeCount" class="psg-recipe-count" role="status"></small></h2><div class="psg-recipe-mode" role="group" aria-label="料理の表示"><button type="button" data-recipe-mode="recipe" class="active" aria-pressed="true">レシピ</button><button type="button" data-recipe-mode="evaluation" aria-pressed="false">評価</button></div></div>
  <div class="psg-recipe-filter-bar"><div class="filter-select psg-recipe-select" data-menu="recipe-ing"><button type="button" class="filter-main" id="recipeIngredientButton" aria-expanded="false">食材 <span>▼</span></button><div class="filter-panel" id="recipeIngredientOptions" aria-label="食材で絞り込み"></div></div><label class="psg-recipe-sort-label"><select id="recipeSort" aria-label="レシピの並び順"><option value="energy-desc">Lv.70エナジーが多い順</option><option value="energy-asc">Lv.70エナジーが少ない順</option><option value="name">名前順</option></select><select id="recipeEvaluationSort" aria-label="料理評価の並び順" hidden><option value="total">総エナジーが多い順</option><option value="efficiency">1個あたりが多い順</option><option value="amplification">増幅率が高い順</option></select></label></div>
  <div class="psg-recipe-categories" role="group" aria-label="料理の部門">
   <button type="button" class="active" data-recipe-category="カレー・シチュー" aria-pressed="true">カレー・シチュー</button>
@@ -12,5 +12,5 @@
  <label>通常容量 <select id="cookingPotBase"></select></label><label><input id="cookingSunday" type="checkbox">日曜</label><label><input id="cookingCamp" type="checkbox">キャンプ</label>
  <label>スキル加算 <input id="cookingSkill" type="number" min="0" max="200" step="1" value="0"></label><label>イベント倍率 <input id="cookingEvent" type="number" min="0.001" step="0.001" value="1"></label>
  </div><strong id="cookingPotResult" role="status"></strong><p id="cookingPotCost" class="note"></p><p class="note">次の料理の容量のみ。食材在庫・獲得量は含みません。日曜は04:00〜翌03:59。スキル加算は料理後に消費されます。</p></details>
- <div id="recipeCount" class="note psg-recipe-count" role="status"></div><div id="recipeList"></div>
+ <div id="recipeList"></div>
 </section>

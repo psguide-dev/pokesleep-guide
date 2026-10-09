@@ -176,7 +176,8 @@
 .psg-recipe-sort-label{display:grid;gap:4px;min-width:0;font-size:11px;font-weight:750}
 .psg-recipe-sort-label select{box-sizing:border-box;min-width:0;width:100%;height:var(--psg-ui-unit);padding:0 6px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#111;font-size:12px;font-weight:700}
 .psg-recipe-select .filter-main{box-sizing:border-box;height:var(--psg-ui-unit);padding:0 8px;font-size:12px}
-.psg-recipe-count{margin:10px 2px 6px}
+#recipePage .psg-subpage-head h2{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
+.psg-recipe-count{margin:0;font-size:10px;font-weight:400;color:#75847b;white-space:nowrap}
 .psg-recipe-entry{padding:0!important;overflow:hidden;margin:8px 0;border-radius:12px}
 .psg-recipe-entry>.psg-recipe-heading{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px;align-items:start;cursor:pointer;padding:8px;list-style:none;touch-action:manipulation}
 .psg-recipe-entry>.psg-recipe-heading::-webkit-details-marker{display:none}
@@ -186,7 +187,7 @@
 .psg-recipe-title{grid-column:1;grid-row:1;font-size:clamp(14px,3.8vw,17px);line-height:1.2;color:#111;overflow-wrap:anywhere}
 .psg-recipe-heading .psg-recipe-energy{display:contents}
 .psg-recipe-energy .psg-recipe-energy-max{grid-column:1/-1;grid-row:2;font-size:15px;color:#111;line-height:1.2}
-.psg-recipe-energy-max small{font-size:9px;font-weight:700;color:#55645e}
+.psg-recipe-energy-max small{font-size:9px;font-weight:700;color:#111}
 .psg-recipe-energy-max span{font-size:10px}
 .psg-recipe-energy-min{display:block;font-size:11px;color:#6e7a74;margin-bottom:5px}
 .psg-recipe-chevron{grid-column:2;grid-row:3;display:flex;align-items:center;justify-content:flex-end;min-height:22px;color:#347958;font-size:12px;font-weight:750}
