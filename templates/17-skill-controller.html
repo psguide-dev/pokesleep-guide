@@ -17,7 +17,7 @@
   const query=input.value.trim().toLocaleLowerCase('ja');
   const all=Object.values(catalog.skills||{});
   const matches=all.filter(s=>(!tag?.value||(s.tags||[]).includes(tag.value))&&[s.name,...(s.tags||[]),...(s.nativeSpecies||[]).map(p=>p.name)].some(value=>String(value).toLocaleLowerCase('ja').includes(query)));
-  count.textContent=`${matches.length} / ${all.length} スキル`;
+  count.textContent=`${matches.length} / ${all.length}`;
   list.replaceChildren();
   if(!matches.length){const empty=document.createElement('p');empty.className='note';empty.textContent='該当するスキルはありません。';list.append(empty);return}
   matches.forEach(skill=>{
