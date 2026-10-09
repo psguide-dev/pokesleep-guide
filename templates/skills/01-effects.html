@@ -1,0 +1,52 @@
+ // Keep base skills and their variants together by the effect they provide.
+ const effectGroups=[
+  ['energy_charge_s_fixed','energy_charge_s_variable','stockpile_energy_charge_s','energy_charge_m','nightmare_energy_charge_m'],
+  ['energy_charge_s_self','moonlight_energy_charge_s','energy_cheer_s','healing_pulse_energy_cheer_s','nuzzle_energy_cheer_s','energy_for_everyone_s','berry_juice_energy_for_everyone','lunar_blessing_energy_for_everyone_s'],
+  ['ingredient_magnet_s','plus_ingredient_magnet_s','present_ingredient_magnet_s','ingredient_draw_s','super_luck_ingredient_select_s','hyper_cutter_ingredient_select_s'],
+  ['berry_burst','disguise_berry_burst','draco_meteor_berry_burst','psystrike_berry_zone'],
+  ['extra_helpful_s','helper_boost_electric','helper_boost_fire','helper_boost_water'],
+  ['cooking_power_up_s','minus_cooking_power_up_s','cooking_chance_s','bulk_up_cooking_assist_s'],
+  ['dream_shard_magnet_s','dream_shard_magnet_s_variable','aura_sphere_dream_shards'],
+  ['metronome','mimic_skill_copy','transform_skill_copy'],
+  ['almighty']
+ ];
+ const effectOrder=new Map(effectGroups.flat().map((id,index)=>[id,index]));
+ if(tag)for(const value of [...new Set(Object.values(catalog.skills||{}).flatMap(skill=>skill.tags||[]))].sort((a,b)=>a.localeCompare(b,'ja'))){const option=document.createElement('option');option.value=value;option.textContent=value;tag.append(option)}
+ const effects=(skill,level)=>{
+  const value=skill.levels?.[level];
+  if(skill.displayNote&&value?.description)return value.description;
+  if(skill.effectType==='random_ingredients'&&Number.isFinite(value?.amount))return `ランダムな食材を${value.amount}個ゲットする`;
+  if(skill.effectType==='team_energy_recovery'&&Number.isFinite(value?.recovery))return `チーム全員のげんきを${value.recovery}回復する`;
+  if(skill.effectType==='fixed_energy'&&Number.isFinite(value?.energy))return `カビゴンのエナジーを${value.energy.toLocaleString()}増やす`;
+  if(skill.effectType==='variable_energy'&&Number.isFinite(value?.min)&&Number.isFinite(value?.max))return `カビゴンのエナジーを${value.min.toLocaleString()}～${value.max.toLocaleString()}増やす`;
+  return typeof value?.description==='string'&&value.description.trim()?value.description:'効果データ未確認';
+ };
+ const range=values=>{const numbers=Object.values(values).filter(Number.isFinite),min=Math.min(...numbers),max=Math.max(...numbers);return min===max?min.toLocaleString():min.toLocaleString()+'〜'+max.toLocaleString()};
+ function previewEffect(skill){
+  const x=skill.levels?.[1]||{},n=x.namedValues||{},type=skill.effectType;
+  if(n.spitEnergyByStoredCount)return `エナジー ${range(n.spitEnergyByStoredCount)}`;
+  if(n.selfBerriesByDistinctCount)return (n.recoveryPerTeamMember!=null?`全員のげんき＋${n.recoveryPerTeamMember}／`:'')+`きのみ：自分 ${range(n.selfBerriesByDistinctCount)}個／他の各匹 ${range(n.berriesPerOtherMemberByDistinctCount)}個`;
+  if(skill.id==='disguise_berry_burst')return `きのみ：自分 ${n.selfBerries}個／他の各匹 ${n.berriesPerOtherMember}個（大成功3倍）`;
+  if(n.directEnergy!=null)return `エナジー ${n.directEnergy.toLocaleString()}`+(n.zoneIncreasePercentagePoints!=null?`／ゾーン＋${n.zoneIncreasePercentagePoints}%`:`／あく以外のげんき−${n.energyLossPerNonDarkMember}`);
+  if(n.randomIngredientTotalBase!=null)return `食材 ${n.randomIngredientTotalBase}個／条件で追加 ${range(n.additionalByFirstIngredient)}個`;
+  if(n.potIncrease!=null)return `鍋＋${n.potIncrease}個／条件でげんき＋${n.conditionalRecovery}`;
+  if(n.recoveryPerTarget!=null)return `2匹のげんき＋${n.recoveryPerTarget}／おてつだい${n.instantHelpsPerTarget}〜${n.instantHelpsPerTarget+n.conditionalAdditionalHelpsPerTarget}回`;
+  if(n.bonusDrawCount!=null)return `1匹のげんき＋${n.displayRecovery}／スキルを${n.bonusDrawCount}回抽選`;
+  if(n.baseCandy!=null)return `セットしたスキル＋アメ${n.baseCandy}個`;
+  if(type==='variable_energy')return `エナジー ${x.min.toLocaleString()}〜${x.max.toLocaleString()}`;
+  if(type==='variable_dream_shards')return `ゆめのかけら ${x.min.toLocaleString()}〜${x.max.toLocaleString()}個`;
+  if(type==='fixed_dream_shards_energy')return `ゆめのかけら ${x.shards}個／エナジー ${x.energy}`;
+  if(x.energy!=null)return `エナジー ${x.energy.toLocaleString()}`;
+  if(x.selfRecovery!=null)return `自分のげんき＋${x.selfRecovery}／大成功で1匹のげんき＋${x.bonusRecovery}`;
+  if(x.recovery!=null)return `${type==='self_energy_recovery'?'自分':type==='ally_energy_recovery'?'1匹':'全員'}のげんき＋${x.recovery}`+(skill.id==='berry_juice_energy_for_everyone'?'／きのみジュース':'');
+  if(type==='berry_burst')return `きのみ：自分 ${x.selfBerries}個／他の各匹 ${x.teamBerriesEach}個`;
+  if(type?.startsWith('helper_boost_')){const bonus=Object.entries(x).find(([key])=>key.startsWith('bonusByUnique'))?.[1]||[0];return `全員のおてつだい${x.helps}〜${x.helps+Math.max(...bonus)}回`}
+  if(x.helps!=null)return `1匹のおてつだい${x.helps}回`;
+  if(x.capacity!=null)return `鍋＋${x.capacity}個`;
+  if(x.chancePercent!=null)return `大成功確率を${x.chancePercent}%追加`;
+  if(x.shards!=null)return `ゆめのかけら ${x.shards}個`;
+  if(type==='random_main_skill')return 'メインスキルをランダム発動';
+  if(type==='team_skill_copy')return '仲間のスキルをランダム発動';
+  if(x.amount!=null)return `食材 ${x.amount}個`+(x.bonusCandy!=null?`／ときどきアメ${x.bonusCandy}個`:x.chanceBonus!=null?`／大成功確率を${x.chanceBonus}%追加`:x.shardsSmall!=null?` または ゆめのかけら ${x.shardsSmall.toLocaleString()}個か${x.shardsLarge.toLocaleString()}個`:x.bonusAmount!=null?`／大成功で追加${x.bonusAmount}個`:'');
+  return effects(skill,1);
+ }

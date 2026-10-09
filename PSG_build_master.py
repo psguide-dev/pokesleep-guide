@@ -99,6 +99,9 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     'images/05-refresh.html',
     '16-swipe.html',
     '17-skill-controller.html',
+    'skills/01-effects.html',
+    'skills/03-index-view.html',
+    'skills/04-index-events.html',
     'skills/02-friendship-reference.html',
     '18-recipe-controller.html',
     'recipes/02-ingredient-filter.html',
@@ -138,6 +141,7 @@ STYLE_FILES = tuple(ROOT / 'styles' / name for name in (
     '09-list-cards.css',
     '14-comparisons.css',
     '10-page-headers.css',
+    '21-skills.css',
     '10-detail-facts.css',
     '11-cooking.css',
     '12-recipe-evaluation.css',
@@ -521,7 +525,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v488') == 2
+    assert source.count('Review v489') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
