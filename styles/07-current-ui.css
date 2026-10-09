@@ -164,7 +164,7 @@
 .psg-info-link strong{font-size:19px}.psg-info-link span{color:var(--muted);font-size:13px}
 .psg-info-link b{grid-column:2;grid-row:1/3;font-size:24px;color:#587567}
 .psg-subpage-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}.psg-subpage-head h2{margin:0}
-.psg-recipe-categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.psg-recipe-categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:8px}
 .psg-recipe-categories button{min-height:var(--psg-ui-unit);padding:4px 3px;border:1px solid var(--line);border-radius:10px;background:var(--recipe-category-bg,#fff);font-size:clamp(11px,3.2vw,14px);line-height:1.25;font-weight:700;color:#24332d;cursor:pointer}
 .psg-recipe-categories button.active{border-color:var(--recipe-category-border);box-shadow:inset 0 0 0 1px var(--recipe-category-border)}
 .psg-recipe-sticky{position:sticky;top:var(--psg-header-height);z-index:60;padding:7px 0 9px;background:var(--bg);border-bottom:1px solid var(--line)}

@@ -45,7 +45,7 @@
   const evaluation=recipeMode==='evaluation';
   document.getElementById('recipePage').classList.toggle('psg-evaluation-mode',evaluation);
   sort.hidden=evaluation;evaluationSort.hidden=!evaluation;
-  document.getElementById('recipeCompareControls').hidden=evaluation;
+  document.getElementById('recipeCompareControls').hidden=true;
   document.getElementById('recipeEvaluationNote').hidden=!evaluation;
   document.getElementById('recipeSupplyControls').hidden=!evaluation;
   updateLevelFacts();
