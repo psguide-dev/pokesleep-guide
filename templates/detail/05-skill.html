@@ -35,6 +35,7 @@
   for(const m of marks){result+=detailEsc(text.slice(cursor,m.start))+`<span class="skill-var effect-${m.kind}">${detailEsc(text.slice(m.start,m.end))}</span>`;cursor=m.end}
   return result+detailEsc(text.slice(cursor));
  }
+ if(typeof window!=='undefined')window.PS_SKILL_DESCRIPTION=skillDescription;
  function skillVariables(s,x,lv){
   if(!x)return '効果未確認';
   const value=(v,kind,unit='')=>`<span class="skill-var effect-${kind}">${detailEsc(typeof v==='number'?v.toLocaleString():v)}${unit}</span>`;
