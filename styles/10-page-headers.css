@@ -41,7 +41,9 @@
 .psg-skill-identity{display:flex;flex-direction:column;gap:4px;min-width:0}
 .psg-skill-effect-preview{display:flex;flex-direction:column;gap:3px;min-width:0;font-size:clamp(11px,3vw,14px);line-height:1.45;overflow-wrap:anywhere}
 .psg-skill-preview-level{font-size:11px;font-weight:700;color:#111}
-.psg-skill-detail-heading{padding:10px 14px 4px;font-size:14px;font-weight:700}
+.psg-skill-entry>.note{margin:8px 14px;overflow-wrap:anywhere}
+.psg-skill-entry>.psg-skill-conditions{margin:8px 14px 12px}
+.psg-skill-entry>.psg-skill-conditions>summary{padding:8px 0}
 #skillPage .skill-var{font-weight:900}
 #skillPage .effect-food{color:var(--skill-effect-food)}
 #skillPage .effect-energy{color:var(--skill-effect-energy)}

@@ -80,7 +80,6 @@
    const compactEffect=previewEffect(skill);
    if(window.PS_SKILL_DESCRIPTION)previewCopy.innerHTML=window.PS_SKILL_DESCRIPTION(skill,{description:compactEffect});else previewCopy.textContent=compactEffect;
    preview.append(previewLevel,previewCopy);summary.append(identity,preview);item.append(summary);
-   const detailHeading=document.createElement('div');detailHeading.className='psg-skill-detail-heading';detailHeading.textContent='スキルの詳細';item.append(detailHeading);
    const rows=document.createElement('div');rows.className='psg-skill-levels';
    for(let level=1;level<=Math.min(10,Number(skill.maxLevel)||0);level++){
     const row=document.createElement('div');row.className='psg-skill-level';
