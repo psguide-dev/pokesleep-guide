@@ -25,7 +25,7 @@
     }
     if(unlock>1){const level=document.createElement('small');level.textContent=`Lv.${unlock}`;art.append(level)}
     button.title=species.name;button.append(art);
-    if(species.speciesId){const name=document.createElement('span');name.style.cssText='font-size:10px;line-height:1.25;overflow-wrap:anywhere';name.textContent=species.name;button.append(name)}
+    if(species.speciesId){const name=document.createElement('span');name.className='psg-recipe-provider-name';name.style.cssText='font-size:10px;line-height:1.25;overflow-wrap:anywhere';name.textContent=species.name;button.append(name)}
     if(species.mythicalSettings){const note=document.createElement('small');note.textContent='要枠解放';button.append(note);button.setAttribute('aria-label',button.getAttribute('aria-label')+'（枠の解放・食材選択が必要）')}
     button.onclick=()=>window.openPokemonDetail?.(species.speciesId||species.no);wrap.append(button);
   }
