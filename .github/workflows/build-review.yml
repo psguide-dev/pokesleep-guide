@@ -50,6 +50,8 @@ jobs:
           python-version: '3.12'
       - name: Build review from master folders
         run: python3 PSG_build_master.py
+      - name: Check generated species field data validation
+        run: python3 tests/check_species_fields.py
       - name: Check saved teams and daily forecasts
         run: |
           node tests/check_saved_teams.cjs

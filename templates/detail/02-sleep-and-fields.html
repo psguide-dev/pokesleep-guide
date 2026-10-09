@@ -70,11 +70,11 @@
    sleep.append(grid);
  }
  function renderPokemonFields(m){
-   if(!window.PS_FIELD_DATA&&!m.detailPreviewOnly){
+   if(!window.PS_POKEMON_FIELDS?.[m.no]&&!m.detailPreviewOnly&&m.dataStatus!=='preview_pending_abilities'){
      field.replaceChildren();const note=document.createElement('p');note.className='note';note.textContent='フィールド情報を読み込み中…';field.append(note);
      const key=detailKey(m);
      const stillCurrent=()=>currentTab==='field'&&detailKey(byNo(currentSpeciesId||currentNo)||{})===key;
-     window.PS_FIELD_ROUTE.loadData().then(()=>{if(stillCurrent())renderPokemonFields(m)}).catch(()=>{
+     window.PS_FIELD_ROUTE.loadPokemonData(m.no).then(()=>{if(stillCurrent())renderPokemonFields(m)}).catch(()=>{
        if(!stillCurrent())return;
        note.textContent='フィールド情報を読み込めませんでした。';const retry=document.createElement('button');retry.className='btn';retry.textContent='再読み込み';retry.onclick=()=>renderPokemonFields(m);field.append(retry);
      });return;
@@ -89,7 +89,7 @@
    const note=document.createElement('p');note.className='note';note.textContent='解放エナジーは最低ランクへの到達値で、出現を保証しません。必要ねむけパワーは別条件です。攻略資料に基づく掲載値・ゲーム内未照合。未掲載は出現しないという意味ではありません。';field.append(note);
    const fieldOrder=['greengrass','cyan','taupe','snowdrop','lapis','old_gold','amber'];
    const position=entry=>{const index=fieldOrder.indexOf(entry.id.replace(/_ex$/,''));return index<0?fieldOrder.length:index};
-   const entries=Object.values(V.fields||{}).sort((a,b)=>(a.mode==='expert')-(b.mode==='expert')||position(a)-position(b)||a.id.localeCompare(b.id));
+   const entries=Object.values(window.PS_POKEMON_FIELDS?.[m.no]||{}).sort((a,b)=>(a.mode==='expert')-(b.mode==='expert')||position(a)-position(b)||a.id.localeCompare(b.id));
    const groups=new Map();
    for(const entry of entries){
      for(const item of entry.encounters||[]){

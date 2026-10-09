@@ -40,13 +40,28 @@ console.log('Page-specific code/data, shared team settings, field boot/back, sav
 (async()=>{
  const ctx=main.ctx,scripts=[];
  ctx.document.createElement=()=>({remove(){this.removed=true}});ctx.document.head={append:script=>scripts.push(script)};
- ctx.window.PS_FIELD_DATA_URL=asset;ctx.window.PS_CATALOG={};
- const first=main.route.loadData(),second=main.route.loadData();assert.equal(first,second);assert.equal(scripts.length,1);
+ ctx.window.PS_CATALOG={pokemon:{1:{fieldDataURL:common.pokemon[1].fieldDataURL}}};
+ const first=main.route.loadPokemonData(1),second=main.route.loadPokemonData(1);assert.equal(first,second);assert.equal(scripts.length,1);
  scripts[0].onerror();await assert.rejects(first);
- const retry=main.route.loadData();assert.equal(scripts.length,2);ctx.window.PS_FIELD_DATA={fields:{cyan:{encounters:[1]}}};scripts[1].onload();await retry;
- assert.equal(ctx.window.PS_CATALOG.fields.cyan.encounters.length,1);await main.route.loadData();assert.equal(scripts.length,2);
+ const retry=main.route.loadPokemonData(1);assert.equal(scripts.length,2);ctx.window.PS_POKEMON_FIELDS={1:{cyan:{encounters:[1]}}};scripts[1].onload();await retry;
+ assert.equal(ctx.window.PS_POKEMON_FIELDS[1].cyan.encounters.length,1);await main.route.loadPokemonData(1);assert.equal(scripts.length,2);
  assert(!pages.pokemon.includes('renderSleepStyles(m);renderPokemonFields(m);'));
  console.log('Field data waits for first tab visit, shares in-flight request, retries failure and reuses successful load');
 })().catch(error=>{console.error(error);process.exitCode=1});
 
 assert(fs.readFileSync('templates/08-fields.html','utf8').includes('class="btn psg-field-detail-back" data-back'));
+
+const expected=new Map(),actual=new Map();
+for(const [fieldId,field] of Object.entries(data.window.PS_FIELD_DATA.fields))for(const row of field.encounters)expected.set(fieldId+':'+row.sleepStyleId,JSON.stringify(row));
+const sizes=[];
+for(const [no,pokemon] of Object.entries(common.pokemon)){
+ const ctx={window:{}};const script=fs.readFileSync(pokemon.fieldDataURL,'utf8');vm.runInNewContext(script,ctx);sizes.push(Buffer.byteLength(script));
+ const payload=ctx.window.PS_POKEMON_FIELDS[no];assert(payload);
+ for(const [fieldId,field] of Object.entries(payload)){
+  for(const key of ['id','name','mode'])assert.equal(field[key],data.window.PS_FIELD_DATA.fields[fieldId][key]);
+  for(const row of field.encounters){assert.equal(String(Number(row.sleepStyleId.split('_')[0])),no);const key=fieldId+':'+row.sleepStyleId;assert(!actual.has(key));actual.set(key,JSON.stringify(row))}
+ }
+}
+assert.deepEqual([...actual].sort(),[...expected].sort());
+assert(!pages.pokemon.includes('window.PS_FIELD_DATA_URL='));
+console.log(`${sizes.length} species payloads exactly match ${actual.size} canonical field encounters; largest ${Math.max(...sizes)} bytes`);
