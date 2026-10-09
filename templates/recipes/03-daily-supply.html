@@ -3,8 +3,8 @@
  const currentSupply=()=>supply.scenarios?.[supplyScenario]||supply;
  const scenarioControls=[];
  for(const [parentId,id] of [['recipeSupplyControls','recipeSupplyScenario'],['ingredientSupplyConditions','ingredientSupplyScenario']]){
-  const parent=document.getElementById(parentId),label=document.createElement('label'),select=document.createElement('select');label.textContent='収集条件 ';select.id=id;select.setAttribute('aria-label',parentId==='recipeSupplyControls'?'料理収集の比較条件':'食材日産量の比較条件');select.style.maxWidth='100%';
-  for(const hours of [1,3,6])for(const meals of [0,1]){const option=document.createElement('option');option.value=`collect${hours}h_meals${meals}`;option.textContent=`回収${hours}時間・料理回復${meals?'あり':'なし'}${hours===3&&!meals?'（基準）':''}`;select.append(option)}select.value=supplyScenario;label.append(select);parent.append(label);scenarioControls.push(select);
+  const parent=document.getElementById(parentId),label=document.createElement('label'),select=document.createElement('select');label.textContent=parentId==='ingredientSupplyConditions'?'':'収集条件 ';select.id=id;select.setAttribute('aria-label',parentId==='recipeSupplyControls'?'料理収集の比較条件':'食材日産量の比較条件');select.style.maxWidth='100%';
+  for(const hours of [1,3,6])for(const meals of [0,1]){const option=document.createElement('option');option.value=`collect${hours}h_meals${meals}`;option.textContent=parentId==='ingredientSupplyConditions'?`回収${hours}h・回復${meals?'有':'無'}`:`回収${hours}時間・料理回復${meals?'あり':'なし'}${hours===3&&!meals?'（基準）':''}`;option.title=`回収${hours}時間・料理回復${meals?'あり':'なし'}`;select.append(option)}select.value=supplyScenario;label.append(select);parent.append(label);scenarioControls.push(select);
   select.addEventListener('change',()=>{supplyScenario=select.value;for(const control of scenarioControls)control.value=supplyScenario;preserveRecipeDetails(()=>{});renderDailyTiers()});
  }
  const supplyNumber=value=>Number.isFinite(value)?window.PS_NUMBERS.display(value):'未対応';

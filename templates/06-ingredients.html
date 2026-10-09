@@ -1,6 +1,8 @@
 <section id="ingredientPage" class="screen">
- <div class="psg-subpage-head"><button class="btn" data-back>‹ 戻る</button><h2>食材 <small id="ingredientIndexCount" role="status">19 / 19</small></h2></div>
- <div class="psg-ingredient-controls"><input type="search" id="ingredientSearch" aria-label="食材名で検索" placeholder="食材名で検索" autocomplete="off"><select id="ingredientIndexSort" aria-label="食材の並び順"><option value="energy">基本エナジー順</option><option value="daily">日産量順</option><option value="name">名前順</option></select><select id="ingredientSupplyLevel" aria-label="食材日産量の比較レベル"><option value="30">担当Lv30</option><option value="60">担当Lv60</option></select></div>
- <div id="ingredientSupplyConditions" class="psg-cooking-controls"></div><p class="note psg-ingredient-note">日産量は共通条件の推定・ティアは暫定。<button type="button" id="ingredientSupplyBasis">前提を見る</button></p>
+ <div class="psg-ingredient-sticky">
+  <div class="psg-subpage-head psg-ingredient-header"><button class="btn" data-back>‹ 戻る</button><h2>食材 <small id="ingredientIndexCount" role="status">19 / 19</small></h2><input type="search" id="ingredientSearch" aria-label="食材名で検索" placeholder="食材名検索" autocomplete="off"></div>
+  <div class="psg-ingredient-controls"><select id="ingredientIndexSort" aria-label="食材の並び順"><option value="energy">エナジー順</option><option value="daily">日産順</option><option value="name">名前順</option></select><select id="ingredientSupplyLevel" aria-label="食材日産量の比較レベル"><option value="30">Lv30</option><option value="60">Lv60</option></select><div id="ingredientSupplyConditions" class="psg-cooking-controls"></div></div>
+ </div>
+ <p class="note psg-ingredient-note">日産量は共通条件の推定・ティアは暫定。<button type="button" id="ingredientSupplyBasis">前提を見る</button></p>
  <div id="ingredientDailyTiers"></div>
 </section>

@@ -1,11 +1,16 @@
-#ingredientPage .psg-subpage-head h2{display:flex;align-items:baseline;gap:6px}
-#ingredientIndexCount{font-size:12px;font-weight:400;color:#75847b;white-space:nowrap}
-.psg-ingredient-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin:8px 0}
-.psg-ingredient-controls input{grid-column:1/-1;min-width:0;padding:0 10px;font-size:16px}
-.psg-ingredient-controls select{min-width:0;padding:0 8px;font-size:12px}
-.psg-ingredient-controls input,.psg-ingredient-controls select,#ingredientSupplyConditions select{box-sizing:border-box;width:100%;height:var(--psg-ui-unit);border:1px solid var(--line);border-radius:10px;background:#fff}
-#ingredientSupplyConditions{margin:8px 0;display:block}
-#ingredientSupplyConditions label{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px}
+#ingredientPage .psg-ingredient-sticky{position:sticky;top:var(--psg-header-height);z-index:69;margin-inline:-12px;padding-inline:12px;background:#fff;border-bottom:1px solid var(--line)}
+#ingredientPage .psg-ingredient-header{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2fr);gap:0;box-shadow:none}
+#ingredientPage .psg-ingredient-header>[data-back]{width:100%!important}
+#ingredientPage .psg-subpage-head h2{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
+#ingredientIndexCount{font-size:10px;font-weight:400;color:#75847b;white-space:nowrap}
+#ingredientSearch{min-width:0;padding:0 8px;font-size:16px}
+.psg-ingredient-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2fr);gap:0;align-items:center;box-sizing:border-box;height:calc(1.5 * var(--psg-ui-unit));margin:0}
+.psg-ingredient-controls>select{min-width:0;padding:0 4px;font-size:12px}
+#ingredientSearch,.psg-ingredient-controls select{box-sizing:border-box;width:100%;height:var(--psg-ui-unit);border:1px solid var(--line);border-radius:10px;background:#fff}
+.psg-ingredient-controls>select{width:calc(100% - 6px)}
+#ingredientSupplyConditions{min-width:0;margin:0;display:block}
+#ingredientSupplyConditions label{display:block;min-width:0}
+#ingredientSupplyConditions select{min-width:0;padding:0 4px;font-size:12px}
 .psg-ingredient-note{font-size:11px;margin:5px 0}
 #ingredientSupplyBasis{border:0;background:transparent;color:#35694c;text-decoration:underline;font-size:11px;padding:3px}
 #ingredientPage .psg-supply-tier{margin:8px 0;padding:10px;border-radius:12px;background:#fff}
