@@ -56,9 +56,14 @@
 | `18-recipe-controller.html` | 料理一覧の共通DOM・状態 |
 | `recipes/02-ingredient-filter.html` | 食材アイコン・フィルター候補 |
 | `recipes/03-providers.html` | 最終進化の食材拾得候補 |
-| `recipes/03-cooking.html` | 比較Lv・実測値優先のエナジー・鍋試算・資料表 |
+| `recipes/03-cooking.html` | 比較Lv・実測値優先のエナジーとレベル表示 |
+| `recipes/03-pot-settings.html` | 鍋試算・入力検証・設定保存と変更通知 |
+| `recipes/03-reference-tables.html` | 鍋・経験値・アメの資料表 |
 | `recipes/03-daily-supply.html` | 共通条件の日産量・専任収集負担・実際の構成・日産ティアと前提 |
-| `ingredients/01-index.html` | 食材19種類・日産量・担当・対応料理・出典。料理コントローラーの共通関数を再利用する断片 |
+| `ingredients/01-index.html` | 食材の共通DOM参照・名前の正規化 |
+| `ingredients/02-details.html` | 担当ポケモン・対応料理・出典の詳細表示 |
+| `ingredients/03-list-view.html` | 食材の検索・並び順・日産量と遅延詳細表示 |
+| `ingredients/04-events.html` | 検索・並び順・レベル変更・資料への操作と初期表示 |
 | `recipes/03-evaluation.html` | 料理3指標・評価モード・状態維持・評価基準 |
 | `recipes/04-list-view.html` | 並び順・料理カード・遅延詳細表示 |
 | `recipes/05-events.html` | 絞り込み・カテゴリ切替・料理を開く入口 |

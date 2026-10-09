@@ -60,3 +60,7 @@
 ## 図鑑詳細の見出し
 
 `templates/detail/03-identity.html` の `renderDexHeading` が番号・名前・衣装/サイズ選択・前後移動をまとめて描画する。`detail/07-navigation.html` はURL移動・履歴と文書タイトルのみを扱い、描画済みのh2を名前だけで上書きしない。画像再表示でも同じ見出し関数を使う。スマホのタイトルは番号＋名前の行と選択欄を縦に配置する。戻るの表示・押せる範囲は `styles/10-page-headers.css` の共通指定を維持する。
+
+## 食材・料理の構成整理（v466）
+
+食材は `ingredients/01-index.html`（共通参照）、`02-details.html`（担当・対応料理・出典）、`03-list-view.html`（検索・並び順・一覧）、`04-events.html`（操作・初期化）に分離。料理は `recipes/03-cooking.html`（Lvとエナジー）、`03-pot-settings.html`（鍋計算・保存）、`03-reference-tables.html`（資料表）に分離する。これらは同じ料理コントローラー内の断片であり、独立したscriptタグで囲まない。ビルド順・初期化順・関数の内容を維持し、v465と生成HTML全体がバージョン表示以外は一致する。CSS・在庫保存・日産・収集時間・交代比較には変更を加えない。

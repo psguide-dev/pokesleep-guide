@@ -1,0 +1,23 @@
+ function renderDailyTiers(){
+  const openNames=new Set([...tiersView.querySelectorAll(':scope > details[open]')].map(el=>el.dataset.ingredient));
+  const query=normalizeIngredient(ingredientSearch.value);
+  const entries=ingredientNames.filter(name=>normalizeIngredient(name).includes(query)).map(name=>({name,food:catalog.ingredientAssets[name],row:currentSupply().tiers[dailyLevel.value]?.[name]}));
+  entries.sort((a,b)=>{
+   if(ingredientSort.value==='name')return a.name.localeCompare(b.name,'ja');
+   const av=ingredientSort.value==='daily'?a.row?.daily:a.food.baseEnergy,bv=ingredientSort.value==='daily'?b.row?.daily:b.food.baseEnergy;
+   if(!Number.isFinite(av)||!Number.isFinite(bv))return Number.isFinite(av)?-1:Number.isFinite(bv)?1:a.name.localeCompare(b.name,'ja');
+   return bv-av||a.name.localeCompare(b.name,'ja');
+  });
+  document.getElementById('ingredientIndexCount').textContent=`${entries.length} / ${ingredientNames.length}`;
+  tiersView.replaceChildren();
+  if(!entries.length){const empty=document.createElement('p');empty.className='note';empty.textContent='該当する食材はありません。';tiersView.append(empty);return}
+  for(const {name,food,row} of entries){
+   const details=document.createElement('details');details.className='psg-cooking-reference psg-supply-tier';details.dataset.ingredient=name;
+   const summary=document.createElement('summary');summary.append(icon(name));const title=document.createElement('strong');title.className='psg-ingredient-name';title.textContent=name;
+   const base=document.createElement('span');base.className='psg-ingredient-base';base.textContent=`基本 ${Number.isFinite(food.baseEnergy)?food.baseEnergy.toLocaleString():'未確認'} エナジー`;
+   const quantity=document.createElement('span');quantity.className='psg-supply-daily';quantity.textContent=row?`${row.tier}・${supplyNumber(row.daily)}個/日`:'日産 未対応';summary.append(title,base,quantity);details.append(summary);
+   let populated=false;const populate=()=>{if(!populated){details.append(ingredientDetails(name,row));populated=true}};
+   details.addEventListener('toggle',()=>{if(details.open)populate()});
+   if(openNames.has(name)){details.open=true;populate()}tiersView.append(details);
+  }
+ }

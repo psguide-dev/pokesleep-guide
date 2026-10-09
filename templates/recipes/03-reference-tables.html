@@ -1,0 +1,15 @@
+ const reference=document.getElementById('cookingReferenceTables');
+ const addNote=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;reference.append(p)};
+ function addTable(title,columns,rows){
+  const section=document.createElement('details');section.className='psg-cooking-reference';
+  const heading=document.createElement('summary');heading.textContent=title;section.append(heading);
+  const wrap=document.createElement('div');wrap.className='psg-cooking-table-wrap';const table=document.createElement('table');table.className='psg-cooking-table';
+  const head=document.createElement('thead'),header=document.createElement('tr');for(const column of columns){const th=document.createElement('th');th.scope='col';th.textContent=column;header.append(th)}head.append(header);table.append(head);
+  const body=document.createElement('tbody');for(const values of rows){const tr=document.createElement('tr');for(const value of values){const td=document.createElement('td');td.textContent=value===null?'対象外':typeof value==='number'?value.toLocaleString():value;tr.append(td)}body.append(tr)}table.append(body);wrap.append(table);section.append(wrap);reference.append(section);
+ }
+ addNote(`確認日 ${cooking.pot['確認日']}。鍋・費用・倍率・EXPは資料確認、料理Lv上限70は公式確認。`);
+ addTable('鍋の拡張23段階',['容量','寝顔種類','拡張費用','累計費用'],potRows.map(r=>[r['容量'],r['必要寝顔種類数'],r['拡張1回のゆめのかけら'],r['初期からの累計ゆめのかけら']]));
+ addTable('料理Lv1〜70',['Lv','倍率','次Lv EXP','累計EXP'],levelRows.map(r=>[r['レベル'],r['倍率'],r['次Lvまでの必要EXP'],r['Lv1からの累計EXP']]));
+ addNote('鍋はイベント倍率 → 日曜倍率 → スキル加算 → キャンプ倍率の順で試算します。途中丸めはせず、結果2桁・表示1桁の共通規格を使用します。ゲーム内の端数処理例外は未採用です。通常容量の上限81。');
+ addNote('料理の取得EXPは総エナジー。Lv倍率はレシピ部分に適用し、追加食材には適用しません。上限時の余剰EXP保存、レベルアップした料理への倍率遡及は未確定。');
+ addNote('比較Lvは表示用で個別の育成記録ではありません。実測・掲載値のないLvはLv1×倍率を丸めずに計算した推定値。Lv70掲載値との端数不一致は補正せず保持します。');
