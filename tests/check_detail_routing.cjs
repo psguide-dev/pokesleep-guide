@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const html=fs.readFileSync('review.html','utf8'),page=fs.readFileSync('pokemon.html','utf8');
-assert.equal(page,html);assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp index.html review.html pokemon.html public/'));
+assert.equal(page.replace(/<script src="data\/fields-[a-f0-9]+\.js"><\/script>/,''),html);assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp index.html review.html pokemon.html public/'));
 const script=html.match(/<script id="psg-pokemon-routing">([\s\S]*?)<\/script>/)[1];
 const storage=new Map();let blocked=false;
 class Node{constructor(){this.children=[];this.classList={add:()=>{}};this.value='';this.textContent=''}append(...x){this.children.push(...x)}replaceChildren(){this.children=[]}}
@@ -38,7 +38,7 @@ console.log('Individual detail URLs, real document navigation, native links, for
 
 // Reproduce returning from Dex, navigating elsewhere and then reloading.
 const stale=setup('https://example.test/guide/review.html?screen=dex&restore=dex');stale.listeners.DOMContentLoaded();
-for(const screen of ['fieldPage','home','startPage','accountPage','rankingPage','ingredientRankingPage']){
+for(const screen of ['home','startPage','accountPage','rankingPage','ingredientRankingPage']){
  stale.window.PS.go(screen,false);assert.equal(stale.location.searchParams.get('screen'),screen);assert.equal(stale.location.searchParams.has('restore'),false);
  const refreshed=setup(stale.location.href);refreshed.listeners.DOMContentLoaded();assert.equal(refreshed.window.PS.state.screen,screen);
 }
@@ -54,6 +54,6 @@ console.log('Current-page URL synchronization, reload after Dex return, informat
 const fieldRoute=setup('https://example.test/guide/review.html?screen=fieldDetail&field=cyan_ex');
 fieldRoute.window.PS_FIELD_DETAIL={fieldId:'cyan_ex',open:id=>{fieldRoute.window.PS_FIELD_DETAIL.fieldId=id;fieldRoute.window.PS.go('fieldDetail');return true}};
 fieldRoute.listeners.DOMContentLoaded();assert.equal(fieldRoute.window.PS.state.screen,'fieldDetail');assert.equal(fieldRoute.location.searchParams.get('field'),'cyan_ex');fieldRoute.route.capture();
-const pokemonFromField=setup('https://example.test/guide/pokemon.html?species=0001_default');pokemonFromField.route.returnToApp();assert.equal(pokemonFromField.assigned[0],'https://example.test/guide/review.html?screen=fieldDetail&restore=dex&field=cyan_ex');
+const pokemonFromField=setup('https://example.test/guide/pokemon.html?species=0001_default');pokemonFromField.route.returnToApp();assert.equal(pokemonFromField.assigned[0],'https://example.test/guide/fields.html?screen=fieldDetail&restore=dex&field=cyan_ex');
 fieldRoute.window.PS.go('fieldPage');assert.equal(fieldRoute.location.searchParams.has('field'),false);
 console.log('Field detail direct URL, reload target and return from Pokémon detail preserve browsed field');

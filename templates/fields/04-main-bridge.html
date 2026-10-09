@@ -1,0 +1,6 @@
+// Field screens live in a separate document; shared weekly settings stay here.
+function renderFieldGallery(){}
+window.PS_FIELD_DETAIL={
+ url:id=>window.PS_FIELD_ROUTE.url('fieldDetail',id),
+ open(id){if(!window.PS_CATALOG.fields[id])return false;window.PS_FIELD_ROUTE.open('fieldDetail',id);return true;}
+};

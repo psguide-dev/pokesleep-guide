@@ -1,0 +1,37 @@
+<style>
+html.psg-field-page main>.screen:not(#fieldPage):not(#fieldDetail){display:none!important}
+</style>
+<script id="psg-field-routing">
+(()=>{
+ const KEY='psn-field-return-v1',isField=location.pathname.endsWith('/fields.html');
+ window.PS_FIELD_PAGE=isField;
+ if(isField)document.documentElement.classList.add('psg-field-page','psg-route-pending');
+ function read(){try{return JSON.parse(sessionStorage.getItem(KEY)||'null')}catch{return null}}
+ function write(value){try{sessionStorage.setItem(KEY,JSON.stringify(value))}catch{}}
+ function url(screen='fieldPage',id){
+  const target=new URL('fields.html',location.href);target.searchParams.set('screen',screen==='fieldDetail'?'fieldDetail':'fieldPage');
+  if(id)target.searchParams.set('field',id);return target.href;
+ }
+ function open(screen='fieldPage',id){
+  if(!isField){
+   const ps=window.PS;
+   if(ps){const filters={};for(const kind of ['filters','boxFilters']){filters[kind]={};for(const [key,values] of Object.entries(ps.state[kind]))filters[kind][key]=[...values]}
+    write({origin:ps.state.screen,history:ps.state.history,filters,dexSearch:document.getElementById('dexSearch').value,boxSearch:document.getElementById('boxSearch').value,scroll:window.scrollY||0});}
+  }
+  location.assign(url(screen,id));
+ }
+ function returnToApp(screen='info'){
+  const target=new URL('review.html',location.href);target.searchParams.set('screen',screen);
+  if(read()?.origin===screen)target.searchParams.set('restore','field');location.assign(target.href);
+ }
+ function restore(){
+  const saved=read(),ps=window.PS;if(!saved||!ps)return;
+  for(const kind of ['filters','boxFilters'])for(const key of Object.keys(ps.state[kind])){const values=saved.filters?.[kind]?.[key];if(Array.isArray(values))ps.state[kind][key]=new Set(values.filter(x=>typeof x==='string'))}
+  for(const id of ['dexSearch','boxSearch'])if(typeof saved[id]==='string')document.getElementById(id).value=saved[id];
+  ps.state.history=Array.isArray(saved.history)?saved.history.filter(x=>typeof x==='string'):[];
+  ps.refreshAssetViews();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,Math.max(0,Number(saved.scroll)||0))));
+ }
+ window.PS_FIELD_ROUTE={url,open,returnToApp,restore,read};
+})();
+</script>

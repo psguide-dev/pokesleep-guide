@@ -1,0 +1,17 @@
+function renderFieldGallery(){
+ const host=document.getElementById('fieldGallery');host.replaceChildren();let exHeadingAdded=false;
+ for(const id of fieldOrder){
+  const field=window.PS_CATALOG.fields[id];if(!field)continue;
+  if(field.mode==='expert'&&!exHeadingAdded){const heading=document.createElement('h3');heading.className='psg-field-ex-heading';heading.textContent='EXフィールド';host.append(heading);exHeadingAdded=true;}
+  const button=document.createElement('a');button.href=fieldDetailURL(id);button.className='psg-field-choice';button.dataset.fieldId=id;
+  button.setAttribute('aria-label',field.name+'の詳細を見る');
+  const image=window.PS_IMAGE_FILES.fields[id];
+  if(image){const img=document.createElement('img');img.src=image;img.alt='';img.width=76;img.height=86;button.append(img)}
+  const label=document.createElement('div'),name=document.createElement('strong');name.textContent=field.name;label.append(name);
+  const favorites=document.createElement('div');favorites.className='psg-field-berry-icons';
+  for(const berry of field.favoriteBerries||[]){const icon=berryIcon(berry);if(icon)favorites.append(icon)}
+  if(favorites.childElementCount)label.append(favorites);button.append(label);
+  button.onclick=event=>{if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();openFieldDetail(id);};host.append(button);
+ }
+
+}

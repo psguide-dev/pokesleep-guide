@@ -1,5 +1,6 @@
 """Validate master folders and produce the GitHub Pages review with external image assets."""
 import json
+import hashlib
 import re
 from pathlib import Path
 
@@ -17,6 +18,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     '01-shell-head.html',
     '00-number-format.html',
     '01-species-catalog.html',
+    '01-field-routing.html',
     '01-detail-routing.html',
     '02-home.html',
     '03-box.html',
@@ -52,6 +54,8 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     'core/07-corrections.html',
     'core/10-individual-evaluation.html',
     'core/08-fields.html',
+    'fields/02-gallery.html',
+    'fields/03-details.html',
     'fields/01-spawn-calculator.html',
     'core/11-field-spawn.html',
     'whistle/01-calculator.html',
@@ -485,10 +489,20 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v479') == 2
-    js_data = json.dumps(catalog,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
+    assert source.count('Review v480') == 2
+    serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
+    field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
+    field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
+    data_dir = ROOT / 'data'
+    data_dir.mkdir(exist_ok=True)
+    (data_dir / field_asset).write_text('window.PS_FIELD_DATA=' + field_data + ';')
+    # Only small settings needed by team calculations remain in the main catalog.
+    common_catalog = {**catalog, 'fields': {key: {k:v for k,v in entry.items() if k not in ('encounters','rankThresholds')} for key,entry in catalog['fields'].items()}}
+    common_catalog.pop('fieldSpawnCounts')
+    js_data = serialize(common_catalog)
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
+                 'if(window.PS_FIELD_DATA)Object.assign(window.PS_CATALOG,window.PS_FIELD_DATA);\n'
                  'for(const [kind,entries] of Object.entries('+js_images+'))'
                  'Object.assign(window.PS_IMAGE_FILES[kind],entries);')
     face_script = face_sheet_script(ROOT, FACE_SCRIPT, FACE_SHEET)
@@ -496,15 +510,38 @@ def build():
     if not CSS.exists() or CSS.read_text() != css_text:
         CSS.write_text(css_text)  # Compatibility copy; edit styles/*.css instead.
     assert source.count('/* PSG_BUILD_SWAP_ENGINE */') == 1
-    html = source.replace(MARKER,injection).replace('/* PSG_BUILD_STYLES */',css_text).replace('/* PSG_BUILD_SPECIALTY_IMAGES */',ART.read_text()).replace('/* PSG_BUILD_FACE_SCRIPT */',face_script).replace('/* PSG_BUILD_SWAP_ENGINE */',swap_engine()).replace('/* PSG_BUILD_SPECIAL_ENGINE */',special_engine())
+    def assemble(page_source, page_injection):
+        return page_source.replace(MARKER,page_injection).replace('/* PSG_BUILD_STYLES */',css_text).replace('/* PSG_BUILD_SPECIALTY_IMAGES */',ART.read_text()).replace('/* PSG_BUILD_FACE_SCRIPT */',face_script).replace('/* PSG_BUILD_SWAP_ENGINE */',swap_engine()).replace('/* PSG_BUILD_SPECIAL_ENGINE */',special_engine())
+    field_only = ('fields/02-gallery.html','fields/03-details.html','fields/01-spawn-calculator.html','core/11-field-spawn.html')
+    main_source = source
+    for name in field_only:
+        main_source = main_source.replace((ROOT / 'templates' / name).read_text(), '', 1)
+    main_source = main_source.replace((ROOT / 'templates/core/08-fields.html').read_text(), (ROOT / 'templates/core/08-fields.html').read_text() + (ROOT / 'templates/fields/04-main-bridge.html').read_text(), 1)
+    html = assemble(main_source, injection)
     trim_bounds = json.loads((ROOT / 'assets/ui/icon-trim-bounds.json').read_text())
     trim_script = (ROOT / 'templates/icon-trim.js').read_text().replace('/* PSG_ICON_TRIM_BOUNDS */', json.dumps(trim_bounds,separators=(',',':')))
     import re
-    html = html.replace(css_text, re.sub(r'(?<![\w-])img(?![\w-])', ':is(img,svg.psg-trimmed-icon)', css_text))
-    html = html.replace('</head>', '<script>'+trim_script+'</script></head>',1)
+    def finish(page):
+        page = page.replace(css_text, re.sub(r'(?<![\w-])img(?![\w-])', ':is(img,svg.psg-trimmed-icon)', css_text))
+        return page.replace('</head>', '<script>'+trim_script+'</script></head>',1)
+    html = finish(html)
     assert MARKER not in html
     PREVIEW.write_text(html)
-    (ROOT / 'pokemon.html').write_text(html)
+    field_script = f'<script src="data/{field_asset}"></script>'
+    (ROOT / 'pokemon.html').write_text(html.replace('<script id="psg-catalog">', field_script + '<script id="psg-catalog">', 1))
+    # The standalone field document does not carry recipe/ingredient/skill UI code.
+    fields_source = source
+    first = next(i for i,p in enumerate(TEMPLATE_PARTS) if p.name == '17-skill-controller.html')
+    last = next(i for i,p in enumerate(TEMPLATE_PARTS) if str(p).endswith('recipes/05-events.html'))
+    for path in TEMPLATE_PARTS[first:last+1]:
+        fields_source = fields_source.replace(path.read_text(), '', 1)
+    fields_catalog = {**common_catalog, 'recipes': {}}
+    fields_catalog.pop('dailySupply')
+    fields_catalog.pop('recipeEvaluation')
+    fields_injection = injection.replace('window.PS_CATALOG='+js_data+';', 'window.PS_CATALOG='+serialize(fields_catalog)+';', 1)
+    fields_html = finish(assemble(fields_source, fields_injection))
+    fields_html = fields_html.replace('<script id="psg-catalog">', field_script + '<script id="psg-catalog">', 1)
+    (ROOT / 'fields.html').write_text(fields_html)
     print(f'{len(catalog["pokemon"])} pokemon, {len(catalog["sleepStyles"])} sleep groups, '
           f'{len(catalog["recipes"])} recipes: {len(html)} characters')
 

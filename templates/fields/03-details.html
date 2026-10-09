@@ -1,0 +1,109 @@
+let fieldDetailId=null;
+function fieldDetailURL(id){return window.PS_FIELD_ROUTE.url('fieldDetail',id);}
+function openFieldDetail(id){
+ if(!window.PS_CATALOG.fields[id])return false;
+ if(fieldDetailId!==id)document.getElementById('fieldRankFilter').value='';
+ fieldDetailId=id;window.PS.go('fieldDetail');return true;
+}
+function renderFieldDetail(){
+ const field=window.PS_CATALOG.fields[fieldDetailId];if(!field)return;
+ document.title=field.name+'｜フィールド｜P Sleep Nexus';
+ const name=document.getElementById('fieldDetailName');name.textContent=field.name;
+ document.getElementById('fieldDetailBonus').value=String(fieldProfile.areaBonuses[fieldDetailId]||0);
+ const art=document.getElementById('fieldDetailArt');art.replaceChildren();
+ const detailImages={"greengrass":"assets/fields/detail/wakakusa_main_detail.webp","cyan":"assets/fields/detail/cyan_beach_detail.webp","taupe":"assets/fields/detail/taupe_hollow_detail.webp","snowdrop":"assets/fields/detail/snowdrop_tundra_detail.webp","lapis":"assets/fields/detail/lapis_lakeside_detail.webp","old_gold":"assets/fields/detail/old_gold_power_plant_detail.webp","amber":"assets/fields/detail/amber_canyon_detail.webp","greengrass_ex":"assets/fields/detail/greengrass_isle_ex_detail.webp","cyan_ex":"assets/fields/detail/cyan_beach_ex_detail.webp"};
+ const detailSrc=detailImages[fieldDetailId],src=detailSrc||window.PS_IMAGE_FILES.fields[fieldDetailId];if(src){const image=document.createElement('img');image.src=src;image.alt=field.name;image.width=detailSrc?732:96;image.height=detailSrc?432:112;art.append(image);}
+ const berryHost=document.getElementById('fieldDetailBerries');berryHost.replaceChildren();
+ const berryRow=document.createElement('div');berryRow.className='psg-field-detail-berry-row';berryHost.append(berryRow);
+ const entry=fieldProfile.weekly[fieldDetailId],berries=entry?.weekKey===currentFieldWeek()?entry.berries:(field.favoriteBerries||[]);
+ for(let i=0;i<3;i++){
+  const name=berries[i],slot=document.createElement('span');slot.className='psg-field-detail-berry';slot.setAttribute('aria-label',`${i+1}：${name||'未設定'}${field.mode==='expert'&&i===0?'（メイン）':''}`);
+  const icon=name?berryIcon(name):null;if(icon)slot.append(icon);else slot.textContent=name||'未設定';berryRow.append(slot);
+ }
+ const ids=new Set((field.encounters||[]).map(x=>x.sleepStyleId)),found=readSleepBackup();
+ const discovered=[...ids].filter(id=>found[id]).length,summary=document.getElementById('fieldDetailSleepSummary');
+ summary.textContent=`寝顔 ${discovered} / ${ids.size}`;summary.setAttribute('aria-label',`寝顔：発見済み${discovered}種類／収録${ids.size}種類`);
+ renderFieldSpawn();renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldDetailId);
+}
+function saveFieldDetailBonus(value){
+ if(!fieldDetailId||!window.PS_CATALOG.fields[fieldDetailId])return false;
+ const input=document.getElementById('fieldDetailBonus');
+ if(String(value).trim()===''||!Number.isFinite(Number(value))){input.value=String(fieldProfile.areaBonuses[fieldDetailId]||0);return false;}
+ fieldProfile.areaBonuses[fieldDetailId]=Math.max(0,Math.min(200,Number(value)));
+ const saved=saveFieldProfile({berryOnly:true});input.value=String(fieldProfile.areaBonuses[fieldDetailId]||0);return saved;
+}
+document.getElementById('fieldDetailBonus').onchange=event=>saveFieldDetailBonus(event.currentTarget.value);
+window.PS_FIELD_DETAIL={open:openFieldDetail,url:fieldDetailURL,setBonus:saveFieldDetailBonus,get fieldId(){return fieldDetailId}};
+window.PS_PAGE_RENDERERS??={};window.PS_PAGE_RENDERERS.fieldDetail=renderFieldDetail;
+const fieldTabKeys=['rank','spawn','ranking'];
+function selectFieldDetailTab(key,focus=false){
+ if(!fieldTabKeys.includes(key))return;
+ for(const tab of fieldTabKeys){
+  const button=document.getElementById('fieldTab-'+tab),active=tab===key;
+  button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;
+  document.getElementById('fieldPanel-'+tab).hidden=!active;
+  if(active&&focus)button.focus();
+ }
+}
+for(const [index,key] of fieldTabKeys.entries()){
+ const button=document.getElementById('fieldTab-'+key);
+ button.onclick=()=>selectFieldDetailTab(key);
+ button.onkeydown=event=>{
+  let next;if(event.key==='ArrowRight')next=(index+1)%3;else if(event.key==='ArrowLeft')next=(index+2)%3;else if(event.key==='Home')next=0;else if(event.key==='End')next=2;else return;
+  event.preventDefault();selectFieldDetailTab(fieldTabKeys[next],true);
+ };
+}
+function renderFieldEncounters(field){
+ const host=document.getElementById('fieldEncounterList');if(!host)return;
+ host.replaceChildren();
+ const encounters=field?.encounters||[];
+ const rankFilter=document.getElementById('fieldRankFilter');
+ const rankOrder={ノーマル:0,スーパー:1,ハイパー:2,マスター:3};
+ const rankValue=rank=>rankOrder[rank.tier]*100+rank.level;
+ const oldValue=rankFilter.value;
+ const rankOptions=(field?.rankThresholds||[]).map(rank=>[`${rank.tier}:${rank.level}`,rank]);
+ rankFilter.replaceChildren(new Option('すべて表示',''));
+ for(const [value,rank] of rankOptions)rankFilter.add(new Option(`${rank.tier}${rank.level}まで`,value));
+ rankFilter.value=oldValue;
+ if(!rankFilter.value)rankFilter.value='';
+ rankFilter.onchange=()=>renderFieldEncounters(field);
+ const selected=rankOptions.find(([value])=>value===rankFilter.value)?.[1];
+ const visibleRanks=rankOptions.map(([,rank])=>rank).filter(rank=>!selected||rankValue(rank)<=rankValue(selected));
+ const visible=encounters.filter(item=>!selected||rankValue(item.rank)<=rankValue(selected));
+ document.getElementById('fieldEncounterCount').textContent=`${visible.length} / ${encounters.length} 件の収録済み寝顔`;
+ const grouped=new Map();
+ for(const item of visible){
+  const no=String(Number(item.sleepStyleId.split('_')[0]));
+  const pokemon=window.PS_CATALOG.pokemon?.[no];
+  const style=window.PS_CATALOG.sleepStyles?.[no]?.find(row=>row.id===item.sleepStyleId);
+  if(!pokemon||!style)continue;
+  const key=`${item.rank.tier}:${item.rank.level}`;
+  if(!grouped.has(key))grouped.set(key,[]);
+  grouped.get(key).push({item,style,pokemon});
+ }
+ for(const rank of visibleRanks){
+  const section=document.createElement('section');section.className='psg-field-rank-section';
+  const heading=document.createElement('h3');heading.className='psg-field-rank-heading';
+  const label=document.createElement('span');label.textContent=`${rank.tier}${rank.level}`;window.PS_UI_ART.rank(label,rank.tier);
+  const energy=document.createElement('strong');energy.textContent=Number.isFinite(rank.energy)?rank.energy.toLocaleString():'未確認';energy.setAttribute('aria-label',`必要エナジー：${energy.textContent}`);heading.append(label,energy);section.append(heading);
+  const rows=grouped.get(`${rank.tier}:${rank.level}`)||[];
+  if(rows.length){
+   const grid=document.createElement('div');grid.className='psg-field-rank-faces';
+   for(const {item,style,pokemon} of rows.sort((a,b)=>a.pokemon.no-b.pokemon.no||(a.style.stars||0)-(b.style.stars||0))){
+    const link=document.createElement('a');link.className='psg-field-rank-face';link.href=window.PS_DEX_ROUTE.url(pokemon.speciesId||`${String(pokemon.no).padStart(4,'0')}_default`);
+    const stars=Number.isFinite(style.stars)?`★${style.stars}`:'★未確認';
+    const description=`${pokemon.name}・${stars} ${style.name}・必要ねむけパワー：${Number.isFinite(item.drowsyPower)?item.drowsyPower.toLocaleString():'未確認'}${item.eventOnly?'・イベント条件あり':''}`;
+    link.title=description;link.setAttribute('aria-label',description);link.dataset.sleepStyleId=item.sleepStyleId;
+    const art=document.createElement('span');art.className='psg-field-rank-face-art';
+    const src=pokemon.faceImage||pokemon.image;
+    if(src){const image=document.createElement('img');image.alt=pokemon.name;image.width=40;image.height=40;image.loading='lazy';image.decoding='async';const fallback=pokemon.image&&pokemon.image!==src?pokemon.image:null;let retried=false;image.onerror=()=>{if(fallback&&!retried){retried=true;image.loading='eager';image.src=fallback;return}image.remove();art.textContent=pokemon.name};window.PS_IMAGE_LOADING.set(image,src,'pokemon');art.append(image)}else art.textContent=pokemon.name;
+    const star=document.createElement('span');star.textContent=stars;link.append(art,star);
+    link.onclick=event=>{if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;event.preventDefault();window.openPokemonDetail?.(pokemon.no)};
+    grid.append(link);
+   }
+   section.append(grid);
+  }
+  host.append(section);
+ }
+ if(!encounters.length){const note=document.createElement('p');note.className='note';note.textContent='このフィールドの出現データは未投入です。';host.append(note)}
+}
