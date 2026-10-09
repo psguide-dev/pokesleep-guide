@@ -35,17 +35,8 @@
    let populated=false;
    const populateDetail=()=>{
     if(populated)return;populated=true;
-    if(recipeMode==='evaluation')detail.append(min);
-    const levelNote=document.createElement('p');levelNote.className='note';const level=selectedLevel();levelNote.textContent=`比較Lv.${level['レベル']}・倍率×${level['倍率']}・累計 ${level['Lv1からの累計EXP'].toLocaleString()} EXP（資料確認）。実測・掲載値のないLvは暫定切り捨ての推定。レシピ本体のみ。`;detail.append(levelNote);
-    const energyNote=document.createElement('p');energyNote.className='note';energyNote.textContent=[recipe.energy?.note,recipe.energy?.conditions].filter(Boolean).join('。');detail.append(energyNote);
-    if(recipeMode==='evaluation'){
-     detail.append(supplyDetail(recipe));
-     const data=recipeMetrics(recipe),rounding=catalog.recipeEvaluation.rounding[recipe.id];
-     const note=document.createElement('p');note.className='note';note.textContent=`必要食材 ${data.quantity}個・基本エナジー合計 ${Number.isFinite(data.base)?data.base.toLocaleString():'未確定'}。掲載値 ${data.total.toLocaleString()}を評価に使用。${rounding?.difference?`四捨五入の参考式 ${rounding.reference.toLocaleString()}とは差 ${rounding.difference>0?'+':''}${rounding.difference}（端数処理未確定）。`:''}`;detail.append(note);
-    }
     const heading=document.createElement('h3');heading.textContent='食材を拾うポケモン（最終進化）';detail.append(heading);
     recipe.ingredients.forEach(item=>detail.append(providerGroup(item)));
-    const notice=document.createElement('p');notice.className='note';notice.textContent='候補は図鑑で確認できた種族のみ。チームでの獲得・調理判定はチーム画面で確認します。';detail.append(notice);
    };
    card.append(detail);card.addEventListener('toggle',()=>{
     chevron.textContent=card.open?'閉じる ▲':'詳細 ▼';
