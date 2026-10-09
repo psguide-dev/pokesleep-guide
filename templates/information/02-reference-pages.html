@@ -1,5 +1,7 @@
 (()=>{
- window.PS_BOOKSHELF={openReference(id){
+ window.PS_BOOKSHELF={async openReference(id){
+  if(window.PS_INFO_PAGE){window.PS_INFO_ROUTE.open('bookshelfPage',{reference:id});return;}
+  try{await window.PS_INFO_ROUTE.ensureCooking()}catch{const node=document.getElementById(id);if(node)node.textContent='資料を読み込めませんでした。ページを再読み込みしてください。';return;}
   const reference=document.getElementById(id);if(!reference)return;
   window.PS.go('bookshelfPage');
   for(let node=reference;node&&node.id!=='bookshelfContent';node=node.parentElement)if(node.tagName==='DETAILS')node.open=true;

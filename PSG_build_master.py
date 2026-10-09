@@ -19,6 +19,7 @@ TEMPLATE_PARTS = tuple(ROOT / 'templates' / name for name in (
     '00-number-format.html',
     '01-species-catalog.html',
     '01-field-routing.html',
+    '01-info-routing.html',
     '01-detail-routing.html',
     '02-home.html',
     '03-box.html',
@@ -520,7 +521,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v482') == 2
+    assert source.count('Review v483') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
@@ -530,6 +531,11 @@ def build():
     # Only small settings needed by team calculations remain in the main catalog.
     common_catalog = {**catalog, 'fields': {key: {k:v for k,v in entry.items() if k not in ('encounters','rankThresholds')} for key,entry in catalog['fields'].items()}}
     common_catalog.pop('fieldSpawnCounts')
+    cooking_data = serialize({key:catalog[key] for key in ('recipes','dailySupply','recipeEvaluation')})
+    cooking_asset = 'cooking-' + hashlib.sha256(cooking_data.encode()).hexdigest()[:12] + '.js'
+    (data_dir / cooking_asset).write_text('window.PS_COOKING_DATA=' + cooking_data + ';')
+    common_catalog.pop('dailySupply')
+    common_catalog.pop('recipeEvaluation')
     for no, payload in pokemon_field_payloads(catalog).items():
         species_data = serialize(payload)
         species_asset = f'pokemon-fields/{no}-' + hashlib.sha256(species_data.encode()).hexdigest()[:12] + '.js'
@@ -541,6 +547,7 @@ def build():
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
                  'if(window.PS_FIELD_DATA)Object.assign(window.PS_CATALOG,window.PS_FIELD_DATA);\n'
+                 'if(window.PS_COOKING_DATA)Object.assign(window.PS_CATALOG,window.PS_COOKING_DATA);\n'
                  'for(const [kind,entries] of Object.entries('+js_images+'))'
                  'Object.assign(window.PS_IMAGE_FILES[kind],entries);')
     face_script = face_sheet_script(ROOT, FACE_SCRIPT, FACE_SHEET)
@@ -552,13 +559,22 @@ def build():
         return page_source.replace(MARKER,page_injection).replace('/* PSG_BUILD_STYLES */',css_text).replace('/* PSG_BUILD_SPECIALTY_IMAGES */',ART.read_text()).replace('/* PSG_BUILD_FACE_SCRIPT */',face_script).replace('/* PSG_BUILD_SWAP_ENGINE */',swap_engine()).replace('/* PSG_BUILD_SPECIAL_ENGINE */',special_engine())
     field_only = ('fields/02-gallery.html','fields/03-details.html','fields/01-spawn-calculator.html','core/11-field-spawn.html')
     main_source = source
+    cooking_first = next(i for i,p in enumerate(TEMPLATE_PARTS) if p.name == '18-recipe-controller.html')
+    cooking_last = next(i for i,p in enumerate(TEMPLATE_PARTS) if str(p).endswith('recipes/05-events.html'))
+    cooking_source = ''.join(p.read_text() for p in TEMPLATE_PARTS[cooking_first:cooking_last+1])
+    cooking_code = re.sub(r'</?(?:script|body|html)\b[^>]*>', '', cooking_source)
+    cooking_package = 'cooking-view-' + hashlib.sha256(cooking_code.encode()).hexdigest()[:12] + '.js'
+    package_dir = ROOT / 'packages'
+    package_dir.mkdir(exist_ok=True)
+    (package_dir / cooking_package).write_text(cooking_code)
+    injection += '\nwindow.PS_COOKING_PACKAGE=' + serialize({'data':'data/'+cooking_asset, 'view':'packages/'+cooking_package}) + ';'
+    main_source = main_source.replace(cooking_source, '<script>window.PS_OPEN_RECIPE=id=>window.PS_INFO_ROUTE.open("recipePage",{recipe:id});</script>', 1)
     for name in field_only:
         main_source = main_source.replace((ROOT / 'templates' / name).read_text(), '', 1)
     main_source = main_source.replace((ROOT / 'templates/core/08-fields.html').read_text(), (ROOT / 'templates/core/08-fields.html').read_text() + (ROOT / 'templates/fields/04-main-bridge.html').read_text(), 1)
     html = assemble(main_source, injection)
     trim_bounds = json.loads((ROOT / 'assets/ui/icon-trim-bounds.json').read_text())
     trim_script = (ROOT / 'templates/icon-trim.js').read_text().replace('/* PSG_ICON_TRIM_BOUNDS */', json.dumps(trim_bounds,separators=(',',':')))
-    import re
     def finish(page):
         page = page.replace(css_text, re.sub(r'(?<![\w-])img(?![\w-])', ':is(img,svg.psg-trimmed-icon)', css_text))
         return page.replace('</head>', '<script>'+trim_script+'</script></head>',1)
@@ -567,6 +583,11 @@ def build():
     PREVIEW.write_text(html)
     field_script = f'<script src="data/{field_asset}"></script>'
     (ROOT / 'pokemon.html').write_text(html)
+    cooking_script = f'<script src="data/{cooking_asset}"></script>'
+    for filename in ('recipes.html', 'ingredients.html'):
+        page = html.replace('<script id="psg-catalog">', cooking_script + '<script id="psg-catalog">', 1)
+        page += f'<script src="packages/{cooking_package}"></script></body></html>'
+        (ROOT / filename).write_text(page)
     # The standalone field document does not carry recipe/ingredient/skill UI code.
     fields_source = source
     first = next(i for i,p in enumerate(TEMPLATE_PARTS) if p.name == '17-skill-controller.html')
@@ -574,8 +595,6 @@ def build():
     for path in TEMPLATE_PARTS[first:last+1]:
         fields_source = fields_source.replace(path.read_text(), '', 1)
     fields_catalog = {**common_catalog, 'recipes': {}}
-    fields_catalog.pop('dailySupply')
-    fields_catalog.pop('recipeEvaluation')
     fields_injection = injection.replace('window.PS_CATALOG='+js_data+';', 'window.PS_CATALOG='+serialize(fields_catalog)+';', 1)
     fields_html = finish(assemble(fields_source, fields_injection))
     fields_html = fields_html.replace('<script id="psg-catalog">', field_script + '<script id="psg-catalog">', 1)

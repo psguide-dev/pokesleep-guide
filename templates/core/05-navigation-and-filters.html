@@ -6,6 +6,8 @@ const screens=[...document.querySelectorAll('.screen')],tabs=[...document.queryS
 
 function go(id,push=true){
  if(window.PS_POKEMON_PAGE&&id!=='dexDetail'){window.PS_DEX_ROUTE.returnToApp(id);return;}
+ if(window.PS_INFO_PAGE&&id!==window.PS_INFO_PAGE){window.PS_INFO_ROUTE.open(id,{push});return;}
+ if(!window.PS_INFO_PAGE&&['recipePage','ingredientPage'].includes(id)){window.PS_INFO_ROUTE.open(id,{push});return;}
  if(window.PS_FIELD_PAGE&&!['fieldPage','fieldDetail'].includes(id)){window.PS_FIELD_ROUTE.returnToApp(id);return;}
  if(!window.PS_FIELD_PAGE&&['fieldPage','fieldDetail'].includes(id)){window.PS_FIELD_ROUTE.open(id);return;}
  if(push&&state.screen!==id)state.history.push(state.screen);

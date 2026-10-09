@@ -12,7 +12,7 @@ for(const [id,field] of Object.entries(data.window.PS_FIELD_DATA.fields)){
  assert(!common.fields[id].encounters);assert(!common.fields[id].rankThresholds);
  for(const key of ['name','mode','favoriteMode','favoriteBerries'])assert.equal(JSON.stringify(field[key]),JSON.stringify(common.fields[id][key]));
 }
-assert(common.dailySupply);assert(!fieldCatalog.dailySupply);assert.equal(Object.keys(fieldCatalog.recipes).length,0);
+assert(!common.dailySupply);assert(!fieldCatalog.dailySupply);assert.equal(Object.keys(fieldCatalog.recipes).length,0);
 const storage=new Map();let blocked=false;
 function setup(path){
  const assigned=[],nodes={},classes=[],listeners={},location=new URL('https://example.test/guide/'+path);location.assign=url=>assigned.push(url);

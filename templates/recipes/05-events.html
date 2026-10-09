@@ -5,6 +5,7 @@
   selectedIngredient='';ingredientButton.firstChild.textContent='食材';ingredientButton.classList.remove('active');ingredientOptions.parentElement.classList.remove('open');ingredientChoices();render();
  }));
  window.PS_OPEN_RECIPE=id=>{
+  if(window.PS_INFO_PAGE!=='recipePage'){window.PS_INFO_ROUTE.open('recipePage',{recipe:id});return;}
   const recipe=catalog.recipes?.[id];if(!recipe)return;
   categoryButtons.find(button=>button.dataset.recipeCategory===recipe.category)?.click();
   window.PS?.go('recipePage');
@@ -14,6 +15,10 @@
  // Navigation reuses the current list; providers are built only when details open.
  window.PS_PAGE_RENDERERS??={};
  let recipeListReady=false;
+ window.PS_COOKING_VIEW_STATE={
+  get:()=>({selectedIngredient}),
+  restore(value){selectedIngredient=recipes.some(r=>r.ingredients.some(i=>i.name===value?.selectedIngredient))?value.selectedIngredient:'';ingredientButton.firstChild.textContent=selectedIngredient||'食材';ingredientButton.classList.toggle('active',!!selectedIngredient);ingredientChoices();if(window.PS_INFO_PAGE==='recipePage')render();}
+ };
  window.PS_PAGE_RENDERERS.recipePage=()=>{if(!recipeListReady){ingredientChoices();render();recipeListReady=true}};
 })();
 </script>

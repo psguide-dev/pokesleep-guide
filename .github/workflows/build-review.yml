@@ -63,6 +63,7 @@ jobs:
           node tests/check_home_calendar.cjs
           node tests/check_detail_routing.cjs
           node tests/check_field_page_split.cjs
+          node tests/check_cooking_packages.cjs
           node tests/check_daily_audit.cjs
           node tests/check_recipe_team_time.cjs
           node tests/check_recipe_swap_connection.cjs
@@ -93,6 +94,8 @@ jobs:
           mkdir -p public
           cp index.html review.html pokemon.html public/
           cp fields.html public/
+          cp recipes.html ingredients.html public/
+          cp -R packages public/
           cp -R data public/
           if [ -d assets ]; then cp -R assets public/; fi
           cp -R master public/
