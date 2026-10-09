@@ -489,7 +489,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v480') == 2
+    assert source.count('Review v481') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
@@ -502,6 +502,7 @@ def build():
     js_data = serialize(common_catalog)
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'
+                 f'window.PS_FIELD_DATA_URL="data/{field_asset}";\n'
                  'if(window.PS_FIELD_DATA)Object.assign(window.PS_CATALOG,window.PS_FIELD_DATA);\n'
                  'for(const [kind,entries] of Object.entries('+js_images+'))'
                  'Object.assign(window.PS_IMAGE_FILES[kind],entries);')
@@ -528,7 +529,7 @@ def build():
     assert MARKER not in html
     PREVIEW.write_text(html)
     field_script = f'<script src="data/{field_asset}"></script>'
-    (ROOT / 'pokemon.html').write_text(html.replace('<script id="psg-catalog">', field_script + '<script id="psg-catalog">', 1))
+    (ROOT / 'pokemon.html').write_text(html)
     # The standalone field document does not carry recipe/ingredient/skill UI code.
     fields_source = source
     first = next(i for i,p in enumerate(TEMPLATE_PARTS) if p.name == '17-skill-controller.html')

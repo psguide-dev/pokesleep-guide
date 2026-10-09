@@ -2,7 +2,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const pages=Object.fromEntries(['review','fields','pokemon'].map(p=>[p,fs.readFileSync(p+'.html','utf8')]));
 for(const [page,html] of Object.entries(pages))for(const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g))if(!m[1].includes('application/json'))new vm.Script(m[2],{filename:page});
 const asset=pages.fields.match(/<script src="(data\/fields-[a-f0-9]+\.js)">/)[1];
-assert(pages.pokemon.includes(asset));assert(!pages.review.includes(asset));
+assert(!pages.pokemon.includes('<script src="'+asset+'">'));assert(!pages.review.includes('<script src="'+asset+'">'));
 assert(!pages.review.includes('function renderFieldEncounters('));assert(pages.fields.includes('function renderFieldEncounters('));
 assert(!pages.fields.includes('id="psg-recipe-index-controller"'));assert(!pages.fields.includes('id="psg-skill-index-controller"'));
 function catalog(html){return JSON.parse(html.match(/window.PS_CATALOG=(.*);\n/)[1])}
@@ -36,5 +36,17 @@ fields.window.PS.go(fields.state.history.pop(),false);assert(fields.assigned.at(
 blocked=true;assert.doesNotThrow(()=>main.route.open('fieldDetail','cyan_ex'));assert(main.assigned.at(-1).includes('field=cyan_ex'));
 assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp -R data public/'));
 console.log('Page-specific code/data, shared team settings, field boot/back, saved filters/scroll, direct URLs, blocked storage and deployment assets passed');
+
+(async()=>{
+ const ctx=main.ctx,scripts=[];
+ ctx.document.createElement=()=>({remove(){this.removed=true}});ctx.document.head={append:script=>scripts.push(script)};
+ ctx.window.PS_FIELD_DATA_URL=asset;ctx.window.PS_CATALOG={};
+ const first=main.route.loadData(),second=main.route.loadData();assert.equal(first,second);assert.equal(scripts.length,1);
+ scripts[0].onerror();await assert.rejects(first);
+ const retry=main.route.loadData();assert.equal(scripts.length,2);ctx.window.PS_FIELD_DATA={fields:{cyan:{encounters:[1]}}};scripts[1].onload();await retry;
+ assert.equal(ctx.window.PS_CATALOG.fields.cyan.encounters.length,1);await main.route.loadData();assert.equal(scripts.length,2);
+ assert(!pages.pokemon.includes('renderSleepStyles(m);renderPokemonFields(m);'));
+ console.log('Field data waits for first tab visit, shares in-flight request, retries failure and reuses successful load');
+})().catch(error=>{console.error(error);process.exitCode=1});
 
 assert(fs.readFileSync('templates/08-fields.html','utf8').includes('class="btn psg-field-detail-back" data-back'));

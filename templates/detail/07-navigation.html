@@ -10,7 +10,7 @@
    let notice=document.getElementById('dexPreviewNotice');
    if(!notice){notice=document.createElement('p');notice.id='dexPreviewNotice';notice.className='note';ability.prepend(notice)}
    notice.hidden=m.dataStatus!=='preview_pending_abilities';notice.textContent='能力データは確認待ちです。画像は各タブで確認できます。';
-   renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);renderPokemonFields(m);switchTab(currentTab||"ability");
+   renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);switchTab(currentTab||"ability");
    updateDexStickyTop();
    if(opts.keepScroll)window.scrollTo(0,scroll);
    document.title=`${m.name}｜ポケモン図鑑｜P Sleep Nexus`;

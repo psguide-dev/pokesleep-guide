@@ -18,7 +18,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   if(isDetail)return;
   const ps=window.PS;if(!ps)return;
   const filters=ps.state.filters;
-  write({origin:screens.has(origin||ps.state.screen)?origin||ps.state.screen:'dex',search:document.getElementById('dexSearch').value,types:[...filters.types],ingredients:[...filters.ingredients],specs:[...filters.specs],scroll:Math.max(0,window.scrollY||0),history:ps.state.history.filter(x=>screens.has(x)),field:ps.state.screen==='fieldDetail'?window.PS_FIELD_DETAIL?.fieldId:null,savedAt:Date.now()});
+  write({origin:screens.has(origin||ps.state.screen)?origin||ps.state.screen:'dex',returnURL:location.href,search:document.getElementById('dexSearch').value,types:[...filters.types],ingredients:[...filters.ingredients],specs:[...filters.specs],scroll:Math.max(0,window.scrollY||0),history:ps.state.history.filter(x=>screens.has(x)),field:ps.state.screen==='fieldDetail'?window.PS_FIELD_DETAIL?.fieldId:null,savedAt:Date.now()});
  }
  function url(species,tab='ability'){
   const target=new URL('pokemon.html',location.href);target.searchParams.set('species',String(species));
@@ -30,6 +30,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   location.assign(url(species,tab));
  }
  function returnToApp(screen){
+  if(screen===undefined&&isDetail&&read()?.returnURL===document.referrer){history.back();return;}
   const destination=screens.has(screen)?screen:read()?.origin||'dex';
   const target=new URL(['fieldPage','fieldDetail'].includes(destination)?'fields.html':'review.html',location.href);target.searchParams.set('screen',destination);
   target.searchParams.set('restore','dex');if(target.searchParams.get('screen')==='fieldDetail'&&read()?.field)target.searchParams.set('field',read().field);location.assign(target.href);

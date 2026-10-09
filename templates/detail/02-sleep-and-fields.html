@@ -70,6 +70,15 @@
    sleep.append(grid);
  }
  function renderPokemonFields(m){
+   if(!window.PS_FIELD_DATA&&!m.detailPreviewOnly){
+     field.replaceChildren();const note=document.createElement('p');note.className='note';note.textContent='フィールド情報を読み込み中…';field.append(note);
+     const key=detailKey(m);
+     const stillCurrent=()=>currentTab==='field'&&detailKey(byNo(currentSpeciesId||currentNo)||{})===key;
+     window.PS_FIELD_ROUTE.loadData().then(()=>{if(stillCurrent())renderPokemonFields(m)}).catch(()=>{
+       if(!stillCurrent())return;
+       note.textContent='フィールド情報を読み込めませんでした。';const retry=document.createElement('button');retry.className='btn';retry.textContent='再読み込み';retry.onclick=()=>renderPokemonFields(m);field.append(retry);
+     });return;
+   }
    field.replaceChildren();
    const title=document.createElement('h3');title.textContent='寝顔別のフィールド・最低ランク';field.append(title);
    if(m.dataStatus==='preview_pending_abilities'){

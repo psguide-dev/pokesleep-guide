@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const html=fs.readFileSync('review.html','utf8'),page=fs.readFileSync('pokemon.html','utf8');
-assert.equal(page.replace(/<script src="data\/fields-[a-f0-9]+\.js"><\/script>/,''),html);assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp index.html review.html pokemon.html public/'));
+assert.equal(page,html);assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp index.html review.html pokemon.html public/'));
 const script=html.match(/<script id="psg-pokemon-routing">([\s\S]*?)<\/script>/)[1];
 const storage=new Map();let blocked=false;
 class Node{constructor(){this.children=[];this.classList={add:()=>{}};this.value='';this.textContent=''}append(...x){this.children.push(...x)}replaceChildren(){this.children=[]}}
@@ -9,7 +9,7 @@ function setup(address,deferFrames=false){
  const document={documentElement:{classList:{add:x=>classes.push(x),remove:x=>{const i=classes.indexOf(x);if(i>=0)classes.splice(i,1)}}},getElementById:id=>hosts[id]??=new Node(),createElement:()=>new Node()};
  const window={scrollY:850,addEventListener:(key,fn)=>listeners[key]=fn,scrollTo:(x,y)=>calls.push(['scroll',y]),PS:{state:{screen:'dex',history:['startPage'],filters:{types:new Set(['ほのお']),ingredients:new Set(['あまいミツ']),specs:new Set(['食材'])}},refreshAssetViews:()=>calls.push(['refresh']),go:(screen,push)=>{window.PS.state.screen=screen;window.PS_DEX_ROUTE?.syncScreen(screen);calls.push(['go',screen,push])}}};
  const sessionStorage={getItem:key=>{if(blocked)throw Error('blocked');return storage.get(key)||null},setItem:(key,value)=>{if(blocked)throw Error('blocked');storage.set(key,value)},removeItem:key=>storage.delete(key)};
- vm.runInNewContext(script,{window,location,document,sessionStorage,URL,URLSearchParams,Date,Set,history:{state:null,replaceState:(state,title,url)=>{location.href=url;calls.push(['replace',url])}},requestAnimationFrame:fn=>deferFrames?frames.push(fn):fn()});
+ vm.runInNewContext(script,{window,location,document,sessionStorage,URL,URLSearchParams,Date,Set,history:{state:null,back:()=>calls.push(['native-back']),replaceState:(state,title,url)=>{location.href=url;calls.push(['replace',url])}},requestAnimationFrame:fn=>deferFrames?frames.push(fn):fn()});
  return {window,route:window.PS_DEX_ROUTE,document,hosts,calls,assigned,listeners,classes,frames,location};
 }
 const app=setup('https://example.test/guide/review.html');app.document.getElementById('dexSearch').value='ほげ';app.route.capture('dex');
@@ -57,3 +57,6 @@ fieldRoute.listeners.DOMContentLoaded();assert.equal(fieldRoute.window.PS.state.
 const pokemonFromField=setup('https://example.test/guide/pokemon.html?species=0001_default');pokemonFromField.route.returnToApp();assert.equal(pokemonFromField.assigned[0],'https://example.test/guide/fields.html?screen=fieldDetail&restore=dex&field=cyan_ex');
 fieldRoute.window.PS.go('fieldPage');assert.equal(fieldRoute.location.searchParams.has('field'),false);
 console.log('Field detail direct URL, reload target and return from Pokémon detail preserve browsed field');
+
+const nativeList=setup('https://example.test/guide/review.html?screen=dex');nativeList.route.capture('dex');
+const nativeDetail=setup('https://example.test/guide/pokemon.html?species=0001_default');nativeDetail.document.referrer=nativeList.location.href;nativeDetail.route.returnToApp();assert(nativeDetail.calls.some(x=>x[0]==='native-back'));assert.equal(nativeDetail.assigned.length,0);
