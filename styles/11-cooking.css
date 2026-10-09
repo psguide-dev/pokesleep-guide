@@ -2,6 +2,15 @@
 .psg-cooking-controls label{display:flex;align-items:center;gap:4px;font-size:12px;min-width:0}
 .psg-cooking-controls input[type=number]{width:76px;min-width:0;padding:4px}
 .psg-cooking-controls select{padding:4px;max-width:100%}
+#recipeCompareControls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:8px 0;align-items:center}
+#recipeCompareControls label{display:grid;grid-template-columns:64px minmax(0,1fr)}
+#recipeCompareControls select{box-sizing:border-box;height:var(--psg-ui-unit);border:1px solid var(--line);border-radius:10px;background:#fff}
+#recipeLevelFacts{margin:0;font-size:11px;text-align:right}
+#recipePage>.psg-cooking-reference{background:#fff;border-radius:12px;padding:10px}
+#recipePage>.psg-cooking-reference>.psg-cooking-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#recipePage>.psg-cooking-reference label{flex-wrap:wrap}
+#recipePage>.psg-cooking-reference input[type=number]{width:100%;box-sizing:border-box}
+#recipePage .psg-recipe-team-time>details{border:0;border-top:1px solid var(--line);border-radius:0;padding:8px 0;background:transparent}
 .psg-cooking-reference{margin:8px 0;padding:8px;border:1px solid var(--line,#dce4df);border-radius:10px}
 .psg-cooking-reference summary{cursor:pointer;font-weight:700}
 .psg-cooking-reference .note{margin:6px 0;font-size:12px;overflow-wrap:anywhere}
