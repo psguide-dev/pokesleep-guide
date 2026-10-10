@@ -100,7 +100,7 @@
    dialog=document.createElement('dialog');
    dialog.id='psnSkillDialog';dialog.className='psn-skill-dialog'+(['energy_charge_s_fixed','energy_charge_s_variable','energy_charge_m'].includes(s.id)?' psn-energy-dialog':'');
    dialog.setAttribute('aria-labelledby','psnSkillTitle');
-   dialog.innerHTML=`<header><h3 id="psnSkillTitle">${detailEsc(dexSkillGameName(s))}</h3><div class="psn-skill-level-switch" role="group" aria-label="表示するスキルレベル"><button type="button" data-step="-1" aria-label="前のスキルレベル">◀</button><b id="psnSkillLevel" aria-live="polite"></b><button type="button" data-step="1" aria-label="次のスキルレベル">▶</button></div></header><div class="psn-skill-dialog-body"><p class="psn-game-description"></p><div id="psnSkillTable" aria-live="polite"></div></div><footer><button type="button" class="psn-dialog-close">とじる</button></footer>`;
+   dialog.innerHTML=`<header><h3 id="psnSkillTitle">${detailEsc(dexSkillGameName(s))}</h3><div class="psn-skill-level-switch" role="group" aria-label="表示するスキルレベル"><button type="button" data-step="-1" aria-label="前のスキルレベル">◀</button><b id="psnSkillLevel" aria-live="polite"></b><button type="button" data-step="1" aria-label="次のスキルレベル">▶</button></div></header><div class="psn-skill-dialog-body"><p class="psn-game-description skill-desc"></p><div id="psnSkillTable" aria-live="polite"></div></div><footer><button type="button" class="psn-dialog-close">とじる</button></footer>`;
    document.body.appendChild(dialog);
    const available=Object.keys(s.levels||{}).map(Number).sort((a,b)=>a-b);
    let index=0;
@@ -117,7 +117,7 @@
        const names=s.ingredientCandidates||(m.ingredients||[]).map(x=>x.name).filter(Boolean);
        table+=`<p>ゲットする可能性のある食材：${names.length?names.map(detailEsc).join('・'):'ポケモンごとに異なります'}</p>`;
      }
-     const notes=s.gameNotes||s.ruleNotes?.map(n=>n.label+'：'+n.text)||[];
+     const notes=s.gameNotes||(s.gameEffectTemplate?[]:s.ruleNotes?.map(n=>n.label+'：'+n.text))||[];
      table+=notes.map(n=>`<p class="note">※${detailEsc(n)}</p>`).join('');
      dialog.querySelector('#psnSkillTable').innerHTML=table;
 
@@ -126,6 +126,11 @@
      const select=document.createElement('select');select.setAttribute('aria-label','表示するポケモン');
      choices.forEach((p,i)=>{const option=document.createElement('option');option.value=i;option.textContent=p.name;select.appendChild(option)});
      select.addEventListener('change',()=>{m=choices[Number(select.value)];update()});dialog.querySelector('header').appendChild(select);
+   }
+   if(choices.length){
+     const related=document.createElement('details'),label=document.createElement('summary');label.textContent='このスキルを持つポケモン';related.appendChild(label);
+     choices.forEach(p=>{const button=document.createElement('button');button.type='button';button.textContent=p.name;button.addEventListener('click',()=>{dialog.close();window.openPokemonDetail?.(p.speciesId||p.no,{pushHistory:false})});related.appendChild(button)});
+     dialog.querySelector('.psn-skill-dialog-body').appendChild(related);
    }
    dialog.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click',()=>{index=Math.max(0,Math.min(available.length-1,index+Number(button.dataset.step)));update()}));
    dialog.querySelector('.psn-dialog-close').addEventListener('click',()=>dialog.close());

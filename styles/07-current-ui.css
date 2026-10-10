@@ -460,3 +460,7 @@
 .psn-energy-dialog .psn-game-description{margin:0;text-align:center;font-weight:700;line-height:1.6}
 .psn-energy-dialog .psn-skill-dialog-body{padding:22px 14px}
 .psn-energy-dialog .effect-energy{color:var(--skill-effect-energy)}
+
+.psn-skill-dialog header select{display:block;margin:8px auto 0;max-width:100%;min-height:36px;font:inherit;border:1px solid #c8ccdc;border-radius:8px;background:white;padding:4px 8px}
+.psn-skill-dialog-body>details{margin-top:14px}
+.psn-skill-dialog-body>details button{margin:6px 4px 0 0;padding:4px 8px}
