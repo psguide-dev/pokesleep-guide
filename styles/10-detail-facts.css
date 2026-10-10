@@ -74,12 +74,6 @@
 #dexDetail #detailFoods .psg-food-stack{margin-block:0!important}
 #boxDetail>.card{margin-block:0 var(--detail-block-gap)!important}
 
-#dexDetail .detail-head{background:var(--type-bg)!important;border-bottom:0!important;box-shadow:none!important}
+#dexDetail .detail-head{background:var(--type-bg)!important}
 #dexDetail .psg-detail-register button{width:100%;height:100%;min-width:0;padding:1px;border:0;border-radius:8px;background:transparent;color:#111;font:inherit;font-weight:850;cursor:pointer}
 #dexDetail .psg-detail-register button:focus-visible{outline:2px solid var(--type-accent);outline-offset:1px}
-
-/* Visible controls use a white surface above the type-colored fixed area. */
-#dexDetail :is(.detail-head>[data-back],#v12Prev,#v12Next,#dexExpToggle,#dexRegister,#skillDetailToggle){background:#fff!important;border:1px solid #d6dce1!important;border-radius:8px!important;color:#24323d!important;box-sizing:border-box}
-#dexDetail #skillDetailToggle{width:auto!important;min-width:64px!important;padding:2px 8px!important;text-align:center!important}
-#dexDetail .v12-tabs button{background:#fff!important;color:#44515c!important;border:1px solid #d6dce1!important;border-radius:10px!important}
-#dexDetail .v12-tabs button.active{background:#fff!important;color:#17252f!important;border:2px solid var(--type-accent)!important;border-radius:10px!important}

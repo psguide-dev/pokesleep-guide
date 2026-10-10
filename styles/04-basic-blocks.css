@@ -45,8 +45,10 @@
   white-space:nowrap!important;
 }
 
-
-
+/* Field tab: deeper green, independent from Pokémon type color. */
+#dexDetail .v12-tabs button[data-v12tab="field"]{
+  border-color:#8db49a!important;
+}
 
 @media(max-width:620px){
   #dexDetail .v12-nav button,
@@ -112,9 +114,17 @@
   line-height:1!important;
 }
 
-
-
-
+/* Tabs remain UI colors, not type colors. Field green stays clearly distinct. */
+#dexDetail .v12-tabs button[data-v12tab="field"]{
+  background:#f7faf8!important;
+  color:#174a2b!important;
+  border:1.5px solid #245b36!important;
+}
+#dexDetail .v12-tabs button[data-v12tab="field"].active{
+  background:#245b36!important;
+  color:#fff!important;
+  border-color:#174526!important;
+}
 
 @media(max-width:620px){
   #dexDetail .v12-nav button,
