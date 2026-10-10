@@ -19,6 +19,12 @@ def retired_images(root):
                                 'assets/skill-icons/', 'assets/pokemon/biblo-v347/'))
         assert '..' not in name.split('/') and name not in rows
         rows[name] = row
+    ui = json.loads((root / 'data-import/retired-ui-images-v545.json').read_text())
+    assert len(ui['images']) == ui['count'] == 12
+    for row in ui['images']:
+        name = row['path']
+        assert name.startswith(('assets/ui/', 'master/specialties/')) and '..' not in name.split('/') and name not in rows
+        rows[name] = row
     return rows
 
 

@@ -1,0 +1,54 @@
+{
+  "version": 545,
+  "count": 12,
+  "images": [
+    {
+      "path": "assets/ui/menu_home.png",
+      "sha256": "6ed490cacdf38f74f849da74ad4919db2f9bc4de8b30c16080305bc86ce799f9"
+    },
+    {
+      "path": "assets/ui/menu_team.png",
+      "sha256": "29ffc543711e06c94940c608980a8991ff5be39be72e24a7a6c731d27168e99f"
+    },
+    {
+      "path": "assets/ui/menu_box.png",
+      "sha256": "0838a116b5aa12605c95d5a420e4c88bcb11e0c38d2fb0269d15a321b50934c6"
+    },
+    {
+      "path": "assets/ui/menu_dex.png",
+      "sha256": "bc560a6057f4f0d6847b7417205e70f813c19aa3e6974d7a9d73741eadb90d5d"
+    },
+    {
+      "path": "assets/ui/menu_info.png",
+      "sha256": "a73c4f478172886b0a3a722a6c62afa3e2adb74616dde3ce27783b4d9b03d203"
+    },
+    {
+      "path": "assets/ui/PSN_menu_account.png",
+      "sha256": "e4b18d8bf850e5cc47b1c3265036eab6234d00ad8f36c618b049da5c0349eb72"
+    },
+    {
+      "path": "assets/ui/PSN_menu_bookshelf.png",
+      "sha256": "01d26e066907323e0067cb4e303c3537cd432946ed52825c5071b8f9f20f22b1"
+    },
+    {
+      "path": "assets/ui/PSN_menu_exp.png",
+      "sha256": "2f78a470d1c251efde70122564c093ee531325f28cca9f5cdfd2f47e623cf9f4"
+    },
+    {
+      "path": "master/specialties/all/icon.webp",
+      "sha256": "773d3f6214ca6420289fcf3db1367f024d60e03244060c1bd8379c54188109b2"
+    },
+    {
+      "path": "master/specialties/berry/icon.webp",
+      "sha256": "388231f9a0ea847188f2cb4020f2a115330bdc7be63e565030cf0dbb6487fc47"
+    },
+    {
+      "path": "master/specialties/ingredient/icon.webp",
+      "sha256": "1cdcb11cbbf7f99a7958fd1d7d15c45d225a81c7f9117f3398ea766b0c76f8f2"
+    },
+    {
+      "path": "master/specialties/skill/icon.webp",
+      "sha256": "c7cc420f4a93804a808e5f41543d019f4fee95c0547a6a5a88f4e528bf8324e5"
+    }
+  ]
+}

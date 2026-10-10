@@ -197,50 +197,6 @@
       114
     ]
   },
-  "master/specialties/all/icon.webp": {
-    "source": "master/specialties/all/icon.webp",
-    "width": 238,
-    "height": 236,
-    "box": [
-      0,
-      0,
-      238,
-      236
-    ]
-  },
-  "master/specialties/skill/icon.webp": {
-    "source": "master/specialties/skill/icon.webp",
-    "width": 238,
-    "height": 238,
-    "box": [
-      0,
-      0,
-      238,
-      238
-    ]
-  },
-  "master/specialties/berry/icon.webp": {
-    "source": "master/specialties/berry/icon.webp",
-    "width": 238,
-    "height": 237,
-    "box": [
-      0,
-      0,
-      238,
-      237
-    ]
-  },
-  "master/specialties/ingredient/icon.webp": {
-    "source": "master/specialties/ingredient/icon.webp",
-    "width": 238,
-    "height": 235,
-    "box": [
-      0,
-      0,
-      238,
-      235
-    ]
-  },
   "master/sleepTypes/snoozing/icon.webp": {
     "source": "master/sleepTypes/snoozing/icon.webp",
     "width": 320,

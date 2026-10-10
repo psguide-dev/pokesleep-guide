@@ -14,6 +14,8 @@ on:
       - 'PSG_build_sources.py'
       - 'PSG_received_art.py'
       - 'data-import/received-v506/**'
+      - 'data-import/reference-v544/**'
+      - 'data-import/retired-ui-images-v545.json'
       - 'PSG_biblo_assets.py'
       - 'PSG_retired_images.py'
       - 'PSG_trim_assets.py'
@@ -87,6 +89,7 @@ jobs:
           node tests/check_individual_evaluation.cjs
       - name: Check image-first species and received artwork
         run: |
+          node tests/check_reference_lists.cjs
           node tests/check_image_first.cjs
           node tests/check_biblo_assets.cjs
           node tests/check_retired_images.cjs

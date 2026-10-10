@@ -32,10 +32,8 @@ def restore_trim_assets(root):
                 data = archive.read(member)
                 assert hashlib.sha256(data).hexdigest() == row['sha256']
                 if member in adopted:
-                    seen.add(member)
                     continue
                 if member in retired_images(root):
-                    seen.add(member)
                     continue
                 destination = root / member
                 assert destination.is_file()
@@ -43,7 +41,7 @@ def restore_trim_assets(root):
                 if destination.read_bytes() != data:
                     destination.write_bytes(data)
                 seen.add(member)
-    assert seen == set(rows) - set(retired_images(root))
+    assert seen == set(rows) - set(retired_images(root)) - set(adopted)
     print(f'Trimmed artwork: {len(seen)} current images restored unchanged')
 
 
@@ -65,10 +63,8 @@ def restore_additional_trim_assets(root):
                 data = archive.read(member)
                 assert hashlib.sha256(data).hexdigest() == row['sha256']
                 if member in adopted:
-                    seen.add(member)
                     continue
                 if member in retired_images(root):
-                    seen.add(member)
                     continue
                 destination = root / member
                 if destination.exists():
@@ -79,5 +75,5 @@ def restore_additional_trim_assets(root):
                 if not destination.exists() or destination.read_bytes() != data:
                     destination.write_bytes(data)
                 seen.add(member)
-    assert seen == set(rows) - set(retired_images(root))
+    assert seen == set(rows) - set(retired_images(root)) - set(adopted)
     print(f'Additional trimmed artwork: {len(seen)} current images restored unchanged')

@@ -9,7 +9,7 @@
   const host=document.getElementById('berryReference');host.replaceChildren();
   host.append(el('p','エナジーはきのみ1個あたり。好物・フィールド・EX・ゾーン補正前の値です。'));
   const body=table(host,['きのみ','タイプ','Lv.1','Lv.70']);
-  ref.berries.forEach(row=>{const berry=c.berries[row.key];const tr=el('tr'),th=el('th');th.scope='row';const img=el('img');img.src=window.PS_IMAGE_FILES.berries[berry.name];img.alt='';img.width=36;img.height=36;img.loading='lazy';th.append(img,el('span',berry.name));tr.append(th,el('td',row.type),el('td',row.energyLv1),el('td',row.energyLv70));body.append(tr)});
+  ref.berries.forEach(row=>{const berry={name:row.name};const tr=el('tr'),th=el('th');th.scope='row';const img=el('img');img.src=window.PS_IMAGE_FILES.berries[berry.name];img.alt='';img.width=36;img.height=36;img.loading='lazy';th.append(img,el('span',berry.name));tr.append(th,el('td',row.type),el('td',row.energyLv1),el('td',row.energyLv70));body.append(tr)});
   const special=el('details');special.className='card';special.append(el('summary','イベント限定のきのみ（推定）'));
   ref.specialBerries.forEach(row=>{special.append(el('h3',row.name),el('p','全タイプが追加で拾うイベント限定のきのみ。通常18種とは別枠です。'),el('p',`Lv.1：${row.energyLv1} ／ Lv.70：${row.energyLv70}（推定・補正前）`),el('p',row.scope))});host.append(special);
   source(host,[['きのみ',ref.sources.berryEnergy],['タイプ対応',ref.sources.berryTypes],['Lv.70解放',ref.sources.levelCap]]);
