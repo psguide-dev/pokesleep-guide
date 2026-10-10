@@ -14,7 +14,7 @@
    return otherRows.filter(Boolean).length?otherRows.filter(Boolean):['条件未確認'];
  }
  function evolutionConditionMarkup(value){
-   value=String(value).replace(/一緒に睡眠\s*([0-9０-９]+)\s*時間/g,'睡眠$1時間').replace('一緒に睡眠','睡眠');
+   value=String(value).replace(/(?:一緒に|チームに入れて)\s*睡眠\s*([0-9０-９]+)\s*時間/g,'睡眠$1時間').replace(/(?:一緒に|チームに入れて)\s*睡眠/g,'睡眠');
    const names=value.split('＋');
    if(names.every(name=>window.PS_IMAGE_FILES.items?.[name])){
      const id=`psg-evo-items-${++evolutionItemPopoverIndex}`,label=names.join('＋');
