@@ -157,7 +157,8 @@
      const compact=detail.length<=6&&detail.every(([lv,x])=>skillVariables(s,x,lv).replace(/<[^>]*>/g,'').length<=10);
      const layoutClass=compact&&detail.length===6?'v43-compact-3':detail.length<=6?'v43-compact-2':'v43-detail-long';
      const note=s.displayNote|| (s.effectType==='random_main_skill'?'選ばれたメインスキルは、ゆびをふると同じレベルで発動します（対象スキルの上限まで）。':s.effectType?.startsWith('helper_boost_')?'追加回数は同じタイプの異なるポケモンが3／4／5種類いる場合。':s.effectType==='fixed_dream_shards_energy'?'ゆめのかけら ／ エナジー':s.effectType==='cooking_assist'?'食材数 ／ 大成功確率':s.effectType==='moonlight_energy_recovery'?'追加は大成功時にチーム内の1匹へ。':'');
-     levels.innerHTML=(note?`<p class="psg-skill-variable-note">${detailEsc(note)}</p>`:'')+`<div class="v32-skill-grid ${layoutClass}">${detail.map(([lv,x])=>`<div class="v32-skill-cell"><b>Lv.<span class="psg-skill-level-number">${lv}</span></b><strong class="psg-skill-values">${skillEffectLines(skillVariables(s,x,lv))}</strong></div>`).join('')}</div>`;
+     const lunar=s.id==='lunar_blessing_energy_for_everyone_s';
+     levels.innerHTML=(note?`<p class="psg-skill-variable-note">${detailEsc(note)}</p>`:'')+`<div class="v32-skill-grid ${lunar?'psg-lunar-level-grid':layoutClass}">${detail.map(([lv,x])=>`<div class="v32-skill-cell${lunar?' psg-lunar-level':''}"><b>Lv.<span class="psg-skill-level-number">${lv}</span></b><strong class="psg-skill-values">${lunar?`<span class="psg-lunar-effect">${dexSkillEffect(s,x,m)}</span>${dexLunarTable(s,x)}`:skillEffectLines(skillVariables(s,x,lv))}</strong></div>`).join('')}</div>`;
      if(s.ruleNotes?.length)levels.insertAdjacentHTML('beforeend',`<div class="psg-skill-conditions"><h4>発動条件・持続</h4>${s.ruleNotes.map(row=>`<p><b>${detailEsc(row.label)}</b>：${detailEsc(row.text)}</p>`).join('')}<p class="note">資料確認。独自のゲーム内実測ではありません。</p></div>`);
 
    }

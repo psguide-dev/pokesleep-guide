@@ -293,7 +293,13 @@
 #v12Ability .psg-skill-summary .skill-icon{width:var(--skill-icon-size)!important;height:var(--skill-icon-size)!important;margin:0!important}
 #v12Ability .psg-skill-icon-column{width:var(--skill-icon-size);min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:start;margin-top:calc(var(--box-unit-height) * .25 - 1px);gap:0}
 #v12Ability .psg-skill-copy{min-width:0;display:grid;grid-template-rows:minmax(var(--skill-copy-row),auto) minmax(var(--skill-copy-row),auto) auto}
-#v12Ability .psg-skill-copy .skill-levels{grid-column:1!important;grid-row:3!important;padding-inline:0}
+#v12Ability .psg-skill-summary > .skill-levels{grid-column:1 / -1!important;grid-row:2!important;padding-inline:0;margin-left:0!important}
+#v12Ability .psg-skill-summary .skill-levels .v32-skill-cell{grid-template-columns:max-content minmax(0,1fr)!important;justify-content:start!important;column-gap:6px!important;padding-inline:0!important}
+#v12Ability .psg-skill-summary .skill-levels .v32-skill-cell > b{text-align:left!important;white-space:nowrap}
+#v12Ability .psg-skill-summary .skill-levels .psg-lunar-level-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+#v12Ability .psg-skill-summary .psg-lunar-level .psg-skill-values{display:grid;grid-template-columns:minmax(0,1fr) minmax(104px,42%);align-items:center;gap:6px}
+#v12Ability .psg-skill-summary .psg-lunar-level .psg-lunar-table{grid-column:2;grid-row:auto}
+#v12Ability .psg-skill-summary .psg-lunar-level .psg-lunar-effect{font-size:11px;line-height:1.2}
 #v12Ability .psg-skill-name-main,#v12Ability .psg-skill-name-variant{display:block}
 #v12Ability .psg-skill-summary[aria-disabled="false"]{cursor:pointer;touch-action:manipulation}
 #v12Ability .psg-skill-summary:focus-visible{outline:2px solid var(--type-accent);outline-offset:2px;border-radius:6px}
@@ -305,7 +311,6 @@
 #v12Ability .psg-skill-three-lines .psg-skill-copy{grid-template-columns:minmax(0,1fr) minmax(104px,42%);column-gap:6px}
 #v12Ability .psg-skill-summary.psg-skill-three-lines .skill-name{grid-column:1;font-size:clamp(11px,3.4vw,14px)!important}
 #v12Ability .psg-skill-three-lines .skill-desc{grid-column:1;grid-row:2}
-#v12Ability .psg-skill-summary.psg-skill-three-lines .skill-levels{grid-column:1 / -1!important}
 #v12Ability .psg-lunar-table{grid-column:2;grid-row:1 / 3;align-self:center;width:100%;border-collapse:collapse;table-layout:fixed;margin:0;color:#111;font-size:clamp(11px,3vw,13px);line-height:1.1;text-align:center}
 #v12Ability .psg-lunar-table caption{font-size:inherit;line-height:1.1;padding:0;white-space:nowrap}
 #v12Ability .psg-lunar-table th,#v12Ability .psg-lunar-table td{padding:2px 0;border:1px solid #dce0e3;text-align:center}
