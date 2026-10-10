@@ -456,3 +456,7 @@
 .psn-skill-extra{margin:10px 0 0;line-height:1.5}
 .psn-skill-dialog footer{flex-shrink:0;padding:8px 14px 12px;text-align:center}
 .psn-dialog-close{width:65%}
+
+.psn-energy-dialog .psn-game-description{margin:0;text-align:center;font-weight:700;line-height:1.6}
+.psn-energy-dialog .psn-skill-dialog-body{padding:22px 14px}
+.psn-energy-dialog .effect-energy{color:var(--skill-effect-energy)}
