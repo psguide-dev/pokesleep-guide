@@ -61,7 +61,7 @@
 #detailFoods .psg-food-pending{color:#111;font-size:10px}
 /* Section frames match the Box detail cards. */
 #dexDetail :is(#v12Ability,#v12Sleep,#v12Field) .card{background:#f3f7ff!important;border:1px solid var(--line)!important;border-radius:18px!important;box-shadow:none!important}
-#v12Ability .ability-card:has(#detailSkill){padding:3px 9px!important;margin-bottom:8px!important;box-sizing:border-box;min-height:var(--skill-block-height,calc(var(--box-unit-height) * 2));display:flex;flex-direction:column;justify-content:flex-start}
+#v12Ability .ability-card:has(#detailSkill){padding:3px 9px!important;margin-bottom:8px!important;box-sizing:border-box;min-height:var(--skill-block-height,calc(var(--box-unit-height) * 1.5));display:flex;flex-direction:column;justify-content:flex-start}
 #evolutionCard .v31-evo-node{border-radius:16px!important}
 #dexDetail .v31-big-arrow{color:#39453d!important;font-size:27px!important;font-weight:500!important;line-height:1!important}
 #dexDetail .v106-evo-conditions{order:2!important;font-weight:850;color:#111;}
@@ -291,14 +291,17 @@
 #v12Ability .psg-skill-summary{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:start;gap:10px}
 #v12Ability .psg-skill-summary .skill-icon{width:44px!important;height:44px!important;margin:0!important}
 #v12Ability .psg-skill-icon-column{width:44px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
-#v12Ability .psg-skill-copy{min-width:0}
+#v12Ability .psg-skill-copy{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 44px;column-gap:4px;align-items:start}
+#v12Ability .psg-skill-copy .skill-name{grid-column:1;grid-row:1}
+#v12Ability .psg-skill-copy #skillDetailToggle{grid-column:2;grid-row:1;min-height:22px;text-align:right;padding:2px 0!important}
+#v12Ability .psg-skill-copy .skill-desc{grid-column:1 / -1!important;grid-row:2!important}
 #v12Ability .psg-skill-copy .skill-name{display:block!important;font-size:17px!important;line-height:1.2!important;white-space:normal!important}
 #v12Ability .psg-skill-copy .skill-desc{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:baseline;column-gap:6px;margin:2px 0 0!important;padding:0!important;line-height:1.35!important;font-size:13px!important;border:0!important}
 #v12Ability .psg-skill-copy .v35-effect-level{font-size:13px!important;margin-right:0}
 #v12Ability .psg-skill-copy .v35-effect-copy{font-size:13px!important;min-width:0;overflow-wrap:anywhere}
 #v12Ability .psg-skill-level-number{font-size:18px;line-height:1;font-weight:950;color:#111}
 #dexDetail .psg-dex-title-line{display:flex;align-items:baseline;justify-content:center;gap:5px;min-width:0;max-width:100%}
-#dexDetail .psg-dex-costume{flex:none;width:75px;height:24px;min-height:24px;padding:2px;font:inherit;font-size:11px;color:#52645b;background:#fff;border:1px solid #dce4df;border-radius:7px;opacity:1}
+#dexDetail .psg-dex-costume{flex:none;width:75px;height:24px;min-height:24px;padding:2px;font:inherit;font-size:11px;color:#000;background:#fff;border:1px solid #dce4df;border-radius:7px;opacity:1}
 #dexDetail .psg-form-no-image{font-size:14px;color:#718078;align-self:center}
 .psg-skill-level>span{min-width:0;overflow-wrap:anywhere;line-height:1.6}
 .psg-skill-entry summary strong{min-width:0;overflow-wrap:anywhere}

@@ -97,8 +97,8 @@ main:has(#dexDetail.active){background:var(--dex-type-bg,#eaf7ed);min-height:cal
 #dexDetail .detail-head h2:has(.psg-dex-costume) .psg-dex-title-line{display:flex;justify-content:center;min-width:0;width:100%;gap:4px}
 #dexDetail .detail-head h2:has(.psg-dex-costume) .v51-head-no{flex:none;font-size:9px!important}
 #dexDetail .detail-head h2:has(.psg-dex-costume) .v51-head-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#dexDetail .detail-head .psg-dex-costume{width:100%;max-width:100%;min-width:0;height:28px;min-height:28px;margin:0;padding:2px;font-size:11px;box-sizing:border-box}
+#dexDetail .detail-head .psg-dex-costume{width:100%;max-width:100%;min-width:0;height:28px;min-height:28px;margin:0;padding:2px;font-size:11px;color:#000;box-sizing:border-box}
 
 /* Frame only the artwork; facts sit directly on the type background. */
 #dexDetail .hero{background:transparent!important;border:0!important;box-shadow:none!important}
-#dexDetail .hero-art{background:color-mix(in srgb,var(--type-bg) 76%,white 24%)!important;border:1px solid color-mix(in srgb,var(--type-accent) 22%,transparent)!important;border-radius:18px!important;box-sizing:border-box}
+#dexDetail .hero-art{background:#fff!important;border:1px solid color-mix(in srgb,var(--type-accent) 22%,transparent)!important;border-radius:18px!important;box-sizing:border-box}

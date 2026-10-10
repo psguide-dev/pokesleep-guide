@@ -76,7 +76,7 @@
    if(!(resolvedUnit>0))return;
    const inset=['paddingTop','paddingBottom','borderTopWidth','borderBottomWidth'].reduce((n,key)=>n+(parseFloat(style[key])||0),0);
    const half=resolvedUnit/2,needed=skillBox.getBoundingClientRect().height+inset;
-   card.style.setProperty('--skill-block-height',`${Math.max(4,Math.ceil((needed-.01)/half))*half}px`);
+   card.style.setProperty('--skill-block-height',`${Math.max(3,Math.ceil((needed-.01)/half))*half}px`);
  }
  if(window.ResizeObserver&&skillBox)new ResizeObserver(resizeSkillBlock).observe(skillBox);
  window.addEventListener('resize',resizeSkillBlock,{passive:true});
