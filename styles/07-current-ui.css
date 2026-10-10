@@ -441,7 +441,7 @@
 .psn-skill-dialog{width:min(560px,calc(100vw - 28px));max-height:calc(100dvh - 40px);padding:0;border:1px solid #d9dee7;border-radius:18px;background:#f5f7ff;color:#17222a;box-sizing:border-box;box-shadow:0 12px 40px #0004}
 .psn-skill-dialog::backdrop{background:#0008}
 .psn-skill-dialog[open]{display:flex;flex-direction:column}
-.psn-skill-dialog header{flex-shrink:0;padding:10px 14px;background:#eee8ff;border-bottom:1px solid #d9dee7}
+.psn-skill-dialog header{display:block;height:auto;position:static;flex-shrink:0;padding:10px 14px;background:#eee8ff;border-bottom:1px solid #d9dee7}
 .psn-skill-dialog h3{margin:0;font-size:16px}
 .psn-skill-dialog-body{padding:12px 14px;overflow-y:auto;min-height:0;font-size:14px}
 .psn-skill-level-switch{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;font-size:14px}
