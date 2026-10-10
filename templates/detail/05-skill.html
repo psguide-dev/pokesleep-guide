@@ -81,6 +81,7 @@
    if(s.id==='lunar_blessing_energy_for_everyone_s')return `チーム内げんきを＋${value(v.recoveryPerTeamMember,'energy-recovery')}<br>きのみを自分${value('x','berry')}個<br>チーム内各${value('y','berry')}個`;
   }
   let html=skillEffectLines(skillDescription(s,row));
+  if(s.id==='extra_helpful_s')html=html.replace('おてつだい','おてつだいを<br>');
   if(s.id==='bulk_up_cooking_assist_s')html=html.replace('ゲットし、','ゲットし、<br>');
   if(s.id==='berry_juice_energy_for_everyone')html=html.replace('回復する。','回復する。<br>');
   if(s.effectType?.startsWith('helper_boost_'))html=html.replace('おてつだい。','おてつだい。<br>').replace(/異なる([^<。]+?)タイプ3[～〜]5種/g,'異なる$13〜5');
