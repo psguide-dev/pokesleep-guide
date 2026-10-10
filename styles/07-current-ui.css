@@ -432,7 +432,12 @@
 #dexDetail #detailFoods .psg-food-initial{position:absolute;right:1px;bottom:1px;padding:0;background:transparent;color:#111;font-size:9px;line-height:1;font-weight:700}
 
 /* Draco Meteor trial: shared-size detail dialog, one preview level at a time. */
-.psn-skill-info{margin-left:auto;font-size:20px;align-self:center}
+#v12Ability .psg-skill-summary[aria-haspopup="dialog"]{position:relative}
+#v12Ability .psg-skill-summary[aria-haspopup="dialog"] .psg-skill-copy{grid-template-rows:repeat(2,minmax(var(--skill-copy-row),auto))}
+#v12Ability .psg-skill-summary[aria-haspopup="dialog"] .skill-name{flex-direction:row;align-items:center;justify-content:center;gap:10px;padding-right:22px;text-align:center}
+#v12Ability .psg-skill-summary[aria-haspopup="dialog"] .skill-desc{grid-template-columns:minmax(0,1fr);align-self:stretch;align-items:center}
+.psn-title-level{font-size:13px;white-space:nowrap}
+.psn-skill-info{position:absolute;right:0;top:8px;font-size:20px;line-height:1}
 .psn-skill-dialog{width:min(560px,calc(100vw - 28px));max-height:calc(100dvh - 40px);padding:0;border:1px solid #d9dee7;border-radius:18px;background:#f5f7ff;color:#17222a;box-sizing:border-box;box-shadow:0 12px 40px #0004}
 .psn-skill-dialog::backdrop{background:#0008}
 .psn-skill-dialog header{padding:16px 18px;background:#eee8ff;border-bottom:1px solid #d9dee7}

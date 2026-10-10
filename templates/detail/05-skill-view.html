@@ -50,7 +50,8 @@
      summary?.classList.remove('psg-skill-three-lines');
      summary?.setAttribute('aria-haspopup','dialog');
      summary?.setAttribute('aria-controls','psnDracoDialog');
-     name?.insertAdjacentHTML('beforeend','<span class="psn-skill-info" aria-hidden="true">ⓘ</span>');
+     effect.innerHTML=`<span class="v35-effect-copy">${detailEsc(s.gameDescription).replace(/\n/g,'<br>')}</span>`;
+     name?.insertAdjacentHTML('beforeend','<b class="psn-title-level">Lv.1</b><span class="psn-skill-info" aria-hidden="true">ⓘ</span>');
    }else{summary?.setAttribute('aria-haspopup','false');summary?.setAttribute('aria-controls','skillLevels')}
    // Dex is reference-only: no skill-level adjustment control here.
    const ctl=document.getElementById("v12SkillLv");
