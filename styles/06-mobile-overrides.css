@@ -131,7 +131,7 @@
   #dexDetail .detail-head{
     position:sticky!important;top:calc(38px + env(safe-area-inset-top))!important;z-index:69!important;
     margin:0 -10px 7px!important;padding:5px 10px 6px!important;min-height:42px!important;
-    background:#fff!important;border-top:0!important;border-bottom:1px solid rgba(0,0,0,.08)!important;
+    background:var(--type-bg)!important;border-top:0!important;border-bottom:1px solid rgba(0,0,0,.08)!important;
     box-shadow:0 2px 7px rgba(0,0,0,.035)!important;backdrop-filter:none!important;
   }
 

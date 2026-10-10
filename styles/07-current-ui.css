@@ -286,14 +286,14 @@
 .psg-ribbon-preview{display:inline-block;margin-left:4px;min-height:30px;vertical-align:middle}
 .psg-mint-mark .psg-ui-icon{width:24px;height:24px;margin:0}
 
-/* The icon column owns its compact toggle; expanded levels stay below. */
+/* Compact copy owns the right-aligned toggle; expanded levels stay below. */
 #v12Ability .skill-box:has(.psg-skill-summary){display:block!important}
 #v12Ability .psg-skill-summary{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:start;gap:10px}
 #v12Ability .psg-skill-summary .skill-icon{width:44px!important;height:44px!important;margin:0!important}
 #v12Ability .psg-skill-icon-column{width:44px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
 #v12Ability .psg-skill-copy{min-width:0}
-#v12Ability .psg-skill-copy .skill-name{display:block!important;font-size:17px!important;line-height:1.3!important;white-space:normal!important}
-#v12Ability .psg-skill-copy .skill-desc{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:baseline;column-gap:6px;margin:4px 0 0!important;padding:0!important;line-height:1.45!important;font-size:13px!important;border:0!important}
+#v12Ability .psg-skill-copy .skill-name{display:block!important;font-size:17px!important;line-height:1.2!important;white-space:normal!important}
+#v12Ability .psg-skill-copy .skill-desc{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:baseline;column-gap:6px;margin:2px 0 0!important;padding:0!important;line-height:1.35!important;font-size:13px!important;border:0!important}
 #v12Ability .psg-skill-copy .v35-effect-level{font-size:13px!important;margin-right:0}
 #v12Ability .psg-skill-copy .v35-effect-copy{font-size:13px!important;min-width:0;overflow-wrap:anywhere}
 #v12Ability .psg-skill-level-number{font-size:18px;line-height:1;font-weight:950;color:#111}

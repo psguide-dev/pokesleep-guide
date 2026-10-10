@@ -40,15 +40,18 @@
 
    renderDexHeading(m);
 
-   // Same three-row proportions as Box; Dex reserves the two action slots.
+   // Same three-row proportions as Box; EXP and registration occupy the action slots.
    h.innerHTML=`<div class="psg-detail-traits">
      <span class="psg-detail-trait psg-detail-berry"><span class="psg-detail-berry-visual" title="${m.berry||'きのみ'}">${m.berryImage?window.PS_DEV_ASSETS.image(m.berryImage,'berry',m.berry,'full',m.berry):'<small class="psg-mini-missing" aria-label="No image">No<br>image</small>'}</span><b>${berryQty==null?"未確認":`×${berryQty}`}</b></span>
      <span class="psg-detail-trait">${window.PS_SLEEP_ICON(m.sleepType)} ${m.sleepType||'未確認'}</span>
-     <span class="psg-detail-trait psg-fact-empty" aria-hidden="true"></span><span class="psg-detail-trait psg-detail-exp"><button type="button" id="dexExpToggle" aria-expanded="false" aria-controls="dexExpNote" aria-label="必要EXP ${expStars?`星${expStars}個`:'未確認'}。倍率の説明を表示"><small>必要EXP</small><b aria-hidden="true">${expStars?'★'.repeat(expStars):'未確認'}</b></button><span id="dexExpNote" class="psg-exp-note" hidden>${expNote}</span></span>
+     <span class="psg-detail-trait psg-detail-exp"><button type="button" id="dexExpToggle" aria-expanded="false" aria-controls="dexExpNote" aria-label="必要EXP ${expStars?`星${expStars}個`:'未確認'}。倍率の説明を表示"><small>必要EXP</small><b aria-hidden="true">${expStars?'★'.repeat(expStars):'未確認'}</b></button><span id="dexExpNote" class="psg-exp-note" hidden>${expNote}</span></span><span class="psg-detail-trait psg-detail-register"><button type="button" id="dexRegister" aria-label="${detailEsc(m.name)}をボックスに登録">＋登録</button></span>
      <span class="psg-detail-trait psg-detail-specialty" title="得意：${m.specialty}" aria-label="得意：${m.specialty}">${window.PS_SPECIALTY_IMAGES?.[({"きのみ":"berry","食材":"ingredient","スキル":"skill","オール":"all"})[m.specialty]]?`<img class="psg-specialty-icon" src="${window.PS_SPECIALTY_IMAGES[({"きのみ":"berry","食材":"ingredient","スキル":"skill","オール":"all"})[m.specialty]]}" alt="">`:m.specialty||'未確認'}</span>
      <span class="psg-detail-trait psg-detail-friend" title="フレンドポイント（資料確認）" aria-label="フレンドポイント ${m.friendPoints??'未確定'}">${window.PS_UI_ART.icon('items','ポケサブレ')}<b>${m.friendPoints??'未確定'}</b></span>
      <span id="dexSpeed" class="psg-fact-speed"></span>
    </div>`;
+   document.getElementById('dexRegister').onclick=()=>{
+     const target=new URL('review.html',location.href);target.searchParams.set('screen','box');target.searchParams.set('register',detailKey(m));location.assign(target.href);
+   };
    const expToggle=document.getElementById('dexExpToggle'),expHelp=document.getElementById('dexExpNote');
    expToggle.onclick=()=>{const open=expToggle.getAttribute('aria-expanded')!=='true';expToggle.setAttribute('aria-expanded',String(open));expHelp.hidden=!open};
    expToggle.onblur=()=>{expToggle.setAttribute('aria-expanded','false');expHelp.hidden=true};

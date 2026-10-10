@@ -71,6 +71,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
    if(window.PS_FIELD_PAGE){const origin=window.PS_FIELD_ROUTE.read()?.origin||'info';window.PS.state.history=screen==='fieldDetail'?[origin,'fieldPage']:[origin];window.PS.state.screen=screen;}
    const saved=params.get('restore')==='dex'?restore():null;
    if(screen==='fieldDetail'){if(!window.PS_FIELD_DETAIL?.open(params.get('field')))window.PS.go('fieldPage',false);}else window.PS.go(screen,false);
+   if(screen==='box'&&params.get('register'))window.PS.openBoxRegistration?.(params.get('register'));
    if(screen===saved?.origin)restorePosition(saved);
    if(params.get('restore')==='field')window.PS_FIELD_ROUTE.restore();
    if(window.PS_INFO_PAGE||params.get('restore')==='info')window.PS_INFO_ROUTE.restore();

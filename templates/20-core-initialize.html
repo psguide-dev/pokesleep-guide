@@ -5,6 +5,11 @@ addBtn.onclick=()=>{
  if(opening)boxSpecies.innerHTML=boxCatalog().map(p=>`<option value="${speciesKey(p)}">No.${String(p.no).padStart(3,'0')} ${p.name}</option>`).join('');
  boxAddPanel.hidden=!opening;addBtn.setAttribute('aria-expanded',String(opening));
 };
+function openBoxRegistration(species){
+ const entries=boxCatalog(),p=entries.find(x=>speciesKey(x)===String(species));if(!p)return false;
+ go('box',false);boxSpecies.innerHTML=entries.map(x=>`<option value="${speciesKey(x)}">No.${String(x.no).padStart(3,'0')} ${x.name}</option>`).join('');
+ boxSpecies.value=speciesKey(p);boxAddPanel.hidden=false;addBtn.setAttribute('aria-expanded','true');boxConfirmAdd.focus();return true;
+}
 boxCancelAdd.onclick=closeBoxAdd;
 boxConfirmAdd.onclick=()=>{
  const p=boxCatalog().find(x=>speciesKey(x)===boxSpecies.value);if(!p)return;
@@ -32,6 +37,6 @@ function refreshAssetViews(){
  if(state.screen==='box')renderBox();
  if(state.screen==='home')renderTeam();
 }
-window.PS={recipeCollectionPanel,dailyResult:(...args)=>window.PS_NUMBERS.finalValues(dailyBaseline(...args)),whistleResult:(...args)=>window.PS_NUMBERS.finalValues(whistleEstimate(...args)),refreshAssetViews,state,master,go,renderDex,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,setGoodCamp:value=>{teamGoodCamp=value===true;saveDaySettings()}};
+window.PS={openBoxRegistration,recipeCollectionPanel,dailyResult:(...args)=>window.PS_NUMBERS.finalValues(dailyBaseline(...args)),whistleResult:(...args)=>window.PS_NUMBERS.finalValues(whistleEstimate(...args)),refreshAssetViews,state,master,go,renderDex,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,setGoodCamp:value=>{teamGoodCamp=value===true;saveDaySettings()}};
 })();
 </script>

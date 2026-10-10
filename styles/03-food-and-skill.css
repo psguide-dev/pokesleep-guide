@@ -141,7 +141,7 @@
 /* source: stable-v26-layout-refine */
 /* Keep the Pokémon type color inside the identity block on a white page. */
 #dexDetail{
-  --pane-bg:#fff;
+  --pane-bg:var(--type-bg);
   background:#fff!important;
   border-radius:18px!important;
 }
