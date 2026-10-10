@@ -299,6 +299,11 @@
 #v12Ability .psg-skill-summary .skill-levels .v32-skill-grid{grid-auto-flow:row!important;grid-template-rows:none!important}
 #v12Ability .psg-skill-summary .skill-levels .psg-skill-values-short{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(max(82px,calc((100% - 18px) / 4)),1fr))!important;gap:3px 6px!important}
 #v12Ability .psg-skill-summary .psg-skill-values-short .v32-skill-cell{min-height:24px!important;padding-block:2px!important;font-size:12px!important;column-gap:4px!important}
+#v12Ability .psg-skill-summary .skill-levels .psg-skill-values-wide{grid-template-columns:repeat(auto-fit,minmax(max(100px,calc((100% - 18px) / 4)),1fr))!important}
+#v12Ability .psg-skill-summary .skill-levels .psg-skill-values-short .psg-skill-values{white-space:nowrap;overflow-wrap:normal;word-break:normal}
+#v12Ability .psg-skill-summary .skill-levels .psg-skill-values-paired{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(max(108px,calc((100% - 18px) / 4)),1fr))!important;gap:3px 6px!important}
+#v12Ability .psg-skill-summary .psg-skill-values-paired .v32-skill-cell{font-size:12px!important;column-gap:4px!important;padding-block:3px!important}
+#v12Ability .psg-skill-summary .psg-skill-values-paired .psg-skill-values{white-space:nowrap;overflow-wrap:normal;word-break:normal}
 #v12Ability .psg-skill-summary .skill-levels .psg-lunar-level-grid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
 #v12Ability .psg-skill-summary .psg-lunar-level .psg-skill-values{display:grid;grid-template-columns:minmax(0,1fr) minmax(104px,42%);align-items:center;gap:6px}
 #v12Ability .psg-skill-summary .psg-lunar-level .psg-lunar-table{grid-column:2;grid-row:auto}

@@ -65,6 +65,22 @@
  function skillEffectLines(html){
   return html.split(/(<[^>]+>)/g).map(part=>part.startsWith('<')?part:part.replace(/[／/]/g,(separator,index,text)=>/[0-9]/.test(text[index-1]||'')&&/[0-9]/.test(text[index+1]||'')?separator:'<br>').replace(/\s*<br>\s*/g,'<br>')).join('');
  }
+
+ // Recovery notation and species-specific detail values are Dex display only.
+ function dexRecoveryNotation(html){
+  return html.replace(/(<span class="skill-var effect-energy-recovery">)([^<]+)(<\/span>)(?:回復する[。]?|回復)?/g,(_,open,n,close)=>open+(/^[＋+−-]/.test(n)?n:'＋'+n)+close);
+ }
+ function dexSkillVariables(s,x,lv,m={}){
+  if(s.id==='plus_ingredient_magnet_s'&&x?.namedValues){
+   const name=m.ingredients?.[0]?.name;
+   const key=({'めざましコーヒー':'coffee','モーモーミルク':'moomoo_milk'})[name];
+   const label=key==='coffee'?'コーヒー':key==='moomoo_milk'?'ミルク':'対象食材';
+   const v=x.namedValues;
+   const count=n=>`<span class="skill-var effect-food">${detailEsc(n??'未確定')}</span>`;
+   return `ランダム食材 ${count(v.randomIngredientTotalBase)}個<br>${label}＋${count(v.additionalByFirstIngredient?.[key])}個`;
+  }
+  return dexRecoveryNotation(skillEffectLines(skillVariables(s,x,lv)));
+ }
  // Dex-only phrasing and intentional breaks; calculation descriptions stay unchanged.
  function dexSkillEffect(s,row,m={}){
   const v=row?.namedValues;
@@ -86,7 +102,7 @@
   if(s.id==='berry_juice_energy_for_everyone')html=html.replace('回復する。','回復する。<br>');
   if(s.effectType?.startsWith('helper_boost_'))html=html.replace('おてつだい。','おてつだい。<br>').replace(/異なる([^<。]+?)タイプ3[～〜]5種/g,'異なる$13〜5');
   if(s.id==='berry_burst')html=html.replace('個、チーム内のポケモン','個獲得<br>チームのポケモン');
-  return html;
+  return dexRecoveryNotation(html);
  }
  function dexSkillCandidates(s,m){
   const plus=s.id==='plus_ingredient_magnet_s';
@@ -156,11 +172,14 @@
    if(levels){
      const detail=Object.entries(s.levels||{}).filter(([lv,x])=>Number(lv)>1&&x).sort((a,b)=>Number(a[0])-Number(b[0]));
      const compact=detail.length<=6&&detail.every(([lv,x])=>skillVariables(s,x,lv).replace(/<[^>]*>/g,'').length<=10);
-     const layoutClass=compact&&detail.every(([lv,x])=>skillVariables(s,x,lv).replace(/<[^>]*>/g,'').length<=5)?'psg-skill-values-short':detail.length<=6?'v43-compact-2':'v43-detail-long';
-     const note=s.displayNote|| (s.effectType==='random_main_skill'?'選ばれたメインスキルは、ゆびをふると同じレベルで発動します（対象スキルの上限まで）。':s.effectType?.startsWith('helper_boost_')?'追加回数は同じタイプの異なるポケモンが3／4／5種類いる場合。':s.effectType==='fixed_dream_shards_energy'?'ゆめのかけら ／ エナジー':s.effectType==='cooking_assist'?'食材数 ／ 大成功確率':s.effectType==='moonlight_energy_recovery'?'追加は大成功時にチーム内の1匹へ。':'');
+     const paired=['cooking_assist','berry_burst'].includes(s.effectType);
+     const narrow=compact&&detail.every(([lv,x])=>dexSkillVariables(s,x,lv,m).replace(/<[^>]*>/g,'').length<=5);
+     const wide=narrow&&detail.some(([lv,x])=>dexSkillVariables(s,x,lv,m).replace(/<[^>]*>/g,'').length>=5);
+     const layoutClass=paired?'psg-skill-values-paired':narrow?'psg-skill-values-short'+(wide?' psg-skill-values-wide':''):detail.length<=6?'v43-compact-2':'v43-detail-long';
+     const note=(s.id==='plus_ingredient_magnet_s'?'他にプラス／マイナスが1匹以上いると、発動者の1枠目の食材を追加。 日産予想への効果反映は未対応です。':s.displayNote)|| (s.effectType==='random_main_skill'?'選ばれたメインスキルは、ゆびをふると同じレベルで発動します（対象スキルの上限まで）。':s.effectType?.startsWith('helper_boost_')?'追加回数は同じタイプの異なるポケモンが3／4／5種類いる場合。':s.effectType==='fixed_dream_shards_energy'?'ゆめのかけら ／ エナジー':s.effectType==='cooking_assist'?'食材数 ／ 大成功確率':s.effectType==='moonlight_energy_recovery'?'追加は大成功時にチーム内の1匹へ。':'');
      const lunar=s.id==='lunar_blessing_energy_for_everyone_s';
-     levels.innerHTML=(note?`<p class="psg-skill-variable-note">${detailEsc(note)}</p>`:'')+`<div class="v32-skill-grid ${lunar?'psg-lunar-level-grid':layoutClass}">${detail.map(([lv,x])=>`<div class="v32-skill-cell${lunar?' psg-lunar-level':''}"><b>Lv.<span class="psg-skill-level-number">${lv}</span></b><strong class="psg-skill-values">${lunar?`<span class="psg-lunar-effect">${dexSkillEffect(s,x,m)}</span>${dexLunarTable(s,x)}`:skillEffectLines(skillVariables(s,x,lv))}</strong></div>`).join('')}</div>`;
-     if(s.ruleNotes?.length)levels.insertAdjacentHTML('beforeend',`<div class="psg-skill-conditions"><h4>発動条件・持続</h4>${s.ruleNotes.map(row=>`<p><b>${detailEsc(row.label)}</b>：${detailEsc(row.text)}</p>`).join('')}<p class="note">資料確認。独自のゲーム内実測ではありません。</p></div>`);
+     levels.innerHTML=(note?`<p class="psg-skill-variable-note">${detailEsc(note)}</p>`:'')+`<div class="v32-skill-grid ${lunar?'psg-lunar-level-grid':layoutClass}">${detail.map(([lv,x])=>`<div class="v32-skill-cell${lunar?' psg-lunar-level':''}"><b>Lv.<span class="psg-skill-level-number">${lv}</span></b><strong class="psg-skill-values">${lunar?`<span class="psg-lunar-effect">${dexSkillEffect(s,x,m)}</span>${dexLunarTable(s,x)}`:dexSkillVariables(s,x,lv,m)}</strong></div>`).join('')}</div>`;
+     if(s.ruleNotes?.length)levels.insertAdjacentHTML('beforeend',`<div class="psg-skill-conditions"><h4>発動条件・持続</h4>${s.ruleNotes.map(row=>`<p><b>${detailEsc(row.label)}</b>：${detailEsc(s.id==='plus_ingredient_magnet_s'&&row.label==='追加食材'?'発動者の1枠目の食材を追加する。':row.text)}</p>`).join('')}<p class="note">資料確認。独自のゲーム内実測ではありません。</p></div>`);
 
    }
  }
