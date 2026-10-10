@@ -43,3 +43,8 @@ body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 #fieldDetail [role="tabpanel"]{padding-top:8px;scroll-margin-top:calc(var(--psg-header-height) + 5.5 * var(--psg-ui-unit))}
 
 #fieldDetail .psg-field-detail-back{width:100%!important}
+
+/* Keep account settings beside the information title while scrolling. */
+#info>.psg-info-header{position:sticky;top:var(--psg-header-height);z-index:65;justify-content:space-between}
+#info .psg-info-account{display:flex;align-items:center;justify-content:center;gap:5px;height:var(--psg-ui-unit);padding:0 9px;background:#fff;white-space:nowrap;font-size:14px}
+#info .psg-info-account img{width:28px;height:28px;object-fit:contain}
