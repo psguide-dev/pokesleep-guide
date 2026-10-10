@@ -93,7 +93,7 @@
    }
  }
 
- function openDexSkillDialog(s,m={}){
+ function openDexSkillDialog(s,m={},choices=[]){
    let dialog=document.getElementById('psnSkillDialog');
    if(dialog?.open)return;
    dialog?.remove();
@@ -121,6 +121,11 @@
      table+=notes.map(n=>`<p class="note">※${detailEsc(n)}</p>`).join('');
      dialog.querySelector('#psnSkillTable').innerHTML=table;
 
+   }
+   if(choices.length>1&&['plus_ingredient_magnet_s','ingredient_draw_s'].includes(s.id)){
+     const select=document.createElement('select');select.setAttribute('aria-label','表示するポケモン');
+     choices.forEach((p,i)=>{const option=document.createElement('option');option.value=i;option.textContent=p.name;select.appendChild(option)});
+     select.addEventListener('change',()=>{m=choices[Number(select.value)];update()});dialog.querySelector('header').appendChild(select);
    }
    dialog.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click',()=>{index=Math.max(0,Math.min(available.length-1,index+Number(button.dataset.step)));update()}));
    dialog.querySelector('.psn-dialog-close').addEventListener('click',()=>dialog.close());

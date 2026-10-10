@@ -27,6 +27,7 @@
    const detailButton=document.createElement('button');detailButton.type='button';detailButton.className='btn';detailButton.textContent='スキルの詳細 ⓘ';
    let selected=species[0];
    if(species.length){const select=document.createElement('select');select.setAttribute('aria-label','食材候補を表示するポケモン');species.forEach((p,i)=>{const option=document.createElement('option');option.value=i;option.textContent=p.name;select.append(option)});select.addEventListener('change',()=>{selected=species[Number(select.value)];previewCopy.innerHTML=window.PS_SKILL_DISPLAY.effect(skill,1,selected)});item.append(select);previewCopy.innerHTML=window.PS_SKILL_DISPLAY.effect(skill,1,selected)}
+   summary.setAttribute('aria-haspopup','dialog');summary.addEventListener('click',e=>{e.preventDefault();window.PS_SKILL_DISPLAY.open(skill,selected,species)});
    detailButton.addEventListener('click',()=>window.PS_SKILL_DISPLAY.open(skill,selected));item.append(detailButton);
    const heading=document.createElement('div');heading.className='psg-skill-species-label';heading.textContent='このスキルを持つポケモン';item.append(heading);
    const links=document.createElement('div');links.className='psg-skill-species';
