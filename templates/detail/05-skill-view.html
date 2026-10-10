@@ -16,7 +16,7 @@
    }
    summary?.classList.toggle('psg-skill-three-lines',dexSkillHasTable(s));
    summary?.classList.toggle('psg-skill-healing',s.id==='healing_pulse_energy_cheer_s');
-   summary?.classList.toggle('psg-skill-short-copy',['plus_ingredient_magnet_s','minus_cooking_power_up_s','disguise_berry_burst'].includes(s.id));
+   summary?.classList.toggle('psg-skill-short-copy',['plus_ingredient_magnet_s','minus_cooking_power_up_s','disguise_berry_burst','moonlight_energy_charge_s','psystrike_berry_zone','present_ingredient_magnet_s'].includes(s.id));
    if(copy)copy.insertAdjacentHTML('beforeend',dexSkillTable(s,s.levels?.[1]));
    const expandable=Object.entries(s.levels||{}).some(([lv,x])=>Number(lv)>1&&x);
    if(summary){summary.setAttribute('aria-disabled',String(!expandable));summary.setAttribute('aria-expanded','false');summary.tabIndex=expandable?0:-1}
@@ -52,10 +52,11 @@
    if(levels){
      const detail=Object.entries(s.levels||{}).filter(([lv,x])=>Number(lv)>1&&x).sort((a,b)=>Number(a[0])-Number(b[0])).map(([lv,x])=>({lv,row:x,values:dexSkillVariables(s,x,lv,m),reference:skillVariables(s,x,lv)}));
      const compact=detail.length<=6&&detail.every(x=>x.reference.replace(/<[^>]*>/g,'').length<=10);
-     const paired=['cooking_assist','berry_burst'].includes(s.effectType);
+     const paired=['cooking_assist','berry_burst'].includes(s.effectType)||s.id==='present_ingredient_magnet_s';
      const narrow=compact&&detail.every(x=>x.values.replace(/<[^>]*>/g,'').length<=5);
      const wide=narrow&&detail.some(x=>x.values.replace(/<[^>]*>/g,'').length>=5);
-     const layoutClass=paired?'psg-skill-values-paired':narrow?'psg-skill-values-short'+(wide?' psg-skill-values-wide':''):detail.length<=6?'v43-compact-2':'v43-detail-long';
+     const three=s.effectType==='moonlight_energy_recovery'||s.id==='healing_pulse_energy_cheer_s';
+     const layoutClass=three?'psg-skill-values-three':paired?'psg-skill-values-paired':narrow?'psg-skill-values-short'+(wide?' psg-skill-values-wide':''):detail.length<=6?'v43-compact-2':'v43-detail-long';
      const note=(s.id==='plus_ingredient_magnet_s'?'他にプラス／マイナスが1匹以上いると、発動者の1枠目の食材を追加。 日産予想への効果反映は未対応です。':s.displayNote)|| (s.effectType==='random_main_skill'?'選ばれたメインスキルは、ゆびをふると同じレベルで発動します（対象スキルの上限まで）。':s.effectType?.startsWith('helper_boost_')?'追加回数は同じタイプの異なるポケモンが3／4／5種類いる場合。':s.effectType==='fixed_dream_shards_energy'?'ゆめのかけら ／ エナジー':s.effectType==='cooking_assist'?'食材数 ／ 大成功確率':s.effectType==='moonlight_energy_recovery'?'追加は大成功時にチーム内の1匹へ。':'');
      const tabular=dexSkillHasTable(s);
      levels.innerHTML=(note?`<p class="psg-skill-variable-note">${detailEsc(note)}</p>`:'')+`<div class="v32-skill-grid ${tabular?'psg-lunar-level-grid':layoutClass}">${detail.map(({lv,row:x,values})=>`<div class="v32-skill-cell${tabular?' psg-lunar-level':''}"><b>Lv.<span class="psg-skill-level-number">${lv}</span></b><strong class="psg-skill-values">${tabular?`<span class="psg-lunar-effect">${dexSkillEffect(s,x,m)}</span>${dexSkillTable(s,x)}`:values}</strong></div>`).join('')}</div>`;

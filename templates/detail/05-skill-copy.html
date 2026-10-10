@@ -7,8 +7,14 @@
  function dexRecoveryNotation(html){
   return html.replace(/([＋+−－-]?)(<span class="skill-var effect-energy-recovery">)([^<]+)(<\/span>)(?:回復する[。]?|回復)?/g,(_,lead,open,n,close)=>open+(lead||n.match(/^[＋+−－-]/)?.[0]||'＋')+n.replace(/^[＋+−－-]+/,'')+close);
  }
+ function dexSkillValue(n,kind){
+  return `<span class="skill-var effect-${kind}">${detailEsc(n==null?'未確定':typeof n==='number'?n.toLocaleString():n)}</span>`;
+ }
  function dexSkillVariables(s,x,lv,m={}){
-  if(['nightmare_energy_charge_m','healing_pulse_energy_cheer_s'].includes(s.id)&&x?.namedValues)return dexSkillEffect(s,x,m);
+  const value=dexSkillValue,v=x?.namedValues;
+  if(s.id==='healing_pulse_energy_cheer_s'&&v)return `げんき${value('＋'+v.recoveryPerTarget,'energy-recovery')}<br>${value(v.instantHelpsPerTarget,'help')}回完了<br>条件成立時${value('＋'+v.conditionalAdditionalHelpsPerTarget,'help')}`;
+  if(s.id==='nightmare_energy_charge_m'&&v)return `エナジー ${value(v.directEnergy,'energy')}<br>げんき${value('−'+v.energyLossPerNonDarkMember,'energy-recovery')}`;
+  if(s.effectType==='moonlight_energy_recovery'&&x)return `自分 ${value('＋'+Math.trunc(x.selfRecovery),'energy-recovery')}<br>追加 ${value('＋'+Math.trunc(x.bonusRecovery),'energy-recovery')}`;
   if(s.id==='plus_ingredient_magnet_s'&&x?.namedValues){
    const name=m.ingredients?.[0]?.name;
    const key=({'めざましコーヒー':'coffee','モーモーミルク':'moomoo_milk'})[name];
@@ -22,9 +28,12 @@
  // Dex-only phrasing and intentional breaks; calculation descriptions stay unchanged.
  function dexSkillEffect(s,row,m={}){
   const v=row?.namedValues;
-  const value=(n,kind)=>`<span class="skill-var effect-${kind}">${detailEsc(n==null?'未確定':typeof n==='number'?n.toLocaleString():n)}</span>`;
+  const value=dexSkillValue;
+  if(s.effectType==='moonlight_energy_recovery'&&row)return `自分のげんきを${value('＋'+Math.trunc(row.selfRecovery),'energy-recovery')}<br>大成功時チーム1匹のげんきを${value('＋'+Math.trunc(row.bonusRecovery),'energy-recovery')}`;
+  if(s.id==='present_ingredient_magnet_s'&&row)return `ランダムな食材${value(row.amount,'food')}個ゲットする<br>ときどき、1匹のアメを${value(row.bonusCandy,'skill')}個ゲットする`;
   if(s.effectType?.startsWith('helper_boost_'))return `チーム全員が${value('x','help')}回の<br>おてつだいを完了`;
   if(v){
+   if(s.id==='psystrike_berry_zone')return `カビゴンのエナジーを${value(v.directEnergy,'energy')}増やす<br>マゴのみゾーンを${value('＋'+v.zoneIncreasePercentagePoints.toFixed(1),'zone')}%`;
    if(s.id==='healing_pulse_energy_cheer_s')return `2匹のげんきを${value('＋'+v.recoveryPerTarget,'energy-recovery')}、おてつだいを${value(v.instantHelpsPerTarget,'help')}回完了する<br>条件成立時さらに${value(v.conditionalAdditionalHelpsPerTarget,'help')}回`;
    if(s.id==='draco_meteor_berry_burst')return `きのみを自分${value('x','berry')}個<br>チーム内各${value('y','berry')}個<br>条件成立時自分${value('＋'+v.conditionalExtraSelfBerries,'berry')}個`;
    if(s.id==='nightmare_energy_charge_m')return `エナジーを${value(v.directEnergy,'energy')}獲得<br>あく以外のポケモンのげんきを${value('−'+v.energyLossPerNonDarkMember,'energy-recovery')}`;
