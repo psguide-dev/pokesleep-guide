@@ -9,5 +9,5 @@
   const bonus=boost?Object.entries(row).find(([k])=>k.startsWith('bonusByUnique'))?.[1]:null;
   const rows=boost?[['x',Object.fromEntries(counts.map(n=>[n,row.helps!=null&&bonus?.[n]!=null?row.helps+bonus[n]:null]))]]:v?[['x',v.selfBerriesByDistinctCount],['y',v.berriesPerOtherMemberByDistinctCount]]:[];
   if(!rows.length)return '';
-  return `<table class="psg-lunar-table${boost?' psg-help-table':''}" aria-label="異なる${type}の種類数別の${boost?'おてつだい回数':'きのみ個数'}（自分を含む）"><caption title="自分を含む異なる${type}の種類数">チーム内${type}</caption><thead><tr><th scope="col"></th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${rows.map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  return `<table class="psg-lunar-table${boost?' psg-help-table':''}" aria-label="異なる${type}の種類数別の${boost?'おてつだい回数':'きのみ個数'}（自分を含む）"><colgroup><col style="width:40%">${counts.map(()=>'<col style="width:12%">').join('')}</colgroup><thead><tr><th scope="col" title="自分を含む異なる${type}の種類数">チーム内${type}</th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${rows.map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
  }
