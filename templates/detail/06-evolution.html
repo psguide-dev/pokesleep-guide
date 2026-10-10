@@ -105,8 +105,8 @@
      while(cur&&guard++<12){chain.push(cur);const es=evolutionEntries(cur);if(es.length!==1)break;cur=byNo(es[0].toNo)}
      let html='<div class="v31-evo-line">';
      chain.forEach((p,i)=>{
-       const incoming=i?evolutionEntries(chain[i-1])[0]:null;
-       html+=evoNode(p,m.no,"",incoming,true);
+       const edge=i<chain.length-1?evolutionEntries(p)[0]:null;
+       html+=evoNode(p,m.no,"",edge);
      });
      html+='</div>';el.innerHTML=html;
    }
