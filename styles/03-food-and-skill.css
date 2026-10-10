@@ -139,10 +139,10 @@
 }
 
 /* source: stable-v26-layout-refine */
-/* Keep the Pokémon type color inside the identity block on a white page. */
+/* Continue the Pokémon type background beneath the fixed identity block. */
 #dexDetail{
   --pane-bg:var(--type-bg);
-  background:#fff!important;
+  background:var(--type-bg)!important;
   border-radius:18px!important;
 }
 #dexDetail .hero{

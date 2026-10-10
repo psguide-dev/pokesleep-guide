@@ -27,6 +27,7 @@
    const [bg,accent]=TYPE_THEME[type]||["#f3f6f4","#718078"];
    const d=document.getElementById("dexDetail");
    d.style.setProperty("--type-bg",bg);d.style.setProperty("--type-accent",accent);
+   d.closest("main")?.style.setProperty("--dex-type-bg",bg);
  }
  function show(id){
    document.querySelectorAll(".screen").forEach(x=>x.classList.toggle("active",x.id===id));
