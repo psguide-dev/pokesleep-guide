@@ -23,7 +23,7 @@
 /* v51 — Block 1 mobile 3-2-2-3 layout. v50 Blocks 2–4 are intentionally untouched. */
 @media(max-width:620px){
   #dexDetail .detail-head{
-    display:grid!important;grid-template-columns:25% minmax(0,1fr) auto!important;
+    display:grid!important;grid-template-columns:64px minmax(0,1fr) 64px!important;
     align-items:center!important;gap:6px!important;
   }
   #dexDetail .detail-head>[data-back]{grid-column:1!important;width:100%!important;padding:6px 4px!important;white-space:nowrap!important;}
@@ -34,12 +34,12 @@
   }
   #dexDetail .v51-head-no{flex:0 0 auto!important;}
   #dexDetail .v51-head-name{}
-  #dexDetail .v51-head-nav{grid-column:3!important;display:flex!important;gap:3px!important;}
+  #dexDetail .v51-head-nav{grid-column:3!important;display:flex!important;gap:3px!important;justify-content:flex-end!important;}
   #dexDetail .v51-head-nav button{
     width:28px!important;height:30px!important;padding:0!important;border:1px solid rgba(0,0,0,.15)!important;
     border-radius:9px!important;background:#fff!important;color:#26332c!important;font-size:20px!important;line-height:1!important;
   }
-  #dexDetail .v51-head-nav button:disabled{opacity:.28!important;}
+  #dexDetail .v51-head-nav button:disabled{opacity:1!important;color:#bec7c0!important;cursor:default;}
 
   #dexDetail .hero{padding:7px!important;}
   #dexDetail .hero-top{
@@ -131,8 +131,8 @@
   #dexDetail .detail-head{
     position:sticky!important;top:calc(38px + env(safe-area-inset-top))!important;z-index:69!important;
     margin:0 -10px 7px!important;padding:5px 10px 6px!important;min-height:42px!important;
-    background:var(--type-bg)!important;border-top:0!important;border-bottom:1px solid rgba(0,0,0,.08)!important;
-    box-shadow:0 2px 7px rgba(0,0,0,.035)!important;backdrop-filter:none!important;
+    background:var(--type-bg)!important;border-top:0!important;border-bottom:0!important;
+    box-shadow:none!important;backdrop-filter:none!important;
   }
 
   /* 1-2: square stays fixed; the artwork display region is vertically centered within it. */

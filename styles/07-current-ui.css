@@ -12,12 +12,12 @@
 #detailFoods .psg-food-id b{position:absolute;left:8px;top:9px;font-size:20px;line-height:1}
 #detailFoods .psg-food-id img{object-fit:contain}
 #detailFoods .psg-food-id .psg-food-fallback{font-size:12px;text-align:center;overflow-wrap:anywhere;margin-top:12px}
-#detailFoods .psg-food-row[data-slot="A"] .psg-food-id{background:#e9f8ee}
-#detailFoods .psg-food-row[data-slot="B"] .psg-food-id{background:#fdf0f3}
-#detailFoods .psg-food-row[data-slot="C"] .psg-food-id{background:#fdf6e9}
-#detailFoods .psg-food-row[data-slot="A"] .psg-food-id b{color:#609c7a}
-#detailFoods .psg-food-row[data-slot="B"] .psg-food-id b{color:#bd7289}
-#detailFoods .psg-food-row[data-slot="C"] .psg-food-id b{color:#a28c5c}
+#detailFoods .psg-food-row[data-slot="A"] .psg-food-id{background:#eaf3fd}
+#detailFoods .psg-food-row[data-slot="B"] .psg-food-id{background:#f1ecfb}
+#detailFoods .psg-food-row[data-slot="C"] .psg-food-id{background:#fff0e5}
+#detailFoods .psg-food-row[data-slot="A"] .psg-food-id b{color:#537ca5}
+#detailFoods .psg-food-row[data-slot="B"] .psg-food-id b{color:#8467ad}
+#detailFoods .psg-food-row[data-slot="C"] .psg-food-id b{color:#a4734d}
 #detailFoods .psg-food-content{display:grid;grid-template-rows:auto auto;min-width:0}
 #detailFoods .psg-food-levels{min-height:67px;background:#fff}
 #detailFoods .psg-food-level{flex-direction:column;align-items:center;justify-content:center;gap:3px;}
@@ -50,9 +50,9 @@
 #detailFoods .psg-food-level{min-width:0;padding:4px 1px;display:grid;place-items:center}
 #detailFoods .psg-food-level+.psg-food-level{border-left:0}
 #detailFoods .psg-food-level strong{font-size:clamp(12px,3.6vw,20px)}
-#detailFoods .psg-food-row[data-slot="A"] .psg-food-id,#detailFoods .psg-food-row[data-slot="A"] .psg-food-levels{background:#e9f8ee}
-#detailFoods .psg-food-row[data-slot="B"] .psg-food-id,#detailFoods .psg-food-row[data-slot="B"] .psg-food-levels{background:#fdf0f3}
-#detailFoods .psg-food-row[data-slot="C"] .psg-food-id,#detailFoods .psg-food-row[data-slot="C"] .psg-food-levels{background:#fdf6e9}
+#detailFoods .psg-food-row[data-slot="A"] .psg-food-id,#detailFoods .psg-food-row[data-slot="A"] .psg-food-levels{background:#eaf3fd}
+#detailFoods .psg-food-row[data-slot="B"] .psg-food-id,#detailFoods .psg-food-row[data-slot="B"] .psg-food-levels{background:#f1ecfb}
+#detailFoods .psg-food-row[data-slot="C"] .psg-food-id,#detailFoods .psg-food-row[data-slot="C"] .psg-food-levels{background:#fff0e5}
 #detailFoods .psg-food-recipes{border-top:0;border-left:1px solid #e8eeeb;min-height:82px;background:#fff;padding:6px 3px;display:flex;align-items:center;justify-content:center;min-width:0}
 #detailFoods .psg-food-recipes.is-pending{min-height:82px;background:#fff;padding:5px 3px}
 #detailFoods .psg-food-recipe-strip{width:100%;gap:2px}
