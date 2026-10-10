@@ -17,9 +17,10 @@
    const tags=document.createElement('span');tags.className='psg-skill-tags';tags.textContent=(skill.tags||[]).join(' · ');
    const iconSlot=document.createElement('span');iconSlot.className='psg-skill-entry-icon';
    const iconSrc=window.PS_IMAGE_FILES?.skills?.[skill.id];if(iconSrc){const icon=document.createElement('img');icon.src=iconSrc;icon.alt='';icon.width=36;icon.height=36;icon.style.objectFit='contain';iconSlot.append(icon)}summary.append(iconSlot);
-   const identity=document.createElement('span');identity.className='psg-skill-identity';identity.append(title,tags);
+   const identity=document.createElement('span');identity.className='psg-skill-identity';identity.append(title);
    const preview=document.createElement('span');preview.className='psg-skill-effect-preview';
    const previewLevel=document.createElement('span');previewLevel.className='psg-skill-preview-level';previewLevel.textContent='Lv.1 ⓘ';
+   const meta=document.createElement('span');meta.className='psg-skill-meta';meta.append(previewLevel,tags);
    const previewCopy=document.createElement('span');
    const updatePreview=member=>{
     if(skill.id==='stockpile_energy_charge_s'){previewCopy.textContent='たくわえた回数に応じて、はきだす時にカビゴンのエナジーを増やす';return}
@@ -28,7 +29,7 @@
     previewCopy.querySelectorAll('br').forEach(br=>br.replaceWith(' '));
    };
    updatePreview();
-   preview.append(previewCopy);summary.append(identity,previewLevel,preview);item.append(summary);
+   preview.append(previewCopy);summary.append(identity,meta,preview);item.append(summary);
    const detailButton=document.createElement('button');detailButton.type='button';detailButton.className='btn';detailButton.textContent='スキルの詳細 ⓘ';
    let selected=species[0];
    if(species.length){const select=document.createElement('select');select.setAttribute('aria-label','食材候補を表示するポケモン');species.forEach((p,i)=>{const option=document.createElement('option');option.value=i;option.textContent=p.name;select.append(option)});select.addEventListener('change',()=>{selected=species[Number(select.value)];updatePreview(selected)});item.append(select);updatePreview(selected)}
