@@ -29,7 +29,7 @@ summary.querySelector=selector=>selector==='.psg-skill-copy'?skillCopy:null;
 skillCopy.querySelector=()=>null;
 const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:selector=>selector.includes('psg-skill-summary')?summary:icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{},PS_IMAGE_LOADING:{set:(img,src)=>{img.src=src}}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
 vm.createContext(c);
-for(const file of ['04-food','05-skill','06-evolution','02-sleep-and-fields'])vm.runInContext(read(`templates/detail/${file}.html`),c);
+for(const file of ['04-food','05-skill','06-evolution','02-sleep-and-fields'])vm.runInContext(file==='05-skill'?require('./read_detail_skill.cjs')():read(`templates/detail/${file}.html`),c);
 // Open a known skill, then incomplete variants: stale effects and levels must clear.
 for(const skill of [{name:'名前だけ'},{name:'レベル途中',levels:{1:null,2:null,3:{description:'効果未確認'}}},null,undefined]){
  c.m={no:9999,speciesId:'9999_default',name:'画像先行',detailPreviewOnly:true,dataStatus:'preview_pending_abilities',skill};

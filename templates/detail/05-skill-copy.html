@@ -1,0 +1,55 @@
+ // Separate distinct effects while preserving compact numeric alternatives such as 3／4／5.
+ function skillEffectLines(html){
+  return html.split(/(<[^>]+>)/g).map(part=>part.startsWith('<')?part:part.replace(/[／/]/g,(separator,index,text)=>/[0-9]/.test(text[index-1]||'')&&/[0-9]/.test(text[index+1]||'')?separator:'<br>').replace(/\s*<br>\s*/g,'<br>')).join('');
+ }
+
+ // Recovery notation and species-specific detail values are Dex display only.
+ function dexRecoveryNotation(html){
+  return html.replace(/([＋+−－-]?)(<span class="skill-var effect-energy-recovery">)([^<]+)(<\/span>)(?:回復する[。]?|回復)?/g,(_,lead,open,n,close)=>open+(lead||n.match(/^[＋+−－-]/)?.[0]||'＋')+n.replace(/^[＋+−－-]+/,'')+close);
+ }
+ function dexSkillVariables(s,x,lv,m={}){
+  if(['nightmare_energy_charge_m','healing_pulse_energy_cheer_s'].includes(s.id)&&x?.namedValues)return dexSkillEffect(s,x,m);
+  if(s.id==='plus_ingredient_magnet_s'&&x?.namedValues){
+   const name=m.ingredients?.[0]?.name;
+   const key=({'めざましコーヒー':'coffee','モーモーミルク':'moomoo_milk'})[name];
+   const label=key==='coffee'?'コーヒー':key==='moomoo_milk'?'ミルク':'対象食材';
+   const v=x.namedValues;
+   const count=n=>`<span class="skill-var effect-food">${detailEsc(n??'未確定')}</span>`;
+   return `ランダム食材 ${count(v.randomIngredientTotalBase)}個<br>${label}＋${count(v.additionalByFirstIngredient?.[key])}個`;
+  }
+  return dexRecoveryNotation(skillEffectLines(skillVariables(s,x,lv)));
+ }
+ // Dex-only phrasing and intentional breaks; calculation descriptions stay unchanged.
+ function dexSkillEffect(s,row,m={}){
+  const v=row?.namedValues;
+  const value=(n,kind)=>`<span class="skill-var effect-${kind}">${detailEsc(n==null?'未確定':typeof n==='number'?n.toLocaleString():n)}</span>`;
+  if(s.effectType?.startsWith('helper_boost_'))return `チーム全員が${value('x','help')}回の<br>おてつだいを完了`;
+  if(v){
+   if(s.id==='healing_pulse_energy_cheer_s')return `2匹のげんきを${value('＋'+v.recoveryPerTarget,'energy-recovery')}、おてつだいを${value(v.instantHelpsPerTarget,'help')}回完了する<br>条件成立時さらに${value(v.conditionalAdditionalHelpsPerTarget,'help')}回`;
+   if(s.id==='draco_meteor_berry_burst')return `きのみを自分${value('x','berry')}個<br>チーム内各${value('y','berry')}個<br>条件成立時自分${value('＋'+v.conditionalExtraSelfBerries,'berry')}個`;
+   if(s.id==='nightmare_energy_charge_m')return `エナジーを${value(v.directEnergy,'energy')}獲得<br>あく以外のポケモンのげんきを${value('−'+v.energyLossPerNonDarkMember,'energy-recovery')}`;
+   if(s.id==='disguise_berry_burst')return `きのみを自分${value(v.selfBerries,'berry')}個、チーム内各${value(v.berriesPerOtherMember,'berry')}個獲得<br>大成功時は各3倍`;
+   if(s.id==='nuzzle_energy_cheer_s')return `チーム内の1匹のげんき＋${value(v.recovery,'energy-recovery')}<br>対象のスキルを${value(v.bonusDrawCount,'skill')}回抽選`;
+   if(s.id==='plus_ingredient_magnet_s'){
+    const key=({'めざましコーヒー':'coffee','モーモーミルク':'moomoo_milk'})[m.ingredients?.[0]?.name];
+    return `ランダムな食材を${value(v.randomIngredientTotalBase,'food')}個獲得<br>条件成立時に特定の食材を${value(v.additionalByFirstIngredient?.[key],'food')}個獲得`;
+   }
+   if(s.id==='minus_cooking_power_up_s')return `鍋＋${value(v.potIncrease,'zone')}個<br>条件成立時にチーム内の1匹のげんき＋${value(v.conditionalRecovery,'energy-recovery')}`;
+   if(s.id==='lunar_blessing_energy_for_everyone_s')return `チーム内げんきを＋${value(v.recoveryPerTeamMember,'energy-recovery')}<br>きのみを自分${value('x','berry')}個<br>チーム内各${value('y','berry')}個`;
+  }
+  let html=skillEffectLines(skillDescription(s,row));
+  if(s.id==='extra_helpful_s')html=html.replace('おてつだい','おてつだいを<br>');
+  if(s.id==='bulk_up_cooking_assist_s')html=html.replace('ゲットし、','ゲットし、<br>');
+  if(s.id==='berry_juice_energy_for_everyone')html=html.replace('回復する。','回復する。<br>');
+  if(s.id==='berry_burst')html=html.replace('個、チーム内のポケモン','個獲得<br>チームのポケモン');
+  return dexRecoveryNotation(html);
+ }
+ function dexSkillCandidates(s,m){
+  const plus=s.id==='plus_ingredient_magnet_s';
+  if(!plus&&!['select_ingredients','conditional_ingredient_select'].includes(s.effectType))return '';
+  const names=[...new Set(plus?(m.ingredients||[]).slice(0,1).map(x=>x.name).filter(Boolean):s.ingredientCandidates||(m.ingredients||[]).map(x=>x.name).filter(Boolean))];
+  return names.length?`<span class="psg-skill-candidates" aria-label="候補の食材">${names.map(name=>{
+   const src=V.ingredientVisual(name)?.image||window.PS_INGREDIENT_FALLBACK_ICON?.(name);
+   return src?`<img src="${detailEsc(src)}" alt="${detailEsc(name)}" title="${detailEsc(name)}">`:'';
+  }).join('')}</span>`:'';
+ }

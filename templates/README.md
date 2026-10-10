@@ -43,7 +43,10 @@
 | `detail/02-sleep-and-fields.html` | 寝顔の表示・登録・保存、フィールド出現情報、登録情報の再読み込み |
 | `detail/03-identity.html` | タブ切り替え、名前・前後ナビの表示、基本能力 |
 | `detail/04-food.html` | 食材候補・数量・対応料理の表示 |
-| `detail/05-skill.html` | メインスキル・効果・各レベルの表示 |
+| `detail/05-skill.html` | マスター文言の数値着色・共通レベル値 |
+| `detail/05-skill-copy.html` | 図鑑用の個別文言・改行・回復符号・食材候補画像 |
+| `detail/05-skill-table.html` | きのみ・おてつだいの種類数別の表 |
+| `detail/05-skill-view.html` | スキルのDOM更新・詳細レベルの配置 |
 | `detail/06-evolution.html` | 進化条件・系統探索・通常進化・途中分岐・イーブイの表示 |
 | `detail/07-navigation.html` | 詳細を開く処理、一覧への復帰、戻る／進む履歴、イベント接続、クロージャの終了 |
 | `15-auto-images.html` | 自動画像処理の共通状態・読み込みキャッシュ、クロージャの開始 |
@@ -141,3 +144,9 @@ v268：Boxは受領248レコードに対応。ミュウ/ダークライのmythic
 - 図鑑カードは通常のリンク。長押し・別タブ・ブラウザーの戻る/進むに対応。ボックス個体編集は変更しない。
 - ビルドは共通テンプレートから `review.html` と `pokemon.html` を生成し、workflowで両方配信。生成HTMLを手編集しない。
 - この版はページと履歴の分離。カタログ・計算コードは共用しており、初回転送サイズの削減やSEO最適化を実施済みとは扱わない。広告枠は未追加。
+
+## 図鑑スキル表示の編集
+
+05-skill → 05-skill-copy → 05-skill-table → 05-skill-view は同じクロージャの断片です。文言の変更はcopy、表はtable、配置はviewを編集します。共通のskillDescription / skillVariablesはマスター文言を保持し、図鑑の省略表記と分けます。各レベルのHTMLはviewで一度生成して配置判定と描画に使います。
+
+作業環境が空の場合は `git clone --depth 1 https://github.com/psguide-dev/pokesleep-guide.git psn` で最新mainを復元できます。生成物を手編集せず、公開前にビルドとworkflowのチェックを実行します。
