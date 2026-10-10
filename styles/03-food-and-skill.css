@@ -185,6 +185,7 @@
 }
 
 /* Tabs use fixed semantic colors, independent of Pokémon type. */
+#dexDetail{--sleep-tab-bg:#f2ecff}
 #dexDetail .v12-tabs{margin-top:0!important}
 #dexDetail .v12-tabs button{
   min-height:48px!important;font-size:14px!important;border-width:1px!important;
@@ -194,7 +195,7 @@
   background:#eaf4ff!important;color:#1768a6!important;border-color:#b8d9f5!important;
 }
 #dexDetail .v12-tabs button[data-v12tab="sleep"]{
-  background:#f2ecff!important;color:#704bb2!important;border-color:#d8c7f5!important;
+  background:var(--sleep-tab-bg)!important;color:#704bb2!important;border-color:#d8c7f5!important;
 }
 #dexDetail .v12-tabs button[data-v12tab="ability"].active{
   background:#2f80c9!important;color:#fff!important;border-color:#2f80c9!important;
