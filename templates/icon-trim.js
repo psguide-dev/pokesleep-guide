@@ -1,8 +1,11 @@
 (()=>{
  const bounds=/* PSG_ICON_TRIM_BOUNDS */;
  const byUrl=new Map(Object.entries(bounds).map(([path,box])=>[new URL(path,document.baseURI).href,box]));
+ const adopted=new Set(/* PSG_ADOPTED_UI_PATHS */.map(path=>new URL(path,document.baseURI).href));
  const ns='http://www.w3.org/2000/svg';
  function trim(img){
+  const url=new URL(img.src,document.baseURI),plain=new URL(url.href);plain.search='';plain.hash='';
+  if(adopted.has(plain.href)&&url.searchParams.get('art')!=='544'){url.searchParams.set('art','544');img.src=url.href;return;}
   const spec=byUrl.get(img.src);if(!spec)return;
   const svg=document.createElementNS(ns,'svg');
   for(const attr of img.attributes)if(!['src','srcset','loading','decoding'].includes(attr.name))svg.setAttribute(attr.name,attr.value);

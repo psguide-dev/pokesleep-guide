@@ -400,7 +400,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v545') == 2
+    assert source.count('Review v546') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
@@ -453,7 +453,7 @@ def build():
     main_source = main_source.replace((ROOT / 'templates/core/08-fields.html').read_text(), (ROOT / 'templates/core/08-fields.html').read_text() + (ROOT / 'templates/fields/04-main-bridge.html').read_text(), 1)
     html = assemble(main_source, injection)
     trim_bounds = json.loads((ROOT / 'assets/ui/icon-trim-bounds.json').read_text())
-    trim_script = (ROOT / 'templates/icon-trim.js').read_text().replace('/* PSG_ICON_TRIM_BOUNDS */', json.dumps(trim_bounds,separators=(',',':')))
+    trim_script = (ROOT / 'templates/icon-trim.js').read_text().replace('/* PSG_ICON_TRIM_BOUNDS */', json.dumps(trim_bounds,separators=(',',':'))).replace('/* PSG_ADOPTED_UI_PATHS */', json.dumps([row['path'] for row in json.loads((ROOT / 'data-import/reference-v544/ui-receipt.json').read_text())['images']]))
     def finish(page):
         page = page.replace(css_text, re.sub(r'(?<![\w-])img(?![\w-])', ':is(img,svg.psg-trimmed-icon)', css_text))
         return page.replace('</head>', '<script>'+trim_script+'</script></head>',1)
