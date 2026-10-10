@@ -12,6 +12,13 @@ def retired_images(root):
     assert all(name.startswith(('assets/pokemon/', 'assets/sleep/', 'assets/faces/',
                                 'master/pokemon/', 'master/forms/artwork/'))
                and '..' not in name.split('/') for name in rows)
+    replacement = json.loads((root / 'data-import/received-v506/manifest.json').read_text())
+    for row in replacement['retired']:
+        name = row['path']
+        assert name.startswith(('master/ingredients/', 'master/berries/', 'master/recipes/',
+                                'assets/skill-icons/', 'assets/pokemon/biblo-v347/'))
+        assert '..' not in name.split('/') and name not in rows
+        rows[name] = row
     return rows
 
 
@@ -31,7 +38,7 @@ def purge_retired_images(root):
             assert hashlib.sha256(file.read_bytes()).hexdigest() in allowed[name], f'retired path has changed: {name}'
             file.unlink()
             removed += 1
-    print(f'Retired artwork: {removed} old files removed; 1165 paths protected against restoration')
+    print(f'Retired artwork: {removed} old files removed; {len(rows)} paths protected against restoration')
 
 
 def clean_retired_references(root, images):

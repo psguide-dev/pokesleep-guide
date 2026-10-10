@@ -647,62 +647,6 @@
   "svgCount": 18,
   "archives": [
     {
-      "path": "pack-01.zip",
-      "sha256": "0349ae75502ebad747988ec847261f796084bf61040e72c5a2676c1fcd3e81fe"
-    },
-    {
-      "path": "pack-02.zip",
-      "sha256": "333eebcf3b94776311f4dde3265f5ce21037ff4942d4beb2452b6510cb23328d"
-    },
-    {
-      "path": "pack-03.zip",
-      "sha256": "f9615f1280d4407a0c092f743adacbca398056d0d5009c5f92ff97ec42dd391b"
-    },
-    {
-      "path": "pack-04.zip",
-      "sha256": "124086301df2a1c662b8bbd9ec21f411d51ddea23902785eaf93a803fc3583e0"
-    },
-    {
-      "path": "pack-05.zip",
-      "sha256": "b9fd03fb85f53bd2ad3edf1bca923e383bfd9eedd45b4309df4582926e276cdb"
-    },
-    {
-      "path": "pack-06.zip",
-      "sha256": "30f038efa73d14138a1fe69a596bfb07c393d5df0f85247e03cc0cee691c0c20"
-    },
-    {
-      "path": "pack-07.zip",
-      "sha256": "eb04e8ba6ff823fc7d32bd34393e8b03b2633eb91d0e3ca44db958a3a4eefb40"
-    },
-    {
-      "path": "pack-08.zip",
-      "sha256": "cdc2071d57768f60d8871d129d450321b3a5e01277d0c8e0bf741aaf3de3248b"
-    },
-    {
-      "path": "pack-09.zip",
-      "sha256": "3216137f0071b7b2f8e482b1b893f4c760f3a2db6667af2424133e11034e3424"
-    },
-    {
-      "path": "pack-10.zip",
-      "sha256": "bd36564e9ddd7610430381c0cf3a7b1c9344c7dc5baf493c7b5c4786a61fb0f1"
-    },
-    {
-      "path": "pack-11.zip",
-      "sha256": "87f8295780822d8ce759af481ceccea43d5d855d4bf092aec58bea04a4045fbf"
-    },
-    {
-      "path": "pack-12.zip",
-      "sha256": "4050d95dd934bb49a61a075deedcbda0bfc8a4028f667aa0b8764b75f0e31c68"
-    },
-    {
-      "path": "pack-13.zip",
-      "sha256": "c2641337cf100c5cd5b5d69e0f212acac985bc1db0022ae53d9685b2e653ae07"
-    },
-    {
-      "path": "pack-14.zip",
-      "sha256": "c4ee5c988119782b62221cfa3d65a2bfdaabcdd4dc207dc66a834fdfa6ab3748"
-    },
-    {
       "path": "pack-15.zip",
       "sha256": "ccd441bfcfb5cd41b38dfbe179f98a5930862aa615ca52ad376937e7c99c0a18"
     },

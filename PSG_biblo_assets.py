@@ -42,6 +42,7 @@ def restore_biblo_assets(root, catalog, images):
     catalog['forms']['species'].extend(pending_previews)
     catalog['forms']['independentDexEntries'].extend(p['speciesId'] for p in pending_previews)
     for kind, bindings in manifest['bindings'].items():
+        bindings = {key: value for key, value in bindings.items() if value not in retired_images(root)}
         assert set(bindings.values()) <= seen
         images[kind].update(bindings)
     # Promote image-first species once normal ability records are available.

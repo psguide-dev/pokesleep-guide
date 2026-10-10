@@ -1,6 +1,7 @@
 from pathlib import Path
 import json,zipfile,hashlib
 r=Path(__file__).resolve().parent.parent;ret={x['path'] for x in json.loads((r/'data-import/retired-pokemon-images-v352.json').read_text())['images']}
+ret.update(x['path'] for x in json.loads((r/'data-import/received-v506/manifest.json').read_text())['retired'])
 for name in ['picasso-trim-v305','picasso-trim-v326','biblo-v347']:
  m=json.loads((r/'data-import'/name/'manifest.json').read_text());rows={x['path']:x for x in m['images']};seen=set()
  for a in m['archives']:

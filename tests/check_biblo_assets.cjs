@@ -8,7 +8,7 @@ const c={window:{},console};vm.createContext(c);
 for(const marker of ['window.PS_IMAGE_FILES = {','window.PS_CATALOG=','// Resolve form identity'])vm.runInContext(scripts.find(s=>s.includes(marker)),c);
 const catalog=c.window.PS_CATALOG,forms=c.window.PS_FORMS,files=c.window.PS_IMAGE_FILES;
 assert.equal(forms.records.size,32);assert.equal(manifest.images.filter(r=>r.role==='sleep').length,944);
-const retired=new Set(JSON.parse(fs.readFileSync(path.join(root,'data-import/retired-pokemon-images-v352.json'))).images.map(r=>r.path));
+const retired=new Set([...JSON.parse(fs.readFileSync(path.join(root,'data-import/retired-pokemon-images-v352.json'))).images,...JSON.parse(fs.readFileSync(path.join(root,'data-import/received-v506/manifest.json'))).retired].map(r=>r.path));
 for(const row of manifest.images)assert.equal(fs.existsSync(path.join(root,row.path)),!retired.has(row.path),row.path);
 for(const [sid,bindings] of Object.entries(manifest.sleepBindings))for(const [id,image] of Object.entries(bindings)){
  const override=corrections.bindings.find(r=>r.speciesId===sid&&r.sleepStyleId===id);assert.equal(files.sleepStylesBySpecies[sid][id],override?.path||image);
