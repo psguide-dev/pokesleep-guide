@@ -43,7 +43,7 @@
    const image=window.PS_DEV_ASSETS.image(face,'pokemon',p.no,'face',p.name);
    const isCurrent=Number(p.no)===Number(currentNo);
    const conditions=condition?`<span class="v106-evo-conditions">${evolutionConditions(condition).map((x,i)=>`<span>${evolutionConditionMarkup(x)}${i===0&&!incoming?'<span class="v111-evo-next" aria-hidden="true">›</span>':''}</span>`).join("")}</span>`:"";
-   return `<div class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}"><span class="v31-evo-name">${p.name}</span><span class="v111-evo-body"><button type="button" class="psg-evo-open" aria-label="${detailEsc(p.name)}の詳細"><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span></button>${conditions}</span></div>`;
+   return `<div class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}"><span class="v111-evo-body"><button type="button" class="psg-evo-open" aria-label="${detailEsc(p.name)}の詳細"><span class="v31-evo-name">${detailEsc(p.name)}</span><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span></button>${conditions}</span></div>`;
  }
  function nestedEvolutionTree(root,currentNo){
    const leafCount=(p,seen=new Set())=>{
