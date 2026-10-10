@@ -5,7 +5,7 @@
 #detailFoods .psg-food-head{justify-content:space-between;color:#111}
 #detailFoods .psg-food-rate{display:flex;flex-direction:column;align-items:flex-start;font-weight:900;line-height:1.15}
 #detailFoods .psg-food-rate strong{font-size:25px;color:#111}
-#detailFoods .psg-food-stack{margin:0 4px 10px;border:1px solid #e0e9e5;overflow:hidden;background:#fff}
+#detailFoods .psg-food-stack{margin:0 4px 10px;border:0;overflow:hidden;background:#fff}
 #detailFoods .psg-food-row{display:grid;grid-template-columns:minmax(90px,30%) minmax(0,1fr);background:#fff}
 #detailFoods .psg-food-row:not(:last-child){border-bottom:1px solid #e0e9e5}
 #detailFoods .psg-food-id{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;position:relative}
@@ -42,7 +42,7 @@
 #detailFoods .psg-food-rate span{font-size:20px;font-weight:950;color:#111}
 #detailFoods .psg-food-head>b{text-align:center;font-size:13px;color:#111}
 #detailFoods .psg-food-head-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));text-align:center;font-size:12px;font-weight:900;color:#111}
-#detailFoods .psg-food-stack{border-radius:18px;box-shadow:none}
+#detailFoods .psg-food-stack{border-radius:0;box-shadow:none}
 #detailFoods .psg-food-row,#detailFoods .psg-food-row[data-slot]{grid-template-columns:minmax(64px,22%) minmax(108px,30%) minmax(0,1fr);min-height:82px}
 #detailFoods .psg-food-id{padding:7px 2px;gap:0}
 #detailFoods .psg-food-id img{width:clamp(38px,11vw,56px);height:clamp(38px,11vw,56px)}
