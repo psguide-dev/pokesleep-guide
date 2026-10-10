@@ -80,9 +80,10 @@
 
 /* A single boundary marks the bottom of the complete fixed panel. */
 #dexDetail>.psg-dex-sticky{border-bottom:2px solid color-mix(in srgb,var(--type-accent) 55%,#8b9690);box-shadow:0 3px 5px #00000012!important}
-#dexDetail .detail-head>[data-back]{width:100%!important;font-size:20px!important;background:transparent!important;border:0!important;border-radius:10px!important;color:#1768a6!important;isolation:isolate}
+#dexDetail .detail-head>[data-back]{width:100%!important;font-size:16px!important;gap:0!important;background:transparent!important;border:0!important;border-radius:10px!important;color:#1768a6!important;isolation:isolate}
 #dexDetail .detail-head>[data-back]::before{background:#fff;z-index:-1}
-#dexDetail .v51-head-nav button{font-size:30px!important;line-height:1!important;background:#fff!important;border:1px solid rgba(0,0,0,.15)!important;border-radius:9px!important}
+#dexDetail .detail-head .psg-detail-chevron{display:block;width:22px;height:28px;flex:none}
+#dexDetail .v51-head-nav button{display:grid!important;place-items:center!important;box-sizing:border-box;width:28px!important;height:32px!important;padding:0!important;line-height:1!important;background:#fff!important;border:1px solid rgba(0,0,0,.15)!important;border-radius:9px!important}
 #dexDetail .detail-head{display:grid!important;grid-template-columns:64px minmax(0,1fr) 64px!important;gap:6px!important;align-items:center!important}
 #dexDetail .detail-head h2{min-width:0!important;margin:0!important;text-align:center}
 #dexDetail .v51-head-nav{display:flex!important;justify-content:flex-end!important;gap:3px!important}

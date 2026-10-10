@@ -15,7 +15,7 @@
      head.querySelector(".v51-head-nav")?.remove();
      const nav=document.createElement("div");
      nav.className="v51-head-nav";
-     nav.innerHTML=`<button id="v12Prev" aria-label="前のポケモン" ${prev?"":"disabled"}>‹</button><button id="v12Next" aria-label="次のポケモン" ${next?"":"disabled"}>›</button>`;
+     nav.innerHTML=`<button id="v12Prev" aria-label="前のポケモン" ${prev?"":"disabled"}><svg class="psg-detail-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 4 8 12 16 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button id="v12Next" aria-label="次のポケモン" ${next?"":"disabled"}><svg class="psg-detail-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 4 16 12 8 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>`;
      head.appendChild(nav);
    }
 
