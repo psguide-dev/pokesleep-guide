@@ -65,6 +65,23 @@
  function skillEffectLines(html){
   return html.split(/(<[^>]+>)/g).map(part=>part.startsWith('<')?part:part.replace(/[／/]/g,(separator,index,text)=>/[0-9]/.test(text[index-1]||'')&&/[0-9]/.test(text[index+1]||'')?separator:'<br>').replace(/\s*<br>\s*/g,'<br>')).join('');
  }
+ // Dex-only phrasing and intentional breaks; calculation descriptions stay unchanged.
+ function dexSkillEffect(s,row){
+  let html=skillEffectLines(skillDescription(s,row));
+  if(s.id==='bulk_up_cooking_assist_s')html=html.replace('ゲットし、','ゲットし、<br>');
+  if(s.id==='berry_juice_energy_for_everyone')html=html.replace('回復する。','回復する。<br>');
+  if(s.effectType?.startsWith('helper_boost_'))html=html.replace('おてつだい。','おてつだい。<br>').replace(/異なる([^<。]+?)タイプ3[～〜]5種/g,'異なる$13〜5');
+  if(s.id==='berry_burst')html=html.replace('個、チーム内のポケモン','個獲得<br>チームのポケモン');
+  return html;
+ }
+ function dexSkillCandidates(s,m){
+  if(!['select_ingredients','conditional_ingredient_select'].includes(s.effectType))return '';
+  const names=[...new Set(s.ingredientCandidates||(m.ingredients||[]).map(x=>x.name).filter(Boolean))];
+  return names.length?`<span class="psg-skill-candidates" aria-label="候補の食材">${names.map(name=>{
+   const src=V.ingredientVisual(name)?.image||window.PS_INGREDIENT_FALLBACK_ICON?.(name);
+   return src?`<img src="${detailEsc(src)}" alt="${detailEsc(name)}" title="${detailEsc(name)}">`:'';
+  }).join('')}</span>`:'';
+ }
  function renderSkill(m){
    const s=skillOf(m);if(!s){
      document.querySelector('#v12Ability .skill-icon')?.replaceChildren();
@@ -93,14 +110,15 @@
    const name=document.getElementById("detailSkill");
    if(name){
      const parts=String(s.name).match(/^(.*?)\s*([（(].*[）)])$/);
-     name.innerHTML=parts?`<span class="psg-skill-name-main">${detailEsc(parts[1])}</span><span class="psg-skill-name-variant">${detailEsc(parts[2])}</span>`:detailEsc(s.name);
+     const title=parts?`<span class="psg-skill-name-main">${detailEsc(parts[1])}</span><span class="psg-skill-name-variant">${detailEsc(parts[2])}</span>`:detailEsc(s.name);
+     name.innerHTML=`<span class="psg-skill-name-copy">${title}</span>${dexSkillCandidates(s,m)}`;
    }
    const rate=document.getElementById("skillRateInline");
    if(rate)rate.innerHTML=`発動確率 <strong>${m.skillRate!=null?m.skillRate+"%":"未確認"}</strong>`;
    const lv1=s.levels?.[1];
    const effect=document.getElementById("detailSkillEffect");
    if(effect){
-     const effectCopy=skillEffectLines(skillDescription(s,lv1));
+     const effectCopy=dexSkillEffect(s,lv1);
      effect.innerHTML=`<b class="v35-effect-level">Lv.<span class="psg-skill-level-number">1</span></b><span class="v35-effect-copy">${effectCopy}</span>`;
      effect.classList.add("skill-desc");
    }
