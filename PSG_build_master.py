@@ -9,6 +9,7 @@ from PSG_retired_images import purge_retired_images, clean_retired_references
 from PSG_trim_assets import restore_trim_assets, restore_additional_trim_assets
 from PSG_standard_art import restore_standard_art
 from PSG_biblo_assets import restore_biblo_assets
+from PSG_received_art import restore_received_art, bind_received_art
 from PSG_import_cooking import validate as validate_cooking
 
 ROOT = Path(__file__).resolve().parent
@@ -172,6 +173,9 @@ def records(kind):
 
 
 def catalog_and_images():
+    received = json.loads((ROOT / "data-import/received-v506/manifest.json").read_text())
+    received_skills = {binding["key"]: row["path"] for row in received["images"]
+                       for binding in row["bindings"] if binding["kind"] == "skills"}
     data = json.loads((MASTER / 'catalog.json').read_text())
     natures = json.loads((MASTER / 'natures' / 'data.json').read_text())
     subskills = json.loads((MASTER / 'subskills' / 'data.json').read_text())
@@ -329,10 +333,12 @@ def catalog_and_images():
         if obj.get('effectType') == 'variable_energy':
             assert sorted(map(int,obj['levels'])) == list(range(1,obj['maxLevel']+1)), key
             assert all(isinstance(level.get('min'),int) and isinstance(level.get('max'),int) and 0 < level['min'] <= level['max'] for level in obj['levels'].values()), key
+        if key in received_skills:
+            obj = {**obj, 'iconAsset': received_skills[key]}
         catalog['skills'][key] = obj
         icon = obj.get('iconAsset') or image_path(ROOT, folder, 'icon')
         if obj.get('iconAsset'):
-            assert icon.startswith('assets/skill-icons/') and (ROOT/icon).is_file(), key
+            assert icon.startswith(('assets/skill-icons/', 'assets/received-v506/skills/')) and (ROOT/icon).is_file(), key
         if icon:
             images['skills'][key] = icon
     for key,(obj,folder) in kinds['pokemon'].items():
@@ -510,9 +516,11 @@ def build():
     purge_retired_images(ROOT)
     restore_trim_assets(ROOT)  # Verify received pack hashes before applying artwork.
     restore_additional_trim_assets(ROOT)
+    received = restore_received_art(ROOT)
     catalog, images = catalog_and_images()
     restore_standard_art(ROOT, catalog, images)
     restore_biblo_assets(ROOT, catalog, images)
+    bind_received_art(received, images)
     clean_retired_references(ROOT, images)
     core = ('help','carry','berryQty','foodRate','skillRate','ingredientSlots')
     missing = [(f'{int(no):04d} {obj["name"]}',[field for field in core if field not in obj])
@@ -525,7 +533,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v505') == 2
+    assert source.count('Review v506') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'

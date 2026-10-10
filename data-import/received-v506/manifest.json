@@ -1,0 +1,2060 @@
+{
+  "version": 506,
+  "date": "2026-10-10",
+  "images": [
+    {
+      "path": "assets/received-v506/ingredients/large_leek.webp",
+      "sha256": "32df8e15b9fc0c31ec90bb163e2376bb4b3711cb6251cd8b3691d1fb8d521a89",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "ふといながねぎ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_1_0.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/tasty_mushroom.webp",
+      "sha256": "445a14c76e58ee2482229bf9fcec8689fd2fe0117852875a41d0ceff21bdb458",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "あじわいキノコ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_2.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/fancy_egg.webp",
+      "sha256": "d944fd90622b7392e3369f2a3055edc9754dae5cc00fe9c80d33fc9210b8cc89",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "とくせんエッグ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_3_2.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/potato.webp",
+      "sha256": "7d3cf7359e9a9ab788b01836b2526a3dfdb74dfd4f43542b91547f4510916704",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "ほっこりポテト"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_4_1.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/fancy_apple.webp",
+      "sha256": "460553599c3468c1582d170ca05046a34c32b1596994cbe64cbf719221bea57f",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "とくせんリンゴ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_5_2.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/fiery_herb.webp",
+      "sha256": "69848879b7556643dee907ebc01b50fa7d219f12244114c028e42688fe1a90f3",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "げきからハーブ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_6_2.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/bean_meat.webp",
+      "sha256": "e6bec60fa9d4db4db30d6b51760f0831653e4706fcaa1a4d189f486ee96d4d56",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "マメミート"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_7_2.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/moomoo_milk.webp",
+      "sha256": "46f8ad00b7f4748286d73f8658cbaff2fe2f0793a38643d6ee2e6ed5b66c40c2",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "モーモーミルク"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_8_1.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/honey.webp",
+      "sha256": "13c3a8a69dad5c2501738e5c963ce8faf4dd233c05d1e1a4c12694a659d7057f",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "あまいミツ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_9_2.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/pure_oil.webp",
+      "sha256": "2c57024345c0dfa2fb3b0105d905c3e0a26797e822264a541ef7d647a9b6663f",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "ピュアなオイル"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_10_0.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/warming_ginger.webp",
+      "sha256": "7cd0a5e337af476c978dd4f33095faf12a958e9fa7959990e87c0a3ed1656b92",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "あったかジンジャー"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_11_1.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/tomato.webp",
+      "sha256": "f4a3ecd000d0760e6c538ed090b74edcdff057d9983924c2c88b54d53aed0eac",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "あんみんトマト"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_12.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/soothing_cacao.webp",
+      "sha256": "7e155bc86aeb05f13afcb48e31d7e1d5296c592f4a3663415c27f2abaf3a1c45",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "リラックスカカオ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_13_2.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/tasty_tail.webp",
+      "sha256": "f9de8e8f6aa0079389092f31e7e7e448857ab7c0728aae0676b6a764bcc17ada",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "おいしいシッポ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_14_1.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/greengrass_soybeans.webp",
+      "sha256": "995fc8c85578d23a87085819b40bee0feccad9104d74d9b434b74eb2e8604be3",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "ワカクサ大豆"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_15.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/greengrass_corn.webp",
+      "sha256": "904bb37a020a625e770ebea58a7e37b005e713f826235e4cde519eeb25938807",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "ワカクサコーン"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_16.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/coffee.webp",
+      "sha256": "13f5bb5e5fd21f6d63319de644275d6d0ca1c329e84d487f2dcab3ca4f85fd6a",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "めざましコーヒー"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_17.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/plump_pumpkin.webp",
+      "sha256": "115538dad49e4ba7e6650d75ba5fcdc3dbe3c82f29dcd2cdb8516a17d77e98db",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "ずっしりカボチャ"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_18.webp"
+    },
+    {
+      "path": "assets/received-v506/ingredients/shiny_avocado.webp",
+      "sha256": "c742d9b3e1c00688317e5cbfc7df6be0b0c4114e06a1baa6eb22190c008640ce",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "ingredients",
+          "key": "つやつやアボカド"
+        }
+      ],
+      "source": "ingredients/WebP/cooking_food_19.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/belue.webp",
+      "sha256": "7f14a60bd6a6227c264790b791804caa7b8a416dffa710622f4326450005d6ff",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ベリブのみ"
+        }
+      ],
+      "source": "berries/WebP/belueberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/bluk.webp",
+      "sha256": "b891f7d68a04e418bc7fea337d097cc994b265fd8f4a36a546fe63b76c52f76d",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ブリーのみ"
+        }
+      ],
+      "source": "berries/WebP/blukberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/cheri.webp",
+      "sha256": "6602688392dc0e801eafe0562f9a5fd4e98d069205de30fafdad7dfb214b8183",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "クラボのみ"
+        }
+      ],
+      "source": "berries/WebP/cheriberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/chesto.webp",
+      "sha256": "7031ca154e71bc8b0291bb3f0fc19b3141cdd561a97af9e25e4462190e1810b2",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "カゴのみ"
+        }
+      ],
+      "source": "berries/WebP/chestoberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/durin.webp",
+      "sha256": "1d702deb545da4a6b9a3889188a72545f1b4847a4fe651d999e5e8e2de2ba2a7",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ドリのみ"
+        }
+      ],
+      "source": "berries/WebP/durinberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/figy.webp",
+      "sha256": "bf9070be90345935854c0106695f66df76c1ce9c5e079fde563706b77ce9edbb",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "フィラのみ"
+        }
+      ],
+      "source": "berries/WebP/figyberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/grepa.webp",
+      "sha256": "e9b295417309a896c00358a5e320bcfb09e7e13b2c1280eaa22cc7cbe6b27bee",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ウブのみ"
+        }
+      ],
+      "source": "berries/WebP/grepaberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/leppa.webp",
+      "sha256": "a5e1fa481c2c6f4a0f89e91a9e39c05ca35ba99fc65bde520ce76ae37b053d55",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ヒメリのみ"
+        }
+      ],
+      "source": "berries/WebP/leppaberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/lum.webp",
+      "sha256": "d83d3d75fd0a25d6139393480edb4db7b749bde5ecf9a6a118b49be9e7a2fdb0",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ラムのみ"
+        }
+      ],
+      "source": "berries/WebP/lumberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/mago.webp",
+      "sha256": "9e7809c058749fdc58f6565794c17f39a63669dd5d999382f629434732c96b66",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "マゴのみ"
+        }
+      ],
+      "source": "berries/WebP/magoberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/oran.webp",
+      "sha256": "2aca0c882c869abb99e858f228a7456f7dff137ae9188f24af5a827f1de9a9b0",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "オレンのみ"
+        }
+      ],
+      "source": "berries/WebP/oranberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/pamtre.webp",
+      "sha256": "ba05eafeb418641314cbb676cc083a64701746ae68cbcf1cbe63309dbb10f13e",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "シーヤのみ"
+        }
+      ],
+      "source": "berries/WebP/pamtreberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/pecha.webp",
+      "sha256": "5423587b8e1368150f9265b6f9d2291bb59b3bdd825a92717413754532f39ff2",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "モモンのみ"
+        }
+      ],
+      "source": "berries/WebP/pechaberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/persim.webp",
+      "sha256": "f35277dc8749633075a1e05f35cc4af9b0bc0e8043cc027974eaebeb53f83d0c",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "キーのみ"
+        }
+      ],
+      "source": "berries/WebP/persimberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/rawst.webp",
+      "sha256": "600ee566c96a6936d8e9d4e0090ff95473f70a9f7f0821e4ba32fe456164f8f3",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "チーゴのみ"
+        }
+      ],
+      "source": "berries/WebP/rawstberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/sitrus.webp",
+      "sha256": "ed8305522875ecfbb2f39ca765fb8433e99c491e6cb6cb0e6e44168b12acbe29",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "オボンのみ"
+        }
+      ],
+      "source": "berries/WebP/sitrusberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/wiki.webp",
+      "sha256": "49dd116ffa904f66c867d9824205f34c316f8ec99bf6c3ba0b01e9b923c82e00",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ウイのみ"
+        }
+      ],
+      "source": "berries/WebP/wikiberry.webp"
+    },
+    {
+      "path": "assets/received-v506/berries/yache.webp",
+      "sha256": "781e46768ea9b28c2164855fb38753c4b07035abd0159655255b10f40594e42b",
+      "size": [
+        150,
+        150
+      ],
+      "bindings": [
+        {
+          "kind": "berries",
+          "key": "ヤチェのみ"
+        }
+      ],
+      "source": "berries/WebP/yacheberry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/mixedcurry.webp",
+      "sha256": "da22af6ef2ff0833f412a3a2578da9f55a99db5bbddb71c9d4393feb70ff3ca2",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [],
+      "source": "cooking/WebP/mixedcurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/fancy_apple_curry.webp",
+      "sha256": "dd71ed467b0ccb8a31b6eb0583b83224476448f41c530c731bead0acbfde356f",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "fancy_apple_curry"
+        }
+      ],
+      "source": "cooking/WebP/fancyapplecurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/grilled_tail_curry.webp",
+      "sha256": "0a7da99c87ddd5e4b779402391478ed155efc49fd73d177cee2948aa0ca300f9",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "grilled_tail_curry"
+        }
+      ],
+      "source": "cooking/WebP/grilledtailcurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/solar_power_tomato_curry.webp",
+      "sha256": "1b321d809d6ae0dc7db136fdb6df9f520f1190ac69fb700d00704da84c7295b1",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "solar_power_tomato_curry"
+        }
+      ],
+      "source": "cooking/WebP/solarpowertomatocurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/dream_eater_butter_curry.webp",
+      "sha256": "7cc35a970f2f6d1c99cd59bd83c1ad7119f1befd907c859e2e46b46016d24001",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "dream_eater_butter_curry"
+        }
+      ],
+      "source": "cooking/WebP/dreameaterbuttercurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/spicy_leek_curry.webp",
+      "sha256": "af9a624c3ca53a9d679579e1b86c17686cb5ee8441d13dfd0641153994d1cd18",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "spicy_leek_curry"
+        }
+      ],
+      "source": "cooking/WebP/spicyleekcurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/spore_mushroom_curry.webp",
+      "sha256": "389edd70df020a0647ff1440424048eba254cfe5d5759ed806a6846a4eea8ee3",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "spore_mushroom_curry"
+        }
+      ],
+      "source": "cooking/WebP/sporemushroomcurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/egg_bomb_curry.webp",
+      "sha256": "c3ef4994694f387c5ba749c508f6d630200122aa306c014cc10046dfa604e310",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "egg_bomb_curry"
+        }
+      ],
+      "source": "cooking/WebP/eggbombcurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/hearty_cheeseburger_curry.webp",
+      "sha256": "7bb619574ac92f231694bd78b91d0092efa86de15318e70d07587046b6dd639a",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "hearty_cheeseburger_curry"
+        }
+      ],
+      "source": "cooking/WebP/heartycheeseburgercurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/hearty_white_stew.webp",
+      "sha256": "77c04a420332f6ed938bc6a12bec7e841f5611e06df923b264051a4c7324f614",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "hearty_white_stew"
+        }
+      ],
+      "source": "cooking/WebP/softpotatochowder.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/simple_white_stew.webp",
+      "sha256": "5eb748e661e30a88b5534eddfce1a71ad5b9c3352a55a91fa097df283203a145",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "simple_white_stew"
+        }
+      ],
+      "source": "cooking/WebP/simplechowder.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/bean_burger_curry.webp",
+      "sha256": "66094afa6a8cc31fd041d9f4370a324f257798785086575f078bac66f836c0b6",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "bean_burger_curry"
+        }
+      ],
+      "source": "cooking/WebP/beanburgercurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/baby_honey_curry.webp",
+      "sha256": "2399dbe1bf63ed77487ab99b2cfff6d7baa5351e3d26eea0864a08626884cc8b",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "baby_honey_curry"
+        }
+      ],
+      "source": "cooking/WebP/mildhoneycurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/ninja_curry.webp",
+      "sha256": "91b2491abb5dbcddda49ea6ecc6380a51577fdf053dcf1e096e22bc8761f0957",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "ninja_curry"
+        }
+      ],
+      "source": "cooking/WebP/ninjacurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/drought_katsu_curry.webp",
+      "sha256": "47590e3b1ebb027d6595d02f116c1a2b1ab3c78c463bdd26c50ca01401531684",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "drought_katsu_curry"
+        }
+      ],
+      "source": "cooking/WebP/droughtkatsucurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/melty_omelette_curry.webp",
+      "sha256": "b879cd6372388f6a3699c0ba78e5a09246f7f0c8944f27c4b223ff1fd23862dd",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "melty_omelette_curry"
+        }
+      ],
+      "source": "cooking/WebP/meltyomelettecurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/bulk_up_bean_curry.webp",
+      "sha256": "6c0b53c488ed6f012e9a910433f9df0ad68252d29b35cb1c54e4579e2b703838",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "bulk_up_bean_curry"
+        }
+      ],
+      "source": "cooking/WebP/bulkupbeancurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/limber_corn_stew.webp",
+      "sha256": "bbdec20b81eec6801421d0c1891e43504654b491ecb26eca28e1ed18597c7b59",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "limber_corn_stew"
+        }
+      ],
+      "source": "cooking/WebP/limbercornstew.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/inferno_corn_keema_curry.webp",
+      "sha256": "8eee33d4a3adbd11701ed1acdb036ce6d8a62e2bfcac278aa1be7260ca05f566",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "inferno_corn_keema_curry"
+        }
+      ],
+      "source": "cooking/WebP/infernocornkeemacurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/dizzy_punch_spicy_curry.webp",
+      "sha256": "7c390fe5567869b975711f0d1e8dc0c2a5ec0f661752895c7e52c192818ba943",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "dizzy_punch_spicy_curry"
+        }
+      ],
+      "source": "cooking/WebP/dizzypunchspicycurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/hidden_power_stew.webp",
+      "sha256": "adcb835e0586d6555fba2d59c2840dc7dd49771dad21d0d7de2d9fba3269d46f",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "hidden_power_stew"
+        }
+      ],
+      "source": "cooking/WebP/hiddenpowerperk-upstew.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/sacred_sword_sukiyaki_curry.webp",
+      "sha256": "17ecfda10d281b37d2176f081d9380525a0e263475c78c2426b4110dee21e4ad",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "sacred_sword_sukiyaki_curry"
+        }
+      ],
+      "source": "cooking/WebP/cutsukiyakicurry.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/role_play_pumpkaboo_stew.webp",
+      "sha256": "2085c598382e34b3c06ab5421fb1e0b329f9db3e7d5dbb7f9e5672f02eca2d42",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "role_play_pumpkaboo_stew"
+        }
+      ],
+      "source": "cooking/WebP/roleplaypumpkaboostew.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/verdant_avocado_gratin.webp",
+      "sha256": "b9b08c1054a87b1d3c317debe82ac9a9f985067d0aeea9704bf81775d398101b",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "verdant_avocado_gratin"
+        }
+      ],
+      "source": "cooking/WebP/overgrowavocadogratin.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/greengrass_curry_bun.webp",
+      "sha256": "0309ccaf86484b297636b7524865b13e02836a876ec56e8c195cb75e0a9940d7",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "greengrass_curry_bun"
+        }
+      ],
+      "source": "cooking/WebP/greengrasscurrybun.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/bouncing_curry_udon.webp",
+      "sha256": "6ed81821c486ed93a26ff965fc9488b23d47ca5bbf380045f830eb08143bbf7c",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "bouncing_curry_udon"
+        }
+      ],
+      "source": "cooking/WebP/bouncecurryudon.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/mixedsalad.webp",
+      "sha256": "a8bd0f341eadd81988828e3b7de9ebd7cdbf805cbad306b59afdce0ae59d831e",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [],
+      "source": "cooking/WebP/mixedsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/slowpoke_tail_pepper_salad.webp",
+      "sha256": "840ec0cecd00fb84d0902492a1c9eb002852f64d3a05dd201d8470f45d493098",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "slowpoke_tail_pepper_salad"
+        }
+      ],
+      "source": "cooking/WebP/slowpoketailpeppersalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/spore_mushroom_salad.webp",
+      "sha256": "3b0f071a372a5632da0d710e61b9eaad510b74c2d49b7577e9fc156aa02f45c3",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "spore_mushroom_salad"
+        }
+      ],
+      "source": "cooking/WebP/sporemushroomsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/snow_cloak_caesar_salad.webp",
+      "sha256": "7a77242ceecdd80dec3aa48e5c1e0065f4c81460a4c81baad9b5f771a30bb347",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "snow_cloak_caesar_salad"
+        }
+      ],
+      "source": "cooking/WebP/snowcloakcaesarsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/gluttony_potato_salad.webp",
+      "sha256": "6b54da49ad8dce674d2f787de7a3c48010b406588caa196aced6e77aa73e459f",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "gluttony_potato_salad"
+        }
+      ],
+      "source": "cooking/WebP/gluttonypotatosalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/water_veil_tofu_salad.webp",
+      "sha256": "f3a85db80970e0c61bedcbdb2b1163155cf6ff6ba9115c3ee8908a19dafc9610",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "water_veil_tofu_salad"
+        }
+      ],
+      "source": "cooking/WebP/waterveiltofusalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/superpower_extreme_salad.webp",
+      "sha256": "da78aa7eb02bae76f8be04931db1dc9203e3bb8ef008a2f24166fa98c50d2bb1",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "superpower_extreme_salad"
+        }
+      ],
+      "source": "cooking/WebP/superpowerextremesalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/bean_ham_salad.webp",
+      "sha256": "272e34f99ec3b3cbf2e4bd6f9b6d73da9d1ec91f697c936834f3a14271a5ca52",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "bean_ham_salad"
+        }
+      ],
+      "source": "cooking/WebP/beanhamsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/snoozy_tomato_salad.webp",
+      "sha256": "76080c2a1069cdfa6f6779d6d5ce911ff8432e2036774a1bd5aec8ddc7c07185",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "snoozy_tomato_salad"
+        }
+      ],
+      "source": "cooking/WebP/snoozytomatosalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/moomoo_caprese.webp",
+      "sha256": "fa15cb8366f0b954f4fec4d6ecf7716c91bc10590e33f845d99dc7994bbd33ef",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "moomoo_caprese"
+        }
+      ],
+      "source": "cooking/WebP/moomoocapresesalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/choice_apple_salad.webp",
+      "sha256": "9713e6485fffbc8c9ed62a6c6a9a71955b7f1bd686b885fcc5a65443c6e3b5dc",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "choice_apple_salad"
+        }
+      ],
+      "source": "cooking/WebP/fancyapplesalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/immunity_leek_salad.webp",
+      "sha256": "ed2f5df2476fa45f15ceb66cc47d3a4d8ea599660e251207bf5d60b6ee2ca2e7",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "immunity_leek_salad"
+        }
+      ],
+      "source": "cooking/WebP/immunityleeksalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/attract_apple_cheese_salad.webp",
+      "sha256": "5eb481bd8eefeb17e6375816ca4213f84f59cf031c66c076fa2c80349132673c",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "attract_apple_cheese_salad"
+        }
+      ],
+      "source": "cooking/WebP/dazzlingapplecheesesalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/ninja_salad.webp",
+      "sha256": "ad0d8277c4fb3c23563521b707f380ea4654b56500965c8d61c91aa839dc0029",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "ninja_salad"
+        }
+      ],
+      "source": "cooking/WebP/ninjasalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/heat_wave_tofu_salad.webp",
+      "sha256": "dbd4d58ed0cb9a85a928fdfe9672ad45614d9621d9432f4ca0063b93d2551d1b",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "heat_wave_tofu_salad"
+        }
+      ],
+      "source": "cooking/WebP/heatwavetofusalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/greengrass_salad.webp",
+      "sha256": "272c5d030f1b9adfeedaae125ff95b9a7b314fe174aea98c8c3f79aa5775fd79",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "greengrass_salad"
+        }
+      ],
+      "source": "cooking/WebP/greengrasssalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/calm_mind_fruit_salad.webp",
+      "sha256": "57ba7757b7eb2df6e1c49475ec63a25594d3b5e64f11d2e153410f85545c652e",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "calm_mind_fruit_salad"
+        }
+      ],
+      "source": "cooking/WebP/calmmindfruitsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/fury_attack_corn_salad.webp",
+      "sha256": "d7e2974f05dc39ceecb93c8692f9836a1de47c29b8d70785ec7ab0e1ce035f55",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "fury_attack_corn_salad"
+        }
+      ],
+      "source": "cooking/WebP/furyattackcornsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/cross_chop_salad.webp",
+      "sha256": "a2b0eb30c35536813872ce88668013933fd7c97f13c8aaf5d31abd202f5e7c98",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "cross_chop_salad"
+        }
+      ],
+      "source": "cooking/WebP/crosschopsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/defiant_coffee_salad.webp",
+      "sha256": "7493416337ede0fe735c7060631df385c44b1623b4e26406185558a398fcbd50",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "defiant_coffee_salad"
+        }
+      ],
+      "source": "cooking/WebP/defiantcoffee-dressedsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/crunch_avocado_salad.webp",
+      "sha256": "9ebc32c52139f59b2c71a8eef93258b049722afc57ec15897b46d80fc3db8715",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "crunch_avocado_salad"
+        }
+      ],
+      "source": "cooking/WebP/lusciousavocadosalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/stomping_guacamole_chips.webp",
+      "sha256": "bcd6aa42edbfb6dd3a803a0f0313d85cd1b5d3c7ce0fa2a8928d7ad9c880b18a",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "stomping_guacamole_chips"
+        }
+      ],
+      "source": "cooking/WebP/bulldozeguacamoleandchips.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/boiling_hot_salad.webp",
+      "sha256": "1308ec263dc32d1d5b10cc3daad437a8848e5cca233dfcd2ab04c659bf5bd7cc",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "boiling_hot_salad"
+        }
+      ],
+      "source": "cooking/WebP/scaldchunkysalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/mixedjuice.webp",
+      "sha256": "8f161c5030ed5046b89a01b6a495b1317f02a2020b7d11683be226b97e1b0832",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [],
+      "source": "cooking/WebP/mixedjuice.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/ripened_sweet_potato.webp",
+      "sha256": "5300dee3874a8bb1a3bf60d038a26042ab900bcc859a7ae99f717614f95cea46",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "ripened_sweet_potato"
+        }
+      ],
+      "source": "cooking/WebP/fluffysweetpotatoes.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/steadfast_ginger_cookies.webp",
+      "sha256": "c39820c8d304eac3d691ef38962d2f12760ea9fd7ed8ce400bf23823465f3b71",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "steadfast_ginger_cookies"
+        }
+      ],
+      "source": "cooking/WebP/steadfastgingercookies.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/apple_juice.webp",
+      "sha256": "e4b43c0877d0253e69cf43536eeea420ba62aa21b617cfef5c78020eaef129a3",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "apple_juice"
+        }
+      ],
+      "source": "cooking/WebP/fancyapplejuice.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/craft_psycho_soda.webp",
+      "sha256": "2b273cd6a2729d6e3b43296fb6dc89f695337da9b0608ed1c25ac0030edef2c3",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "craft_psycho_soda"
+        }
+      ],
+      "source": "cooking/WebP/craftsodapop.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/ginger_tea.webp",
+      "sha256": "76c8c0709fdcf96a9e68f938f4dc289e62488bcbf8c983d7b13ef8bfe8705365",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "ginger_tea"
+        }
+      ],
+      "source": "cooking/WebP/embergingertea.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/jigglypuff_flan.webp",
+      "sha256": "450db15648d41b1f1f0a90572115c20e4aff81def77bfc12c543711722f4b0fe",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "jigglypuff_flan"
+        }
+      ],
+      "source": "cooking/WebP/jigglypuff'sfruityflan.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/lovely_kiss_fruit_au_lait.webp",
+      "sha256": "637cc0b83a10973505564bcd3a6318ec82ae9a8f862bdf028b330a19000e4af4",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "lovely_kiss_fruit_au_lait"
+        }
+      ],
+      "source": "cooking/WebP/lovelykisssmoothie.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/wish_apple_pie.webp",
+      "sha256": "17fa0155e24719548c83ea310c8f355e6dc72cf959ec3781690022a1655552b4",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "wish_apple_pie"
+        }
+      ],
+      "source": "cooking/WebP/luckychantapplepie.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/neroli_detox_tea.webp",
+      "sha256": "d07b4fa70677c64b84b89fd2e6f186d6c1a395bf78244e3daad2acc091f0a7f5",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "neroli_detox_tea"
+        }
+      ],
+      "source": "cooking/WebP/neroli'srestorativetea.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/sweet_scent_chocolate_cake.webp",
+      "sha256": "4c276556e88106095f9e8b924af317ff52885d4cf05af12b02af01f1aa6444f6",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "sweet_scent_chocolate_cake"
+        }
+      ],
+      "source": "cooking/WebP/sweetscentchocolatecake.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/hot_milk.webp",
+      "sha256": "4bd4404e35fbb13739f12873a0a9fcb170c66e9ebf31f6261d492c1e62161f8b",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "hot_milk"
+        }
+      ],
+      "source": "cooking/WebP/warmmoomoomilk.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/light_soy_cake.webp",
+      "sha256": "355b3422f8ca82d49f366f011ff09983461efb49862d5fe531272c2a502bf5e2",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "light_soy_cake"
+        }
+      ],
+      "source": "cooking/WebP/cloudninesoycake.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/hustle_protein_smoothie.webp",
+      "sha256": "890beb8a8f4e13855233ed72320cd88bc80a664d7771f578cb57322c3514a631",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "hustle_protein_smoothie"
+        }
+      ],
+      "source": "cooking/WebP/hustleproteinsmoothie.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/slow_and_steady_vegetable_juice.webp",
+      "sha256": "8ee9cdfcdaad84c66f535d1cc62c7a551710b626116381290452e06fe6f65b04",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "slow_and_steady_vegetable_juice"
+        }
+      ],
+      "source": "cooking/WebP/stalwartvegetablejuice.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/big_malasada.webp",
+      "sha256": "91c2b78cb60090ca0ed3db71096ddfcc08e2740950d5934b97d36e825b1b3173",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "big_malasada"
+        }
+      ],
+      "source": "cooking/WebP/bigmalasada.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/huge_power_soy_donuts.webp",
+      "sha256": "785e30b4b1fafa31435bff502638dca1534b5fe0dfc854b640ffd8b40ec91b51",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "huge_power_soy_donuts"
+        }
+      ],
+      "source": "cooking/WebP/hugepowersoydonuts.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/explosion_popcorn.webp",
+      "sha256": "d95b9e69fc7b1438f244da9719a9b932f23e90a867c89755f10168c5a6909762",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "explosion_popcorn"
+        }
+      ],
+      "source": "cooking/WebP/explosionpopcorn.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/teatime_corn_scones.webp",
+      "sha256": "b0d2088f45f3c5c627d2fef5071d18934c7dd40152e7e22ce544815830fea20b",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "teatime_corn_scones"
+        }
+      ],
+      "source": "cooking/WebP/teatimecornscones.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/petal_dance_chocolate_tart.webp",
+      "sha256": "a385a64309e68e116cd90c504f82cf5a8acbfc6962421274a683db4f86c8a888",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "petal_dance_chocolate_tart"
+        }
+      ],
+      "source": "cooking/WebP/petaldancechocolatetart.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/flower_gift_macarons.webp",
+      "sha256": "2ad18c9298e21e39c2cd04477933f90beda682a4f3b27f1a3cd64f56f0714843",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "flower_gift_macarons"
+        }
+      ],
+      "source": "cooking/WebP/flowergiftmacarons.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/early_bird_coffee_jelly.webp",
+      "sha256": "0d62c4bb301d0654c0714356800bd3baae793fa823208ca521621b9ccd158b9a",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "early_bird_coffee_jelly"
+        }
+      ],
+      "source": "cooking/WebP/earlybirdcoffeejelly.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/zippy_zap_spiced_cola.webp",
+      "sha256": "dbf92c48d6fc804f8a783bdcf695d2e6fd7aef89ef931e03dffba2b4c30beffe",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "zippy_zap_spiced_cola"
+        }
+      ],
+      "source": "cooking/WebP/zingzapspicedcola.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/mold_breaker_corn_tiramisu.webp",
+      "sha256": "357b6728aa273b77b9c2dd84ba8ea4cda9b99546e2bdf78c06c2d5dd606bb196",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "mold_breaker_corn_tiramisu"
+        }
+      ],
+      "source": "cooking/WebP/moldbreakercorntiramisu.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/clodsire_eclairs.webp",
+      "sha256": "62f69923ca2ca9996fe721fe633aa5ac8c8d921ef5cad5ec5d4980b6b329b6f1",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "clodsire_eclairs"
+        }
+      ],
+      "source": "cooking/WebP/clodsireeclair.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/spooky_face_pancakes.webp",
+      "sha256": "58ce916d6dd57c56c9c68d3ca41a7531e8ba49cde0d6e220ec8ea268701c1c3f",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "spooky_face_pancakes"
+        }
+      ],
+      "source": "cooking/WebP/scaryfacepancakes.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/grass_mixer_smoothie.webp",
+      "sha256": "1fc6fcc8777431845a1a24b173a96ed89ad4269b4cb4b48ab30a2f147917c3a7",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "grass_mixer_smoothie"
+        }
+      ],
+      "source": "cooking/WebP/leaftornadosmoothie.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/honey_gathering_chocolate_waffles.webp",
+      "sha256": "3e84d58504d7f9d693c2f73019bfd2d66433dde4c47c55d68829abd75708b4e1",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "honey_gathering_chocolate_waffles"
+        }
+      ],
+      "source": "cooking/WebP/honeygatherchocolatewaffles.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/apple_acid_yogurt_salad.webp",
+      "sha256": "7d957c6a44037de7bcf561e8157229cbe5af7652e302317c4bdf528476bf5af5",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "apple_acid_yogurt_salad"
+        }
+      ],
+      "source": "cooking/WebP/appleacidyogurt-dressedsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/petal_blizzard_mimosa_salad.webp",
+      "sha256": "aaa0c66333bdc76294445a9a1697b00005cdbf409ac55050f17e981270b9765b",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "petal_blizzard_mimosa_salad"
+        }
+      ],
+      "source": "cooking/WebP/petalblizzardlayeredsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/fury_attack_chocolate_meat_salad.webp",
+      "sha256": "2fc8df267115f2616f83b63a2e373c4c0fa2d400c666eaf598e5d7d8219422f9",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "fury_attack_chocolate_meat_salad"
+        }
+      ],
+      "source": "cooking/WebP/contrarychocolatemeatsalad.webp"
+    },
+    {
+      "path": "assets/received-v506/recipes/overheat_salad.webp",
+      "sha256": "e63c700be3762a57124d5d35bdb634b611cedf620dfc8488477940f60a590c05",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "recipes",
+          "key": "overheat_salad"
+        }
+      ],
+      "source": "cooking/WebP/overheatgingersalad.webp"
+    },
+    {
+      "path": "assets/received-v506/pokemon/0590_default_face.webp",
+      "sha256": "c9b7026ac392b660103718a60e9ec8e60aa0ddf1ce10b89b4f3b211b343c48ce",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "pokemonFaces",
+          "key": "590"
+        },
+        {
+          "kind": "pokemonFacesBySpecies",
+          "key": "0590_default"
+        }
+      ],
+      "source": "assets/pokemon/0590_default_face.webp"
+    },
+    {
+      "path": "assets/received-v506/pokemon/0591_default_face.webp",
+      "sha256": "872b314e0d689e7e6b8cba651cfa84e534e275a9bb3e11d28a110c0c0ec4edb0",
+      "size": [
+        256,
+        256
+      ],
+      "bindings": [
+        {
+          "kind": "pokemonFaces",
+          "key": "591"
+        },
+        {
+          "kind": "pokemonFacesBySpecies",
+          "key": "0591_default"
+        }
+      ],
+      "source": "assets/pokemon/0591_default_face.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/cooking_power_up_s.webp",
+      "sha256": "8a78104ca58120592573e5a93f538cadc43bd19382d1143bcd5ea535eb524eb3",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "cooking_power_up_s"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/cooking_power_up_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/cooking_chance_s.webp",
+      "sha256": "db37f9f23f89150aa7e3e84fa265db656b6795db336ebf3daf3f35b4fe7823f4",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "cooking_chance_s"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/cooking_chance_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/dream_shard_magnet_s.webp",
+      "sha256": "4be3f1039353c029770be7a649c9ea4625496bf9814544557eb68d3698d06c26",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "dream_shard_magnet_s"
+        },
+        {
+          "kind": "skills",
+          "key": "dream_shard_magnet_s_variable"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/dream_shard_magnet_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/ingredient_magnet_s.webp",
+      "sha256": "7bb9b75d40a7a18b2e02dca740809995bb8103cd6dea12da219c8fdefac166fc",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "ingredient_magnet_s"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/ingredient_magnet_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/ingredient_select_s.webp",
+      "sha256": "7eb68c118712cdc2d6b074090ffad56b2193032273fcc0eb4512376e71ff6f12",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "ingredient_draw_s"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/ingredient_select_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/energizing_cheer_s.webp",
+      "sha256": "6d16bbda355020edf0f89c932a4b760ff102c0c5eb395ae8952c4b5ddef454d5",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "energy_charge_s_self"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/energizing_cheer_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/energy_cheer_s.webp",
+      "sha256": "ab4b6bbf26e956c7fd860bc25a9ca18dbf0a59f1b6ce90415a587216c87d4c90",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "energy_cheer_s"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/energy_cheer_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/energy_all_s.webp",
+      "sha256": "26d833c3a9fe4004440de03342fa4df6f126f7c775a0bc84149d3279f2051b69",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "energy_for_everyone_s"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/energy_all_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/helper_support_s.webp",
+      "sha256": "87a4108bff128bfef0e73e2a8e8e591570441979af26e49c84ed9a0556b45297",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "extra_helpful_s"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/helper_support_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/S/energy_charge_s.webp",
+      "sha256": "57f4b89b97c42f3803dc881002b212b76ccc098ff7bffccd2749ce65115ba99b",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "energy_charge_s_variable"
+        },
+        {
+          "kind": "skills",
+          "key": "energy_charge_s_fixed"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/S/energy_charge_s.webp"
+    },
+    {
+      "path": "assets/received-v506/skills/M/energy_charge_m.webp",
+      "sha256": "6df2f89f63b2e96ce943945092f96b2e9196d80fec2684a40f505742d65f24e6",
+      "size": [
+        512,
+        512
+      ],
+      "bindings": [
+        {
+          "kind": "skills",
+          "key": "energy_charge_m"
+        }
+      ],
+      "source": "PSN_skill_icons_SM_replacement_20261009/app/M/energy_charge_m.webp"
+    }
+  ],
+  "archives": [
+    {
+      "path": "pack-001.zip",
+      "sha256": "a171908f8eac14ca180941687284715dd6ad05e269d0394062cb381c5f2ad383",
+      "bytes": 399464
+    },
+    {
+      "path": "pack-002.zip",
+      "sha256": "a0bf0d7fe7e94cbbd7f6d109deef3bfbfa197ca3ef5df040dc7ebb59f1b6e16a",
+      "bytes": 399187
+    },
+    {
+      "path": "pack-003.zip",
+      "sha256": "7f4fbb95f9b65f500bf766d530da82c673e8ac53943ddd38ee698f8593eae069",
+      "bytes": 393189
+    },
+    {
+      "path": "pack-004.zip",
+      "sha256": "301a9fe31a439eca1841fc500df6d41a6d86d2d30e1866f5f3084c65e82fd90a",
+      "bytes": 385411
+    },
+    {
+      "path": "pack-005.zip",
+      "sha256": "afc875b244e4e981e57bc214f01e1cf210bc90e6315fcbf9c4b7bea014e00d89",
+      "bytes": 261009
+    },
+    {
+      "path": "pack-006.zip",
+      "sha256": "13986e45c071b4cdaa737e705aa68cbfa478c0bb843a9ff74b2bd250e7710f22",
+      "bytes": 233689
+    },
+    {
+      "path": "pack-007.zip",
+      "sha256": "0c99aee1e8843a700094846776ffd354a33ae37b2e3ba1bdc1f876024740a9fc",
+      "bytes": 241595
+    },
+    {
+      "path": "pack-008.zip",
+      "sha256": "ba694eb48a11ae0a29d9b4566afc02f84d95707dcc0fd779d7de0e92779e6d24",
+      "bytes": 261288
+    },
+    {
+      "path": "pack-009.zip",
+      "sha256": "800fae26d7ff47e78975c0c32a827ad5f7786fc0e888399b9cfcf9d814c813e2",
+      "bytes": 264527
+    },
+    {
+      "path": "pack-010.zip",
+      "sha256": "baf267ba6052be0187e81011994e0b70b3998391bae06cd709ee5214ad5037bb",
+      "bytes": 273307
+    },
+    {
+      "path": "pack-011.zip",
+      "sha256": "090a1eadf12dd876791407a4555acbafd262500b40226766ee2127db70f20f40",
+      "bytes": 250774
+    },
+    {
+      "path": "pack-012.zip",
+      "sha256": "58e078e61239b2e42a8f78a420a3d09767d893d7d858f2375849a3ff8e9afdc9",
+      "bytes": 240593
+    },
+    {
+      "path": "pack-013.zip",
+      "sha256": "80152bcdf78bef0f79f11b70fdd04983ef7744026a6ee7a06622f32f6510bfa4",
+      "bytes": 263831
+    },
+    {
+      "path": "pack-014.zip",
+      "sha256": "ea496de8b2f5dbc5b0a46fb415baaa0fed33a0284a0cf2cca8541a7331b39150",
+      "bytes": 231143
+    },
+    {
+      "path": "pack-015.zip",
+      "sha256": "5cedf76d98c1f9fed93ed39f3e294380e6a829eb32935b5968e8e0218e4552ec",
+      "bytes": 266683
+    },
+    {
+      "path": "pack-016.zip",
+      "sha256": "fe8a57236725e86bf5d4d537628e93abbed59ef69712b487a47d4426aabd2112",
+      "bytes": 270357
+    }
+  ],
+  "unbound": [
+    "ごちゃまぜカレー",
+    "ごちゃまぜサラダ",
+    "ごちゃまぜジュース"
+  ],
+  "retired": []
+}

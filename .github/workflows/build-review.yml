@@ -11,6 +11,8 @@ on:
       - 'vendor/enigma-special/**'
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
+      - 'PSG_received_art.py'
+      - 'data-import/received-v506/**'
       - 'PSG_biblo_assets.py'
       - 'PSG_retired_images.py'
       - 'PSG_trim_assets.py'
