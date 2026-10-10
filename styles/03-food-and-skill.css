@@ -184,24 +184,16 @@
   border-radius:12px!important;
 }
 
-/* Tabs use fixed semantic colors, independent of Pokémon type. */
+/* Tabs share a neutral surface; selection follows the Pokémon type. */
 #dexDetail .v12-tabs{margin-top:0!important}
 #dexDetail .v12-tabs button{
   min-height:48px!important;font-size:14px!important;border-width:1px!important;
   transition:filter .15s ease,transform .15s ease!important;
 }
-#dexDetail .v12-tabs button[data-v12tab="ability"]{
-  background:#eaf4ff!important;color:#1768a6!important;border-color:#b8d9f5!important;
-}
-#dexDetail .v12-tabs button[data-v12tab="sleep"]{
-  background:#f2ecff!important;color:#704bb2!important;border-color:#d8c7f5!important;
-}
-#dexDetail .v12-tabs button[data-v12tab="ability"].active{
-  background:#2f80c9!important;color:#fff!important;border-color:#2f80c9!important;
-}
-#dexDetail .v12-tabs button[data-v12tab="sleep"].active{
-  background:#7957b8!important;color:#fff!important;border-color:#7957b8!important;
-}
+
+
+
+
 
 /* Food: probability + Lv.1/Lv.30/Lv.60 + recipes share one header grid. */
 #detailFoods .v24-food-title{display:none!important}
