@@ -45,6 +45,10 @@
    const conditions=condition?`<span class="v106-evo-conditions">${evolutionConditions(condition).map((x,i)=>`<span>${evolutionConditionMarkup(x)}${i===0&&!incoming?'<span class="v111-evo-next" aria-hidden="true">›</span>':''}</span>`).join("")}</span>`:"";
    return `<div class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}"><span class="v111-evo-body"><button type="button" class="psg-evo-open" aria-label="${detailEsc(p.name)}の詳細"><span class="v31-evo-name">${detailEsc(p.name)}</span><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span></button>${conditions}</span></div>`;
  }
+ function evoEdgeMarkup(condition){
+   const rows=evolutionConditions(condition);
+   return `<div class="psg-evo-edge" aria-label="進化条件">${rows.map(row=>`<span class="psg-evo-edge-condition">${evolutionConditionMarkup(row)}</span>`).join('')}<span class="psg-evo-edge-arrow" aria-hidden="true" style="grid-row:1 / span ${Math.max(2,rows.length)}">›</span></div>`;
+ }
  function nestedEvolutionTree(root,currentNo){
    const leafCount=(p,seen=new Set())=>{
      if(!p||seen.has(p.no))return 0;
@@ -55,14 +59,15 @@
    const walk=(p,depth,row,incoming=null,seen=new Set())=>{
      if(!p||seen.has(p.no))return;
      const next=new Set(seen).add(p.no),span=Math.max(1,leafCount(p,seen));columns=Math.max(columns,depth+1);
-     cells.push(`<div class="psg-evo-tree-cell" data-depth="${depth}" style="grid-column:${depth+1};grid-row:${row} / span ${span}">${evoNode(p,currentNo,'psg-evo-tree-node',incoming,true)}</div>`);
+     if(incoming)cells.push(`<div class="psg-evo-tree-edge" style="grid-column:${depth*2};grid-row:${row} / span ${span}">${evoEdgeMarkup(incoming)}</div>`);
+     cells.push(`<div class="psg-evo-tree-cell" data-depth="${depth}" style="grid-column:${depth*2+1};grid-row:${row} / span ${span}">${evoNode(p,currentNo,'psg-evo-tree-node')}</div>`);
      let childRow=row;
      for(const edge of evolutionEntries(p)){
        const child=byNo(edge.toNo);if(!child||next.has(child.no))continue;
        walk(child,depth+1,childRow,edge,next);childRow+=Math.max(1,leafCount(child,next));
      }
    };
-   walk(root,0,1);return `<div class="psg-evolution-tree" style="--evo-columns:${columns}">${cells.join('')}</div>`;
+   walk(root,0,1);return `<div class="psg-evolution-tree" style="--evo-columns:${columns*2-1}">${cells.join('')}</div>`;
  }
  function renderEvolution(m){
    evolutionItemPopoverIndex=0;
@@ -109,10 +114,11 @@
    }else{
      const chain=[];let cur=root,guard=0;
      while(cur&&guard++<12){chain.push(cur);const es=evolutionEntries(cur);if(es.length!==1)break;cur=byNo(es[0].toNo)}
-     let html='<div class="v31-evo-line">';
+     let html=`<div class="v31-evo-line" style="--evo-columns:${chain.length*2-1}">`;
      chain.forEach((p,i)=>{
        const edge=i<chain.length-1?evolutionEntries(p)[0]:null;
-       html+=evoNode(p,m.no,"",edge);
+       html+=evoNode(p,m.no);
+       if(edge)html+=evoEdgeMarkup(edge);
      });
      html+='</div>';el.innerHTML=html;
    }

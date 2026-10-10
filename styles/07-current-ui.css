@@ -125,8 +125,8 @@
   #dexDetail .v51-type-badge .filter-pictogram{font-size:12px}
 }
 /* Evolution: face on the left and outgoing requirements on the right. */
-#dexDetail .v31-evo-line{display:flex!important;align-items:stretch!important;gap:5px!important;padding:2px 0!important;overflow-x:visible!important}
-#dexDetail .v31-evo-line>.v31-evo-node{flex:1 1 0!important;width:0!important;min-width:0!important;max-width:none!important}
+#dexDetail .v31-evo-line{display:grid!important;grid-template-columns:repeat(var(--evo-columns),minmax(0,1fr));align-items:center!important;gap:3px!important;padding:2px 0!important;overflow-x:visible!important}
+#dexDetail .v31-evo-line>.v31-evo-node{width:100%!important;min-width:0!important;max-width:none!important}
 #dexDetail .v31-evo-node{min-width:0!important;gap:6px!important;justify-content:flex-start!important;overflow:visible!important}
 #dexDetail .v31-evo-node .v31-evo-name{max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;line-height:1.2!important;font-size:clamp(10px,2.7vw,13px)!important}
 #dexDetail .v111-evo-body{display:grid;grid-template-columns:clamp(44px,13vw,56px) minmax(0,1fr);align-items:center;gap:3px;width:auto;max-width:100%;min-width:0}
@@ -261,11 +261,11 @@
 .psg-field-choice[aria-pressed="true"]{border-color:#65a382;background:#edf8ee}
 
 /* A later-stage fork keeps the shared ancestors at left and both destinations at right. */
-#dexDetail .psg-evolution-tree{display:grid;grid-template-columns:repeat(var(--evo-columns),minmax(0,1fr));gap:8px 10px;align-items:center;padding:4px 0}
+#dexDetail .psg-evolution-tree{display:grid;grid-template-columns:repeat(var(--evo-columns),minmax(0,1fr));gap:4px 3px;align-items:center;padding:2px 0}
 #dexDetail .psg-evo-tree-cell{position:relative;display:flex;align-items:center;min-width:0;height:100%}
-#dexDetail .psg-evo-tree-cell:not([data-depth="0"])::before{content:'›';position:absolute;left:-9px;top:50%;transform:translateY(-50%);font-size:19px;color:#52635b}
+#dexDetail .psg-evo-tree-cell::before{content:none}
 #dexDetail .psg-evo-tree-node{width:100%!important;min-width:0!important;padding:8px 3px!important;align-self:center;box-sizing:border-box}
-#dexDetail .psg-evo-tree-node .v111-evo-body{display:grid!important;grid-template-columns:clamp(36px,10vw,46px) minmax(0,1fr);align-items:center;gap:3px;width:100%}
+#dexDetail .psg-evo-tree-node .v111-evo-body{display:flex!important;justify-content:center;align-items:center;width:100%}
 #dexDetail .psg-evo-tree-node .v31-evo-image{width:clamp(36px,10vw,46px)!important;height:clamp(36px,10vw,46px)!important;transform:none!important}
 #dexDetail .psg-evo-tree-node .v106-evo-conditions{align-items:flex-start!important;text-align:left!important;font-size:clamp(9px,2.35vw,10px)!important;min-height:0}
 #dexDetail .psg-evo-tree-node .v31-evo-name{font-size:clamp(10px,2.6vw,13px)!important}
@@ -384,3 +384,10 @@
 /* Name and portrait share one column; requirements do not shift the name. */
 #dexDetail .v31-evo-node .psg-evo-open{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
 #dexDetail .v31-evo-node .psg-evo-open .v31-evo-name{display:block;max-width:none!important;overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;text-align:center;align-self:center}
+
+/* Dedicated edge columns place requirements halfway between portraits. */
+#dexDetail .psg-evo-edge{display:grid;grid-template-columns:minmax(0,1fr) 12px;grid-auto-rows:minmax(18px,auto);align-items:center;justify-items:center;gap:1px 2px;min-width:0;min-height:var(--box-unit-height);transform:translateY(7px);font-size:clamp(9px,2.35vw,11px);font-weight:850;line-height:1.2;color:#111;text-align:center}
+#dexDetail .psg-evo-edge-condition{grid-column:1;min-width:0;max-width:100%;overflow-wrap:anywhere}
+#dexDetail .psg-evo-edge-arrow{grid-column:2;display:flex;align-items:center;justify-content:center;align-self:stretch;font-size:36px;font-weight:700;line-height:1;color:#39453d}
+#dexDetail .psg-evo-tree-edge{min-width:0;align-self:center}
+#dexDetail .psg-evo-edge .psg-evo-items{justify-content:center;min-height:22px}
