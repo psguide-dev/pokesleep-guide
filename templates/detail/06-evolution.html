@@ -2,20 +2,25 @@
    if(!m?.evolution)return [];
    return Array.isArray(m.evolution)?m.evolution:[m.evolution];
  }
+ let evolutionItemPopoverIndex=0;
  function evolutionConditions(e){
-   if(Array.isArray(e.conditions)&&e.conditions.length)return e.conditions;
-   const out=[];
-   if(e.level!=null)out.push(`Lv.${e.level}`);
-   if(e.candy!=null)out.push(`アメ${e.candy}個`);
-   if(e.item)out.push(e.item);
-   if(e.extra)out.push(e.extra);
-   return out.length?out:["条件未確認"];
+   const raw=Array.isArray(e.conditions)&&e.conditions.length?e.conditions:[e.level!=null?`Lv.${e.level}`:null,e.item,e.extra].filter(Boolean);
+   let rows=raw.flatMap(value=>String(value).split(/[＋+・]/)).map(value=>value.trim().replace(/^[↓↑]\s*/,''));
+   rows=rows.map(value=>value.replace(/(?:.+の)?アメ\s*[×x]?\s*(\d+)\s*個?/,'アメ×$1'));
+   if(e.candy!=null)rows=[`アメ×${e.candy}`,...rows.filter(value=>!value.includes('アメ'))];
+   const items=Object.keys(window.PS_IMAGE_FILES.items||{});
+   const itemRows=rows.filter(value=>items.includes(value)),otherRows=rows.filter(value=>!items.includes(value));
+   if(itemRows.length)otherRows.push([...new Set(itemRows)].join('＋'));
+   return otherRows.filter(Boolean).length?otherRows.filter(Boolean):['条件未確認'];
  }
  function evolutionConditionMarkup(value){
    value=String(value).replace(/一緒に睡眠\s*([0-9０-９]+)\s*時間/g,'睡眠$1時間').replace('一緒に睡眠','睡眠');
-   let text=detailEsc(value);
-   for(const name of Object.keys(window.PS_IMAGE_FILES.items||{}))if(String(value).includes(name))text=text.replace(name,window.PS_UI_ART.icon('items',name)+name);
-   return text;
+   const names=value.split('＋');
+   if(names.every(name=>window.PS_IMAGE_FILES.items?.[name])){
+     const id=`psg-evo-items-${++evolutionItemPopoverIndex}`,label=names.join('＋');
+     return `<button type="button" class="psg-evo-items" popovertarget="${id}" aria-label="${detailEsc(label)}">${names.map(name=>window.PS_UI_ART.icon('items',name)).join('')}</button><span id="${id}" class="psg-evo-item-popover" popover="auto">${detailEsc(label)}</span>`;
+   }
+   return detailEsc(value);
  }
  function parentsOf(no){
    return Object.values(V.pokemon).filter(p=>evolutionEntries(p).some(e=>Number(e.toNo)===Number(no)));
@@ -38,7 +43,7 @@
    const image=window.PS_DEV_ASSETS.image(face,'pokemon',p.no,'face',p.name);
    const isCurrent=Number(p.no)===Number(currentNo);
    const conditions=condition?`<span class="v106-evo-conditions">${evolutionConditions(condition).map((x,i)=>`<span>${evolutionConditionMarkup(x)}${i===0&&!incoming?'<span class="v111-evo-next" aria-hidden="true">›</span>':''}</span>`).join("")}</span>`:"";
-   return `<button class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}"><span class="v31-evo-name">${p.name}</span><span class="v111-evo-body"><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span>${conditions}</span></button>`;
+   return `<div class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}"><span class="v31-evo-name">${p.name}</span><span class="v111-evo-body"><button type="button" class="psg-evo-open" aria-label="${detailEsc(p.name)}の詳細"><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span></button>${conditions}</span></div>`;
  }
  function nestedEvolutionTree(root,currentNo){
    const leafCount=(p,seen=new Set())=>{
@@ -60,6 +65,7 @@
    walk(root,0,1);return `<div class="psg-evolution-tree" style="--evo-columns:${columns}">${cells.join('')}</div>`;
  }
  function renderEvolution(m){
+   evolutionItemPopoverIndex=0;
    const el=document.getElementById("detailEvolution"),card=document.getElementById("evolutionCard");
    if(!el||!card)return;
    if(m.detailPreviewOnly){
@@ -86,7 +92,7 @@
      const commonCandy=rootBranches.every(e=>e.candy===rootBranches[0].candy)?rootBranches[0].candy:null;
      const cells=rootBranches.map(e=>{
        const conditions=[];
-       if(commonCandy==null&&e.candy!=null)conditions.push(`アメ${e.candy}個`);
+       if(commonCandy==null&&e.candy!=null)conditions.push(`アメ×${e.candy}`);
        if(e.level!=null)conditions.push(`Lv.${e.level}`);
        if(e.item)conditions.push(e.item);
        if(e.extra){
@@ -96,7 +102,7 @@
        }
        return evoNode(byNo(e.toNo),m.no,'psg-eevee-destination',{conditions},true);
      }).join('');
-     el.innerHTML=`<div class="psg-eevee-family"><div class="psg-eevee-origin">${evoNode(root,m.no,'psg-eevee-root')}<div class="psg-eevee-common">進化先を選ぶ${commonCandy!=null?`<strong>共通：アメ${commonCandy}個</strong>`:''}</div></div><div class="psg-eevee-grid">${cells}</div></div>`;
+     el.innerHTML=`<div class="psg-eevee-family"><div class="psg-eevee-origin">${evoNode(root,m.no,'psg-eevee-root')}<div class="psg-eevee-common">進化先を選ぶ${commonCandy!=null?`<strong>共通：アメ×${commonCandy}</strong>`:''}</div></div><div class="psg-eevee-grid">${cells}</div></div>`;
    }else if(family.some(p=>evolutionEntries(p).length>1)){
      // All branching families use the same depth/row tree, including later stages.
      el.innerHTML=nestedEvolutionTree(root,m.no);
@@ -110,5 +116,17 @@
      });
      html+='</div>';el.innerHTML=html;
    }
-   el.querySelectorAll("[data-evo-no]").forEach(btn=>btn.onclick=()=>{const no=Number(btn.dataset.evoNo);if(no&&no!==currentNo)openPokemonDetail(no,{pushHistory:true})});
+   el.querySelectorAll('.psg-evo-items').forEach(button=>{
+     const panel=document.getElementById(button.getAttribute('popovertarget'));
+     if(!panel)return;
+     button.addEventListener('click',event=>{
+       event.stopPropagation();
+       requestAnimationFrame(()=>{
+         const anchor=button.getBoundingClientRect(),box=panel.getBoundingClientRect();
+         panel.style.left=Math.max(8,Math.min(anchor.left,window.innerWidth-box.width-8))+'px';
+         panel.style.top=(anchor.bottom+6+box.height>window.innerHeight?Math.max(8,anchor.top-box.height-6):anchor.bottom+6)+'px';
+       });
+     });
+   });
+   el.querySelectorAll("[data-evo-no]").forEach(btn=>btn.onclick=event=>{if(event.target.closest('.psg-evo-items,.psg-evo-item-popover'))return;const no=Number(btn.dataset.evoNo);if(no&&no!==currentNo)openPokemonDetail(no,{pushHistory:true})});
  }
