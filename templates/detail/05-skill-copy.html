@@ -29,7 +29,7 @@
  function dexSkillEffect(s,row,m={}){
   const v=row?.namedValues;
   const value=dexSkillValue;
-  if(s.id==='ingredient_magnet_s'&&row)return `${value(row.amount,'food')}個獲得`;
+  if(s.id==='ingredient_magnet_s'&&row)return `ランダムな食材を${value(row.amount,'food')}個獲得`;
   if(s.effectType==='moonlight_energy_recovery'&&row)return `自分のげんきを${value('＋'+Math.trunc(row.selfRecovery),'energy-recovery')}<br>大成功時チーム1匹のげんきを${value('＋'+Math.trunc(row.bonusRecovery),'energy-recovery')}`;
   if(s.id==='present_ingredient_magnet_s'&&row)return `ランダムな食材${value(row.amount,'food')}個ゲットする<br>ときどき、1匹のアメを${value(row.bonusCandy,'skill')}個ゲットする`;
   if(s.effectType?.startsWith('helper_boost_'))return `チーム全員が${value('x','help')}回の<br>おてつだいを完了`;
