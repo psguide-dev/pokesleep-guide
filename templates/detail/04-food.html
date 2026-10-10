@@ -2,16 +2,20 @@
    const host=document.getElementById('detailFoods');
    document.getElementById('foodRateBadge')?.style.setProperty('display','none');
    if(!host)return;
+   const mythical=!!m.mythicalSettings;
+   host.classList.toggle('is-mythical',mythical);
    const rows=(m.ingredients||[]).map((x,i)=>{
      const image=V.ingredientVisual(x.name)?.image;
      const iconSource=image||window.PS_INGREDIENT_FALLBACK_ICON?.(x.name);
      const visual=iconSource?`<img src="${iconSource}" alt="${x.name}">`:`<span class="psg-food-fallback">${x.name||'未確認'}</span>`;
-     const quantities=(x.qty||[]).map(n=>`<div class="psg-food-level"><strong>${n==null?'—':`${n}<span class="psg-food-quantity-unit">個</span>`}</strong></div>`).join('');
+     const quantities=(x.qty||[]).map((n,index)=>{
+       const initial=m.mythicalSettings?.ingredientSlots.find(slot=>slot.activeAtLevel===[1,30,60][index]&&slot.initialUnlocked&&slot.candidates.some(c=>c.ingredientId===slot.initialIngredientId&&c.name===x.name));
+       return `<div class="psg-food-level"><strong>${n==null?'—':`${n}<span class="psg-food-quantity-unit">個</span>`}</strong>${initial&&n!=null?'<small class="psg-food-initial">(初期)</small>':''}</div>`;
+     }).join('');
      const knownRecipes=[...(V.recipesByIngredient?.[x.name]||[])].sort((a,b)=>(Number.isFinite(b.energy)?b.energy:-Infinity)-(Number.isFinite(a.energy)?a.energy:-Infinity)||String(a.name||'').localeCompare(String(b.name||''),'ja'));
      const tiles=knownRecipes.map(recipe=>`<div class="psg-food-recipe-tile" data-meal-category="${recipe.category||''}" title="${recipe.name||'料理'}" aria-label="${recipe.name||'料理'}${recipe.amount!=null?' '+recipe.amount+'個':''}">${recipe.image?`<img src="${recipe.image}" alt="">`:'<span class="psg-food-recipe-missing" aria-hidden="true">🍽</span>'}${recipe.amount!=null?`<small>${recipe.amount}</small>`:''}</div>`).join('');
      const recipes=knownRecipes.length?`<div class="psg-food-recipes"><div class="psg-food-recipe-strip">${tiles}</div></div>`:'<div class="psg-food-recipes is-pending"><span class="psg-food-pending">データ未確認</span></div>';
-     return `<div class="psg-food-row" data-slot="${x.slot||['A','B','C'][i]}"><div class="psg-food-id"><b>${x.slot||['A','B','C'][i]}</b>${visual}</div><div class="psg-food-levels">${quantities}</div>${recipes}</div>`;
+     return `<div class="psg-food-row" data-slot="${x.slot||['A','B','C'][i]}"><div class="psg-food-id">${mythical?'':`<b>${x.slot||['A','B','C'][i]}</b>`}${visual}</div><div class="psg-food-levels">${quantities}</div>${recipes}</div>`;
    }).join('');
-   host.innerHTML=`<div class="psg-food-head"><div class="psg-food-rate"><span>食材</span><strong>${m.foodRate!=null?m.foodRate+'%':'未確認'}</strong></div><div class="psg-food-head-levels"><span></span><span class="psg-food-level-heading"><b><small>Lv.</small>30</b></span><span class="psg-food-level-heading"><b><small>Lv.</small>60</b></span></div><b>対応料理</b></div>${rows?`<div class="psg-food-stack">${rows}</div>`:'<p class="unknown">食材データ未確認</p>'}`;
-   if(m.mythicalSettings){const note=document.createElement('p');note.className='note';note.textContent='各枠で抽選される候補と数量です。枠の解放とLv到達が必要。初期食材：'+m.mythicalSettings.ingredientSlots.map(s=>s.initialUnlocked?s.candidates.find(c=>c.ingredientId===s.initialIngredientId)?.name:'未解放').join('／');host.prepend(note)}
+   host.innerHTML=`<div class="psg-food-head"><div class="psg-food-rate"><span>${mythical?'食材候補':'食材'}</span><strong>${m.foodRate!=null?m.foodRate+'%':'未確認'}</strong></div><div class="psg-food-head-levels"><span></span><span class="psg-food-level-heading"><b><small>Lv.</small>30</b></span><span class="psg-food-level-heading"><b><small>Lv.</small>60</b></span></div><b>対応料理</b></div>${rows?`<div class="psg-food-stack">${rows}</div>`:'<p class="unknown">食材データ未確認</p>'}`;
  }

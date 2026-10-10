@@ -287,11 +287,11 @@
 .psg-ribbon-preview{display:inline-block;margin-left:4px;min-height:30px;vertical-align:middle}
 .psg-mint-mark .psg-ui-icon{width:24px;height:24px;margin:0}
 
-/* Fixed-size icon centers against both copy rows and expanded skill levels. */
+/* Keep the icon centered on the two summary rows when levels expand. */
 #v12Ability .skill-box:has(.psg-skill-summary){display:block!important}
 #v12Ability .psg-skill-summary{--skill-icon-size:calc(var(--box-unit-height) * 1.5);--skill-copy-row:calc(var(--box-unit-height) - 1px);display:grid;grid-template-columns:var(--skill-icon-size) minmax(0,1fr);align-items:center;gap:10px;min-height:calc(var(--box-unit-height) * 2 - 2px)}
 #v12Ability .psg-skill-summary .skill-icon{width:var(--skill-icon-size)!important;height:var(--skill-icon-size)!important;margin:0!important}
-#v12Ability .psg-skill-icon-column{width:var(--skill-icon-size);min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:center;gap:0}
+#v12Ability .psg-skill-icon-column{width:var(--skill-icon-size);min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:start;margin-top:calc(var(--box-unit-height) * .25 - 1px);gap:0}
 #v12Ability .psg-skill-copy{min-width:0;display:grid;grid-template-rows:minmax(var(--skill-copy-row),auto) minmax(var(--skill-copy-row),auto) auto}
 #v12Ability .psg-skill-copy .skill-levels{grid-column:1!important;grid-row:3!important;padding-inline:0}
 #v12Ability .psg-skill-name-main,#v12Ability .psg-skill-name-variant{display:block}
@@ -394,3 +394,7 @@
 #dexDetail .psg-evo-edge-arrow{grid-column:2;display:flex;align-items:center;justify-content:center;align-self:stretch;font-size:36px;font-weight:700;line-height:1;color:#000}
 #dexDetail .psg-evo-tree-edge{min-width:0;align-self:center}
 #dexDetail .psg-evo-edge .psg-evo-items{justify-content:center;min-height:22px}
+
+#dexDetail #detailFoods.is-mythical{--food-label-gutter:0px}
+#dexDetail #detailFoods .psg-food-level{position:relative}
+#dexDetail #detailFoods .psg-food-initial{position:absolute;right:1px;bottom:1px;padding:0;background:transparent;color:#111;font-size:9px;line-height:1;font-weight:700}
