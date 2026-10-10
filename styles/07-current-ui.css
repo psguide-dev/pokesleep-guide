@@ -313,7 +313,7 @@
 #v12Ability .psg-skill-summary .psg-lunar-level .psg-lunar-effect{font-size:11px;line-height:1.2}
 #v12Ability .psg-skill-name-main,#v12Ability .psg-skill-name-variant{display:block}
 #v12Ability .psg-skill-summary[aria-disabled="false"]{cursor:pointer;touch-action:manipulation}
-#v12Ability .psg-skill-summary:focus-visible{outline:2px solid var(--type-accent);outline-offset:2px;border-radius:6px}
+#v12Ability .psg-skill-summary:focus-visible{outline:2px solid var(--type-accent);outline-offset:-2px;border-radius:12px}
 #v12Ability .psg-skill-copy .skill-name{display:flex!important;flex-direction:column;justify-content:center;font-size:16px!important;line-height:1.05!important;white-space:normal!important;grid-row:1!important}
 #v12Ability .psg-skill-copy .skill-name:has(.psg-skill-candidates){flex-direction:row;align-items:center;justify-content:space-between;gap:4px}
 #v12Ability .psg-skill-name-copy{min-width:0}
@@ -442,7 +442,7 @@
 .psn-skill-dialog::backdrop{background:#0008}
 .psn-skill-dialog[open]{display:flex;flex-direction:column}
 .psn-skill-dialog header{display:block;height:auto;position:static;flex-shrink:0;padding:10px 14px;background:#eee8ff;border-bottom:1px solid #d9dee7}
-.psn-skill-dialog h3{margin:0;font-size:16px}
+.psn-skill-dialog h3{margin:0;font-size:16px;text-align:center}
 .psn-skill-dialog-body{padding:12px 14px;overflow-y:auto;min-height:0;font-size:14px}
 .psn-skill-level-switch{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;font-size:14px}
 .psn-skill-dialog button{min-height:44px;min-width:44px;border:1px solid #c8ccdc;border-radius:12px;background:white;color:inherit;cursor:pointer;font:inherit}
@@ -451,7 +451,7 @@
 .psn-skill-dialog table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
 .psn-skill-dialog caption{font-weight:700;text-align:left;margin-bottom:6px}
 .psn-skill-dialog th,.psn-skill-dialog td{border:1px solid #d9dee7;padding:6px 4px;text-align:center}
-.psn-skill-dialog tbody th{text-align:left;font-size:12px;width:32%}
+.psn-skill-dialog tbody th{text-align:left;font-size:12px;width:auto;white-space:nowrap}
 .psn-skill-dialog td{color:#bc4945;font-weight:700}
 .psn-skill-extra{margin:10px 0 0;line-height:1.5}
 .psn-skill-dialog footer{flex-shrink:0;padding:8px 14px 12px;text-align:center}

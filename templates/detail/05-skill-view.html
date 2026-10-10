@@ -90,7 +90,7 @@
      dialog.querySelector('[data-step="-1"]').disabled=index===0;
      dialog.querySelector('[data-step="1"]').disabled=index===available.length-1;
      dialog.querySelector('.psn-game-description').textContent=s.gameDetailDescription;
-     dialog.querySelector('#psnDracoTable').innerHTML=`<table><caption>チーム内の異なるドラゴンの種類数（自分を含む）</caption><thead><tr><th scope="col">種類数</th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${[['自分',v?.selfBerriesByDistinctCount],['チーム内各ポケモン',v?.berriesPerOtherMemberByDistinctCount]].map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="psn-skill-extra">ラティアスがチームにいる場合、自分＋${detailEsc(v?.conditionalExtraSelfBerries??'未確定')}個</p>`;
+     dialog.querySelector('#psnDracoTable').innerHTML=`<table><caption>チーム内の異なるドラゴンの種類数（自分を含む）</caption><thead><tr><th scope="col">種類数</th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${[['自分',v?.selfBerriesByDistinctCount],['チーム内ポケモン',v?.berriesPerOtherMemberByDistinctCount]].map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="psn-skill-extra">ラティアスがチームにいる場合、自分＋${detailEsc(v?.conditionalExtraSelfBerries??'未確定')}個</p>`;
    }
    dialog.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click',()=>{index=Math.max(0,Math.min(available.length-1,index+Number(button.dataset.step)));update()}));
    dialog.querySelector('.psn-dialog-close').addEventListener('click',()=>dialog.close());
