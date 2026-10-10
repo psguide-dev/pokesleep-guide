@@ -17,7 +17,7 @@
 .psg-skill-entry-icon{display:flex;align-items:center;justify-content:center;width:36px;height:36px}
 .psg-skill-entry-icon img{display:block;width:36px;height:36px;object-fit:contain}
 .psg-skill-entry>summary .psg-skill-tags{min-width:0;font-size:clamp(10px,2.5vw,12px);color:#527a62;overflow-wrap:anywhere}
-.psg-skill-identity{min-width:0}
+.psg-skill-identity{display:flex;align-items:baseline;min-width:0}
 .psg-skill-effect-preview{grid-column:1 / -1;display:flex;flex-direction:column;gap:3px;min-width:0;font-size:clamp(11px,3vw,14px);line-height:1.45;overflow-wrap:anywhere}
 .psg-skill-meta{display:flex;flex-direction:column;align-items:flex-end;align-self:start;gap:4px;min-width:0;text-align:right}
 .psg-skill-preview-level{white-space:nowrap;font-size:11px;font-weight:700;color:#111}
