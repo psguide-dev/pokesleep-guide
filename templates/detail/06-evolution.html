@@ -97,20 +97,16 @@
        return evoNode(byNo(e.toNo),m.no,'psg-eevee-destination',{conditions},true);
      }).join('');
      el.innerHTML=`<div class="psg-eevee-family"><div class="psg-eevee-origin">${evoNode(root,m.no,'psg-eevee-root')}<div class="psg-eevee-common">進化先を選ぶ${commonCandy!=null?`<strong>共通：アメ${commonCandy}個</strong>`:''}</div></div><div class="psg-eevee-grid">${cells}</div></div>`;
-   }else if(rootBranches.length===1&&family.some(p=>evolutionEntries(p).length>1)){
+   }else if(family.some(p=>evolutionEntries(p).length>1)){
+     // All branching families use the same depth/row tree, including later stages.
      el.innerHTML=nestedEvolutionTree(root,m.no);
-   }else if(rootBranches.length>1){
-     const cells=rootBranches.map(e=>{const p=byNo(e.toNo);return `<div class="v31-branch-cell">${evoNode(p,m.no)}<div class="v31-evo-cond">${evolutionConditions(e).map(x=>`<span>${evolutionConditionMarkup(x)}</span>`).join("")}</div></div>`}).join("");
-     el.innerHTML=`<div class="v31-branch-layout"><div class="v31-branch-root">${evoNode(root,m.no,"is-root")}</div><div class="v31-big-arrow">›</div><div class="v31-branch-grid ${rootBranches.length===2?'is-two':''}">${cells}</div></div>`;
    }else{
-     // Normal line: render the full known evolution family, not Pokédex-number adjacency.
      const chain=[];let cur=root,guard=0;
      while(cur&&guard++<12){chain.push(cur);const es=evolutionEntries(cur);if(es.length!==1)break;cur=byNo(es[0].toNo)}
      let html='<div class="v31-evo-line">';
      chain.forEach((p,i)=>{
-       const edge=i<chain.length-1?evolutionEntries(p)[0]:null;
-       html+=evoNode(p,m.no,"",edge);
-       // The source card carries the arrow and outgoing requirement.
+       const incoming=i?evolutionEntries(chain[i-1])[0]:null;
+       html+=evoNode(p,m.no,"",incoming,true);
      });
      html+='</div>';el.innerHTML=html;
    }
