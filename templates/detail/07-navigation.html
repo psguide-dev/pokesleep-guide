@@ -64,6 +64,8 @@
  const summary=document.querySelector('#v12Ability .psg-skill-summary'),levels=document.getElementById("skillLevels");
  function toggleSkill(){
    if(!summary||!levels||summary.getAttribute('aria-disabled')==='true')return;
+   const s=skillOf(byNo(currentSpeciesId||currentNo));
+   if(s?.id==='draco_meteor_berry_burst'){openDracoSkillDialog(s);return;}
    summary.setAttribute('aria-expanded',String(levels.classList.toggle('open')));
  }
  const skillCard=summary?.closest('.ability-card');
