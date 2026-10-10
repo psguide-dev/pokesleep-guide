@@ -62,7 +62,9 @@
   return '効果未確認';
  }
  // Separate distinct effects while preserving compact numeric alternatives such as 3／4／5.
- function skillEffectLines(html){return html.replace(/\s+[／/]\s+/g,'<br>');}
+ function skillEffectLines(html){
+  return html.split(/(<[^>]+>)/g).map(part=>part.startsWith('<')?part:part.replace(/[／/]/g,(separator,index,text)=>/[0-9]/.test(text[index-1]||'')&&/[0-9]/.test(text[index+1]||'')?separator:'<br>').replace(/\s*<br>\s*/g,'<br>')).join('');
+ }
  function renderSkill(m){
    const s=skillOf(m);if(!s){
      document.querySelector('#v12Ability .skill-icon')?.replaceChildren();
