@@ -91,3 +91,10 @@
 #dexDetail .v51-head-no{font-size:10px;white-space:nowrap}
 
 main:has(#dexDetail.active){background:var(--dex-type-bg,#eaf7ed);min-height:calc(100dvh - var(--psg-header-height))}
+
+/* Keep the name and costume on one row, with a 2:1 share of the title area. */
+#dexDetail .detail-head h2:has(.psg-dex-costume){display:grid!important;grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:center!important;gap:6px!important;width:100%}
+#dexDetail .detail-head h2:has(.psg-dex-costume) .psg-dex-title-line{display:flex;justify-content:center;min-width:0;width:100%;gap:4px}
+#dexDetail .detail-head h2:has(.psg-dex-costume) .v51-head-no{flex:none;font-size:9px!important}
+#dexDetail .detail-head h2:has(.psg-dex-costume) .v51-head-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dexDetail .detail-head .psg-dex-costume{width:100%;max-width:100%;min-width:0;height:28px;min-height:28px;margin:0;padding:2px;font-size:11px;box-sizing:border-box}
