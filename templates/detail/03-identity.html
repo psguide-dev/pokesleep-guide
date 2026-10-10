@@ -65,7 +65,7 @@
    // Type belongs to the artwork, at its lower-right corner.
    const art=document.getElementById("detailArt");
    if(art){
-     art.classList.toggle('psg-special-portrait',!!m.mythicalSettings);
+     art.classList.toggle('psg-special-portrait',m.specialTeamLimited===true);
      art.replaceChildren();
      if(m.detailPreviewOnly&&!m.image){
        const missing=document.createElement('span');missing.className='psg-form-no-image';missing.textContent='No image';art.append(missing);
