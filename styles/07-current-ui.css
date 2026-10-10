@@ -324,6 +324,8 @@
 #v12Ability .psg-lunar-table th,#v12Ability .psg-lunar-table td{padding:2px 0;border:1px solid #dce0e3;text-align:center}
 #v12Ability .psg-lunar-table td,#v12Ability .psg-lunar-table tbody th{color:var(--effect-berry,#bd4545)}
 #v12Ability .psg-skill-summary.psg-skill-three-lines .v35-effect-copy{font-size:11px!important;line-height:1}
+#v12Ability .psg-help-table td,#v12Ability .psg-help-table tbody th{color:var(--effect-help,#2b85b5)}
+#v12Ability .psg-skill-summary.psg-skill-healing .v35-effect-copy{font-size:11px!important;line-height:1.05}
 #v12Ability .psg-skill-summary.psg-skill-short-copy .v35-effect-copy{font-size:12px!important;line-height:1.15}
 #v12Ability .psg-skill-copy .skill-desc{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:6px;margin:0!important;padding:0!important;line-height:1.25!important;font-size:13px!important;border:0!important}
 #v12Ability .psg-skill-copy .v35-effect-level{font-size:13px!important;margin-right:0}
