@@ -103,6 +103,10 @@
   return `<table class="psg-lunar-table" aria-label="異なるエスパーの種類数別のきのみ個数（自分を含む）"><caption title="自分を含む異なるエスパーの種類数">チーム内エスパー</caption><thead><tr><th scope="col"></th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${[['x',v.selfBerriesByDistinctCount],['y',v.berriesPerOtherMemberByDistinctCount]].map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
  }
  function renderSkill(m){
+   const summary=document.querySelector('#v12Ability .psg-skill-summary');
+   const copy=summary?.querySelector('.psg-skill-copy');
+   copy?.querySelector('.psg-lunar-table')?.remove();
+   summary?.classList.remove('psg-skill-three-lines','psg-skill-short-copy');
    const s=skillOf(m);if(!s){
      document.querySelector('#v12Ability .skill-icon')?.replaceChildren();
      const name=document.getElementById('detailSkill'),effect=document.getElementById('detailSkillEffect');
@@ -114,11 +118,8 @@
      if(levels){levels.replaceChildren();levels.classList.remove('open')}
      if(summary){summary.setAttribute('aria-disabled','true');summary.setAttribute('aria-expanded','false');summary.tabIndex=-1}return;
    }
-   const summary=document.querySelector('#v12Ability .psg-skill-summary');
    summary?.classList.toggle('psg-skill-three-lines',s.id==='lunar_blessing_energy_for_everyone_s');
    summary?.classList.toggle('psg-skill-short-copy',['plus_ingredient_magnet_s','minus_cooking_power_up_s','disguise_berry_burst'].includes(s.id));
-   const copy=summary?.querySelector('.psg-skill-copy');
-   copy?.querySelector('.psg-lunar-table')?.remove();
    if(copy)copy.insertAdjacentHTML('beforeend',dexLunarTable(s,s.levels?.[1]));
    const expandable=Object.entries(s.levels||{}).some(([lv,x])=>Number(lv)>1&&x);
    if(summary){summary.setAttribute('aria-disabled',String(!expandable));summary.setAttribute('aria-expanded','false');summary.tabIndex=expandable?0:-1}
