@@ -302,6 +302,13 @@
 #v12Ability .psg-skill-name-copy{min-width:0}
 #v12Ability .psg-skill-candidates{display:flex;align-items:center;justify-content:flex-end;gap:2px;flex:none}
 #v12Ability .psg-skill-candidates img{display:block;width:18px;height:18px;object-fit:contain;flex:none}
+#v12Ability .psg-skill-copy .skill-name:has(.psg-lunar-table){flex-direction:row;align-items:center;justify-content:space-between;gap:4px;font-size:clamp(10px,3.4vw,14px)!important}
+#v12Ability .psg-lunar-table{flex:none;width:clamp(96px,29vw,116px);border-collapse:collapse;table-layout:fixed;margin:0;color:#111;font-size:9px;line-height:1.05;text-align:center}
+#v12Ability .psg-lunar-table caption{font-size:9px;line-height:1.05;padding:0 0 1px;white-space:nowrap}
+#v12Ability .psg-lunar-table th,#v12Ability .psg-lunar-table td{padding:1px 0;border:1px solid #dce0e3;text-align:center}
+#v12Ability .psg-lunar-table td,#v12Ability .psg-lunar-table tbody th{color:var(--effect-berry,#bd4545)}
+#v12Ability .psg-skill-summary.psg-skill-three-lines .v35-effect-copy{font-size:11px!important;line-height:1.15}
+#v12Ability .psg-skill-summary.psg-skill-short-copy .v35-effect-copy{font-size:12px!important;line-height:1.15}
 #v12Ability .psg-skill-copy .skill-desc{display:grid!important;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:6px;margin:0!important;padding:0!important;line-height:1.25!important;font-size:13px!important;border:0!important}
 #v12Ability .psg-skill-copy .v35-effect-level{font-size:13px!important;margin-right:0}
 #v12Ability .psg-skill-copy .v35-effect-copy{font-size:13px!important;min-width:0;overflow-wrap:anywhere}
