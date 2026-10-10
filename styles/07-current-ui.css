@@ -230,7 +230,7 @@
   #dexDetail>.psg-dex-sticky{width:100%;background:var(--pane-bg);box-shadow:none!important}
   #dexDetail .psg-dex-sticky>.hero{margin-bottom:0!important;padding-bottom:7px!important;border-radius:18px!important;box-shadow:none!important}
   #dexDetail .psg-dex-sticky>.v12-tabs{box-sizing:border-box;width:100%!important;margin:0!important;padding:7px 7px 0!important;background:var(--pane-bg)!important;border-radius:0!important}
-  #dexDetail .v12-tabs button.active{border-radius:0!important;box-shadow:none!important}
+  #dexDetail .v12-tabs button.active{border-radius:12px 12px 0 0!important;box-shadow:none!important}
   #dexDetail .v12-tabs button[data-v12tab="ability"].active{background:#f1f7ff!important;color:#1768a6!important;border:0!important;border-bottom:2px solid #2f80c9!important}
   #dexDetail .v12-tabs button[data-v12tab="sleep"].active{background:#f6f1fb!important;color:#704bb2!important;border:0!important;border-bottom:2px solid #7957b8!important}
   #dexDetail .v12-tabs button[data-v12tab="field"].active{background:#f0f6f1!important;color:#347a4b!important;border:0!important;border-bottom:2px solid #4d9662!important}
