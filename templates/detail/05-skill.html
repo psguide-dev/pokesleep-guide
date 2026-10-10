@@ -104,9 +104,9 @@
  }
  function renderSkill(m){
    const summary=document.querySelector('#v12Ability .psg-skill-summary');
-   const copy=summary?.querySelector('.psg-skill-copy');
+   const copy=document.getElementById('detailSkill')?.parentElement;
    copy?.querySelector('.psg-lunar-table')?.remove();
-   summary?.classList.remove('psg-skill-three-lines','psg-skill-short-copy');
+   summary?.classList?.remove('psg-skill-three-lines','psg-skill-short-copy');
    const s=skillOf(m);if(!s){
      document.querySelector('#v12Ability .skill-icon')?.replaceChildren();
      const name=document.getElementById('detailSkill'),effect=document.getElementById('detailSkillEffect');
