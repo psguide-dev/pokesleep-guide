@@ -17,16 +17,20 @@
    const tags=document.createElement('span');tags.className='psg-skill-tags';tags.textContent=(skill.tags||[]).join(' · ');
    const iconSlot=document.createElement('span');iconSlot.className='psg-skill-entry-icon';
    const iconSrc=window.PS_IMAGE_FILES?.skills?.[skill.id];if(iconSrc){const icon=document.createElement('img');icon.src=iconSrc;icon.alt='';icon.width=36;icon.height=36;icon.style.objectFit='contain';iconSlot.append(icon)}summary.append(iconSlot);
-   const identity=document.createElement('span');identity.className='psg-skill-identity';identity.append(title,tags);
+   const identity=document.createElement('span');identity.className='psg-skill-identity';identity.append(title);
    const preview=document.createElement('span');preview.className='psg-skill-effect-preview';
-   const previewLevel=document.createElement('span');previewLevel.className='psg-skill-preview-level';previewLevel.textContent='Lv.1';
+   const previewLevel=document.createElement('span');previewLevel.className='psg-skill-preview-level';previewLevel.textContent='Lv.1 ⓘ';
    const previewCopy=document.createElement('span');
-   const compactEffect=previewEffect(skill);
-   if(window.PS_SKILL_DISPLAY)previewCopy.innerHTML=window.PS_SKILL_DISPLAY.effect(skill,1);else if(window.PS_SKILL_DESCRIPTION)previewCopy.innerHTML=window.PS_SKILL_DESCRIPTION(skill,{description:compactEffect});else previewCopy.textContent=compactEffect;
-   preview.append(previewLevel,previewCopy);summary.append(identity,preview);item.append(summary);
+   const updatePreview=member=>{
+    if(skill.id==='stockpile_energy_charge_s'){previewCopy.textContent='たくわえた回数に応じて、はきだす時にカビゴンのエナジーを増やす';return}
+    const compactEffect=previewEffect(skill);
+    if(window.PS_SKILL_DISPLAY)previewCopy.innerHTML=window.PS_SKILL_DISPLAY.effect(skill,1,member);else if(window.PS_SKILL_DESCRIPTION)previewCopy.innerHTML=window.PS_SKILL_DESCRIPTION(skill,{description:compactEffect});else previewCopy.textContent=compactEffect;
+   };
+   updatePreview();
+   preview.append(previewCopy);summary.append(identity,previewLevel,preview,tags);item.append(summary);
    const detailButton=document.createElement('button');detailButton.type='button';detailButton.className='btn';detailButton.textContent='スキルの詳細 ⓘ';
    let selected=species[0];
-   if(species.length){const select=document.createElement('select');select.setAttribute('aria-label','食材候補を表示するポケモン');species.forEach((p,i)=>{const option=document.createElement('option');option.value=i;option.textContent=p.name;select.append(option)});select.addEventListener('change',()=>{selected=species[Number(select.value)];previewCopy.innerHTML=window.PS_SKILL_DISPLAY.effect(skill,1,selected)});item.append(select);previewCopy.innerHTML=window.PS_SKILL_DISPLAY.effect(skill,1,selected)}
+   if(species.length){const select=document.createElement('select');select.setAttribute('aria-label','食材候補を表示するポケモン');species.forEach((p,i)=>{const option=document.createElement('option');option.value=i;option.textContent=p.name;select.append(option)});select.addEventListener('change',()=>{selected=species[Number(select.value)];updatePreview(selected)});item.append(select);updatePreview(selected)}
    summary.setAttribute('aria-haspopup','dialog');summary.addEventListener('click',e=>{e.preventDefault();window.PS_SKILL_DISPLAY.open(skill,selected,species)});
    detailButton.addEventListener('click',()=>window.PS_SKILL_DISPLAY.open(skill,selected));item.append(detailButton);
    const heading=document.createElement('div');heading.className='psg-skill-species-label';heading.textContent='このスキルを持つポケモン';item.append(heading);

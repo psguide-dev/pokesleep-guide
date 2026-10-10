@@ -8,15 +8,15 @@
 #skillTag{font-size:12px}
 #skillSearch::placeholder{font-size:12px;color:#75847b;opacity:1}
 #skillIndexCount{margin:0;font-size:10px;font-weight:400;color:#75847b;white-space:nowrap}
-.psg-skill-entry>summary{display:grid;grid-template-columns:36px minmax(0,1fr) minmax(0,1fr);align-items:start;gap:10px;min-height:calc(2 * var(--psg-ui-unit));text-align:left}
+.psg-skill-entry>summary{display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:calc(2 * var(--psg-ui-unit));text-align:left}
 .psg-skill-entry>summary strong{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;font-size:clamp(14px,4vw,18px);line-height:1.35}
 .psg-skill-qualifier{font-size:.8em}
 .psg-skill-entry-icon{display:flex;align-items:center;justify-content:center;width:36px;height:36px}
 .psg-skill-entry-icon img{display:block;width:36px;height:36px;object-fit:contain}
-.psg-skill-entry>summary .psg-skill-tags{min-width:0;font-size:clamp(10px,2.8vw,13px);overflow-wrap:anywhere}
+.psg-skill-entry>summary .psg-skill-tags{grid-column:1 / -1;min-width:0;font-size:clamp(10px,2.8vw,13px);overflow-wrap:anywhere}
 .psg-skill-identity{display:flex;flex-direction:column;gap:4px;min-width:0}
-.psg-skill-effect-preview{display:flex;flex-direction:column;gap:3px;min-width:0;font-size:clamp(11px,3vw,14px);line-height:1.45;overflow-wrap:anywhere}
-.psg-skill-preview-level{font-size:11px;font-weight:700;color:#111}
+.psg-skill-effect-preview{grid-column:1 / -1;display:flex;flex-direction:column;gap:3px;min-width:0;font-size:clamp(11px,3vw,14px);line-height:1.45;overflow-wrap:anywhere}
+.psg-skill-preview-level{align-self:start;white-space:nowrap;font-size:11px;font-weight:700;color:#111}
 .psg-skill-entry>.note{margin:8px 14px;overflow-wrap:anywhere}
 .psg-skill-entry>.psg-skill-conditions{margin:8px 14px 12px}
 .psg-skill-entry>.psg-skill-conditions>summary{padding:8px 0}
