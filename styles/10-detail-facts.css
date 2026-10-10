@@ -108,3 +108,6 @@ main:has(#dexDetail.active){background:var(--dex-type-bg,#eaf7ed);min-height:cal
 
 
 #dexDetail .hero-art.psg-special-portrait{border-color:#dce0e3!important;overflow:hidden}
+
+/* Keep the viewport-wide divider from adding horizontal scroll beside a scrollbar. */
+body:has(#dexDetail.active){overflow-x:clip}
