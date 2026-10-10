@@ -1,0 +1,541 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-10 JST",
+  "minLevel": 1,
+  "maxLevel": 70,
+  "energyBasis": "きのみ1個・好物/フィールド/EX/ゾーン補正前",
+  "berries": [
+    {
+      "key": "persim",
+      "name": "キーのみ",
+      "type": "ノーマル",
+      "energyLv1": 28,
+      "energyLv70": 154,
+      "imageLookupName": "キーのみ"
+    },
+    {
+      "key": "leppa",
+      "name": "ヒメリのみ",
+      "type": "ほのお",
+      "energyLv1": 27,
+      "energyLv70": 148,
+      "imageLookupName": "ヒメリのみ"
+    },
+    {
+      "key": "oran",
+      "name": "オレンのみ",
+      "type": "みず",
+      "energyLv1": 31,
+      "energyLv70": 170,
+      "imageLookupName": "オレンのみ"
+    },
+    {
+      "key": "grepa",
+      "name": "ウブのみ",
+      "type": "でんき",
+      "energyLv1": 25,
+      "energyLv70": 137,
+      "imageLookupName": "ウブのみ"
+    },
+    {
+      "key": "durin",
+      "name": "ドリのみ",
+      "type": "くさ",
+      "energyLv1": 30,
+      "energyLv70": 165,
+      "imageLookupName": "ドリのみ"
+    },
+    {
+      "key": "rawst",
+      "name": "チーゴのみ",
+      "type": "こおり",
+      "energyLv1": 32,
+      "energyLv70": 176,
+      "imageLookupName": "チーゴのみ"
+    },
+    {
+      "key": "cheri",
+      "name": "クラボのみ",
+      "type": "かくとう",
+      "energyLv1": 27,
+      "energyLv70": 148,
+      "imageLookupName": "クラボのみ"
+    },
+    {
+      "key": "chesto",
+      "name": "カゴのみ",
+      "type": "どく",
+      "energyLv1": 32,
+      "energyLv70": 176,
+      "imageLookupName": "カゴのみ"
+    },
+    {
+      "key": "figy",
+      "name": "フィラのみ",
+      "type": "じめん",
+      "energyLv1": 29,
+      "energyLv70": 159,
+      "imageLookupName": "フィラのみ"
+    },
+    {
+      "key": "pamtre",
+      "name": "シーヤのみ",
+      "type": "ひこう",
+      "energyLv1": 24,
+      "energyLv70": 132,
+      "imageLookupName": "シーヤのみ"
+    },
+    {
+      "key": "mago",
+      "name": "マゴのみ",
+      "type": "エスパー",
+      "energyLv1": 26,
+      "energyLv70": 143,
+      "imageLookupName": "マゴのみ"
+    },
+    {
+      "key": "lum",
+      "name": "ラムのみ",
+      "type": "むし",
+      "energyLv1": 24,
+      "energyLv70": 132,
+      "imageLookupName": "ラムのみ"
+    },
+    {
+      "key": "sitrus",
+      "name": "オボンのみ",
+      "type": "いわ",
+      "energyLv1": 30,
+      "energyLv70": 165,
+      "imageLookupName": "オボンのみ"
+    },
+    {
+      "key": "bluk",
+      "name": "ブリーのみ",
+      "type": "ゴースト",
+      "energyLv1": 26,
+      "energyLv70": 143,
+      "imageLookupName": "ブリーのみ"
+    },
+    {
+      "key": "yache",
+      "name": "ヤチェのみ",
+      "type": "ドラゴン",
+      "energyLv1": 35,
+      "energyLv70": 192,
+      "imageLookupName": "ヤチェのみ"
+    },
+    {
+      "key": "wiki",
+      "name": "ウイのみ",
+      "type": "あく",
+      "energyLv1": 31,
+      "energyLv70": 170,
+      "imageLookupName": "ウイのみ"
+    },
+    {
+      "key": "belue",
+      "name": "ベリブのみ",
+      "type": "はがね",
+      "energyLv1": 33,
+      "energyLv70": 181,
+      "imageLookupName": "ベリブのみ"
+    },
+    {
+      "key": "pecha",
+      "name": "モモンのみ",
+      "type": "フェアリー",
+      "energyLv1": 26,
+      "energyLv70": 143,
+      "imageLookupName": "モモンのみ"
+    }
+  ],
+  "natureStats": [
+    {
+      "key": "helpSpeed",
+      "label": "おてつだいスピード",
+      "upFactor": 0.9,
+      "downFactor": 1.075,
+      "factorTarget": "おてつだい時間",
+      "status": "検証Wiki掲載値"
+    },
+    {
+      "key": "energyRecovery",
+      "label": "げんき回復量",
+      "upFactor": 1.2,
+      "downFactor": 0.88,
+      "factorTarget": "げんき回復量",
+      "status": "検証Wiki掲載値"
+    },
+    {
+      "key": "ingredientChance",
+      "label": "食材おてつだい確率",
+      "upFactor": 1.2,
+      "downFactor": 0.8,
+      "factorTarget": "食材おてつだい確率",
+      "status": "推定"
+    },
+    {
+      "key": "skillChance",
+      "label": "メインスキル発生確率",
+      "upFactor": 1.2,
+      "downFactor": 0.8,
+      "factorTarget": "メインスキル発生確率",
+      "status": "推定"
+    },
+    {
+      "key": "expGain",
+      "label": "EXP獲得量",
+      "upFactor": 1.18,
+      "downFactor": 0.82,
+      "factorTarget": "EXP獲得量",
+      "status": "検証Wiki掲載値"
+    }
+  ],
+  "natures": [
+    {
+      "name": "がんばりや",
+      "up": null,
+      "down": null,
+      "neutral": true,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "さみしがり",
+      "up": "helpSpeed",
+      "down": "energyRecovery",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 0.9,
+        "energyRecovery": 0.88,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "いじっぱり",
+      "up": "helpSpeed",
+      "down": "ingredientChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 0.9,
+        "energyRecovery": 1,
+        "ingredientChance": 0.8,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "やんちゃ",
+      "up": "helpSpeed",
+      "down": "skillChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 0.9,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 0.8,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "ゆうかん",
+      "up": "helpSpeed",
+      "down": "expGain",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 0.9,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 0.82
+      }
+    },
+    {
+      "name": "ずぶとい",
+      "up": "energyRecovery",
+      "down": "helpSpeed",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1.075,
+        "energyRecovery": 1.2,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "すなお",
+      "up": null,
+      "down": null,
+      "neutral": true,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "わんぱく",
+      "up": "energyRecovery",
+      "down": "ingredientChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1.2,
+        "ingredientChance": 0.8,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "のうてんき",
+      "up": "energyRecovery",
+      "down": "skillChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1.2,
+        "ingredientChance": 1,
+        "skillChance": 0.8,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "のんき",
+      "up": "energyRecovery",
+      "down": "expGain",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1.2,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 0.82
+      }
+    },
+    {
+      "name": "ひかえめ",
+      "up": "ingredientChance",
+      "down": "helpSpeed",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1.075,
+        "energyRecovery": 1,
+        "ingredientChance": 1.2,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "おっとり",
+      "up": "ingredientChance",
+      "down": "energyRecovery",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 0.88,
+        "ingredientChance": 1.2,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "てれや",
+      "up": null,
+      "down": null,
+      "neutral": true,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "うっかりや",
+      "up": "ingredientChance",
+      "down": "skillChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1.2,
+        "skillChance": 0.8,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "れいせい",
+      "up": "ingredientChance",
+      "down": "expGain",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1.2,
+        "skillChance": 1,
+        "expGain": 0.82
+      }
+    },
+    {
+      "name": "おだやか",
+      "up": "skillChance",
+      "down": "helpSpeed",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1.075,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1.2,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "おとなしい",
+      "up": "skillChance",
+      "down": "energyRecovery",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 0.88,
+        "ingredientChance": 1,
+        "skillChance": 1.2,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "しんちょう",
+      "up": "skillChance",
+      "down": "ingredientChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 0.8,
+        "skillChance": 1.2,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "きまぐれ",
+      "up": null,
+      "down": null,
+      "neutral": true,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    },
+    {
+      "name": "なまいき",
+      "up": "skillChance",
+      "down": "expGain",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1.2,
+        "expGain": 0.82
+      }
+    },
+    {
+      "name": "おくびょう",
+      "up": "expGain",
+      "down": "helpSpeed",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1.075,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1.18
+      }
+    },
+    {
+      "name": "せっかち",
+      "up": "expGain",
+      "down": "energyRecovery",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 0.88,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1.18
+      }
+    },
+    {
+      "name": "ようき",
+      "up": "expGain",
+      "down": "ingredientChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 0.8,
+        "skillChance": 1,
+        "expGain": 1.18
+      }
+    },
+    {
+      "name": "むじゃき",
+      "up": "expGain",
+      "down": "skillChance",
+      "neutral": false,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 0.8,
+        "expGain": 1.18
+      }
+    },
+    {
+      "name": "まじめ",
+      "up": null,
+      "down": null,
+      "neutral": true,
+      "factors": {
+        "helpSpeed": 1,
+        "energyRecovery": 1,
+        "ingredientChance": 1,
+        "skillChance": 1,
+        "expGain": 1
+      }
+    }
+  ],
+  "specialBerries": [
+    {
+      "name": "とてもおおきなマゴのみ",
+      "type": null,
+      "associatedType": "エスパー",
+      "energyLv1": 260,
+      "energyLv70": 1430,
+      "status": "推定",
+      "scope": "秘境リサーチ！ミュウツーをおいかけてのイベント限定",
+      "energyBasis": "通常マゴのみの補正前エナジー×10。検証Wiki式から算出。通常のタイプ対応18種とは別枠",
+      "imageLookupName": "とてもおおきなマゴのみ"
+    }
+  ],
+  "sources": {
+    "berryEnergy": "https://wikiwiki.jp/poke_sleep/きのみ",
+    "berryTypes": "https://wikiwiki.jp/poke_sleep/きのみ/きのみの一覧",
+    "natures": "https://wikiwiki.jp/poke_sleep/せいかく",
+    "levelCap": "https://www.pokemonsleep.net/de/news/343133383535303430313232333838343833/"
+  }
+}

@@ -1,1 +1,6 @@
-{"id":"all","name":"オール","icon":"icon.webp"}
+{
+  "id": "all",
+  "name": "オール",
+  "icon": "icon.webp",
+  "iconAsset": "assets/ui/specialty_all.webp"
+}

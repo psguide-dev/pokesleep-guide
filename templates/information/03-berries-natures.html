@@ -1,0 +1,28 @@
+<script id="psn-berries-natures">
+(()=>{
+ const c=window.PS_CATALOG,ref=c.infoReference;
+ const el=(tag,text)=>{const n=document.createElement(tag);if(text!=null)n.textContent=text;return n};
+ function table(host,headers){const wrap=el('div');wrap.className='psg-reference-scroll';const t=el('table');t.className='psg-reference-table';const head=el('thead'),tr=el('tr');headers.forEach(label=>{const th=el('th',label);th.scope='col';tr.append(th)});head.append(tr);const body=el('tbody');t.append(head,body);wrap.append(t);host.append(wrap);return body}
+ function source(host,entries){const p=el('p','出典：');p.className='note';entries.forEach(([name,url],i)=>{if(i)p.append(' ／ ');const a=el('a',name);a.href=url;a.target='_blank';a.rel='noopener noreferrer';p.append(a)});host.append(p)}
+ window.PS_PAGE_RENDERERS??={};
+ window.PS_PAGE_RENDERERS.berryPage=()=>{
+  const host=document.getElementById('berryReference');host.replaceChildren();
+  host.append(el('p','エナジーはきのみ1個あたり。好物・フィールド・EX・ゾーン補正前の値です。'));
+  const body=table(host,['きのみ','タイプ','Lv.1','Lv.70']);
+  ref.berries.forEach(row=>{const berry=c.berries[row.key];const tr=el('tr'),th=el('th');th.scope='row';const img=el('img');img.src=window.PS_IMAGE_FILES.berries[berry.name];img.alt='';img.width=36;img.height=36;img.loading='lazy';th.append(img,el('span',berry.name));tr.append(th,el('td',row.type),el('td',row.energyLv1),el('td',row.energyLv70));body.append(tr)});
+  const special=el('details');special.className='card';special.append(el('summary','イベント限定のきのみ（推定）'));
+  ref.specialBerries.forEach(row=>{special.append(el('h3',row.name),el('p','全タイプが追加で拾うイベント限定のきのみ。通常18種とは別枠です。'),el('p',`Lv.1：${row.energyLv1} ／ Lv.70：${row.energyLv70}（推定・補正前）`),el('p',row.scope))});host.append(special);
+  source(host,[['きのみ',ref.sources.berryEnergy],['タイプ対応',ref.sources.berryTypes],['Lv.70解放',ref.sources.levelCap]]);
+ };
+ window.PS_PAGE_RENDERERS.naturePage=()=>{
+  const host=document.getElementById('natureReference');host.replaceChildren();
+  const labels={speed:'おてつだいスピード',energy:'げんき回復量',food:'食材おてつだい確率',skill:'メインスキル発生確率',exp:'EXP獲得量'};
+  const body=table(host,['性格','能力↑','能力↓']);
+  c.natures.rows.forEach((row,y)=>row.forEach((name,x)=>{const tr=el('tr'),th=el('th',name);th.scope='row';tr.append(th);if(x===y){const td=el('td','補正なし');td.colSpan=2;tr.append(td)}else tr.append(el('td',labels[c.natures.axes[y]]),el('td',labels[c.natures.axes[x]]));body.append(tr)}));
+  const detail=el('details');detail.className='card';detail.append(el('summary','能力補正の倍率'));
+  const factors=table(detail,['対象','↑','↓']);
+  c.natures.axes.forEach(axis=>{const f=c.natures.factors[axis],tr=el('tr');tr.append(el('th',f.meaning+(f.status==='estimated'?'（推定）':'')),el('td','×'+f.up.toFixed(f.up===1.075?3:2)),el('td','×'+f.down.toFixed(f.down===1.075?3:2)));factors.append(tr)});
+  detail.append(el('p','スピードの倍率はおてつだい時間に掛かります。食材・スキル確率の倍率は推定値です。補正なしの性格は全倍率1です。'));host.append(detail);source(host,[['せいかく',ref.sources.natures]]);
+ };
+})();
+</script>

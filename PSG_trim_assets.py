@@ -5,7 +5,18 @@ from zipfile import ZipFile
 from PSG_retired_images import retired_images
 
 
+def adopted_ui_images(root):
+    receipt = json.loads((root / 'data-import/reference-v544/ui-receipt.json').read_text())
+    rows = {row['path']: row for row in receipt['images']}
+    assert len(rows) == 17
+    for name, row in rows.items():
+        assert name.startswith('assets/ui/') and '..' not in name.split('/')
+        assert hashlib.sha256((root / name).read_bytes()).hexdigest() == row['sha256'], name
+    return rows
+
+
 def restore_trim_assets(root):
+    adopted = adopted_ui_images(root)
     folder = root / 'data-import/picasso-trim-v305'
     manifest = json.loads((folder / 'manifest.json').read_text())
     rows = {row['path']: row for row in manifest['images']}
@@ -20,6 +31,9 @@ def restore_trim_assets(root):
                 row = rows[member]
                 data = archive.read(member)
                 assert hashlib.sha256(data).hexdigest() == row['sha256']
+                if member in adopted:
+                    seen.add(member)
+                    continue
                 if member in retired_images(root):
                     seen.add(member)
                     continue
@@ -35,6 +49,7 @@ def restore_trim_assets(root):
 
 def restore_additional_trim_assets(root):
     """Apply the received non-sleep raster/SVG pack after the original 381 assets."""
+    adopted = adopted_ui_images(root)
     folder = root / 'data-import/picasso-trim-v326'
     manifest = json.loads((folder / 'manifest.json').read_text())
     rows = {row['path']: row for row in manifest['images']}
@@ -49,6 +64,9 @@ def restore_additional_trim_assets(root):
                 row = rows[member]
                 data = archive.read(member)
                 assert hashlib.sha256(data).hexdigest() == row['sha256']
+                if member in adopted:
+                    seen.add(member)
+                    continue
                 if member in retired_images(root):
                     seen.add(member)
                     continue

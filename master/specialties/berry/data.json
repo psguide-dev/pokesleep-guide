@@ -1,1 +1,6 @@
-{"id":"berry","name":"きのみ","icon":"icon.webp"}
+{
+  "id": "berry",
+  "name": "きのみ",
+  "icon": "icon.webp",
+  "iconAsset": "assets/ui/info_berries.webp"
+}

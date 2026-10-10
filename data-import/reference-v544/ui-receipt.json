@@ -1,0 +1,120 @@
+{
+  "version": 544,
+  "images": [
+    {
+      "key": "menu_home",
+      "path": "assets/ui/menu_home.webp",
+      "sha256": "145922f5b6aae5c61375e417b80238790d40f00b33c279708485ab2c31a4a603"
+    },
+    {
+      "key": "menu_team",
+      "path": "assets/ui/menu_team.webp",
+      "sha256": "03826d3aa55ecd86210f64c56b168ad6b7f075cc2f6cd5222829339eea7b0607"
+    },
+    {
+      "key": "menu_box",
+      "path": "assets/ui/menu_box.webp",
+      "sha256": "be4adce1722852fc0bd659d8814c06aeb21e0b85cf5f627c29c53f6b067888f4"
+    },
+    {
+      "key": "menu_dex",
+      "path": "assets/ui/menu_dex.webp",
+      "sha256": "b8bec6439fc5cbb0d431d1358cdf1e652edce988822efff9ad307e6f8c868e52"
+    },
+    {
+      "key": "menu_info",
+      "path": "assets/ui/menu_info.webp",
+      "sha256": "9be9e488a668a6f9de79d7fbf7b708915893f33028f4676b52e454859baa7687"
+    },
+    {
+      "key": "menu_account",
+      "path": "assets/ui/menu_account.webp",
+      "sha256": "c6cb2715292efcab22457354693cb496d99be64dfa0309cd93bd226ef517cdd8"
+    },
+    {
+      "key": "menu_bookshelf",
+      "path": "assets/ui/menu_bookshelf.webp",
+      "sha256": "41830f738d0341dc2aef4d4df5bad2880d6f1f839a647a912d6be043297236af"
+    },
+    {
+      "key": "menu_exp",
+      "path": "assets/ui/menu_exp.webp",
+      "sha256": "c9ca55e918fb199100a1fd1486c9664fd371bac2429510bf064efe10ebe69177"
+    },
+    {
+      "key": "info_cooking",
+      "path": "assets/ui/info_cooking.webp",
+      "sha256": "cd3b4ed10d97e2fdd748e3a587d8466151cc826bc847d34f1fda4e5952fbb8f5"
+    },
+    {
+      "key": "info_ingredients",
+      "path": "assets/ui/info_ingredients.webp",
+      "sha256": "2125df65c33f5b5bf228d6f82d771eb86bb8ee4a0164d0950f392f62b3b76d73"
+    },
+    {
+      "key": "info_skills",
+      "path": "assets/ui/info_skills.webp",
+      "sha256": "a1432ed772308793b78923c9cd808fe31ca699325f96c857cf6f583d1db4de29"
+    },
+    {
+      "key": "info_fields",
+      "path": "assets/ui/info_fields.webp",
+      "sha256": "bbb8abfb4b11eb4a1de6a471d271ee96176b7576a8fb2853901ac57bde290192"
+    },
+    {
+      "key": "info_berries",
+      "path": "assets/ui/info_berries.webp",
+      "sha256": "12d80e05738d70197136def12d10d4d55fa5dad515414216144c7599ea293e70"
+    },
+    {
+      "key": "info_bookshelf",
+      "path": "assets/ui/info_bookshelf.webp",
+      "sha256": "0a64a51a8a51bc5b0fe60c0e644565bbd6e6d37631a5ed76a246509f281523d3"
+    },
+    {
+      "key": "info_exp",
+      "path": "assets/ui/info_exp.webp",
+      "sha256": "36e7908ec72c1449bbb5ce80dd78d967d9245a4d4d9fec5cabbad91c089fb6f7"
+    },
+    {
+      "key": "info_account",
+      "path": "assets/ui/info_account.webp",
+      "sha256": "be05b73f51325c18e04d4a42ecaead3929e5d83b4caa3f64cb151c9b6b85e1c7"
+    },
+    {
+      "key": "specialty_all",
+      "path": "assets/ui/specialty_all.webp",
+      "sha256": "2ea7972d9058a017e18264fb62cad8a5bdf5fd3e1cc3f04ede650a5064cf7585",
+      "receivedManifestSha256": "b82d46c0635569348811583506b459b4c3851abbfca7469ecd584b2b19e55efa"
+    }
+  ],
+  "sharedSpecialties": {
+    "berry": "info_berries",
+    "ingredient": "info_ingredients",
+    "skill": "info_skills",
+    "all": "specialty_all"
+  },
+  "replaced": [
+    {
+      "path": "assets/ui/info_cooking.webp",
+      "sha256": "87d619a08131ce75d9ba9c1594f6e4214e883c48453dfa9556bc37b822f042b5",
+      "action": "replaced"
+    },
+    {
+      "path": "assets/ui/info_ingredients.webp",
+      "sha256": "8f86b64fb919a0c68b912db41b413051c69b9a6bfe0fa7df89cb5d9c3be14fa0",
+      "action": "replaced"
+    },
+    {
+      "path": "assets/ui/info_skills.webp",
+      "sha256": "d4a577bcb13db784a38a431ce1006961ae00be07a93dcfff5cafda8510a63f71",
+      "action": "replaced"
+    },
+    {
+      "path": "assets/ui/info_fields.webp",
+      "sha256": "701a0e7a66624435e23dc391829f2b3f7cce8548ea00b984ed406e614ad951ab",
+      "action": "replaced"
+    }
+  ],
+  "allManifestCorrection": "Received ALL WebP differs from old manifest hash; adopted pink ALL, PNG/WebP RGBA pixels equal."
+}

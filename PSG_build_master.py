@@ -75,11 +75,12 @@ def catalog_and_images():
             assert path.startswith('assets/ui-icons/') and (ROOT/path).is_file(), path
             images[kind][name] = path
     images['ui'] = json.loads((ROOT / 'assets/ui/manifest.json').read_text())
-    assert len(images['ui']) == 9
+    assert len(images['ui']) == 22
     for path in images['ui'].values():
         assert path.startswith('assets/ui/') and (ROOT/path).is_file(), path
     catalog = {**data,'pokemon':{},'sleepStyles':{},'recipes':{},'skills':{},'ingredientAssets':{},'berries':{},'fields':{},
                'natures':natures,'subskills':subskills['records']}
+    catalog['infoReference'] = json.loads((ROOT / 'data-import/reference-v544/berries_natures.json').read_text())
     catalog['cooking'] = json.loads((MASTER / 'cooking/data.json').read_text())
     catalog['nightcap'] = json.loads((MASTER / 'nightcap/data.json').read_text())
     assert [row['level'] for row in catalog['nightcap']['rows']] == list(range(1, 21))
@@ -136,8 +137,8 @@ def catalog_and_images():
         catalog[kind] = {}
         for key, (obj, folder) in records(kind).items():
             assert obj.get('name') and obj.get('icon') == 'icon.webp', f'invalid icon record: {kind}/{key}'
-            image = image_path(ROOT, folder, 'icon')
-            assert image, f'missing icon: {kind}/{key}'
+            image = obj.get('iconAsset') or image_path(ROOT, folder, 'icon')
+            assert image and (ROOT / image).is_file(), f'missing icon: {kind}/{key}'
             catalog[kind][key] = {**obj, 'image':image}
         assert len(catalog[kind]) == (4 if kind == 'specialties' else 3), f'incomplete {kind}'
     for key, name in json.loads((MASTER / 'sleepTypes/manifest.json').read_text()).items():
@@ -399,7 +400,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v543') == 2
+    assert source.count('Review v544') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'

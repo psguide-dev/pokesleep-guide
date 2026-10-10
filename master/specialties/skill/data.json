@@ -1,1 +1,6 @@
-{"id":"skill","name":"スキル","icon":"icon.webp"}
+{
+  "id": "skill",
+  "name": "スキル",
+  "icon": "icon.webp",
+  "iconAsset": "assets/ui/info_skills.webp"
+}

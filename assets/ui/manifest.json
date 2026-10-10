@@ -7,5 +7,18 @@
   "favorite_off": "assets/ui/favorite_off.svg",
   "training_on": "assets/ui/training_on.webp",
   "training_off": "assets/ui/training_off.webp",
-  "special_pokemon": "assets/ui/special_pokemon.webp"
+  "special_pokemon": "assets/ui/special_pokemon.webp",
+  "menu_home": "assets/ui/menu_home.webp",
+  "menu_team": "assets/ui/menu_team.webp",
+  "menu_box": "assets/ui/menu_box.webp",
+  "menu_dex": "assets/ui/menu_dex.webp",
+  "menu_info": "assets/ui/menu_info.webp",
+  "menu_account": "assets/ui/menu_account.webp",
+  "menu_bookshelf": "assets/ui/menu_bookshelf.webp",
+  "menu_exp": "assets/ui/menu_exp.webp",
+  "info_berries": "assets/ui/info_berries.webp",
+  "info_bookshelf": "assets/ui/info_bookshelf.webp",
+  "info_exp": "assets/ui/info_exp.webp",
+  "info_account": "assets/ui/info_account.webp",
+  "specialty_all": "assets/ui/specialty_all.webp"
 }

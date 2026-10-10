@@ -1,0 +1,10 @@
+.psg-reference-scroll{overflow-x:auto;margin:12px 0;background:#fff;border:1px solid var(--line);border-radius:12px}
+.psg-reference-table{width:100%;border-collapse:collapse;color:#000;font-size:clamp(11px,3vw,14px)}
+.psg-reference-table th,.psg-reference-table td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.psg-reference-table thead{background:#edf5f1}.psg-reference-table tbody tr:last-child>*{border-bottom:0}
+.psg-reference-table tbody th{font-weight:600}.psg-reference-table th img{display:inline-block;vertical-align:middle;object-fit:contain;margin-right:5px}
+#berryReference .psg-reference-table tbody th{text-align:left;white-space:nowrap}
+#berryReference .psg-reference-table td:nth-last-child(-n+2){font-variant-numeric:tabular-nums;min-width:36px}
+#natureReference>.psg-reference-scroll .psg-reference-table{table-layout:fixed}
+#natureReference>.psg-reference-scroll th:first-child{width:25%}
+#berryReference>p,#natureReference p{line-height:1.6}

@@ -1,1 +1,6 @@
-{"id":"ingredient","name":"食材","icon":"icon.webp"}
+{
+  "id": "ingredient",
+  "name": "食材",
+  "icon": "icon.webp",
+  "iconAsset": "assets/ui/info_ingredients.webp"
+}

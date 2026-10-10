@@ -692,17 +692,6 @@
       96
     ]
   },
-  "assets/ui/info_skills.webp": {
-    "source": "assets/ui/info_skills.webp",
-    "width": 217,
-    "height": 215,
-    "box": [
-      0,
-      0,
-      217,
-      215
-    ]
-  },
   "assets/ui/favorite_off.webp": {
     "source": "assets/ui/favorite_off.webp",
     "width": 191,
@@ -714,39 +703,6 @@
       179
     ]
   },
-  "assets/ui/info_fields.webp": {
-    "source": "assets/ui/info_fields.webp",
-    "width": 220,
-    "height": 177,
-    "box": [
-      0,
-      0,
-      220,
-      177
-    ]
-  },
-  "assets/ui/training_off.webp": {
-    "source": "assets/ui/training_off.webp",
-    "width": 196,
-    "height": 197,
-    "box": [
-      3,
-      53,
-      190,
-      141
-    ]
-  },
-  "assets/ui/special_pokemon.webp": {
-    "source": "assets/ui/special_pokemon.webp",
-    "width": 220,
-    "height": 112,
-    "box": [
-      0,
-      0,
-      220,
-      112
-    ]
-  },
   "assets/ui/favorite_on.webp": {
     "source": "assets/ui/favorite_on.webp",
     "width": 188,
@@ -756,39 +712,6 @@
       0,
       188,
       173
-    ]
-  },
-  "assets/ui/info_cooking.webp": {
-    "source": "assets/ui/info_cooking.webp",
-    "width": 224,
-    "height": 169,
-    "box": [
-      0,
-      0,
-      224,
-      169
-    ]
-  },
-  "assets/ui/training_on.webp": {
-    "source": "assets/ui/training_on.webp",
-    "width": 160,
-    "height": 136,
-    "box": [
-      3,
-      18,
-      154,
-      115
-    ]
-  },
-  "assets/ui/info_ingredients.webp": {
-    "source": "assets/ui/info_ingredients.webp",
-    "width": 217,
-    "height": 177,
-    "box": [
-      0,
-      0,
-      217,
-      177
     ]
   },
   "assets/ui-icons/razor_claw.webp": {
@@ -1053,28 +976,6 @@
       0,
       183,
       184
-    ]
-  },
-  "assets/ui/favorite_on.svg": {
-    "source": "assets/ui/favorite_on.webp",
-    "width": 188,
-    "height": 173,
-    "box": [
-      0,
-      0,
-      188,
-      173
-    ]
-  },
-  "assets/ui/favorite_off.svg": {
-    "source": "assets/ui/favorite_off.webp",
-    "width": 191,
-    "height": 179,
-    "box": [
-      0,
-      0,
-      191,
-      179
     ]
   }
 }

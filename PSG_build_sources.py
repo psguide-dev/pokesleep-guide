@@ -109,6 +109,7 @@ TEMPLATE_NAMES = (
     'rankings/00-conditions.html',
     'information/01-reference-data.html',
     'information/02-reference-pages.html',
+    'information/03-berries-natures.html',
     'rankings/04-trial-data.html',
     'rankings/05-trial-pages.html',
     'rankings/01-same-skill-controls.html',
@@ -140,4 +141,5 @@ STYLE_NAMES = (
     '18-adopted-ui-icons.css',
     '19-nightcap.css',
     '20-image-import.css',
+    '22-reference-lists.css',
 )
