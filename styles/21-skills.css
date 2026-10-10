@@ -10,7 +10,7 @@
 #skillIndexCount{margin:0;font-size:10px;font-weight:400;color:#75847b;white-space:nowrap}
 .psg-skill-entry>summary{display:grid;grid-template-columns:36px minmax(0,1fr) clamp(92px,28vw,140px);align-items:center;column-gap:8px;row-gap:6px;padding:12px;text-align:left}
 .psg-skill-entry>summary strong{display:inline;min-width:0;font-size:clamp(14px,4vw,18px);line-height:1.35}
-.psg-skill-qualifier{font-size:.8em}
+.psg-skill-qualifier{display:block;font-size:.8em}
 .psg-skill-entry-icon{display:flex;align-items:center;justify-content:center;width:36px;height:36px}
 .psg-skill-entry-icon img{display:block;width:36px;height:36px;object-fit:contain}
 .psg-skill-entry>summary .psg-skill-tags{min-width:0;font-size:clamp(10px,2.5vw,12px);overflow-wrap:anywhere}
