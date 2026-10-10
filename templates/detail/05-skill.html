@@ -78,7 +78,7 @@
     return `ランダムな食材を${value(v.randomIngredientTotalBase,'food')}個獲得<br>条件成立時に特定の食材を${value(v.additionalByFirstIngredient?.[key],'food')}個獲得`;
    }
    if(s.id==='minus_cooking_power_up_s')return `鍋＋${value(v.potIncrease,'zone')}個<br>条件成立時にチーム内の1匹のげんき＋${value(v.conditionalRecovery,'energy-recovery')}`;
-   if(s.id==='lunar_blessing_energy_for_everyone_s')return `チーム内全員のげんきを${value(v.recoveryPerTeamMember,'energy-recovery')}回復<br>自分のきのみを${value('x','berry')}個獲得<br>チーム内のきのみを各${value('y','berry')}個獲得`;
+   if(s.id==='lunar_blessing_energy_for_everyone_s')return `チーム内げんきを＋${value(v.recoveryPerTeamMember,'energy-recovery')}<br>きのみを自分${value('x','berry')}個<br>チーム内各${value('y','berry')}個`;
   }
   let html=skillEffectLines(skillDescription(s,row));
   if(s.id==='bulk_up_cooking_assist_s')html=html.replace('ゲットし、','ゲットし、<br>');
@@ -117,6 +117,9 @@
    const summary=document.querySelector('#v12Ability .psg-skill-summary');
    summary?.classList.toggle('psg-skill-three-lines',s.id==='lunar_blessing_energy_for_everyone_s');
    summary?.classList.toggle('psg-skill-short-copy',['plus_ingredient_magnet_s','minus_cooking_power_up_s','disguise_berry_burst'].includes(s.id));
+   const copy=summary?.querySelector('.psg-skill-copy');
+   copy?.querySelector('.psg-lunar-table')?.remove();
+   if(copy)copy.insertAdjacentHTML('beforeend',dexLunarTable(s,s.levels?.[1]));
    const expandable=Object.entries(s.levels||{}).some(([lv,x])=>Number(lv)>1&&x);
    if(summary){summary.setAttribute('aria-disabled',String(!expandable));summary.setAttribute('aria-expanded','false');summary.tabIndex=expandable?0:-1}
    document.getElementById('skillLevels')?.classList.remove('open');
@@ -133,7 +136,7 @@
    if(name){
      const parts=String(s.name).match(/^(.*?)\s*([（(].*[）)])$/);
      const title=parts?`<span class="psg-skill-name-main">${detailEsc(parts[1])}</span><span class="psg-skill-name-variant">${detailEsc(parts[2])}</span>`:detailEsc(s.name);
-     name.innerHTML=`<span class="psg-skill-name-copy">${title}</span>${dexSkillCandidates(s,m)}${dexLunarTable(s,s.levels?.[1])}`;
+     name.innerHTML=`<span class="psg-skill-name-copy">${title}</span>${dexSkillCandidates(s,m)}`;
    }
    const rate=document.getElementById("skillRateInline");
    if(rate)rate.innerHTML=`発動確率 <strong>${m.skillRate!=null?m.skillRate+"%":"未確認"}</strong>`;
