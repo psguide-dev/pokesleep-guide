@@ -24,7 +24,9 @@ class Node{
  replaceChildren(...nodes){this.children=nodes;this.textContent='';this.innerHTML=''} setAttribute(key,value){this.attributes[key]=value} remove(){} insertAdjacentHTML(_,html){this.innerHTML+=html}
 }
 const markup=read('templates/09-dex-detail.html'),nodes=new Map([...markup.matchAll(/id="([^"]+)"/g)].map(m=>[m[1],new Node()]));
-const sleep=new Node(),field=new Node(),icon=new Node(),count=new Node(),tab=new Node(),summary=new Node();tab.querySelector=()=>count;
+const sleep=new Node(),field=new Node(),icon=new Node(),count=new Node(),tab=new Node(),summary=new Node(),skillCopy=new Node();tab.querySelector=()=>count;
+summary.querySelector=selector=>selector==='.psg-skill-copy'?skillCopy:null;
+skillCopy.querySelector=()=>null;
 const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:selector=>selector.includes('psg-skill-summary')?summary:icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{},PS_IMAGE_LOADING:{set:(img,src)=>{img.src=src}}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
 vm.createContext(c);
 for(const file of ['04-food','05-skill','06-evolution','02-sleep-and-fields'])vm.runInContext(read(`templates/detail/${file}.html`),c);
