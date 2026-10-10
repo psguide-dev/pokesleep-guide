@@ -80,7 +80,7 @@
    dialog=document.createElement('dialog');
    dialog.id='psnDracoDialog';dialog.className='psn-skill-dialog';
    dialog.setAttribute('aria-labelledby','psnDracoTitle');
-   dialog.innerHTML=`<header><h3 id="psnDracoTitle">${detailEsc(s.name)}</h3></header><div class="psn-skill-dialog-body"><nav aria-label="表示するスキルレベル"><button type="button" data-step="-1" aria-label="前のスキルレベル">◀</button><b id="psnDracoLevel" aria-live="polite"></b><button type="button" data-step="1" aria-label="次のスキルレベル">▶</button></nav><p class="psn-game-description"></p><div id="psnDracoTable" aria-live="polite"></div></div><footer><button type="button" class="psn-dialog-close">とじる</button></footer>`;
+   dialog.innerHTML=`<header><h3 id="psnDracoTitle">${detailEsc(s.name)}</h3><div class="psn-skill-level-switch" role="group" aria-label="表示するスキルレベル"><button type="button" data-step="-1" aria-label="前のスキルレベル">◀</button><b id="psnDracoLevel" aria-live="polite"></b><button type="button" data-step="1" aria-label="次のスキルレベル">▶</button></div></header><div class="psn-skill-dialog-body"><p class="psn-game-description"></p><div id="psnDracoTable" aria-live="polite"></div></div><footer><button type="button" class="psn-dialog-close">とじる</button></footer>`;
    document.body.appendChild(dialog);
    const available=Object.keys(s.levels||{}).map(Number).sort((a,b)=>a-b);
    let index=0;
@@ -90,7 +90,7 @@
      dialog.querySelector('[data-step="-1"]').disabled=index===0;
      dialog.querySelector('[data-step="1"]').disabled=index===available.length-1;
      dialog.querySelector('.psn-game-description').textContent=s.gameDetailDescription;
-     dialog.querySelector('#psnDracoTable').innerHTML=`<table><caption>チーム内の異なるドラゴンの種類数（自分を含む）</caption><thead><tr><th scope="col">種類数</th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${[['自分',v?.selfBerriesByDistinctCount],['チーム内各ポケモン',v?.berriesPerOtherMemberByDistinctCount]].map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table><p>獲得するきのみの個数</p><p>ラティアスがチームにいる場合、自分＋${detailEsc(v?.conditionalExtraSelfBerries??'未確定')}個</p>`;
+     dialog.querySelector('#psnDracoTable').innerHTML=`<table><caption>チーム内の異なるドラゴンの種類数（自分を含む）</caption><thead><tr><th scope="col">種類数</th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${[['自分',v?.selfBerriesByDistinctCount],['チーム内各ポケモン',v?.berriesPerOtherMemberByDistinctCount]].map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="psn-skill-extra">ラティアスがチームにいる場合、自分＋${detailEsc(v?.conditionalExtraSelfBerries??'未確定')}個</p>`;
    }
    dialog.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click',()=>{index=Math.max(0,Math.min(available.length-1,index+Number(button.dataset.step)));update()}));
    dialog.querySelector('.psn-dialog-close').addEventListener('click',()=>dialog.close());
