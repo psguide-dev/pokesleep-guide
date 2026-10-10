@@ -7,13 +7,13 @@
 | `01-shell-head.html` | 文書の先頭、画像設定、共通ヘッダー |
 | `02-home.html` | ホーム |
 | `03-box.html` | ボックス一覧 |
-| `04-dex.html` | 図鑑一覧 |
+| `dex/01-list-screen.html` | 図鑑一覧 |
 | `05-info.html` | 情報の入口 |
 | `06-skills.html` | スキル一覧 |
 | `06-ingredients.html` | 食材ページの検索・並び順・Lv切替・一覧の入口 |
 | `07-recipes.html` | 料理一覧 |
 | `08-fields.html` | フィールド |
-| `09-dex-detail.html` | 図鑑詳細 |
+| `dex/02-detail-screen.html` | 図鑑詳細 |
 | `10-box-detail.html` | 個体詳細 |
 | `11-navigation.html` | ナビゲーションと共通の画面構造 |
 | `12-swap-engine.html` | 原本ES modulesからビルドする独立の通常おてつだい・交代計算 |
@@ -25,7 +25,7 @@
 | `core/03-profiles.html` | 寝顔記録の検証、フィールド・週の料理・好物・エリアボーナスの保存 |
 | `core/04-backup.html` | バックアップ書き出し・復元プレビュー・確認・失敗時の保存復旧 |
 | `core/05-navigation-and-filters.html` | 共通画面ナビ、検索・タイプ・食材・得意フィルター、代替アイコン |
-| `core/06-lists.html` | 図鑑・ボックスカード一覧、チームへ登録する個体の選択 |
+| `core/06-lists.html` | ボックスカード一覧、チームへ登録する個体の選択 |
 | `core/07-corrections.html` | レベル上限・サブスキル解放・性格と個体補正・チーム速度補正 |
 | `core/08-fields.html` | フィールド選択・一覧・寝顔出現・好物・今週の料理の操作 |
 | `core/09-day-view.html` | ホームの日産予想表示・キャンプ・食事・起床時げんきの操作 |
@@ -39,16 +39,16 @@
 | `box/05-actions.html` | レベル・お気に入り・育成・編集保存の操作 |
 | `20-core-initialize.html` | 一覧イベント・追加削除・初期化、共通クロージャの終了 |
 | `13-catalog-adapter.html` | 図鑑データの接続 |
-| `14-detail-controller.html` | 図鑑詳細の共通状態・DOM初期化、クロージャの開始 |
-| `detail/02-sleep-and-fields.html` | 寝顔の表示・登録・保存、フィールド出現情報、登録情報の再読み込み |
-| `detail/03-identity.html` | タブ切り替え、名前・前後ナビの表示、基本能力 |
-| `detail/04-food.html` | 食材候補・数量・対応料理の表示 |
+| `dex/03-detail-controller.html` | 図鑑詳細の共通状態・DOM初期化、クロージャの開始 |
+| `dex/04-sleep-and-fields.html` | 寝顔の表示・登録・保存、フィールド出現情報、登録情報の再読み込み |
+| `dex/05-identity.html` | タブ切り替え、名前・前後ナビの表示、基本能力 |
+| `dex/06-food.html` | 食材候補・数量・対応料理の表示 |
 | `detail/05-skill.html` | マスター文言の数値着色・共通レベル値 |
 | `detail/05-skill-copy.html` | 図鑑用の個別文言・改行・回復符号・食材候補画像 |
 | `detail/05-skill-table.html` | きのみ・おてつだいの種類数別の表 |
 | `detail/05-skill-view.html` | スキルのDOM更新・詳細レベルの配置 |
-| `detail/06-evolution.html` | 進化条件・系統探索・通常進化・途中分岐・イーブイの表示 |
-| `detail/07-navigation.html` | 詳細を開く処理、一覧への復帰、戻る／進む履歴、イベント接続、クロージャの終了 |
+| `dex/07-evolution.html` | 進化条件・系統探索・通常進化・途中分岐・イーブイの表示 |
+| `dex/08-navigation.html` | 詳細を開く処理、一覧への復帰、戻る／進む履歴、イベント接続、クロージャの終了 |
 | `15-auto-images.html` | 自動画像処理の共通状態・読み込みキャッシュ、クロージャの開始 |
 | `images/02-type-alignment.html` | タイプアイコンの可視領域の検出、中央配置 |
 | `images/03-type-sheet.html` | 旧タイプシートの切り抜き、採用済みマスター画像を優先 |
@@ -140,7 +140,7 @@ v268：Boxは受領248レコードに対応。ミュウ/ダークライのmythic
 ### v427 図鑑の個別ページ
 
 - `01-detail-routing.html`: `pokemon.html?species=種族・姿ID` のURL、移動前の検索/タイプ/食材/得意と位置をsessionStorageへ保存し、一覧へ戻った時に復元。
-- `detail/07-navigation.html`: 通常の詳細呼び出しは別HTMLへ移動。初回表示と画像更新だけ `local:true` で同じページを描画。寝顔/フィールドタブはURLの `tab` に保持。
+- `dex/08-navigation.html`: 通常の詳細呼び出しは別HTMLへ移動。初回表示と画像更新だけ `local:true` で同じページを描画。寝顔/フィールドタブはURLの `tab` に保持。
 - 図鑑カードは通常のリンク。長押し・別タブ・ブラウザーの戻る/進むに対応。ボックス個体編集は変更しない。
 - ビルドは共通テンプレートから `review.html` と `pokemon.html` を生成し、workflowで両方配信。生成HTMLを手編集しない。
 - この版はページと履歴の分離。カタログ・計算コードは共用しており、初回転送サイズの削減やSEO最適化を実施済みとは扱わない。広告枠は未追加。
@@ -150,3 +150,6 @@ v268：Boxは受領248レコードに対応。ミュウ/ダークライのmythic
 05-skill → 05-skill-copy → 05-skill-table → 05-skill-view は同じクロージャの断片です。文言の変更はcopy、表はtable、配置はviewを編集します。共通のskillDescription / skillVariablesはマスター文言を保持し、図鑑の省略表記と分けます。各レベルのHTMLはviewで一度生成して配置判定と描画に使います。
 
 作業環境が空の場合は `git clone --depth 1 https://github.com/psguide-dev/pokesleep-guide.git psn` で最新mainを復元できます。生成物を手編集せず、公開前にビルドとworkflowのチェックを実行します。
+
+## v547 図鑑モジュール
+一覧・詳細の編集場所と共通部分の依存は [dex/README.md](dex/README.md) を参照。読み込み順の正本は PSG_build_sources.py です。

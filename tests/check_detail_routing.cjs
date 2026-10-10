@@ -30,10 +30,10 @@ let selected,rendered=[];const w={PS_POKEMON_PAGE:true,PS:{state:{screen:'dexDet
 const heading={get textContent(){return 'No.001 フシギダネ'},set textContent(value){throw Error('Navigation must not overwrite the rendered identity heading')}};
 const doc={title:'',querySelector:s=>s.includes('h2')?heading:null,getElementById:id=>id==='dexPreviewNotice'?{}:null,addEventListener:()=>{}};
 const ctx={window:w,document:doc,location:new URL('https://example.test/guide/pokemon.html?species=0001_default'),byNo:n=>n==='unknown'?null:{no:1,name:'フシギダネ',type:'くさ'},detailKey:()=> '0001_default',currentNo:1,currentSpeciesId:null,currentTab:'ability',detailOrigin:'dex',detailHistory:[],detailForward:[],setTheme:()=>{},show:()=>{},header:()=>{},renderStats:()=>{},renderFood:()=>{},renderSkill:()=>{},renderEvolution:()=>{},renderSleepStyles:()=>rendered.push('sleep'),renderPokemonFields:()=>{},switchTab:()=>{},updateDexStickyTop:()=>{},ability:{prepend:()=>{}},getComputedStyle:()=>({}),history:{},Number,parseFloat};
-vm.runInNewContext(fs.readFileSync('templates/detail/07-navigation.html','utf8').replace(/\}\)\(\);\s*<\/script>\s*$/,''),ctx);
+vm.runInNewContext(fs.readFileSync('templates/dex/08-navigation.html','utf8').replace(/\}\)\(\);\s*<\/script>\s*$/,''),ctx);
 assert.equal(w.openPokemonDetail('0001_default'),true);assert.equal(selected[0],'0001_default');assert.equal(rendered.length,0);selected=null;
 assert.equal(w.openPokemonDetail('0001_default',{local:true}),true);assert.equal(selected,null);assert.equal(rendered.length,1);assert.equal(doc.title,'フシギダネ｜ポケモン図鑑｜P Sleep Nexus');w.PSG_REFRESH_DEX_DETAIL();assert.equal(selected,null);assert.equal(rendered.length,2);assert.equal(w.openPokemonDetail('unknown'),false);
-const list=fs.readFileSync('templates/core/06-lists.html','utf8');assert(list.includes('<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}"'));assert(list.includes("window.PS_DEX_ROUTE.capture('dex')"));
+const list=fs.readFileSync('templates/dex/00-list-view.html','utf8');assert(list.includes('<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}"'));assert(list.includes("window.PS_DEX_ROUTE.capture('dex')"));
 console.log('Individual detail URLs, real document navigation, native links, form/tab targets, list filter/scroll restoration, bfcache, blocked storage and invalid species passed');
 
 // Reproduce returning from Dex, navigating elsewhere and then reloading.
