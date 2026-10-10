@@ -338,7 +338,6 @@
 #dexDetail .psg-dex-costume{flex:none;width:75px;height:24px;min-height:24px;padding:2px;font:inherit;font-size:11px;color:#000;background:#fff;border:1px solid #dce4df;border-radius:7px;opacity:1}
 #dexDetail .psg-form-no-image{font-size:14px;color:#718078;align-self:center}
 .psg-skill-level>span{min-width:0;overflow-wrap:anywhere;line-height:1.6}
-.psg-skill-entry summary strong{min-width:0;overflow-wrap:anywhere}
 
 /* Dex food rows share Block 1's unit: heading 1, A/B/C each 1.5. */
 #dexDetail #detailFoods{--food-heading-height:var(--box-unit-height);--food-heading-font-size:calc(var(--box-unit-height) * .5 - 3px);--food-label-gutter:20px;--food-row-height:calc(var(--box-unit-height) * 1.5)}

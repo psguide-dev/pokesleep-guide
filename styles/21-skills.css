@@ -1,5 +1,8 @@
-/* Skill list: header, cards, conditions and effect colors. */
-.psg-skill-index input{display:block;width:100%;margin:8px 0 12px;padding:12px;border:1px solid var(--line);border-radius:12px;font-size:16px}.psg-skill-entry{margin-top:10px;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}.psg-skill-entry summary{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px;cursor:pointer;color:#171d1a}.psg-skill-entry summary strong{font-size:18px}.psg-skill-tags{font-size:13px;color:#527a62}.psg-skill-levels{padding:0 14px}.psg-skill-level{display:flex;gap:16px;padding:10px 0;border-top:1px solid var(--line)}.psg-skill-level b{min-width:44px}.psg-skill-species-label{font-weight:700;padding:12px 14px 6px}.psg-skill-species{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 14px}
+/* Skill index: sticky header, compact dialog launchers and effect colors. */
+.psg-skill-entry{margin-top:10px;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+/* Used by the Pokédex metronome effect. */
+.psg-skill-level{display:flex;gap:16px;padding:10px 0;border-top:1px solid var(--line)}
+.psg-skill-level b{min-width:44px}
 
 #skillPage>.psg-skill-header{position:sticky;top:var(--psg-header-height);z-index:69;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-inline:-12px;padding-inline:12px;background:#fff}
 #skillPage .psg-skill-header>[data-back]{width:100%!important}
@@ -8,19 +11,16 @@
 #skillTag{font-size:12px}
 #skillSearch::placeholder{font-size:12px;color:#75847b;opacity:1}
 #skillIndexCount{margin:0;font-size:10px;font-weight:400;color:#75847b;white-space:nowrap}
-.psg-skill-entry>summary{display:grid;grid-template-columns:36px minmax(0,1fr) clamp(92px,28vw,140px);align-items:center;column-gap:8px;row-gap:6px;padding:12px;text-align:left}
-.psg-skill-entry>summary strong{display:inline;min-width:0;font-size:clamp(14px,4vw,18px);line-height:1.35}
+.psg-skill-entry>summary{display:grid;grid-template-columns:36px minmax(0,1fr) clamp(92px,28vw,140px);align-items:center;column-gap:8px;row-gap:6px;padding:12px;text-align:left;cursor:pointer;color:#171d1a}
+.psg-skill-entry>summary strong{display:inline;min-width:0;font-size:clamp(14px,4vw,18px);line-height:1.35;overflow-wrap:anywhere}
 .psg-skill-qualifier{display:block;font-size:.8em}
 .psg-skill-entry-icon{display:flex;align-items:center;justify-content:center;width:36px;height:36px}
 .psg-skill-entry-icon img{display:block;width:36px;height:36px;object-fit:contain}
-.psg-skill-entry>summary .psg-skill-tags{min-width:0;font-size:clamp(10px,2.5vw,12px);overflow-wrap:anywhere}
-.psg-skill-identity{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;min-width:0}
+.psg-skill-entry>summary .psg-skill-tags{min-width:0;font-size:clamp(10px,2.5vw,12px);color:#527a62;overflow-wrap:anywhere}
+.psg-skill-identity{min-width:0}
 .psg-skill-effect-preview{grid-column:1 / -1;display:flex;flex-direction:column;gap:3px;min-width:0;font-size:clamp(11px,3vw,14px);line-height:1.45;overflow-wrap:anywhere}
 .psg-skill-meta{display:flex;flex-direction:column;align-items:flex-end;align-self:start;gap:4px;min-width:0;text-align:right}
 .psg-skill-preview-level{white-space:nowrap;font-size:11px;font-weight:700;color:#111}
-.psg-skill-entry>.note{margin:8px 14px;overflow-wrap:anywhere}
-.psg-skill-entry>.psg-skill-conditions{margin:8px 14px 12px}
-.psg-skill-entry>.psg-skill-conditions>summary{padding:8px 0}
 #skillPage .skill-var{font-weight:900}
 #skillPage .effect-food{color:var(--skill-effect-food)}
 #skillPage .effect-energy{color:var(--skill-effect-energy)}
