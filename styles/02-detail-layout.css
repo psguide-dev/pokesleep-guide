@@ -443,7 +443,12 @@
 .psg-day-energy-amount{display:block;font-size:18px;line-height:1.4}.psg-day-energy-breakdown{display:block;font-size:12px;font-weight:400;margin-top:3px}
 
 /* Dex encounters: one group per sleep style, canonical field order inside. */
-.psg-sleep-field-power{display:block;font-weight:400;font-size:.85em;margin-top:3px}
+.psg-sleep-field-heading{display:grid;grid-template-columns:minmax(0,1fr) max-content;align-items:center;gap:8px}
+.psg-sleep-field-title{min-width:0}
+.psg-sleep-field-power{display:grid;grid-template-columns:max-content max-content .6em;align-items:center;font-weight:400;font-size:.72em;line-height:1.4;column-gap:3px;font-variant-numeric:tabular-nums}
+.psg-sleep-power-row{display:contents}
+.psg-sleep-power-label,.psg-sleep-power-number{text-align:right;white-space:nowrap}
+.psg-sleep-power-close{text-align:left}
 .psg-style-field-row{display:grid;grid-template-columns:minmax(0,1fr) 44px 128px;align-items:center;gap:4px 6px;padding:8px 0;border-top:1px solid #e9eeeb;font-size:.9em}
 .psg-style-field-name{min-width:0}
 .psg-style-field-rank{display:inline-flex;align-items:center;justify-content:flex-start;gap:3px;font-variant-numeric:tabular-nums}

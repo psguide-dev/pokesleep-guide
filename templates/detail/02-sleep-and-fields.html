@@ -80,13 +80,11 @@
      });return;
    }
    field.replaceChildren();
-   const title=document.createElement('h3');title.textContent='寝顔別のフィールド・最低ランク';field.append(title);
    if(m.dataStatus==='preview_pending_abilities'){
      const note=document.createElement('p');note.className='note';note.textContent='寝顔別の最低ランク・ねむけパワーは確認待ちです。';field.append(note);
      for(const name of m.appearanceFields||[]){const line=document.createElement('p');line.textContent=name;field.append(line)}return;
    }
    if(m.detailPreviewOnly){const pending=document.createElement('p');pending.className='note';pending.textContent='この姿のフィールド出現条件は未登録です。通常の姿の条件は流用しません。';field.append(pending);return}
-   const note=document.createElement('p');note.className='note';note.textContent='解放エナジーは最低ランクへの到達値で、出現を保証しません。必要ねむけパワーは別条件です。攻略資料に基づく掲載値・ゲーム内未照合。未掲載は出現しないという意味ではありません。';field.append(note);
    const fieldOrder=['greengrass','cyan','taupe','snowdrop','lapis','old_gold','amber'];
    const position=entry=>{const index=fieldOrder.indexOf(entry.id.replace(/_ex$/,''));return index<0?fieldOrder.length:index};
    const entries=Object.values(window.PS_POKEMON_FIELDS?.[m.no]||{}).sort((a,b)=>(a.mode==='expert')-(b.mode==='expert')||position(a)-position(b)||a.id.localeCompare(b.id));
@@ -107,10 +105,18 @@
      const commonPower=powers.length===1?powers[0]:null;
      const expertPowers=[...new Set(rows.filter(row=>row.entry.mode==='expert').map(row=>row.item.drowsyPower))];
      const expertPower=expertPowers.length===1?expertPowers[0]:null;
-     const heading=document.createElement('h4');heading.textContent=`★${style.stars} ${style.name}`;
+     const heading=document.createElement('h4');heading.className='psg-sleep-field-heading';
+     const styleName=document.createElement('span');styleName.className='psg-sleep-field-title';styleName.textContent=`★${style.stars} ${style.name}`;heading.append(styleName);
      if(Number.isFinite(commonPower)){
        const power=document.createElement('small');power.className='psg-sleep-field-power';
-       power.textContent=`ねむけパワー ${commonPower.toLocaleString()}${Number.isFinite(expertPower)&&expertPower!==commonPower?`(EX ${expertPower.toLocaleString()})`:''}`;heading.append(power);
+       const addPower=(label,value,close='')=>{
+         const line=document.createElement('span');line.className='psg-sleep-power-row';
+         for(const [className,text] of [['psg-sleep-power-label',label],['psg-sleep-power-number',value.toLocaleString()],['psg-sleep-power-close',close]]){const part=document.createElement('span');part.className=className;part.textContent=text;line.append(part)}
+         power.append(line);
+       };
+       addPower('ねむけパワー',commonPower);
+       if(Number.isFinite(expertPower))addPower('EX（',expertPower,'）');
+       heading.append(power);
      }
      section.append(heading);
      for(const {entry,item} of rows){
