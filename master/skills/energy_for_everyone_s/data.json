@@ -27,5 +27,10 @@
       "recovery": 18
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/energy_all_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/energy_all_s.webp",
+  "gameEffectTemplate": "チームのポケモン全員のげんきを{recovery}回復する",
+  "gameNotes": [
+    "げんきの回復上限は150です。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

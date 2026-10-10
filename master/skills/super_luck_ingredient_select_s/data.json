@@ -64,5 +64,7 @@
   "calculationStatus": "抽選確率未確定・効果期待値は未対応",
   "calculationNote": "食材とかけらの抽選確率は未確定。このスキルによる食材・かけらの獲得量は日産計算に含めていません。",
   "displayNote": "候補：あじわいキノコ・マメミート・ワカクサ大豆・めざましコーヒー。食材とかけらの抽選確率は未確定。このスキルによる食材・かけらの獲得量は日産計算に含めていません。",
-  "iconAsset": "assets/skill-icons/v423/plain/super_luck.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/super_luck.webp",
+  "gameEffectTemplate": "特定の食材の中からランダムで1種類の食材を{amount}個ゲットする\nまれに食材の代わりに大量のゆめのかけらをゲットする",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

@@ -37,5 +37,10 @@
       "description": "次回の料理でなべの容量を31個増やす"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/cooking_power_up_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/cooking_power_up_s.webp",
+  "gameEffectTemplate": "次回の料理でなべの容量を{capacity}個増やす",
+  "gameNotes": [
+    "メインスキルの効果で増える、なべの最大容量は200個までです。最大に達した場合、このメインスキルを発動できません。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

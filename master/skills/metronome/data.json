@@ -30,5 +30,10 @@
       "description": "たくさんのメインスキルの中からどれか1つをくりだす"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/plain/metronome.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/metronome.webp",
+  "gameEffectTemplate": "たくさんのメインスキルの中からどれか1つをくりだす",
+  "gameNotes": [
+    "選ばれたメインスキルの効果量は、ゆびをふるのメインスキルのレベルによって決まります。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

@@ -50,5 +50,10 @@
   "calculationStatus": "基本効果のみ対応・追加効果は未対応",
   "calculationNote": "追加アメの発生確率と対象の抽選は未確定。アメの期待値は計算に含めていません。",
   "displayNote": "追加アメの発生確率と対象の抽選は未確定。アメの期待値は計算に含めていません。",
-  "iconAsset": "assets/skill-icons/v423/plain/present.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/present.webp",
+  "gameEffectTemplate": "ランダムで食材を{amount}個ゲットする\nときどき、追加でチームのポケモン1匹のアメを{bonusCandy}個ゲットする",
+  "gameNotes": [
+    "ポケモンのアメの所持上限は各9,999個です。上限を超えた分は破棄されます。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

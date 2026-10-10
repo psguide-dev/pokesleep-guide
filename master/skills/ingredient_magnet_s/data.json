@@ -30,5 +30,10 @@
       "amount": 24
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/ingredient_magnet_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/ingredient_magnet_s.webp",
+  "gameEffectTemplate": "ランダムで食材を{amount}個ゲットする",
+  "gameNotes": [
+    "食材は入手済みのものから選ばれます。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

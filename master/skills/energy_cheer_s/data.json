@@ -33,5 +33,11 @@
       "description": "チームのポケモン1匹のげんきを44回復する"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/energy_cheer_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/energy_cheer_s.webp",
+  "gameEffectTemplate": "ランダムでチームのポケモン1匹のげんきを{recovery}回復する",
+  "gameNotes": [
+    "げんきの回復上限は150です。",
+    "ランダムな1匹への回復は、げんきが最も低いポケモンに当たりやすくなっています。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

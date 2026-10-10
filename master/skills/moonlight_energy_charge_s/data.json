@@ -69,5 +69,7 @@
         }
       ]
     }
-  ]
+  ],
+  "gameEffectTemplate": "自分のげんきを{selfRecovery}回復する\nときどき、追加でチームのポケモン1匹のげんきを{bonusRecovery}回復する",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

@@ -1,15 +1,21 @@
- function dexSkillHasDialog(s){
-   return ['draco_meteor_berry_burst','energy_charge_s_fixed','energy_charge_s_variable','energy_charge_m'].includes(s?.id);
- }
- function dexSkillGameName(s){
-   return s.id==='energy_charge_s_variable'?'エナジーチャージS':s.name;
- }
- function dexSkillGameEffect(s,lv){
+ function dexSkillHasDialog(s){return !!s?.levels;}
+ function dexSkillGameName(s){return s.id==='almighty'?'オールマイティー（ゆびをふる）':s.name.replace('（ランダム）','');}
+ function dexSkillGameEffect(s,lv,m={}){
+   const row=s.levels?.[lv]||{},v={...row,...row.namedValues};
    if(s.id==='draco_meteor_berry_burst')return detailEsc(s.gameDescription).replace(/\n/g,'<br>');
-   const row=s.levels[lv];
-   return s.id==='energy_charge_s_variable'
-     ?`カビゴンのエナジーを<br>${dexSkillValue(row.min,'energy')}~${dexSkillValue(row.max,'energy')}増やす`
-     :`カビゴンのエナジーを${dexSkillValue(row.energy,'energy')}増やす`;
+   if(s.gameEffectTemplate){
+     const food=m.ingredients?.[0]?.name,key=({'めざましコーヒー':'coffee','モーモーミルク':'moomoo_milk'})[food];
+     v.additionalIngredient=food||'対象の食材';v.additionalAmount=key?v.additionalByFirstIngredient?.[key]:null;
+     return s.gameEffectTemplate.split(/(\{[a-zA-Z]+\})/).map(part=>{
+       if(!part.startsWith('{'))return detailEsc(part).replace(/\n/g,'<br>');
+       const key=part.slice(1,-1),n=v[key];
+       if(key==='additionalIngredient')return detailEsc(n);
+       const kind=/energy|Energy/.test(key)?'energy':/recovery|Recovery/.test(key)?'energy-recovery':/shards|min|max/.test(key)?'shards':/capacity|pot|zone/i.test(key)?'zone':/helps|Helps/.test(key)?'help':/Berries/.test(key)?'berry':/chance|Candy/.test(key)?'skill':'food';
+       return dexSkillValue(typeof n==='number'&&kind==='energy-recovery'?Math.trunc(n):n,kind);
+     }).join('');
+   }
+   if(s.id==='energy_charge_s_variable')return `カビゴンのエナジーを<br>${dexSkillValue(row.min,'energy')}~${dexSkillValue(row.max,'energy')}増やす`;
+   return skillDescription(s,row);
  }
  function renderSkill(m){
    document.getElementById("psnSkillDialog")?.remove();
@@ -55,7 +61,7 @@
    const lv1=s.levels?.[1];
    const effect=document.getElementById("detailSkillEffect");
    if(effect){
-     const effectCopy=dexSkillHasDialog(s)?dexSkillGameEffect(s,1):dexSkillEffect(s,lv1,m);
+     const effectCopy=dexSkillHasDialog(s)?dexSkillGameEffect(s,1,m):dexSkillEffect(s,lv1,m);
      effect.innerHTML=`<b class="v35-effect-level">Lv.<span class="psg-skill-level-number">1</span></b><span class="v35-effect-copy">${effectCopy}</span>`;
      effect.classList.add("skill-desc");
    }
@@ -63,7 +69,7 @@
      summary?.classList.remove('psg-skill-three-lines');
      summary?.setAttribute('aria-haspopup','dialog');
      summary?.setAttribute('aria-controls','psnSkillDialog');
-     effect.innerHTML=`<span class="v35-effect-copy">${dexSkillGameEffect(s,1)}</span>`;
+     effect.innerHTML=`<span class="v35-effect-copy">${dexSkillGameEffect(s,1,m)}</span>`;
      name?.insertAdjacentHTML('beforeend','<b class="psn-title-level">Lv.1</b><span class="psn-skill-info" aria-hidden="true">ⓘ</span>');
    }else{summary?.setAttribute('aria-haspopup','false');summary?.setAttribute('aria-controls','skillLevels')}
    // Dex is reference-only: no skill-level adjustment control here.
@@ -87,12 +93,12 @@
    }
  }
 
- function openDexSkillDialog(s){
+ function openDexSkillDialog(s,m={}){
    let dialog=document.getElementById('psnSkillDialog');
    if(dialog?.open)return;
    dialog?.remove();
    dialog=document.createElement('dialog');
-   dialog.id='psnSkillDialog';dialog.className='psn-skill-dialog'+(s.id==='draco_meteor_berry_burst'?'':' psn-energy-dialog');
+   dialog.id='psnSkillDialog';dialog.className='psn-skill-dialog'+(['energy_charge_s_fixed','energy_charge_s_variable','energy_charge_m'].includes(s.id)?' psn-energy-dialog':'');
    dialog.setAttribute('aria-labelledby','psnSkillTitle');
    dialog.innerHTML=`<header><h3 id="psnSkillTitle">${detailEsc(dexSkillGameName(s))}</h3><div class="psn-skill-level-switch" role="group" aria-label="表示するスキルレベル"><button type="button" data-step="-1" aria-label="前のスキルレベル">◀</button><b id="psnSkillLevel" aria-live="polite"></b><button type="button" data-step="1" aria-label="次のスキルレベル">▶</button></div></header><div class="psn-skill-dialog-body"><p class="psn-game-description"></p><div id="psnSkillTable" aria-live="polite"></div></div><footer><button type="button" class="psn-dialog-close">とじる</button></footer>`;
    document.body.appendChild(dialog);
@@ -103,12 +109,18 @@
      dialog.querySelector('#psnSkillLevel').textContent=`メインスキルレベル ${lv}`;
      dialog.querySelector('[data-step="-1"]').disabled=index===0;
      dialog.querySelector('[data-step="1"]').disabled=index===available.length-1;
-     if(s.id!=='draco_meteor_berry_burst'){
-       dialog.querySelector('.psn-game-description').innerHTML=dexSkillGameEffect(s,lv);
-       return;
+     dialog.querySelector('.psn-game-description').innerHTML=dexSkillGameEffect(s,lv,m);
+     let table=dexSkillTable(s,s.levels[lv]).replace('>x<',s.effectType?.startsWith('helper_boost_')?'>おてつだい<':'>自分<').replace('>y<','>チーム内ポケモン<');
+     if(s.id==='draco_meteor_berry_burst')table+=`<p>ラティアスがチームにいる場合、自分＋${dexSkillValue(v?.conditionalExtraSelfBerries,'berry')}個</p>`;
+     if(s.id==='super_luck_ingredient_select_s')table+=`<p>ゆめのかけら：${dexSkillValue(s.levels[lv].shardsSmall,'shards')} または ${dexSkillValue(s.levels[lv].shardsLarge,'shards')}</p>`;
+     if(['select_ingredients','conditional_ingredient_select'].includes(s.effectType)){
+       const names=s.ingredientCandidates||(m.ingredients||[]).map(x=>x.name).filter(Boolean);
+       table+=`<p>ゲットする可能性のある食材：${names.length?names.map(detailEsc).join('・'):'ポケモンごとに異なります'}</p>`;
      }
-     dialog.querySelector('.psn-game-description').textContent=s.gameDetailDescription;
-     dialog.querySelector('#psnSkillTable').innerHTML=`<table><caption>チーム内の異なるドラゴンの種類数（自分を含む）</caption><thead><tr><th scope="col">種類数</th>${counts.map(n=>`<th scope="col">${n}</th>`).join('')}</tr></thead><tbody>${[['自分',v?.selfBerriesByDistinctCount],['チーム内ポケモン',v?.berriesPerOtherMemberByDistinctCount]].map(([label,values])=>`<tr><th scope="row">${label}</th>${counts.map(n=>`<td>${detailEsc(values?.[n]??'未確定')}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="psn-skill-extra">ラティアスがチームにいる場合、自分＋${detailEsc(v?.conditionalExtraSelfBerries??'未確定')}個</p>`;
+     const notes=s.gameNotes||s.ruleNotes?.map(n=>n.label+'：'+n.text)||[];
+     table+=notes.map(n=>`<p class="note">※${detailEsc(n)}</p>`).join('');
+     dialog.querySelector('#psnSkillTable').innerHTML=table;
+
    }
    dialog.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click',()=>{index=Math.max(0,Math.min(available.length-1,index+Number(button.dataset.step)));update()}));
    dialog.querySelector('.psn-dialog-close').addEventListener('click',()=>dialog.close());
@@ -117,3 +129,5 @@
    update();dialog.showModal();
    document.querySelector('#v12Ability .psg-skill-summary')?.setAttribute('aria-expanded','true');
  }
+
+ if(typeof window!=='undefined')window.PS_SKILL_DISPLAY={name:dexSkillGameName,effect:dexSkillGameEffect,open:openDexSkillDialog};

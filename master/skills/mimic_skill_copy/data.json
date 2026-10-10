@@ -39,5 +39,11 @@
   ],
   "verifiedAt": "2026-10-01",
   "calculationStatus": "未対応",
-  "iconAsset": "assets/skill-icons/v423/plain/mimic.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/mimic.webp",
+  "gameEffectTemplate": "ランダムでチームのポケモン1匹のメインスキルをコピーしてくりだす",
+  "gameNotes": [
+    "スキルコピーなど一部のメインスキルはコピーできず、代わりにエナジーを少し獲得します。",
+    "選ばれたメインスキルの効果量は、スキルコピーのメインスキルのレベルによって決まります。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

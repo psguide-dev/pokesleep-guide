@@ -44,5 +44,7 @@
     253,
     254
   ],
-  "iconAsset": "assets/skill-icons/v423/plain/berry_burst.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/berry_burst.webp",
+  "gameEffectTemplate": "きのみを{selfBerries}個獲得し、\nさらにチーム内のポケモンのきのみも{teamBerriesEach}個ずつ獲得する",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

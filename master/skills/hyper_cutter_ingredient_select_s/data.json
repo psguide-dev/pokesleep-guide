@@ -57,5 +57,7 @@
   "calculationStatus": "抽選確率未確定・効果期待値は未対応",
   "calculationNote": "食材の抽選確率と大成功率は未確定。このスキルによる食材・かけらの獲得量は日産計算に含めていません。",
   "displayNote": "候補：あんみんトマト・ほっこりポテト・ピュアなオイル・ワカクサコーン。食材の抽選確率と大成功率は未確定。このスキルによる食材・かけらの獲得量は日産計算に含めていません。",
-  "iconAsset": "assets/skill-icons/v423/plain/hyper_cutter.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/hyper_cutter.webp",
+  "gameEffectTemplate": "特定の食材の中からランダムで1種類の食材を{amount}個ゲットする\nときどき、追加で{bonusAmount}個食材をゲットする",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

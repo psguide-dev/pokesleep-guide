@@ -39,5 +39,10 @@
   "calculationStatus": "基本効果のみ対応・追加効果は未対応",
   "calculationNote": "追加ジュースの入手確率・使用効果は日産計算に含めていません。",
   "displayNote": "追加ジュースの入手確率・使用効果は日産計算に含めていません。",
-  "iconAsset": "assets/skill-icons/v423/plain/berry_juice.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/berry_juice.webp",
+  "gameEffectTemplate": "チームのポケモン全員のげんきを{recovery}回復する\nときどき、追加できのみジュースをゲットする",
+  "gameNotes": [
+    "きのみジュースはどうぐバッグに最大5個まで持てます。上限を超える場合、追加効果は発生しません。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

@@ -363,5 +363,7 @@
         }
       ]
     }
-  ]
+  ],
+  "gameEffectTemplate": "ランダムでチームのポケモン2匹のげんきを{recoveryPerTarget}回復し、\nおてつだいが{instantHelpsPerTarget}回分すぐに完了する\nラティオスがチームにいる場合、さらに{conditionalAdditionalHelpsPerTarget}回分すぐに完了する",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

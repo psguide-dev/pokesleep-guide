@@ -54,5 +54,11 @@
   "nativePokemonNos": [
     214
   ],
-  "iconAsset": "assets/skill-icons/v423/plain/bulk_up.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/bulk_up.webp",
+  "gameEffectTemplate": "ランダムで食材を{amount}個ゲットする\nさらに、料理の大成功確率が{chanceBonus}%上がる\n効果は料理が大成功するか、フィールドを移動するまで持続する",
+  "gameNotes": [
+    "食材は入手済みのものから選ばれます。",
+    "メインスキルの効果で上がる、大成功確率の上限は70%です。上限に達した場合、このメインスキルを発動できません。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

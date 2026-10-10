@@ -456,5 +456,7 @@
         }
       ]
     }
-  ]
+  ],
+  "gameEffectTemplate": "ランダムで食材を{randomIngredientTotalBase}個ゲットする\n自分以外に、メインスキル「プラス」か「マイナス」を持つポケモンがチームに1匹以上いる場合、\n追加で{additionalIngredient}を{additionalAmount}個ゲットする",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

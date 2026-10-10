@@ -81,5 +81,10 @@
       "description": "チーム全員が各5回分すぐにおてつだい。異なるみずタイプ2～5種で各1／3／4／6回を追加"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/plain/helper_boost_water.webp"
+  "iconAsset": "assets/skill-icons/v423/plain/helper_boost_water.webp",
+  "gameEffectTemplate": "チームのポケモン全員のおてつだいが{helps}回分すぐに完了する\nチームに異なる種類のみずタイプのポケモンが多いほどさらに効果量がUPする",
+  "gameNotes": [
+    "効果量UPは、メインスキルが発動可能になった時点のチーム編成で決定されます。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

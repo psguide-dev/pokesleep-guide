@@ -33,5 +33,10 @@
       "description": "自分のげんきを43回復する"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/energizing_cheer_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/energizing_cheer_s.webp",
+  "gameEffectTemplate": "自分のげんきを{recovery}回復する",
+  "gameNotes": [
+    "げんきの回復上限は150です。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

@@ -41,5 +41,7 @@
       "description": "ゆめのかけらを2500個ゲットする"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/dream_shard_magnet_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/dream_shard_magnet_s.webp",
+  "gameEffectTemplate": "ゆめのかけら x{shards}をゲットする",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

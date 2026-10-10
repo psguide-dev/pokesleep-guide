@@ -37,5 +37,10 @@
       "description": "チームのポケモン1匹のおてつだい12回分がすぐに完了する"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/helper_support_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/helper_support_s.webp",
+  "gameEffectTemplate": "おてつだいポケモンのだれか1匹の\nおてつだいが{helps}回分すぐに完了する",
+  "gameNotes": [
+    "メインスキルの効果で最大所持数を超えてきのみ・食材を持てます。合計の上限は999個です。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

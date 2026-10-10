@@ -37,5 +37,7 @@
       "description": "特定の食材からランダムで1種類を18個ゲットする"
     }
   },
-  "iconAsset": "assets/skill-icons/v423/S/ingredient_select_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/ingredient_select_s.webp",
+  "gameEffectTemplate": "特定の食材の中からランダムで1種類の食材を{amount}個ゲットする",
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }

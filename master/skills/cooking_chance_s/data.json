@@ -45,5 +45,10 @@
   ],
   "verifiedAt": "2026-10-01",
   "calculationStatus": "日産エナジー未対応（料理・大成功後のリセット・蓄積上限を未モデル化）",
-  "iconAsset": "assets/skill-icons/v423/S/cooking_chance_s.webp"
+  "iconAsset": "assets/skill-icons/v423/S/cooking_chance_s.webp",
+  "gameEffectTemplate": "料理の大成功確率が{chancePercent}%上がる\n効果は料理が大成功するか、フィールドを移動するまで持続する",
+  "gameNotes": [
+    "メインスキルの効果で上がる、大成功確率の上限は70%です。上限に達した場合、このメインスキルを発動できません。"
+  ],
+  "gameDisplaySource": "ユーザー提供のゲーム内スクリーンショット（2026-10-10確認）。数値は既存マスターの各レベルを参照。"
 }
