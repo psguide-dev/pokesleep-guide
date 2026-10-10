@@ -1,11 +1,13 @@
 # CSSの編集先
 
-`PSG_build_master.py` が次の順番で結合します。`PSG_styles.css` と生成HTMLは直接編集せず、ここにあるCSSを編集してビルドしてください。
+`PSG_build_master.py` が`PSG_build_sources.py` の `STYLE_NAMES` の順番で結合します。`PSG_styles.css` と生成HTMLは直接編集せず、ここにあるCSSを編集してビルドしてください。
 
 | ファイル | 担当する指定 |
 | --- | --- |
 | `01-foundation.css` | 全体の基礎、ナビ、一覧カード、フィルター |
 | `02-detail-layout.css` | 図鑑詳細の基本レイアウト、タブ |
+| `16-whistle.css` | ホイッスル計算 |
+| `17-field-spawn.css` | 寝顔出現計算 |
 | `03-food-and-skill.css` | 食材・料理欄、スキル欄の基本指定 |
 | `04-basic-blocks.css` | 詳細の情報ブロック、通常進化・分岐進化 |
 | `05-responsive-detail.css` | 図鑑詳細の画面幅別調整 |
@@ -13,12 +15,18 @@
 | `07-current-ui.css` | 現行の共通画像、料理、情報、寝顔、進化など |
 | `08-box-detail.css` | ボックス個体詳細と編集フォーム |
 | `09-list-cards.css` | 図鑑カードの見出し・画像・下部アイコン |
+| `14-comparisons.css` | 比較表示 |
+| `10-page-headers.css` | 共通の見出し・戻るボタン・情報ページ固定行 |
+| `21-skills.css` | スキル一覧 |
 | `10-detail-facts.css` | 図鑑・個体詳細Block 1の右側4・2・2の3段配置 |
 | `11-cooking.css` | 比較Lv・鍋試算・折りたたみ資料表 |
 | `12-recipe-evaluation.css` | 料理モード切替・3指標の圧縮表示・評価注記 |
 | `13-daily-supply.css` | 専任収集負担・食材の日産量・担当構成の圧縮表示 |
 | `14-ingredients.css` | 食材の検索・一覧・詳細・対応料理 |
 | `15-swap-assist.css` | 不足食材・控え候補・単体補充時間 |
+| `18-adopted-ui-icons.css` | 採用済みUIアイコン |
+| `19-nightcap.css` | ナイトキャップピカチュウ |
+| `20-image-import.css` | 画像取り込み |
 
 ## 編集方針
 

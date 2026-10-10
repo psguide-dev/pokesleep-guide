@@ -1,6 +1,6 @@
 # HTMLの編集場所
 
-`PSG_build_master.py` は以下を `TEMPLATE_PARTS` の指定順に連結し、`review.html` を生成します。従来の `PSG_source_template.html` は互換用の結合結果で、ビルド時に再生成されます。画面の変更は該当する `templates/` のファイルに加えてください。
+`PSG_build_master.py` は以下を `PSG_build_sources.py` の `TEMPLATE_NAMES` の指定順に連結し、`review.html` を生成します。従来の `PSG_source_template.html` は互換用の結合結果で、ビルド時に再生成されます。画面の変更は該当する `templates/` のファイルに加えてください。
 
 | ファイル | 内容 |
 | --- | --- |
