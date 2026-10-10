@@ -12,6 +12,7 @@
    return out.length?out:["条件未確認"];
  }
  function evolutionConditionMarkup(value){
+   value=String(value).replace(/一緒に睡眠\s*([0-9０-９]+)\s*時間/g,'睡眠$1時間').replace('一緒に睡眠','睡眠');
    let text=detailEsc(value);
    for(const name of Object.keys(window.PS_IMAGE_FILES.items||{}))if(String(value).includes(name))text=text.replace(name,window.PS_UI_ART.icon('items',name)+name);
    return text;

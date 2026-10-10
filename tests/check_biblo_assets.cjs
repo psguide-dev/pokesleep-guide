@@ -57,9 +57,9 @@ assert.deepEqual(Array.from(Object.entries(catalog.pendingSleepArtwork).filter((
 // Match the actual detail markup: the removed inline rate element is absent.
 const detailMarkup=fs.readFileSync(path.join(root,'templates/09-dex-detail.html'),'utf8');
 assert(!detailMarkup.includes('id="skillRateInline"'));
-const nodes=new Map(['detailSkill','detailSkillEffect','skillLevels','skillDetailToggle'].map(id=>[id,{textContent:'old',hidden:false,classList:{remove(){}},replaceChildren(){this.textContent=''}}]));
-const icon={replaceChildren(){this.cleared=true}};
-const ui={document:{getElementById:id=>nodes.get(id)||null,querySelector:()=>icon},skillOf:()=>null};vm.createContext(ui);
+const nodes=new Map(['detailSkill','detailSkillEffect','skillLevels'].map(id=>[id,{textContent:'old',hidden:false,classList:{remove(){}},replaceChildren(){this.textContent=''}}]));
+const icon={replaceChildren(){this.cleared=true}},summary={attributes:{},setAttribute(key,value){this.attributes[key]=value}};
+const ui={document:{getElementById:id=>nodes.get(id)||null,querySelector:selector=>selector.includes('psg-skill-summary')?summary:icon},skillOf:()=>null};vm.createContext(ui);
 vm.runInContext(fs.readFileSync(path.join(root,'templates/detail/05-skill.html'),'utf8'),ui);vm.runInContext('renderSkill({mainSkillId:null})',ui);
-assert.equal(nodes.get('detailSkill').textContent,'スキル未確認');assert.equal(nodes.get('skillLevels').textContent,'');assert(nodes.get('skillDetailToggle').hidden);assert(icon.cleared);
+assert.equal(nodes.get('detailSkill').textContent,'スキル未確認');assert.equal(nodes.get('skillLevels').textContent,'');assert.equal(summary.attributes['aria-disabled'],'true');assert.equal(summary.attributes['aria-expanded'],'false');assert(icon.cleared);
 console.log('All scripts parse; 944 received sleep images, original discovery IDs, tentative image statuses, 9 missing faces / 4 bodies, and 2 non-calculating previews verified');

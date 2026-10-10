@@ -69,12 +69,14 @@
      if(effect)effect.textContent='能力データは確認後に追加します。';
      const rate=document.getElementById('skillRateInline');
      if(rate)rate.textContent='発動確率 未確認';
-     const levels=document.getElementById('skillLevels'),toggle=document.getElementById('skillDetailToggle');
+     const levels=document.getElementById('skillLevels'),summary=document.querySelector('#v12Ability .psg-skill-summary');
      if(levels){levels.replaceChildren();levels.classList.remove('open')}
-     if(toggle){toggle.hidden=true;toggle.textContent='詳細 ▼'}return;
+     if(summary){summary.setAttribute('aria-disabled','true');summary.setAttribute('aria-expanded','false');summary.tabIndex=-1}return;
    }
-   const toggle=document.getElementById('skillDetailToggle');
-   if(toggle)toggle.hidden=!Object.entries(s.levels||{}).some(([lv,x])=>Number(lv)>1&&x);
+   const summary=document.querySelector('#v12Ability .psg-skill-summary');
+   const expandable=Object.entries(s.levels||{}).some(([lv,x])=>Number(lv)>1&&x);
+   if(summary){summary.setAttribute('aria-disabled',String(!expandable));summary.setAttribute('aria-expanded','false');summary.tabIndex=expandable?0:-1}
+   document.getElementById('skillLevels')?.classList.remove('open');
    const skillIcon=document.querySelector('#v12Ability .skill-icon');
    if(skillIcon){
      skillIcon.replaceChildren();

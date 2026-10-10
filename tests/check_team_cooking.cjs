@@ -28,7 +28,7 @@ const {firefox}=require(process.env.PSG_PLAYWRIGHT_MODULE||'playwright');
   await page.evaluate(()=>PS.go('skillPage'));await page.locator('#skillSearch').fill('ほっぺすりすり');await page.locator('.psg-skill-entry>summary').click();await page.locator('.psg-skill-conditions>summary').click();
   assert.match(await page.locator('.psg-skill-conditions').innerText(),/誰か1匹の交代で消失/);assert.match(await page.locator('.psg-skill-conditions').innerText(),/未確認の項目/);
   assert(await page.locator('.psg-skill-conditions a').count()>0);
-  await page.evaluate(()=>openDexCard('0777_default'));await page.locator('#skillDetailToggle').click();assert.match(await page.locator('#skillLevels').innerText(),/通常ストックと別/);
+  await page.evaluate(()=>openDexCard('0777_default'));await page.locator('#v12Ability .psg-skill-summary').click();assert.match(await page.locator('#skillLevels').innerText(),/通常ストックと別/);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.deepEqual(errors,[]);
   console.log(width+'px: recipe image, unknown pot, OFF45/ON68, cross-screen camp/sunday/skill, persistence, rule notes/sources');await page.close();
  }

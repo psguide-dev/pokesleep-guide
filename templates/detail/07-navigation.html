@@ -61,8 +61,14 @@
  if(back)back.addEventListener("click",e=>{e.preventDefault();e.stopImmediatePropagation();leaveDetail()},true);
  window.PS_DETAIL_NAV={back:backDetail,forward:forwardDetail};
 
- const toggle=document.getElementById("skillDetailToggle"),levels=document.getElementById("skillLevels");
- if(toggle&&levels)toggle.onclick=()=>{const o=levels.classList.toggle("open");toggle.textContent=o?"詳細 ▲":"詳細 ▼"};
+ const summary=document.querySelector('#v12Ability .psg-skill-summary'),levels=document.getElementById("skillLevels");
+ function toggleSkill(){
+   if(!summary||!levels||summary.getAttribute('aria-disabled')==='true')return;
+   summary.setAttribute('aria-expanded',String(levels.classList.toggle('open')));
+ }
+ const skillCard=summary?.closest('.ability-card');
+ if(skillCard)skillCard.addEventListener('click',e=>{if(!e.target.closest('#skillLevels'))toggleSkill()});
+ if(summary)summary.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleSkill()}});
 
  // Round the measured content height up to half-unit steps, keeping its top fixed.
  const skillBox=document.querySelector('#v12Ability .skill-box');
@@ -76,7 +82,7 @@
    if(!(resolvedUnit>0))return;
    const inset=['paddingTop','paddingBottom','borderTopWidth','borderBottomWidth'].reduce((n,key)=>n+(parseFloat(style[key])||0),0);
    const half=resolvedUnit/2,needed=skillBox.getBoundingClientRect().height+inset;
-   card.style.setProperty('--skill-block-height',`${Math.max(3,Math.ceil((needed-.01)/half))*half}px`);
+   card.style.setProperty('--skill-block-height',`${Math.max(4,Math.ceil((needed-.01)/half))*half}px`);
  }
  if(window.ResizeObserver&&skillBox)new ResizeObserver(resizeSkillBlock).observe(skillBox);
  window.addEventListener('resize',resizeSkillBlock,{passive:true});

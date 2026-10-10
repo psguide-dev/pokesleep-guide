@@ -19,13 +19,13 @@ for(const image of [null,'assets/pokemon/preview.webp']){
  assert.equal(c.window.PS_FORMS.groupFor('9999_default'),undefined);
 }
 class Node{
- constructor(){this.children=[];this.textContent='';this.innerHTML='';this.style={setProperty(){}};this.dataset={};this.classList={add(){},remove(){},toggle(){}}}
+ constructor(){this.attributes={};this.children=[];this.textContent='';this.innerHTML='';this.style={setProperty(){}};this.dataset={};this.classList={add(){},remove(){},toggle(){}}}
  append(...nodes){this.children.push(...nodes)} appendChild(node){this.append(node)} prepend(node){this.children.unshift(node)}
- replaceChildren(...nodes){this.children=nodes;this.textContent='';this.innerHTML=''} setAttribute(){} remove(){} insertAdjacentHTML(_,html){this.innerHTML+=html}
+ replaceChildren(...nodes){this.children=nodes;this.textContent='';this.innerHTML=''} setAttribute(key,value){this.attributes[key]=value} remove(){} insertAdjacentHTML(_,html){this.innerHTML+=html}
 }
 const markup=read('templates/09-dex-detail.html'),nodes=new Map([...markup.matchAll(/id="([^"]+)"/g)].map(m=>[m[1],new Node()]));
-const sleep=new Node(),field=new Node(),icon=new Node(),count=new Node(),tab=new Node();tab.querySelector=()=>count;
-const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:()=>icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{},PS_IMAGE_LOADING:{set:(img,src)=>{img.src=src}}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
+const sleep=new Node(),field=new Node(),icon=new Node(),count=new Node(),tab=new Node(),summary=new Node();tab.querySelector=()=>count;
+const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:selector=>selector.includes('psg-skill-summary')?summary:icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{},PS_IMAGE_LOADING:{set:(img,src)=>{img.src=src}}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
 vm.createContext(c);
 for(const file of ['04-food','05-skill','06-evolution','02-sleep-and-fields'])vm.runInContext(read(`templates/detail/${file}.html`),c);
 // Open a known skill, then incomplete variants: stale effects and levels must clear.
@@ -34,9 +34,11 @@ for(const skill of [{name:'名前だけ'},{name:'レベル途中',levels:{1:null
  nodes.get('skillLevels').innerHTML='old effect';
  vm.runInContext('renderFood(m);renderSkill(m);renderEvolution(m);renderSleepStyles(m);renderPokemonFields(m)',c);
  assert(!nodes.get('skillLevels').innerHTML.includes('old effect'));
+ assert.equal(summary.attributes['aria-disabled'],String(!Object.entries(skill?.levels||{}).some(([lv,x])=>Number(lv)>1&&x)));
+ assert.equal(summary.attributes['aria-expanded'],'false');
  assert(nodes.get('detailFoods').innerHTML.includes('食材データ未確認'));
  assert(field.children.some(n=>n.textContent.includes('確認待ち')));
- if(!skill){assert.equal(nodes.get('detailSkill').textContent,'スキル未確認');assert.equal(nodes.get('skillDetailToggle').hidden,true)}
+ if(!skill){assert.equal(nodes.get('detailSkill').textContent,'スキル未確認');assert.equal(summary.attributes['aria-disabled'],'true');assert.equal(summary.attributes['aria-expanded'],'false');assert.equal(summary.tabIndex,-1)}
 }
 c.V.pendingSleepArtwork['9999_default']=[{image:'sleep.webp'}];
 vm.runInContext('renderSleepStyles(m)',c);

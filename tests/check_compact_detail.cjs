@@ -13,7 +13,7 @@ const {firefox}=require(process.env.PSG_PLAYWRIGHT_MODULE||'playwright');
    if(no===25){assert.equal(await page.locator('.psg-dex-costume').isDisabled(),false);assert.equal(await page.locator('.psg-dex-costume').isVisible(),true)}
    assert.equal(await page.locator('#detailSkill').evaluate(el=>getComputedStyle(el,'::before').content),'none');
    assert.equal(await page.locator('.psg-skill-summary').evaluate(el=>{const icon=el.querySelector('.skill-icon').getBoundingClientRect(),name=el.querySelector('.skill-name').getBoundingClientRect(),effect=el.querySelector('.skill-desc').getBoundingClientRect();return name.left>=icon.right&&effect.left>=icon.right&&effect.top>=name.bottom}),true);
-   const toggle=page.locator('#skillDetailToggle');await toggle.click();assert.equal(await page.locator('#skillLevels').isVisible(),true);await toggle.click();
+   const toggle=page.locator('#v12Ability .psg-skill-summary');await toggle.click();assert.equal(await page.locator('#skillLevels').isVisible(),true);await toggle.click();
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
    if(width===390&&no===25){await page.screenshot({path:'/tmp/psg257-header.png'});await page.locator('.psg-skill-summary').evaluate(el=>scrollTo(0,scrollY+el.getBoundingClientRect().top-480));await page.screenshot({path:'/tmp/psg257-skill.png'})}
   }
