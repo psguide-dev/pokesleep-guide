@@ -87,7 +87,10 @@
    const badge=document.getElementById("skillRateBadge");
    if(badge)badge.style.display="none";
    const name=document.getElementById("detailSkill");
-   if(name)name.textContent=s.name;
+   if(name){
+     const parts=String(s.name).match(/^(.*?)\s*([（(].*[）)])$/);
+     name.innerHTML=parts?`<span class="psg-skill-name-main">${detailEsc(parts[1])}</span><span class="psg-skill-name-variant">${detailEsc(parts[2])}</span>`:detailEsc(s.name);
+   }
    const rate=document.getElementById("skillRateInline");
    if(rate)rate.innerHTML=`発動確率 <strong>${m.skillRate!=null?m.skillRate+"%":"未確認"}</strong>`;
    const lv1=s.levels?.[1];
