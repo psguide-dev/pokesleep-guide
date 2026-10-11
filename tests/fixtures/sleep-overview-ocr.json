@@ -1,0 +1,27 @@
+{
+  "full": "BO 』\n[基 ボケモン論顔較鑑               る  加|@\nNo. 1            No. 2           No. 3           No. 4\nへ\n農 厚 庄 <\nる 4/4         る 4/4         信 4/4         信 4/4\nNo. 5           No. 6           No. 7           No. 8\nの       に3        あ          ら\nる 4/4         る 4/4         る 4/4         信 4/4\nNo. 9           No. 10          No. 1 1          No. 1 2\n<の        ウ        名\n*ーーラ\nる 4/4         る 4/4         る 4/4         信 4/4\nNo. 19          No. 20          No. 23          No. 24\nる 4/4         る 4/4         る 4/4         信 4/4\n       CEi 6\n",
+  "columns": [
+    "No. 1\n\nS 4/4\n\nNo. 5\n\n© 4/4\n\nNo. 9\n\n®\n\neC 4/4\n\nNo. 19\n\neC 4/4\n",
+    "No. 2\n\nS 4/4\n\nNo. 6\n\nC 4/4\n\nNo. 10\n\n€ 4/4\n\nNo. 20\n\n€ 4/4\n",
+    "No. 3\n\n© 4/4\n\nNo. 7\n\n<<’\n\n© 4/4\n\nNo. 11\n\n© 4/4\n\nNo. 23\n\neC 4/4\n",
+    "No. 4\n\na\n\n© 4/4\n\nNo. 8\n\n=\n\nS 4/4\n\nNo. 12\n\nGg\n\nI\n\n«ar\n\neS 4/4\n\nNo. 24\n\neC 4/4\n"
+  ],
+  "expectedNos": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    19,
+    20,
+    23,
+    24
+  ]
+}

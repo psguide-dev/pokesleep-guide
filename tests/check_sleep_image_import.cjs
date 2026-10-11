@@ -37,3 +37,17 @@ const realOCR=JSON.parse(fs.readFileSync(__dirname+'/fixtures/sleep-venusaur-ocr
 const realBatch=actual.window.PS_SLEEP_IMAGE_READER.parseMany(realOCR.full+'\n'+realOCR.right,all);
 assert.deepEqual([...new Set(realBatch.filter(r=>r.styleId).map(r=>r.styleId))].sort(),Array.from(venusaur,r=>r.id).sort(),'actual Japanese-only OCR returns all four Venusaur sleep styles');
 console.log('Actual Japanese-only screenshot OCR resolves all four reviewed sleep candidates');
+
+const overviewOCR=JSON.parse(fs.readFileSync(__dirname+'/fixtures/sleep-overview-ocr.json','utf8'));
+const overviewReader=actual.window.PS_SLEEP_IMAGE_READER;
+assert(overviewReader.isOverview(overviewOCR.full));assert(!overviewReader.isOverview(screenshot));
+const overview=overviewReader.parseOverview(overviewOCR.columns,all);
+assert.deepEqual(Array.from(overview,r=>r.no),overviewOCR.expectedNos);assert(overview.every(r=>r.speciesId&&r.styleIds.length===4));
+assert.equal(new Set(overview.flatMap(r=>Array.from(r.styleIds))).size,64);
+const partial=overviewReader.parseOverview(['No.1\n2/4'],all)[0];assert.equal(partial.count,2);assert.equal(partial.styleIds.length,0,'partial counts do not identify stars');
+assert.equal(overviewReader.parseOverview(['No.1\n4/4'],all)[0].styleIds.length,4,'adjacent number and fraction lines remain separate');
+assert.equal(overviewReader.parseOverview(['No.1\n5/5'],all)[0].styleIds.length,0,'catalog count mismatch requires manual review');
+assert.equal(overviewReader.parseOverview(['No.1\n4/4\n2/4'],all)[0].styleIds.length,0,'conflicting count reads require manual review');
+const alternate=Array.from(all).concat([{...all.find(r=>r.no===1),speciesId:'alternate',id:'alternate-sleep'}]);
+assert.equal(overviewReader.parseOverview(['No.1\n4/4'],alternate)[0].speciesId,null,'No. alone cannot select an alternate identity');
+console.log('Actual overview OCR maps 16 identities to 64 sleep IDs; partial, ambiguous and mismatched counts remain unselected');

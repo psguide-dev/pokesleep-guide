@@ -6,11 +6,38 @@
  function stop(message='読み取りを中止しました。'){epoch++;clearTimeout(timer);timer=null;const old=worker;worker=null;if(old)old.terminate().catch(()=>{});setBusy(false);status.textContent=message}
  function clear(){dialog.classList.remove('is-review');urls.forEach(url=>URL.revokeObjectURL(url));urls=[];$('sleepImagePreviews').replaceChildren();$('sleepImageResults').replaceChildren();resultRows=[];form.hidden=true;$('sleepImageMessage').textContent=''}
  function options(select,rows,empty){select.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent=empty;select.append(blank);for(const row of rows){const option=document.createElement('option');option.value=row.value;option.textContent=row.label;select.append(option)}}
+ function overviewCards(groups,entries,speciesRows,found){
+  const grid=document.createElement('div');grid.className='psg-sleep-overview-grid';
+  for(const group of groups){
+   const card=document.createElement('section');card.className='psg-sleep-overview-card';
+   const species=document.createElement('select');species.setAttribute('aria-label',`No.${group.no}のポケモン（姿・衣装も確認）`);
+   options(species,speciesRows,`No.${group.no} 選択`);species.value=group.speciesId||'';card.append(species);
+   const note=document.createElement('small');card.append(note);
+   const stars=document.createElement('div');stars.className='psg-sleep-overview-stars';card.append(stars);
+   const fill=(initial=false)=>{
+    resultRows=resultRows.filter(r=>r.group!==card);stars.replaceChildren();
+    const styles=entries.filter(r=>r.speciesId===species.value).sort((a,b)=>Number(a.stars)-Number(b.stars));
+    note.textContent=group.count===null?'数を確認':`No.${group.no} · ${group.count}/${group.total}${initial&&group.styleIds.length?'':'・星を選択'}`;
+    for(const style of styles){
+     const label=document.createElement('label'),check=document.createElement('input'),text=document.createElement('span');check.type='checkbox';check.checked=initial&&group.styleIds.includes(style.id);
+     check.setAttribute('aria-label',`${style.pokemon} ★${style.stars} ${style.name}を登録`);label.title=`${style.name}${found[style.id]?'（登録済み）':''}`;
+     text.textContent=`★${style.stars}`;label.append(text,check);stars.append(label);
+     resultRows.push({check,species,style:{value:style.id},group:card});
+    }
+   };fill(true);species.onchange=()=>fill();grid.append(card);
+  }return grid;
+ }
  function review(texts){
   const entries=window.PS_SLEEP_IMAGE_READER.entries();let found={};try{found=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}')||{}}catch{}
   $('sleepImageResults').replaceChildren();resultRows=[];
   const speciesRows=[...new Map(entries.map(r=>[r.speciesId,{value:r.speciesId,label:r.pokemon}])).values()];
-  texts.forEach((text,index)=>{
+  texts.forEach((reading,index)=>{
+   const text=typeof reading==='string'?reading:reading.text;
+   if(reading.overview?.length){
+    const section=document.createElement('section');section.className='psg-sleep-scan-result';
+    const title=document.createElement('strong');title.textContent=`画像 ${index+1}・${reading.overview.length}体`;section.append(title,overviewCards(reading.overview,entries,speciesRows,found));
+    const details=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');summary.textContent='読み取りテキスト';pre.textContent=text;details.append(summary,pre);section.append(details);$('sleepImageResults').append(section);return;
+   }
    const results=window.PS_SLEEP_IMAGE_READER.parseMany(text,entries);
    const section=document.createElement('section');section.className='psg-sleep-scan-result';
    const heading=document.createElement('div');heading.className='psg-sleep-scan-heading';
@@ -50,7 +77,21 @@
    for(const file of selected){
     if(token!==epoch)return;const canvas=await window.PS_IMAGE_READER.canvas(file);let right=null;
     try{
+     await worker.reinitialize('jpn');if(token!==epoch)return;
+     await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT,preserve_interword_spaces:'1'});
      const result=await worker.recognize(canvas);if(token!==epoch)return;
+     if(window.PS_SLEEP_IMAGE_READER.isOverview(result.data.text||'')){
+      const columns=[];await worker.reinitialize('eng');if(token!==epoch)return;
+      await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT,preserve_interword_spaces:'1'});
+      for(let column=0;column<4;column++){
+       if(token!==epoch)return;const width=canvas.width*.23,height=canvas.height*.735,scale=Math.min(2,Math.sqrt(3000000/(width*height)));
+       right=document.createElement('canvas');right.width=Math.round(width*scale);right.height=Math.round(height*scale);
+       right.getContext('2d').drawImage(canvas,canvas.width*(.04+.23*column),canvas.height*.145,width,height,0,0,right.width,right.height);
+       const extra=await worker.recognize(right);if(token!==epoch)return;columns.push(extra.data.text||'');right.width=right.height=1;right=null;
+      }
+      const overview=window.PS_SLEEP_IMAGE_READER.parseOverview(columns,window.PS_SLEEP_IMAGE_READER.entries());
+      texts.push({text:columns.join('\n'),overview});continue;
+     }
      // The detail list keeps its names on the right, separate from the illustrations.
      const width=canvas.width*.50,height=canvas.height*.75,scale=Math.min(1.5,Math.sqrt(3000000/(width*height)));
      right=document.createElement('canvas');right.width=Math.round(width*scale);right.height=Math.round(height*scale);

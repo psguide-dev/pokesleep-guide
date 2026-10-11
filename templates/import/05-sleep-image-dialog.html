@@ -1,12 +1,12 @@
 <dialog id="sleepImageDialog" class="psg-image-dialog" aria-labelledby="sleepImageTitle">
  <div class="psg-image-heading"><h2 id="sleepImageTitle">寝顔スキャン</h2><button type="button" class="btn" id="sleepImageClose">閉じる</button></div>
- <p class="psg-sleep-scan-help">ポケモン名・寝顔名が写った寝顔の詳細画像を選んでください（5枚まで）。1枚に複数の寝顔が写っていても読み取れます。画像は端末内で処理します。</p>
+ <p class="psg-sleep-scan-help">寝顔図鑑の一覧、または寝顔の詳細画像を選んでください（5枚まで）。一覧の4/4など、全種類そろったポケモンはまとめて登録できます。画像は端末内で処理します。</p>
  <label class="btn psg-image-file-label">画像を選ぶ<input type="file" id="sleepImageFiles" accept="image/png,image/jpeg,image/webp" multiple></label>
  <div id="sleepImagePreviews" class="psg-image-previews"></div>
  <div class="psg-image-actions"><button type="button" class="btn primary" id="sleepImageRead" disabled>読み取る</button><button type="button" class="btn" id="sleepImageStop" hidden>中止</button></div>
  <p id="sleepImageStatus" role="status" aria-live="polite">初回は読み取りデータを取得します。</p>
  <form id="sleepImageForm" hidden>
-  <p>画像と照合し、登録する寝顔にチェック。姿・衣装も確認してください。</p>
+  <p>画像と照合してチェック。2/4など一部だけの場合は、持っている星を選んでください。姿・衣装も確認してください。</p>
   <div id="sleepImageResults"></div>
   <p id="sleepImageMessage" role="status"></p>
   <button type="submit" class="btn primary" id="sleepImageSave">確認して寝顔図鑑に登録</button>
