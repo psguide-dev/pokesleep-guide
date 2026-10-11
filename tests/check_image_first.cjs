@@ -27,7 +27,7 @@ const markup=read('templates/dex/02-detail-screen.html'),nodes=new Map([...marku
 const sleep=new Node(),field=new Node(),icon=new Node(),count=new Node(),tab=new Node(),summary=new Node(),skillCopy=new Node();tab.querySelector=()=>count;
 summary.querySelector=selector=>selector==='.psg-skill-copy'?skillCopy:null;
 skillCopy.querySelector=()=>null;
-const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:selector=>selector.includes('psg-skill-summary')?summary:icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{},PS_IMAGE_LOADING:{set:(img,src)=>{img.src=src}}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
+const c={document:{getElementById:id=>nodes.get(id)||null,querySelector:selector=>selector.includes('psg-skill-summary')?summary:icon,createElement:()=>new Node()},localStorage:{getItem:()=>null},window:{addEventListener(){},PS_DEV_ASSETS:{path:()=>'',title:()=>''},PS_UI_ART:{},PS_IMAGE_LOADING:{set:(img,src)=>{img.src=src}}},V:{ingredientVisual:()=>null,pendingSleepArtwork:{}},sleep,field,tabs:{querySelector:()=>tab},detailEsc:String,skillOf:m=>m.skill};
 vm.createContext(c);
 for(const file of ['04-food','05-skill','06-evolution','02-sleep-and-fields'])vm.runInContext(file==='05-skill'?require('./read_detail_skill.cjs')():read(({ '04-food':'templates/dex/06-food.html','06-evolution':'templates/dex/07-evolution.html','02-sleep-and-fields':'templates/dex/04-sleep-and-fields.html' })[file]),c);
 // Open a known skill, then incomplete variants: stale effects and levels must clear.

@@ -1,0 +1,53 @@
+<script id="psg-sleep-image-controller">
+(()=>{
+ const $=id=>document.getElementById(id),dialog=$('sleepImageDialog'),files=$('sleepImageFiles'),read=$('sleepImageRead'),form=$('sleepImageForm'),status=$('sleepImageStatus');
+ let epoch=0,worker=null,busy=false,timer=null,urls=[],resultRows=[];
+ function setBusy(value){busy=value;files.disabled=value;read.disabled=value||!files.files.length;$('sleepImageStop').hidden=!value;$('sleepImageSave').disabled=value}
+ function stop(message='読み取りを中止しました。'){epoch++;clearTimeout(timer);timer=null;const old=worker;worker=null;if(old)old.terminate().catch(()=>{});setBusy(false);status.textContent=message}
+ function clear(){urls.forEach(url=>URL.revokeObjectURL(url));urls=[];$('sleepImagePreviews').replaceChildren();$('sleepImageResults').replaceChildren();resultRows=[];form.hidden=true;$('sleepImageMessage').textContent=''}
+ function options(select,rows,empty){select.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent=empty;select.append(blank);for(const row of rows){const option=document.createElement('option');option.value=row.value;option.textContent=row.label;select.append(option)}}
+ function review(texts){
+  const entries=window.PS_SLEEP_IMAGE_READER.entries();let found={};try{found=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}')||{}}catch{}
+  $('sleepImageResults').replaceChildren();resultRows=[];
+  texts.forEach((text,index)=>{
+   const result=window.PS_SLEEP_IMAGE_READER.parse(text,entries),section=document.createElement('section');section.className='psg-sleep-scan-result';
+   const title=document.createElement('strong');title.textContent=`画像 ${index+1}`;section.append(title);
+   const checkLabel=document.createElement('label');checkLabel.className='psg-image-check';const check=document.createElement('input');check.type='checkbox';check.checked=true;checkLabel.append(check,document.createTextNode('登録する'));section.append(checkLabel);
+   const fields=document.createElement('div');fields.className='psg-image-fields';
+   const species=document.createElement('select'),style=document.createElement('select');species.setAttribute('aria-label',`画像${index+1}のポケモン`);style.setAttribute('aria-label',`画像${index+1}の寝顔`);
+   const speciesRows=[...new Map(entries.map(r=>[r.speciesId,{value:r.speciesId,label:r.pokemon}])).values()];options(species,speciesRows,'ポケモンを選択');species.value=result.speciesId||'';
+   const fill=()=>{options(style,entries.filter(r=>r.speciesId===species.value).map(r=>({value:r.id,label:`★${r.stars} ${r.name}${found[r.id]?'（登録済み）':''}`})),'寝顔を選択');style.disabled=!species.value};fill();style.value=result.styleId||'';species.onchange=fill;
+   for(const [name,select] of [['ポケモン（姿・衣装も確認）',species],['寝顔',style]]){const label=document.createElement('label');label.textContent=name;label.append(select);fields.append(label)}section.append(fields);
+   const note=document.createElement('p');note.textContent=result.styleId?'読み取り候補を画像と照合してください。':'判定できない項目があります。候補を選ぶかチェックを外してください。';section.append(note);
+   const details=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');summary.textContent='読み取りテキスト';pre.textContent=text||'文字を読み取れませんでした。';details.append(summary,pre);section.append(details);
+   $('sleepImageResults').append(section);resultRows.push({check,species,style});
+  });form.hidden=false;
+ }
+ $('sleepImageOpen').onclick=()=>{stop();clear();files.value='';setBusy(false);status.textContent='初回は読み取りデータを取得します。';dialog.showModal()};
+ $('sleepImageClose').onclick=()=>dialog.close();dialog.addEventListener('close',()=>{stop();clear();files.value=''});dialog.addEventListener('cancel',()=>stop());$('sleepImageStop').onclick=()=>stop();
+ files.onchange=()=>{
+  stop();clear();const selected=[...files.files];
+  if(selected.length>5||selected.some(f=>!['image/png','image/jpeg','image/webp'].includes(f.type)||f.size>10*1024*1024)){files.value='';status.textContent='PNG・JPEG・WebPを5枚まで、1枚10MB以内で選んでください。';setBusy(false);return}
+  for(const file of selected){const url=URL.createObjectURL(file);urls.push(url);const image=document.createElement('img');image.src=url;image.alt=file.name;$('sleepImagePreviews').append(image)}
+  status.textContent=selected.length?`${selected.length}枚を選択しました。「読み取る」を押してください。`:'画像を選んでください。';setBusy(false);
+ };
+ read.onclick=async()=>{
+  if(busy||!files.files.length)return;const token=++epoch,selected=[...files.files],texts=[];let ownWorker=null;setBusy(true);form.hidden=true;status.textContent='読み取り機能を準備しています…';
+  timer=setTimeout(()=>{if(token===epoch)stop('読み取りがタイムアウトしました。枚数を減らして再試行してください。')},180000);
+  try{
+   const engine=await window.PS_IMAGE_READER.loadEngine();if(token!==epoch)return;
+   ownWorker=await engine.createWorker(['jpn','eng'],1,{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0',logger:event=>{if(token===epoch&&event.status==='recognizing text')status.textContent=`画像 ${texts.length+1}/${selected.length} 読み取り中 ${Math.round(event.progress*100)}%`}});
+   if(token!==epoch)return;worker=ownWorker;await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT,preserve_interword_spaces:'1'});
+   for(const file of selected){if(token!==epoch)return;const canvas=await window.PS_IMAGE_READER.canvas(file);try{const result=await worker.recognize(canvas);if(token!==epoch)return;texts.push(result.data.text||'')}finally{canvas.width=canvas.height=1}}
+   if(token!==epoch)return;review(texts);status.textContent='読み取りが終わりました。画像と候補を確認して登録してください。';
+  }catch(error){if(token===epoch)status.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
+  finally{if(ownWorker)try{await ownWorker.terminate()}catch{}if(token===epoch){worker=null;clearTimeout(timer);timer=null;setBusy(false)}}
+ };
+ form.onsubmit=event=>{
+  event.preventDefault();if(busy||form.hidden)return;const entries=window.PS_SLEEP_IMAGE_READER.entries(),selected=resultRows.filter(r=>r.check.checked);
+  if(!selected.length){$('sleepImageMessage').textContent='登録する寝顔を選んでください。';return}
+  if(selected.some(r=>!entries.some(e=>e.speciesId===r.species.value&&e.id===r.style.value))){$('sleepImageMessage').textContent='チェックした画像のポケモン・寝顔を確認してください。';return}
+  try{const ids=[...new Set(selected.map(r=>r.style.value))],saved=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}'),updated=window.PS_SLEEP_IMAGE_READER.mergeFound(saved,ids,entries);localStorage.setItem('psg-sleep-discoveries-v1',JSON.stringify(updated));window.PS?.renderDex?.();window.dispatchEvent(new Event('psn-sleep-discoveries-changed'));$('sleepImageMessage').textContent=`${ids.length}件を登録しました。`;selected.forEach(r=>r.check.checked=false)}catch{$('sleepImageMessage').textContent='保存できませんでした。確認内容はこの画面に残しています。'}
+ };
+})();
+</script>

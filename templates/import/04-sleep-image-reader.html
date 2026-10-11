@@ -1,0 +1,29 @@
+<script id="psg-sleep-image-reader">
+(()=>{
+ const compact=s=>String(s||'').normalize('NFKC').replace(/[\s　]/g,'');
+ function entries(){
+  const catalog=window.PS_CATALOG;
+  const seen=new Set();return window.PS_SPECIES_CATALOG.all().flatMap(p=>{
+   const styles=p.speciesId?(window.PS_FORMS?.resolve(p.speciesId)?.sleepStyles||p.sleepStyles||[]):catalog.sleepStyles?.[p.no]||[];
+   return styles.filter(s=>s.id&&!seen.has(`${p.name}|${s.id}`)).map(s=>{seen.add(`${p.name}|${s.id}`);return {speciesId:window.PS_SPECIES_CATALOG.key(p),pokemon:p.name,no:p.no,...s}});
+  });
+ }
+ function parse(text,rows){
+  const lines=String(text||'').split(/\r?\n/).map(compact).filter(Boolean),whole=lines.join('\n');
+  const names=[...new Set(rows.map(r=>r.pokemon))].filter(name=>lines.some(line=>line===compact(name)||line.replace(/^No\.?\d+[:：]?/i,'')===compact(name)));
+  const stars=[...new Set([...whole.matchAll(/(?:[★☆]\s*([1-5])|([1-5])\s*[★☆]|星[:：]?([1-5]))/g)].map(m=>Number(m[1]||m[2]||m[3])))];
+  for(const line of lines)if(/^[★]{1,5}$/.test(line))stars.push(line.length);
+  const starValues=[...new Set(stars)],named=rows.filter(r=>names.includes(r.pokemon));
+  const sleepNames=[...new Set(named.map(r=>r.name))].filter(name=>name&&lines.some(line=>line===compact(name)||line.replace(/^[★☆][1-5][:：]?/,'')===compact(name)));
+  const candidates=named.filter(r=>(!sleepNames.length||sleepNames.includes(r.name))&&(!starValues.length||starValues.includes(Number(r.stars))));
+  const ids=[...new Set(candidates.map(r=>r.id))],species=[...new Set(named.map(r=>r.speciesId))];
+  return {speciesId:species.length===1?species[0]:null,styleId:ids.length===1&&names.length===1&&sleepNames.length<=1&&starValues.length<=1&&(sleepNames.length===1||starValues.length===1)?ids[0]:null,candidates,stars:starValues.length===1?starValues[0]:null};
+ }
+ function mergeFound(saved,ids,rows){
+  if(!saved||typeof saved!=='object'||Array.isArray(saved))throw Error('保存済みデータを確認してください。');
+  const known=new Set(rows.map(r=>r.id));if(ids.some(id=>!known.has(id)))throw Error('寝顔を確認してください。');
+  return {...saved,...Object.fromEntries(ids.map(id=>[id,true]))};
+ }
+ window.PS_SLEEP_IMAGE_READER={entries,parse,mergeFound};
+})();
+</script>

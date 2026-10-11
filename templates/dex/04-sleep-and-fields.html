@@ -7,6 +7,7 @@
    }catch{return {}}
  }
  let sleepFound=readSleepFound();
+ window.addEventListener('psn-sleep-discoveries-changed',()=>{sleepFound=readSleepFound();const m=byNo(currentSpeciesId||currentNo);if(m)renderSleepStyles(m)});
  function renderSleepStyles(m){
    sleep.replaceChildren();
    const styles=(m.detailPreviewOnly?(m.sleepStyles||[]):V.sleepStyles?.[m.no]||[]).filter(x=>x&&x.id&&Number.isInteger(Number(x.stars))&&Number(x.stars)>=1&&Number(x.stars)<=5)
