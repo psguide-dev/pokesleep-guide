@@ -1,0 +1,17 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const source=fs.readFileSync('templates/box/03-view.html','utf8');
+let open=false,handler,frames=[];
+const popover={style:{},classList:{toggle(){}},addEventListener(type,fn){handler=fn},matches(){return open},showPopover(){open=true},hidePopover(){open=false},getBoundingClientRect(){return {width:300,height:220}}};
+const title={},body={};
+const ctx=vm.createContext({document:{getElementById:id=>id==='boxStatPopover'?popover:id==='boxStatPopoverTitle'?title:body},window:{visualViewport:{width:390,height:600,offsetTop:0,offsetLeft:0}},innerWidth:390,innerHeight:600,requestAnimationFrame:fn=>(frames.push(fn),frames.length),cancelAnimationFrame(){}});
+vm.runInContext(source.slice(source.indexOf('const boxStatPopover='),source.indexOf('// Fit the whole skill block')),ctx);
+const button=()=>({expanded:'false',setAttribute(k,v){this.expanded=v},getBoundingClientRect(){return {right:350,top:400,bottom:440}}});
+ctx.a=button();ctx.b=button();
+vm.runInContext("toggleBoxPopover(a,'補正','A')",ctx);assert(open);assert.equal(ctx.a.expanded,'true');
+vm.runInContext("toggleBoxPopover(b,'スキル','B','skill')",ctx);assert(open);assert.equal(ctx.a.expanded,'false');assert.equal(ctx.b.expanded,'true');
+handler({newState:'closed'});assert.equal(ctx.b.expanded,'true','stale close must not clear a newly opened owner');
+assert.equal(body.innerHTML,'B');
+frames.forEach(fn=>fn());assert(parseFloat(popover.style.top)>=12);assert(parseFloat(popover.style.top)+220<=588);
+vm.runInContext("toggleBoxPopover(b,'スキル','B','skill')",ctx);assert(!open);assert.equal(ctx.b.expanded,'false');
+handler({newState:'closed'});
+console.log('Popover lifecycle: shared open/switch/close, stale toggle protection and viewport bounds passed.');
