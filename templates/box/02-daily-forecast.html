@@ -1,23 +1,25 @@
 function boxDailyEstimate(item){
  // Compare the individual under fixed conditions, independent of team/field settings.
- const result=dailyBaseline([item.id],state.box,window.PS_CATALOG,4,100,false,3);
- return {result,member:result.members.find(m=>m.id===item.id)};
+ const result=dailyBaseline([item.id],state.box,window.PS_CATALOG,4,100,true,3);
+ const withoutCamp=dailyBaseline([item.id],state.box,window.PS_CATALOG,4,100,false,3);
+ return {result,member:result.members.find(m=>m.id===item.id),withoutCamp,withoutCampMember:withoutCamp.members.find(m=>m.id===item.id)};
 }
 function renderBoxDayFood(estimate){
- const {result,member}=estimate,host=document.getElementById('boxDayFood');
+ const {result,member,withoutCampMember}=estimate,host=document.getElementById('boxDayFood');
  const scope='個体の標準条件・フィールド補正なし';
- const conditions=`${scope}・回収${result.interval}時間・起床時げんき${result.startingEnergy}・いいキャンプ${result.goodCamp?'ON':'OFF'}・食事${result.mealCount}回`;
+ const conditions=`${scope}・回収${result.interval}時間・起床時げんき${result.startingEnergy}・食事${result.mealCount}回。主表示はいいキャンプあり、（）内はなし。`;
  if(!member||member.missing){host.innerHTML=`<div class="psg-box-day-food-line"><small>１日予想</small><div class="psg-box-day-food-amounts psg-box-pending">${boxEsc(member?.reasons?.join('・')||'個体情報')}（計算保留）</div></div>`;return}
  const amounts=[...member.foods].map(([name,qty])=>{
   const src=window.PS_CATALOG.ingredientVisual(name)?.image||window.PS_INGREDIENT_FALLBACK_ICON?.(name);
-  return `<span class="psg-box-day-food-item" title="${boxEsc(name)}" aria-label="${boxEsc(name)} 約${window.PS_NUMBERS.display(qty)}個">${src?`<img src="${src}" alt="">`:boxEsc(name)}<b>約${window.PS_NUMBERS.display(qty)}</b></span>`;
+  const main=window.PS_NUMBERS.display(qty),plain=withoutCampMember&&!withoutCampMember.missing?window.PS_NUMBERS.display(withoutCampMember.foods.get(name)||0):'未確認';
+  return `<span class="psg-box-day-food-item" title="${boxEsc(name)}" aria-label="${boxEsc(name)} キャンプあり約${main}個、なし約${plain}個">${src?`<img src="${src}" alt="">`:boxEsc(name)}<span class="psg-box-camp-values"><b>約${main}</b><small>（${plain}）</small></span></span>`;
  }).join('');
  host.innerHTML=`<div class="psg-box-day-food-line"><small>１日予想</small><div class="psg-box-day-food-amounts">${amounts}</div></div><details class="psg-box-explanation psg-box-day-conditions"><summary aria-label="1日予想の計算条件" title="1日予想の計算条件"><span class="psg-conditions-closed">▼</span><span class="psg-conditions-open">▲</span></summary><p>${conditions}</p></details>`;
 }
 function boxDailySkillForecast(estimate,totalsOnly=false){
- const {result,member}=estimate;
+ const {result,member,withoutCampMember}=estimate;
  if(!member||member.missing||!Number.isFinite(member.stats?.skill)||!member.skillName)return totalsOnly?'<small>１日効果量合計</small><b>未計算</b>':'<small>１日発動予想</small><strong>未確認</strong>';
- if(!totalsOnly)return `<small>１日発動予想</small><strong>約${window.PS_NUMBERS.display(member.skillTriggers)}回</strong>`;
+ if(!totalsOnly)return `<small>１日発動予想</small><strong>約${window.PS_NUMBERS.display(member.skillTriggers)}回</strong><small class="psg-box-without-camp">（なし ${withoutCampMember&&!withoutCampMember.missing?'約'+window.PS_NUMBERS.display(withoutCampMember.skillTriggers)+'回':'未確認'}）</small>`;
  const item=state.box.find(x=>x.id===member.id),display=dailySkillDisplay(member,item,window.PS_CATALOG);
  if(display.countOnly)return '';
  if(display.select)return `<small>１回の候補</small><b>${boxEsc(dailySkillSelectText(display))}</b>${display.candidates.length?dailySkillCandidateTiles(display).outerHTML:'<small>候補未確認</small>'}`;
