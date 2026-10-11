@@ -37,7 +37,7 @@
   timer=setTimeout(()=>{if(token===epoch)stop('読み取りがタイムアウトしました。枚数を減らして再試行してください。')},180000);
   try{
    const engine=await window.PS_IMAGE_READER.loadEngine();if(token!==epoch)return;
-   ownWorker=await engine.createWorker(['jpn','eng'],1,{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0',logger:event=>{if(token===epoch&&event.status==='recognizing text')status.textContent=`画像 ${texts.length+1}/${selected.length} 読み取り中 ${Math.round(event.progress*100)}%`}});
+   ownWorker=await engine.createWorker(['jpn'],1,{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0',logger:event=>{if(token===epoch&&event.status==='recognizing text')status.textContent=`画像 ${texts.length+1}/${selected.length} 読み取り中 ${Math.round(event.progress*100)}%`}});
    if(token!==epoch)return;worker=ownWorker;await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT,preserve_interword_spaces:'1'});
    for(const file of selected){
     if(token!==epoch)return;const canvas=await window.PS_IMAGE_READER.canvas(file);let right=null;

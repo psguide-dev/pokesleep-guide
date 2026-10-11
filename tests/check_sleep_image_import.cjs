@@ -32,3 +32,8 @@ console.log('Four Venusaur sleep styles in one screenshot text, zero research co
 const repaired=actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot.replace('こうごうせい寝','こうごう\nせい寝').replace('ツルだし寝','ッルだし寝'),all);assert.equal(repaired.filter(r=>r.styleId).length,4,'split OCR lines and one-character kana error preserve four reviewed candidates');
 assert.equal(actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot.replace('ツルだし寝','全然ちがう寝'),all).filter(r=>r.styleId).length,3,'unrelated words do not become a sleep style');
 console.log('Split sleep names and unique single-character OCR repair pass');
+
+const realOCR=JSON.parse(fs.readFileSync(__dirname+'/fixtures/sleep-venusaur-ocr.json','utf8'));
+const realBatch=actual.window.PS_SLEEP_IMAGE_READER.parseMany(realOCR.full+'\n'+realOCR.right,all);
+assert.deepEqual([...new Set(realBatch.filter(r=>r.styleId).map(r=>r.styleId))].sort(),Array.from(venusaur,r=>r.id).sort(),'actual Japanese-only OCR returns all four Venusaur sleep styles');
+console.log('Actual Japanese-only screenshot OCR resolves all four reviewed sleep candidates');
