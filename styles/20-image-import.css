@@ -47,14 +47,12 @@ body:has(#sleepImageDialog[open]){overflow:hidden}
 
 /* Equal four-column review cards; names reserve two lines and styles run down. */
 #sleepImageDialog .psg-sleep-overview-grid{grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch}
-#sleepImageDialog .psg-sleep-overview-card{min-width:0;min-height:220px;position:relative;padding:6px}
-#sleepImageDialog .psg-sleep-overview-name{font-size:13px;line-height:1.35;height:3.9em;overflow-wrap:anywhere;overflow:hidden;padding-right:12px}
-#sleepImageDialog .psg-sleep-overview-card>select{position:absolute;inset:6px 6px auto 6px;width:calc(100% - 12px);min-width:0;opacity:0;min-height:48px;cursor:pointer}
-#sleepImageDialog .psg-sleep-overview-name::after{content:'⌄';position:absolute;right:5px;top:10px}
+#sleepImageDialog .psg-sleep-overview-card{min-width:0;min-height:220px;position:relative;padding:6px;container-type:inline-size}
+#sleepImageDialog .psg-sleep-overview-name{font-size:13px;font-size:min(13px,19cqw);line-height:1.35;height:4.05em;overflow-wrap:anywhere;overflow:hidden}
+#sleepImageDialog .psg-sleep-overview-card>select{position:absolute;inset:6px 6px auto 6px;width:calc(100% - 12px);min-width:0;opacity:0;min-height:48px;height:54px;cursor:pointer}
 #sleepImageDialog .psg-sleep-overview-stars{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0}
 #sleepImageDialog .psg-sleep-overview-stars label{flex-direction:row;justify-content:space-between;min-width:0;min-height:32px;font-size:13px}
 #sleepImageDialog .psg-sleep-count-check{display:flex;align-items:center;gap:3px;font-size:11px;flex-wrap:wrap}
 #sleepImageDialog .psg-sleep-count-check input{width:20px;height:20px}
 .psg-sleep-progress-note{grid-column:1/-1;margin:4px 0;font-size:13px}
 
-#sleepImageDialog .is-count-only .psg-sleep-overview-name::after{display:none}
