@@ -96,6 +96,9 @@
   #boxDetail>.psg-box-hero{top:var(--box-sticky-top,calc(83px + env(safe-area-inset-top)))!important;isolation:isolate}
   #boxDetail>.psg-box-hero::before{content:"";position:absolute;inset:0 -12px;background:var(--box-type-bg,var(--bg));z-index:-1;pointer-events:none}
   #boxDetail>.psg-box-hero::after{content:"";position:absolute;top:-12px;left:-12px;right:-12px;height:12px;background:var(--box-type-bg,var(--bg));z-index:-1;pointer-events:none}
+  body:has(#boxDetail.active)>.psg-app-header{position:fixed!important;inset:0 0 auto!important;width:100%}
+  body:has(#boxDetail.active)>main{padding-top:var(--psg-header-height)}
+  #boxDetail>.psg-box-hero::before{border-bottom:1px solid #dce0e3}
   /* Opaque backing also covers the header gap and rounded card corners. */
   #dexDetail>.psg-dex-sticky{isolation:isolate}
   #dexDetail>.psg-dex-sticky::before{content:"";position:absolute;inset:-12px -10px 0;background:var(--pane-bg,#f1f7ff);z-index:-1;pointer-events:none}
