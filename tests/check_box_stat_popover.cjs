@@ -21,7 +21,7 @@ ctx.item.mint=true;assert.equal(calc().breakdown.natureSpeed,1);assert(!summary(
 ctx.item.mint=false;ctx.item.nature='';assert(summary('food').includes('性格未設定（暫定）'));
 ctx.p.skillRate=null;assert(summary('skill').includes('基礎データ未確認'));
 ctx.p.mythicalSettings={};ctx.item.mythicalState={subskillUnlocked:{0:false,1:true}};assert.equal(calc().breakdown.skillBonus,.18);
-assert(summary('skill').includes('サブスキル・確率：＋18.0%（倍率補正）'));
+assert(summary('skill').includes('サブスキル：1.18倍'));
 ctx.p.mythicalSettings=null;ctx.item.level=70;ctx.item.subskills=Array(5).fill('おてつだいスピードM');assert.equal(calc().breakdown.soloSpeedReduction,.35);
 assert(read('styles/07-current-ui.css').includes('inset:0 -12px;background:var(--box-type-bg,var(--bg));z-index:-1'),'sticky backing must not spill below Block 1');
 assert(!read('styles/07-current-ui.css').includes('box-shadow:0 0 0 12px var(--box-type-bg'));
@@ -50,7 +50,8 @@ assert(!read('templates/10-box-detail.html').includes('name="evolutionCount"'));
 assert(!read('templates/box/03-view.html').includes('入手後の進化回数 × 5'));
 ctx.p=pokemon[244];ctx.item={level:65,nature:'いじっぱり',ribbonHours:0,subskills:['スキル確率アップM','スキル確率アップS']};ctx.calc=calc();
 assert.deepEqual(summary('speed'),['Lv.65・時間：−12.8%','性格・時間：−10.0%']);
-assert.deepEqual(summary('skill'),['サブスキル・確率：＋54.0%（倍率補正）','確率は推定値']);
+assert.deepEqual(summary('skill'),['サブスキル：1.54倍','補正前 2.3% → 3.5%','確率は推定値']);
+assert.deepEqual(summary('food'),['性格：0.8倍','補正前 18.7% → 15.0%','確率は推定値']);
 ctx.p=pokemon[3];ctx.calc=calc();assert(summary('carry').some(line=>line==='進化段階（2進化）：＋10.0'));
 assert(summary('carry').length<=4);
 assert(read('styles/10-detail-facts.css').includes('#boxStatPopover::backdrop{background:transparent}'));

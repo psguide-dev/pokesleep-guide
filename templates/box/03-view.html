@@ -16,8 +16,12 @@ function boxStatSummary(item,p,calc,kind){
   factor('リボン・時間',calc.ribbon.time);
  }else{
   const nature=kind==='food'?b.natureFood:b.natureSkill,bonus=kind==='food'?b.foodBonus:b.skillBonus;
-  factor('性格・確率',nature);
-  if(bonus)lines.push('サブスキル・確率：＋'+num(bonus*100)+'%（倍率補正）');
+  const multiple=value=>Number(value.toFixed(2))+'倍';
+  if(nature==null)lines.push('性格：未確認');
+  else if(nature!==1)lines.push('性格：'+multiple(nature));
+  if(bonus)lines.push('サブスキル：'+multiple(1+bonus));
+  const base=kind==='food'?p?.foodRate:p?.skillRate;
+  if(Number.isFinite(base)&&calc[kind]!=null)lines.push('補正前 '+num(base)+'% → '+num(calc[kind])+'%');
  }
  if(!lines.length)lines.push('補正なし');
  if(kind!=='carry'&&!item.nature&&!item.mint)lines.push('性格未設定（暫定）');
