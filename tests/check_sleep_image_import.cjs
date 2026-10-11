@@ -64,3 +64,11 @@ assert.equal(overviewReader.selectedOverviewStyles(costumeGroup,'0025_default',a
 assert.equal(overviewReader.parseOverview(['No.25\n9/9'],all)[0].total,9);
 assert.equal(overviewReader.parseOverview(['No.25\n16/16'],all)[0].total,16);
 console.log('Explicit regional/costume choice selects its own complete styles, keeps partial counts manual and reads larger totals');
+
+const allPikachu=overviewReader.parseOverview(['No.25\n9/9'],all)[0];
+assert.equal(allPikachu.aggregateStyles.length,9);assert.equal(new Set(allPikachu.styleIds).size,9);
+assert.deepEqual(Array.from(allPikachu.styleIds).sort(),[...new Set(all.filter(r=>r.no===25).map(r=>r.id))].sort(),'aggregate Pikachu count covers normal and all costumes without duplicate Halloween IDs');
+const partPikachu=overviewReader.parseOverview(['No.25\n6/9'],all)[0];assert.equal(partPikachu.aggregateStyles.length,9);assert.equal(partPikachu.styleIds.length,0);
+assert.equal(overviewReader.parseOverview(['No.25\n9/10'],all)[0].aggregateStyles.length,0);
+assert.equal(overviewReader.parseOverview(['No.37\n4/4'],all)[0].aggregateStyles.length,0,'separate regional entries stay separate');
+console.log('Pikachu 9/9 selects all nine unique costume IDs, partial counts stay manual and regional 4/4 stays separate');

@@ -64,7 +64,10 @@
     const count=counts.length===1?Number(counts[0][1]):null,total=counts.length===1?Number(counts[0][2]):null;
     const speciesId=species.length===1?species[0]:null,styles=candidates.filter(r=>r.speciesId===speciesId);
     const complete=speciesId!==null&&count===total&&total>0&&new Set(styles.map(r=>r.id)).size===total;
-    results.push({no,column,index,count,total,speciesId,candidates,styleIds:complete?styles.map(r=>r.id):[]});
+    const uniqueStyles=[...new Map(candidates.map(r=>[r.id,r])).values()];
+    const maxSingle=Math.max(0,...species.map(id=>new Set(candidates.filter(r=>r.speciesId===id).map(r=>r.id)).size));
+    const aggregateStyles=total===uniqueStyles.length&&total>maxSingle?uniqueStyles:[];
+    results.push({no,column,index,count,total,speciesId,candidates,aggregateStyles,styleIds:aggregateStyles.length&&count===total?aggregateStyles.map(r=>r.id):complete?styles.map(r=>r.id):[]});
    });
   });return results.sort((a,b)=>a.index-b.index||a.column-b.column);
  }
