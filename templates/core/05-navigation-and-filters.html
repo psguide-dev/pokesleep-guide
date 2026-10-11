@@ -130,8 +130,17 @@ function renderSelectedFilters(kind){
   for(const option of document.querySelectorAll(`#${kind}CompactFilters [data-${fields[key]}]`)){
    const active=values.has(option.dataset[fields[key]]);option.classList.toggle(option.classList.contains('filter-option')?'on':'active',active);option.setAttribute('aria-pressed',String(active));
   }
-  for(const value of values){const chip=document.createElement('button');chip.type='button';chip.textContent=`${labels[key]}：${key==='tags'?tags[value]:value} ×`;chip.setAttribute('aria-label',`${labels[key]} ${key==='tags'?tags[value]:value}の条件を解除`);chip.onclick=()=>{values.delete(value);kind==='box'?renderBox():renderDexFilters()};node.append(chip)}
+  for(const value of values){
+   const chip=document.createElement('button'),label=`${labels[key]} ${key==='tags'?tags[value]:value}`;
+   chip.type='button';chip.className='psg-filter-chip';chip.title=label;chip.setAttribute('aria-label',`${label}の条件を解除`);
+   const art=key==='types'?typeFilterArt(value):key==='ingredients'?ingredientFilterArt(value):key==='specs'?specIcon(value):['favorite','training'].includes(value)?window.PS_UI_ART.icon('ui',value+'_on'):'';
+   if(art)chip.innerHTML=art;
+   else{const name=document.createElement('span');name.textContent=key==='tags'?tags[value]:value;chip.append(name)}
+   const remove=document.createElement('span');remove.textContent='×';remove.setAttribute('aria-hidden','true');chip.append(remove);
+   chip.onclick=()=>{values.delete(value);kind==='box'?renderBox():renderDexFilters()};node.append(chip);
+  }
  }
+ hydrateSpecialtyIcons(node);
  node.hidden=!node.childElementCount;
  if(!node.hidden){const clear=document.createElement('button');clear.type='button';clear.className='psg-filter-clear';clear.textContent='全解除';clear.onclick=()=>{Object.values(filters).forEach(values=>values.clear());kind==='box'?renderBox():renderDexFilters()};node.append(clear)}
 }
