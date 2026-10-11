@@ -20,10 +20,7 @@
 .psg-detail-stat small{font-size:clamp(8px,2.2vw,11px);font-weight:850;white-space:nowrap;letter-spacing:-.04em}
 .psg-detail-stat b,.psg-detail-stat strong{font-size:clamp(12px,3.1vw,18px);font-weight:900;line-height:1.1;overflow-wrap:anywhere}
 .psg-detail-stat em{font-size:8px;font-weight:650;font-style:normal;line-height:1.1;overflow-wrap:anywhere}
-#boxDetail .psg-detail-stat{position:relative;min-height:32px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:pan-y;cursor:help}
-#boxDetail .psg-detail-stat em{display:none;position:absolute;top:100%;left:0;right:0;z-index:5;padding:3px 2px;background:#fff;border-radius:0 0 6px 6px;box-shadow:0 2px 4px #0002}
-#boxDetail .psg-detail-stat.psg-note-held{z-index:5}
-#boxDetail .psg-detail-stat.psg-note-held em{display:block}
+#boxDetail .psg-detail-stat{position:relative;min-height:32px;border:0;font:inherit;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:pan-y;cursor:pointer}
 #boxDetail .psg-detail-stat:focus-visible{outline:2px solid #3986ff;outline-offset:1px}
 .psg-detail-stat .v45-stat-icon{display:none}
 @media(min-width:621px){.psg-detail-trait{min-height:48px}.psg-detail-stat{min-height:48px}}
@@ -107,7 +104,7 @@ main:has(#dexDetail.active){background:var(--dex-type-bg,#eaf7ed);min-height:cal
 #dexDetail .hero-art{background:#fff!important;border:1px solid color-mix(in srgb,var(--type-accent) 22%,transparent)!important;border-radius:18px!important;box-sizing:border-box}
 
 
-#dexDetail .hero-art.psg-special-portrait{background:#fff!important;border:2px solid #e4b847!important;border-radius:18px!important;box-shadow:inset 0 0 0 1px #666,0 0 0 1px #666!important;overflow:hidden}
+:is(#dexDetail .hero-art,#boxDetail .psg-box-artwork).psg-special-portrait{background:#fff!important;border:2px solid #e4b847!important;border-radius:18px!important;box-shadow:inset 0 0 0 1px #666,0 0 0 1px #666!important;overflow:hidden}
 
 /* Keep the viewport-wide divider from adding horizontal scroll beside a scrollbar. */
 body:has(#dexDetail.active){overflow-x:clip}
@@ -121,3 +118,15 @@ main:has(#boxDetail.active){background:var(--box-page-bg,#eaf7ed);min-height:cal
 #boxDetail .psg-box-header-menu{justify-self:end}
 #boxDetail #boxHeaderEdit{width:80px;box-sizing:border-box;background:#fff;border-radius:10px}
 #boxDetail .psg-box-hero{border-bottom:1px solid #dce0e3}
+
+/* Top-layer corrections sheet: tap outside or Escape to dismiss. */
+#boxStatPopover{position:fixed;inset:auto 12px calc(var(--psg-nav-height,68px) + env(safe-area-inset-bottom) + 12px);box-sizing:border-box;width:min(420px,calc(100vw - 24px));max-height:60dvh;margin-inline:auto;padding:14px;border:1px solid #d9e5df;border-radius:16px;background:#fff;color:#111;box-shadow:0 8px 28px #0003;overflow:auto;font-size:13px;line-height:1.5}
+#boxStatPopover::backdrop{background:#0002}
+#boxStatPopover header{position:static;height:auto;border:0;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+#boxStatPopover h3{margin:0;font-size:16px}
+#boxStatPopover header button{width:40px;min-height:40px;padding:0;border:1px solid #d9e5df;border-radius:10px;background:#fff;font:inherit;font-size:20px}
+#boxStatPopover dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}
+#boxStatPopover dt,#boxStatPopover dd{margin:0;overflow-wrap:anywhere}
+#boxStatPopover dd{font-weight:800;text-align:right}
+#boxStatPopover .psg-stat-result{margin:10px 0 0;padding:8px;background:#f0f6f2;border-radius:9px;font-weight:850}
+#boxStatPopover .psg-stat-note{margin:8px 0 0;font-size:12px;color:#4d5953}

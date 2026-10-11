@@ -1,4 +1,58 @@
 let boxEditorDirty=false;
+// Explain the factors returned by the same engine that renders the stat value.
+function boxStatBreakdown(item,p,calc,kind){
+ const b=calc.breakdown,rows=[],notes=[],num=value=>window.PS_NUMBERS.display(value),percent=value=>num(value*100)+'%';
+ const add=(label,value)=>rows.push([label,value]);
+ const natureLabel='性格（'+(item.mint?'ミント・無補正':item.nature||'未設定')+'）';
+ const effectKinds={speed:'speedReduction',carry:'carryBonus',food:'foodRateBonus',skill:'skillRateBonus'};
+ const unit=kind==='speed'?'秒':kind==='carry'?'':'%';
+ const result=calc[kind];
+ if(kind==='speed'){
+  add('基礎おてつだい時間',Number.isFinite(p?.help)?num(p.help)+'秒':'未確認');
+  add('レベル補正（Lv.'+item.level+'）','×'+percent(b.levelFactor));
+  add(natureLabel,'×'+percent(b.natureSpeed));
+  add('リボン（'+(item.ribbonHours?item.ribbonHours+'h':'なし')+'）',calc.ribbon.time==null?'未確認':'×'+percent(calc.ribbon.time));
+  add('有効サブスキルの時間短縮','−'+percent(b.soloSpeedReduction)+'（上限35%）');
+  notes.push('基礎時間 × レベル補正 × 性格補正 × リボン補正 ×（1 − 時間短縮率）。秒数が小さいほど速くなります。','個体単独の値です。チームのおてつだいボーナス・げんき・キャンプ等は含みません。');
+ }else if(kind==='carry'){
+  add('基礎最大所持数',Number.isFinite(p?.carry)?num(p.carry):'未確認');
+  add('入手後の進化（'+(item.evolutionCount??'未設定')+'回）','＋'+num(b.evolutionCarry));
+  add('有効サブスキル','＋'+num(b.subskillCarry));
+  add('リボン（'+(item.ribbonHours?item.ribbonHours+'h':'なし')+'）',calc.ribbon.capacity==null?'未確認':'＋'+num(calc.ribbon.capacity));
+  notes.push('基礎所持数 ＋ 入手後の進化回数 × 5 ＋ サブスキル ＋ リボン。性格による所持数補正はありません。');
+  if(![0,1,2].includes(item.evolutionCount))notes.push('入手後の進化回数は未設定のため、0回として仮計算しています。');
+ }else{
+  const base=kind==='food'?p?.foodRate:p?.skillRate,nature=kind==='food'?b.natureFood:b.natureSkill,bonus=kind==='food'?b.foodBonus:b.skillBonus;
+  add('基礎確率（推定）',Number.isFinite(base)?num(base)+'%':'未確認');
+  add(natureLabel,'×'+percent(nature));
+  add('有効サブスキルの合計','＋'+percent(bonus)+' → ×'+percent(1+bonus));
+  notes.push('基礎確率 × 性格補正 ×（1 ＋ サブスキル補正の合計）。確率への直接加算ではありません。上限100%。','確率は推定値です。');
+ }
+ SUBSKILL_LEVELS.forEach((unlock,index)=>{
+  const name=item.subskills?.[index],skill=SUBSKILLS[name];if(skill?.effect!==effectKinds[kind])return;
+  const active=unlock<=item.level&&(!p?.mythicalSettings||item.mythicalState?.subskillUnlocked?.[index]===true);
+  const status=active?'有効':unlock>item.level?'Lv未到達':item.mythicalState?.subskillUnlocked?.[index]===false?'未解放':'解放未確認';
+  add('Lv.'+unlock+' '+name+'（'+status+'）',active?(kind==='carry'?'＋'+num(skill.value):(kind==='speed'?'−':'＋')+percent(skill.value)):'補正対象外');
+ });
+ if(kind!=='carry'&&!item.nature&&!item.mint)notes.push('性格が未設定のため、無補正として仮計算しています。');
+ if(calc.unknown.length)notes.push('未確認の補正：'+calc.unknown.join('・'));
+ return {rows,notes,result:result==null?'未確認':num(result)+unit};
+}
+const boxStatPopover=document.getElementById('boxStatPopover');
+let boxStatPopoverOwner=null;
+boxStatPopover.addEventListener('toggle',event=>{
+ if(event.newState==='closed'){boxStatPopoverOwner?.setAttribute('aria-expanded','false');boxStatPopoverOwner=null}
+});
+function openBoxStatPopover(button,item,p,calc,kind,title){
+ const wasSame=boxStatPopoverOwner===button&&boxStatPopover.matches(':popover-open');
+ if(boxStatPopover.matches(':popover-open'))boxStatPopover.hidePopover();
+ boxStatPopoverOwner?.setAttribute('aria-expanded','false');
+ if(wasSame){boxStatPopoverOwner=null;return}
+ const detail=boxStatBreakdown(item,p,calc,kind);
+ document.getElementById('boxStatPopoverTitle').textContent=title+'の補正';
+ document.getElementById('boxStatPopoverBody').innerHTML='<dl>'+detail.rows.map(([label,value])=>'<dt>'+boxEsc(label)+'</dt><dd>'+boxEsc(value)+'</dd>').join('')+'</dl><p class="psg-stat-result">表示値：'+boxEsc(detail.result)+'</p>'+detail.notes.map(note=>'<p class="psg-stat-note">'+boxEsc(note)+'</p>').join('');
+ boxStatPopoverOwner=button;button.setAttribute('aria-expanded','true');boxStatPopover.showPopover();
+}
 function syncBoxFlags(item=state.selected){
  if(!item)return;
  for(const [id,field,labels] of [['boxFavorite','favorite',['お気に入り','favorite']],['boxTraining','training',['育成対象','training']]]){
@@ -26,26 +80,20 @@ function syncLevel({refreshEditor=true}={}){
  const ribbon=document.getElementById('boxRibbon');ribbon.innerHTML=`${window.PS_UI_ART.icon('ribbons',item.ribbonHours)}<small>${item.ribbonHours?item.ribbonHours+'h':'リボンなし'}</small>`;ribbon.setAttribute('aria-label',`おやすみリボン ${item.ribbonHours?item.ribbonHours+'時間':'なし'}`);ribbon.title=`おやすみリボン：${item.ribbonHours?item.ribbonHours+'時間':'なし'}（所持数・残り進化回数による時間補正を反映）`;
  hydrateSpecialtyIcons(document.getElementById('boxTraits'));
  const artwork=document.getElementById('boxArtwork');
+ artwork.classList.toggle('psg-special-portrait',p?.specialTeamLimited===true);
  const hero=document.getElementById('boxDetail'),theme=window.PS_TYPE_THEME[p?.type]||['#f3f6f4','#718078'];
  hero.style.setProperty('--box-type-bg',theme[0]);hero.style.setProperty('--box-type-accent',theme[1]);
  document.querySelector('main').style.setProperty('--box-page-bg',theme[0]);
  const badges=p?`<div class="psg-box-art-badges"><span class="psg-box-art-badge" title="タイプ：${boxEsc(p.type)}" aria-label="タイプ：${boxEsc(p.type)}">${typeFilterArt(p.type)}</span></div>`:'';
  artwork.innerHTML=(p&&(!p.detailPreviewOnly||p.image||p.faceImage)?window.PS_DEV_ASSETS.image(p.image||p.faceImage,'pokemon',p.no,p.image===p.faceImage?'face':'full',item.name):'No image')+badges;
  hydrateSpecialtyIcons(artwork);
- const naturePending=(!item.nature&&!item.mint)||calc.unknown.length;
- const nextRateUnlock=kind=>SUBSKILL_LEVELS.find((unlock,i)=>unlock>item.level&&unlock<=MAX_POKEMON_LEVEL&&SUBSKILLS[item.subskills?.[i]]?.effect===kind);
- const rateNote=(factor,kind)=>{const next=factor===1?nextRateUnlock(kind):null;return next?`推定・Lv.${next}で補正`:`推定・×${window.PS_NUMBERS.display(factor)}`};
- const fields=[['おてつだい時間',calc.speed,'秒','Lv・個体補正',naturePending],['最大所持数',calc.carry,'','補正反映',false],['食材確率',calc.food,'%',rateNote(calc.foodFactor,'foodRateBonus'),naturePending],['スキル発動確率',calc.skill,'%',rateNote(calc.skillFactor,'skillRateBonus'),naturePending]];
- const renderStat=([title,value,unit,note,pending])=>`<div class="psg-detail-stat" role="button" tabindex="0" aria-label="${title}：押している間、補足を表示"><small>${title}</small><strong>${value==null?'未確認':(unit==='%'?window.PS_NUMBERS.display(value):window.PS_NUMBERS.display(value))+unit}</strong><em>${value==null?'（基礎データなし）':'（'+(pending?'暫定・':'')+note+'）'}</em></div>`;
+ if(boxStatPopover.matches(':popover-open'))boxStatPopover.hidePopover();
+ const fields=[['おてつだい時間',calc.speed,'秒','speed'],['最大所持数',calc.carry,'','carry'],['食材確率',calc.food,'%','food'],['スキル発動確率',calc.skill,'%','skill']];
+ const renderStat=([title,value,unit,kind])=>`<button type="button" class="psg-detail-stat" data-stat-kind="${kind}" aria-label="${title}：タップして補正の詳細を表示" aria-haspopup="dialog" aria-controls="boxStatPopover" aria-expanded="false"><small>${title}</small><strong>${value==null?'未確認':window.PS_NUMBERS.display(value)+unit}</strong></button>`;
  document.getElementById('boxSpeed').innerHTML=renderStat(fields[0]);
  document.getElementById('boxStats').innerHTML=fields.slice(1).map(renderStat).join('');
  for(const stat of document.querySelectorAll('#boxDetail .psg-detail-stat')){
-  const hide=()=>stat.classList.remove('psg-note-held');
-  stat.onpointerdown=event=>{if(event.button!==0)return;stat.classList.add('psg-note-held');stat.setPointerCapture(event.pointerId)};
-  stat.onpointerup=hide;stat.onpointercancel=hide;stat.onlostpointercapture=hide;stat.onblur=hide;
-  stat.onkeydown=event=>{if(event.key===' '||event.key==='Enter'){event.preventDefault();stat.classList.add('psg-note-held')}};
-  stat.onkeyup=event=>{if(event.key===' '||event.key==='Enter'){event.preventDefault();hide()}};
-  stat.oncontextmenu=event=>event.preventDefault();
+  stat.onclick=()=>openBoxStatPopover(stat,item,p,calc,stat.dataset.statKind,fields.find(field=>field[3]===stat.dataset.statKind)[0]);
  }
  const slots=p?.ingredientSlots||[];
  const ingredientRows=[1,30,60].map(unlock=>{

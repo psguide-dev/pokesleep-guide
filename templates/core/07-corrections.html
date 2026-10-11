@@ -42,7 +42,10 @@ function individualCorrections(item,p,teamSpeedReduction=0){
  const unknown=[...active.filter(name=>!SUBSKILL_NAMES.includes(name)),...(!item.mint&&item.nature&&!NATURE_EFFECTS[item.nature]?[item.nature]:[])];
  return {speed,soloSpeed,carry,food,skill,foodFactor,skillFactor,active,unknown,ribbon,
    nature:effect,berryQty:Number.isFinite(p?.berryQty)?p.berryQty+sum('berryQtyBonus'):null,
-   teamBonus:sum('teamSpeedReduction')>0,energyFactor:natureFactor('energy'),expFactor:natureFactor('exp')};
+   teamBonus:sum('teamSpeedReduction')>0,energyFactor:natureFactor('energy'),expFactor:natureFactor('exp'),
+   breakdown:{levelFactor:1-(item.level-1)*.002,natureSpeed:natureFactor('speed'),natureFood:natureFactor('food'),natureSkill:natureFactor('skill'),
+     soloSpeedReduction,speedReduction,teamSpeedReduction,foodBonus:sum('foodRateBonus'),skillBonus:sum('skillRateBonus'),
+     evolutionCarry:5*([0,1,2].includes(item.evolutionCount)?item.evolutionCount:0),subskillCarry:sum('carryBonus')}};
 }
 function teamSpeedContext(ids=team,box=state.box,catalog=window.PS_CATALOG){
  const selected=ids.map(id=>box.find(item=>item.id===id)).filter(Boolean);
