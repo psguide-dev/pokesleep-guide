@@ -80,6 +80,42 @@
   const known=new Set(rows.map(r=>r.id));if(ids.some(id=>!known.has(id)))throw Error('寝顔を確認してください。');
   return {...saved,...Object.fromEntries(ids.map(id=>[id,true]))};
  }
- window.PS_SLEEP_IMAGE_READER={entries,parse,parseMany,isOverview,parseOverview,selectedOverviewStyles,mergeFound};
+ // Combine only a complete set of form denominators within one image. Overlapping
+ // screenshots are observations, never additional discoveries.
+ function groupOverview(groups){
+  const byNo=new Map();for(const group of groups){if(!byNo.has(group.no))byNo.set(group.no,[]);byNo.get(group.no).push(group)}
+  const result=[];
+  for(const siblings of byNo.values()){
+   const first=siblings[0],styles=[...new Map(first.candidates.map(r=>[r.id,r])).values()];
+   const valid=siblings.every(g=>Number.isInteger(g.count)&&g.count>=0&&g.count<=g.total);
+   if(siblings.length>1&&valid&&siblings.reduce((n,g)=>n+g.total,0)===styles.length){
+    const count=siblings.reduce((n,g)=>n+g.count,0);
+    result.push({...first,count,total:styles.length,speciesId:null,aggregateStyles:styles,styleIds:count===styles.length?styles.map(r=>r.id):[]});
+   }else result.push(...siblings);
+  }return result;
+ }
+ const COUNT_KEY='psg-sleep-counts-v1';
+ function normalizeCounts(raw,rows=entries()){
+  if(!raw||typeof raw!=='object'||Array.isArray(raw))return {};
+  const result={};for(const [no,value] of Object.entries(raw)){
+   const total=new Set(rows.filter(r=>Number(r.no)===Number(no)).map(r=>r.id)).size;
+   if(total&&Number.isInteger(value?.count)&&value.count>=0&&Number.isInteger(value.total)&&value.total>0&&value.count<=value.total){result[Number(no)]={count:Math.min(value.count,total),total}}
+  }return result;
+ }
+ function readCounts(){try{return normalizeCounts(JSON.parse(localStorage.getItem(COUNT_KEY)||'{}'))}catch{return {}}}
+ function mergeCounts(saved,groups,rows=entries()){
+  const updated=normalizeCounts(saved,rows);
+  for(const group of groups){
+   const total=new Set(rows.filter(r=>Number(r.no)===Number(group.no)).map(r=>r.id)).size;
+   if(!total||!Number.isInteger(group.count)||group.count<0||!Number.isInteger(group.total)||group.total<1||group.count>group.total||group.total>total)throw Error('読み取り数を確認してください。');
+   updated[group.no]={count:Math.max(updated[group.no]?.count||0,group.count),total};
+  }return updated;
+ }
+ function progress(no,found,counts=readCounts(),rows=entries()){
+  const ids=[...new Set(rows.filter(r=>Number(r.no)===Number(no)).map(r=>r.id))],confirmed=ids.filter(id=>found[id]===true).length;
+  const count=Math.min(ids.length,Math.max(confirmed,counts[no]?.count||0));return {count,total:ids.length,confirmed,unknown:count-confirmed};
+ }
+ window.PS_SLEEP_PROGRESS={key:COUNT_KEY,normalize:normalizeCounts,read:readCounts,merge:mergeCounts,progress};
+ window.PS_SLEEP_IMAGE_READER={entries,parse,parseMany,isOverview,parseOverview,groupOverview,selectedOverviewStyles,mergeFound};
 })();
 </script>

@@ -1,31 +1,43 @@
 <script id="psg-sleep-image-controller">
 (()=>{
  const $=id=>document.getElementById(id),dialog=$('sleepImageDialog'),files=$('sleepImageFiles'),read=$('sleepImageRead'),form=$('sleepImageForm'),status=$('sleepImageStatus');
- let epoch=0,worker=null,busy=false,timer=null,urls=[],resultRows=[];
+ let epoch=0,worker=null,busy=false,timer=null,urls=[],resultRows=[],countRows=[];
  function setBusy(value){busy=value;files.disabled=value;read.disabled=value||!files.files.length;$('sleepImageStop').hidden=!value;$('sleepImageSave').disabled=value}
  function stop(message='読み取りを中止しました。'){epoch++;clearTimeout(timer);timer=null;const old=worker;worker=null;if(old)old.terminate().catch(()=>{});setBusy(false);status.textContent=message}
- function clear(){dialog.classList.remove('is-review');urls.forEach(url=>URL.revokeObjectURL(url));urls=[];$('sleepImagePreviews').replaceChildren();$('sleepImageResults').replaceChildren();resultRows=[];form.hidden=true;$('sleepImageMessage').textContent=''}
+ function clear(){dialog.classList.remove('is-review');urls.forEach(url=>URL.revokeObjectURL(url));urls=[];$('sleepImagePreviews').replaceChildren();$('sleepImageResults').replaceChildren();resultRows=[];countRows=[];countRows=[];form.hidden=true;$('sleepImageMessage').textContent=''}
  function options(select,rows,empty){select.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent=empty;select.append(blank);for(const row of rows){const option=document.createElement('option');option.value=row.value;option.textContent=row.label;select.append(option)}}
  function overviewCards(groups,entries,speciesRows,found){
   const grid=document.createElement('div');grid.className='psg-sleep-overview-grid';
-  for(const group of groups){
+  const cards=groups.flatMap(group=>group.aggregateStyles?.length&&group.count===group.total?
+   [...new Set(group.aggregateStyles.map(r=>r.speciesId))].map(id=>({...group,aggregateStyles:[],speciesId:id,styleIds:group.aggregateStyles.filter(r=>r.speciesId===id).map(r=>r.id),variant:true})): [group]);
+  for(const group of cards){
    const card=document.createElement('section');card.className='psg-sleep-overview-card';
    const species=document.createElement('select');species.setAttribute('aria-label',`No.${group.no}のポケモン（姿・衣装も確認）`);
    const sameNo=speciesRows.filter(r=>group.candidates.some(e=>e.speciesId===r.value));
-   const allChoice=group.aggregateStyles?.length?[{value:'__all__',label:`${sameNo.find(r=>r.value.endsWith('_default'))?.label||'No.'+group.no}（衣装含む）`}]:[];
+   const allChoice=group.aggregateStyles?.length?[{value:'__all__',label:`${sameNo.find(r=>r.value.endsWith('_default'))?.label||'No.'+group.no}（姿・衣装合計）`}]:[];
    options(species,[...allChoice,...sameNo.map(r=>({...r,label:sameNo.length>1&&r.value.endsWith('_default')?`${r.label}（通常）`:r.label}))],`No.${group.no} 姿・衣装を選択`);
    const other=document.createElement('optgroup');other.label='No.の読み取りを修正';
    for(const item of speciesRows.filter(r=>!sameNo.some(e=>e.value===r.value))){const option=document.createElement('option');option.value=item.value;option.textContent=item.label;other.append(option)}species.append(other);
    species.value=allChoice.length?'__all__':group.speciesId||'';card.append(species);
+   const name=document.createElement('div');name.className='psg-sleep-overview-name';card.prepend(name);
+   const updateName=()=>{const label=species.selectedOptions[0]?.textContent||`No.${group.no}`;name.replaceChildren();const parts=label.split(/(?=[（(])/);for(const [i,part] of parts.entries()){if(i)name.append(document.createElement('br'));name.append(document.createTextNode(part))}};
+   species.title='ポケモン・姿を変更';
    const note=document.createElement('small');card.append(note);
    const stars=document.createElement('div');stars.className='psg-sleep-overview-stars';card.append(stars);
-   const fill=(initial=false)=>{
+   const countOnly=group.aggregateStyles?.length&&group.count!==group.total;
+   if(countOnly){card.classList.add('is-count-only');
+    const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=true;
+    label.className='psg-sleep-count-check';label.append(check,document.createTextNode('数を登録'));stars.append(label);
+    const hint=document.createElement('small');hint.textContent='内訳は未設定';stars.append(hint);
+    species.disabled=true;countRows.push({check,group});note.textContent=`No.${group.no} · ${group.count}/${group.total}`;updateName();species.onchange=updateName;grid.append(card);continue;
+   }
+   const fill=(initial=false)=>{updateName();
     resultRows=resultRows.filter(r=>r.group!==card);stars.replaceChildren();
     const aggregate=species.value==='__all__';stars.className='psg-sleep-overview-stars'+(aggregate?' is-aggregate':'');
     const styles=aggregate?group.aggregateStyles:entries.filter(r=>r.speciesId===species.value).sort((a,b)=>Number(a.stars)-Number(b.stars));
     const selectedIds=initial?group.styleIds:aggregate?(group.count===group.total?styles.map(r=>r.id):[]):window.PS_SLEEP_IMAGE_READER.selectedOverviewStyles(group,species.value,entries);
     const subgroups=new Map();
-    note.textContent=group.count===null?'数を確認':`No.${group.no} · ${group.count}/${group.total}${selectedIds.length?'':'・星を選択'}`;
+    note.textContent=group.count===null?'数を確認':`No.${group.no} · ${group.variant?styles.length:group.count}/${group.variant?styles.length:group.total}${selectedIds.length?'':'・星を選択'}`;
     for(const style of styles){
      const label=document.createElement('label'),check=document.createElement('input'),text=document.createElement('span');check.type='checkbox';check.checked=selectedIds.includes(style.id);
      check.setAttribute('aria-label',`${style.pokemon} ★${style.stars} ${style.name}を登録`);label.title=`${style.name}${found[style.id]?'（登録済み）':''}`;
@@ -40,18 +52,21 @@
      }
      host.append(label);resultRows.push({check,species:aggregate?{value:style.speciesId}:species,style:{value:style.id},group:card});
     }
-   };fill(true);species.onchange=()=>fill();grid.append(card);
+   };fill(true);species.onchange=()=>fill();
+   if(group.speciesId&&group.count!==null&&group.count<group.total){
+    const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=true;label.className='psg-sleep-count-check';label.append(check,document.createTextNode(`${group.count}/${group.total} 数を登録`));card.append(label);countRows.push({check,group});
+   }grid.append(card);
   }return grid;
  }
  function review(texts){
   const entries=window.PS_SLEEP_IMAGE_READER.entries();let found={};try{found=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}')||{}}catch{}
-  $('sleepImageResults').replaceChildren();resultRows=[];
+  $('sleepImageResults').replaceChildren();resultRows=[];countRows=[];
   const speciesRows=[...new Map(entries.map(r=>[r.speciesId,{value:r.speciesId,label:r.pokemon}])).values()];
   texts.forEach((reading,index)=>{
    const text=typeof reading==='string'?reading:reading.text;
    if(reading.overview?.length){
     const section=document.createElement('section');section.className='psg-sleep-scan-result';
-    const title=document.createElement('strong');title.textContent=`画像 ${index+1}・${reading.overview.length}体`;section.append(title,overviewCards(reading.overview,entries,speciesRows,found));
+    const title=document.createElement('strong');title.textContent=`画像 ${index+1}・${reading.overview.length}体`;section.append(title,overviewCards(window.PS_SLEEP_IMAGE_READER.groupOverview(reading.overview),entries,speciesRows,found));
     const details=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');summary.textContent='読み取りテキスト';pre.textContent=text;details.append(summary,pre);section.append(details);$('sleepImageResults').append(section);return;
    }
    const results=window.PS_SLEEP_IMAGE_READER.parseMany(text,entries);
@@ -122,9 +137,23 @@
  };
  form.onsubmit=event=>{
   event.preventDefault();if(busy||form.hidden)return;const entries=window.PS_SLEEP_IMAGE_READER.entries(),selected=resultRows.filter(r=>r.check.checked);
-  if(!selected.length){$('sleepImageMessage').textContent='登録する寝顔を選んでください。';return}
+  const selectedCounts=countRows.filter(r=>r.check.checked).map(r=>r.group);
+  if(!selected.length&&!selectedCounts.length){$('sleepImageMessage').textContent='登録する寝顔を選んでください。';return}
   if(selected.some(r=>!entries.some(e=>e.speciesId===r.species.value&&e.id===r.style.value))){$('sleepImageMessage').textContent='チェックした画像のポケモン・寝顔を確認してください。';return}
-  try{const ids=[...new Set(selected.map(r=>r.style.value))],saved=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}'),updated=window.PS_SLEEP_IMAGE_READER.mergeFound(saved,ids,entries);localStorage.setItem('psg-sleep-discoveries-v1',JSON.stringify(updated));window.PS?.renderDex?.();window.dispatchEvent(new Event('psn-sleep-discoveries-changed'));$('sleepImageMessage').textContent=`${ids.length}件を登録しました。`;selected.forEach(r=>r.check.checked=false)}catch{$('sleepImageMessage').textContent='保存できませんでした。確認内容はこの画面に残しています。'}
+  const countKey=window.PS_SLEEP_PROGRESS.key,foundKey='psg-sleep-discoveries-v1';
+  let oldFound,oldCounts,written=false;
+  try{
+   oldFound=localStorage.getItem(foundKey);oldCounts=localStorage.getItem(countKey);
+   const ids=[...new Set(selected.map(r=>r.style.value))],saved=JSON.parse(oldFound||'{}'),updated=window.PS_SLEEP_IMAGE_READER.mergeFound(saved,ids,entries);
+   const counts=window.PS_SLEEP_PROGRESS.merge(JSON.parse(oldCounts||'{}'),selectedCounts,entries);
+   localStorage.setItem('psg-sleep-discoveries-v1',JSON.stringify(updated));written=true;localStorage.setItem(countKey,JSON.stringify(counts));
+   window.PS?.renderDex?.();window.dispatchEvent(new Event('psn-sleep-discoveries-changed'));
+   $('sleepImageMessage').textContent=`寝顔 ${ids.length}件・達成数 ${selectedCounts.length}体を登録しました。`;
+   selected.forEach(r=>r.check.checked=false);countRows.forEach(r=>r.check.checked=false);
+  }catch{
+   if(written)try{if(oldFound===null)localStorage.removeItem(foundKey);else localStorage.setItem(foundKey,oldFound);if(oldCounts===null)localStorage.removeItem(countKey);else localStorage.setItem(countKey,oldCounts)}catch{}
+   $('sleepImageMessage').textContent='保存できませんでした。確認内容はこの画面に残しています。';
+  }
  };
 })();
 </script>

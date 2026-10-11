@@ -38,5 +38,5 @@ assert.equal(api.get().savedTeams.teams.length,10);assert.throws(()=>api.create(
 api.switch('');assert.deepEqual(copy(api.get().team),before.team,'unsaved draft remains available');
 const html=fs.readFileSync(path.join(root,'templates/02-home.html'),'utf8');
 assert.ok(html.indexOf('id="teamSlots"')<html.indexOf('id="savedTeamSelect"'),'switch below cards');
-const backup=fs.readFileSync(path.join(root,'templates/core/04-backup.html'),'utf8');assert.match(backup,/version:7,savedTeams:/);assert.match(backup,/savedTeams=readSavedTeams\(\)/);
+const backup=fs.readFileSync(path.join(root,'templates/core/04-backup.html'),'utf8');assert.match(backup,/version:8,sleepCounts:.*savedTeams:/);assert.match(backup,/savedTeams=readSavedTeams\(\)/);
 console.log('Saved teams: legacy migration, explicit overwrite, switching, conditions retained, deletion holes, reload, quota rollback, 10-team limit and backup coverage passed.');

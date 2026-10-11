@@ -72,3 +72,17 @@ const partPikachu=overviewReader.parseOverview(['No.25\n6/9'],all)[0];assert.equ
 assert.equal(overviewReader.parseOverview(['No.25\n9/10'],all)[0].aggregateStyles.length,0);
 assert.equal(overviewReader.parseOverview(['No.37\n4/4'],all)[0].aggregateStyles.length,0,'separate regional entries stay separate');
 console.log('Pikachu 9/9 selects all nine unique costume IDs, partial counts stay manual and regional 4/4 stays separate');
+const progress=ctx.window.PS_SLEEP_PROGRESS;
+const regionRows=[1,2,3,4].flatMap(stars=>[{no:37,speciesId:'0037_default',id:`normal${stars}`,stars},{no:37,speciesId:'0037_alola',id:`alola${stars}`,stars}]);
+const regionGroups=reader.parseOverview(['No.37\n4/4','No.37\n2/4'],regionRows);
+const combined=reader.groupOverview(regionGroups);assert.equal(combined.length,1);assert.equal(combined[0].count,6);assert.equal(combined[0].total,8);assert.equal(combined[0].styleIds.length,0);
+const counts=progress.merge({},combined,regionRows);assert.equal(counts[37].count,6);
+assert.equal(progress.merge(counts,combined,regionRows)[37].count,6);
+assert.equal(progress.progress(37,{normal1:true,normal2:true},counts,regionRows).count,6);
+assert.equal(progress.progress(37,{normal1:true,normal2:true},counts,regionRows).unknown,4);
+const full=reader.groupOverview(reader.parseOverview(['No.37\n4/4','No.37\n4/4'],regionRows));assert.equal(full[0].styleIds.length,8);
+assert.equal(reader.groupOverview(reader.parseOverview(['No.37\n8/8','No.37\n8/8'],regionRows)).length,2);
+assert.equal(Object.keys(progress.normalize({'37':{count:9,total:8}},regionRows)).length,0);
+assert.equal(progress.merge(counts,[{no:37,count:2,total:4}],regionRows)[37].count,6);
+assert(read('templates/core/04-backup.html').includes('sleepCounts:'));assert(read('templates/core/04-backup.html').includes('oldCounts'));
+console.log('Regional 6/8 count-only persistence, full 8/8 IDs, overlapping imports, confirmed-ID deduplication and backup inclusion pass');
