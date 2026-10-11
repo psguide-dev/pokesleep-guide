@@ -4,25 +4,24 @@ const ctx=vm.createContext({window:{PS_CATALOG:{natures:JSON.parse(read('master/
 vm.runInContext(read('templates/00-number-format.html').replace(/<\/?script[^>]*>/g,''),ctx);
 vm.runInContext(read('templates/core/07-corrections.html'),ctx);
 const source=read('templates/box/03-view.html');
-vm.runInContext(source.slice(source.indexOf('function boxStatBreakdown'),source.indexOf('const boxStatPopover=')),ctx);
+vm.runInContext(source.slice(source.indexOf('function boxStatSummary'),source.indexOf('const boxStatPopover=')),ctx);
 ctx.p={no:244,help:3600,carry:10,foodRate:20,skillRate:5,berryQty:1};
 ctx.item={level:65,nature:'いじっぱり',ribbonHours:2000,evolutionCount:2,subskills:['スキル確率アップM','スキル確率アップS','おてつだいスピードM','食材確率アップM','最大所持数アップL']};
 const calc=()=>vm.runInContext('individualCorrections(item,p)',ctx);
-const detail=kind=>{ctx.kind=kind;ctx.calc=calc();return vm.runInContext('boxStatBreakdown(item,p,calc,kind)',ctx)};
+const summary=kind=>{ctx.kind=kind;ctx.calc=calc();return Array.from(vm.runInContext('boxStatSummary(item,p,calc,kind)',ctx))};
 const c=calc(),b=c.breakdown;
 assert(Math.abs(c.speed-ctx.p.help*b.levelFactor*b.natureSpeed*.9*(1-b.soloSpeedReduction))<1e-9);
 assert(Math.abs(c.food-ctx.p.foodRate*b.natureFood*(1+b.foodBonus))<1e-9);
 assert(Math.abs(c.skill-ctx.p.skillRate*b.natureSkill*(1+b.skillBonus))<1e-9);
 assert.equal(c.carry,10+8,'capture-history fields cannot add capacity to a non-evolving species');assert.equal(b.skillBonus,.54);
-assert(detail('speed').rows.some(([name,value])=>name.includes('スピードM（有効）')&&value==='−14.0%'));
-assert(detail('food').rows.some(([name,value])=>name.includes('Lv.70')&&value==='補正対象外'));
-assert(detail('carry').rows.some(([name,value])=>name.includes('Lv.80')&&value==='補正対象外'));
-for(const kind of ['speed','carry','food','skill'])assert.equal(detail(kind).result,ctx.window.PS_NUMBERS.display(c[kind])+({speed:'秒',carry:'',food:'%',skill:'%'}[kind]));
-ctx.item.mint=true;assert.equal(calc().breakdown.natureSpeed,1);assert(detail('speed').rows.some(([name])=>name.includes('ミント・無補正')));
-ctx.item.mint=false;ctx.item.nature='';assert(detail('food').notes.some(note=>note.includes('性格が未設定')));
-ctx.p.skillRate=null;assert.equal(detail('skill').result,'未確認');
+assert(summary('speed').includes('サブスキル・時間：−14.0%'));
+assert(!summary('food').some(line=>line.includes('サブスキル')),'locked food bonus is omitted');
+assert(!summary('carry').some(line=>line.includes('サブスキル')),'locked carry bonus is omitted');
+ctx.item.mint=true;assert.equal(calc().breakdown.natureSpeed,1);assert(!summary('speed').some(line=>line.startsWith('性格')));
+ctx.item.mint=false;ctx.item.nature='';assert(summary('food').includes('性格未設定（暫定）'));
+ctx.p.skillRate=null;assert(summary('skill').includes('基礎データ未確認'));
 ctx.p.mythicalSettings={};ctx.item.mythicalState={subskillUnlocked:{0:false,1:true}};assert.equal(calc().breakdown.skillBonus,.18);
-assert(detail('skill').rows.some(([name,value])=>name.includes('未解放')&&value==='補正対象外'));
+assert(summary('skill').includes('サブスキル・確率：＋18.0%（倍率補正）'));
 ctx.p.mythicalSettings=null;ctx.item.level=70;ctx.item.subskills=Array(5).fill('おてつだいスピードM');assert.equal(calc().breakdown.soloSpeedReduction,.35);
 assert(read('styles/07-current-ui.css').includes('inset:0 -12px;background:var(--box-type-bg,var(--bg));z-index:-1'),'sticky backing must not spill below Block 1');
 assert(!read('styles/07-current-ui.css').includes('box-shadow:0 0 0 12px var(--box-type-bg'));
@@ -41,7 +40,7 @@ for(const [no,stage] of [[1,0],[2,1],[3,2],[172,0],[25,1],[26,2],[133,0],[134,1]
   assert.equal(calc().breakdown.evolutionStage,stage,'current stage for '+no);
   assert.equal(calc().carry,ctx.p.carry+5*stage,'same stage bonus regardless of capture history for '+no);
  }
- assert(detail('carry').rows.some(([name,value])=>name.startsWith('現在の進化段階')&&value==='＋'+ctx.window.PS_NUMBERS.display(stage*5)));
+ if(stage)assert(summary('carry').includes('進化段階（'+stage+'進化）：＋'+ctx.window.PS_NUMBERS.display(stage*5))); else assert(!summary('carry').some(line=>line.startsWith('進化段階')));
 }
 for(const [id,stage] of [['0025_captain',1],['0710_medium',0],['0711_medium',1]]){
  const form=ctx.window.PS_CATALOG.forms.species.find(p=>p.speciesId===id);
@@ -49,4 +48,10 @@ for(const [id,stage] of [['0025_captain',1],['0710_medium',0],['0711_medium',1]]
 }
 assert(!read('templates/10-box-detail.html').includes('name="evolutionCount"'));
 assert(!read('templates/box/03-view.html').includes('入手後の進化回数 × 5'));
+ctx.p=pokemon[244];ctx.item={level:65,nature:'いじっぱり',ribbonHours:0,subskills:['スキル確率アップM','スキル確率アップS']};ctx.calc=calc();
+assert.deepEqual(summary('speed'),['Lv.65・時間：−12.8%','性格・時間：−10.0%']);
+assert.deepEqual(summary('skill'),['サブスキル・確率：＋54.0%（倍率補正）','確率は推定値']);
+ctx.p=pokemon[3];ctx.calc=calc();assert(summary('carry').some(line=>line==='進化段階（2進化）：＋10.0'));
+assert(summary('carry').length<=4);
+assert(read('styles/10-detail-facts.css').includes('#boxStatPopover::backdrop{background:transparent}'));
 console.log('Current species stage: unevolved, 1/2 evolutions, baby/branched lines and legacy capture counts passed.');

@@ -1,41 +1,30 @@
 let boxEditorDirty=false;
 // Explain the factors returned by the same engine that renders the stat value.
-function boxStatBreakdown(item,p,calc,kind){
- const b=calc.breakdown,rows=[],notes=[],num=value=>window.PS_NUMBERS.display(value),percent=value=>num(value*100)+'%';
- const add=(label,value)=>rows.push([label,value]);
- const natureLabel='性格（'+(item.mint?'ミント・無補正':item.nature||'未設定')+'）';
- const effectKinds={speed:'speedReduction',carry:'carryBonus',food:'foodRateBonus',skill:'skillRateBonus'};
- const unit=kind==='speed'?'秒':kind==='carry'?'':'%';
- const result=calc[kind];
- if(kind==='speed'){
-  add('基礎おてつだい時間',Number.isFinite(p?.help)?num(p.help)+'秒':'未確認');
-  add('レベル補正（Lv.'+item.level+'）','×'+percent(b.levelFactor));
-  add(natureLabel,'×'+percent(b.natureSpeed));
-  add('リボン（'+(item.ribbonHours?item.ribbonHours+'h':'なし')+'）',calc.ribbon.time==null?'未確認':'×'+percent(calc.ribbon.time));
-  add('有効サブスキルの時間短縮','−'+percent(b.soloSpeedReduction)+'（上限35%）');
-  notes.push('基礎時間 × レベル補正 × 性格補正 × リボン補正 ×（1 − 時間短縮率）。秒数が小さいほど速くなります。','個体単独の値です。チームのおてつだいボーナス・げんき・キャンプ等は含みません。');
- }else if(kind==='carry'){
-  add('基礎最大所持数',Number.isFinite(p?.carry)?num(p.carry):'未確認');
-  add('現在の進化段階（'+(b.evolutionStage==null?'未確認':b.evolutionStage===0?'未進化':b.evolutionStage+'進化')+'）',b.evolutionCarry==null?'未確認':'＋'+num(b.evolutionCarry));
-  add('有効サブスキル','＋'+num(b.subskillCarry));
-  add('リボン（'+(item.ribbonHours?item.ribbonHours+'h':'なし')+'）',calc.ribbon.capacity==null?'未確認':'＋'+num(calc.ribbon.capacity));
-  notes.push('基礎所持数 ＋ 現在の進化段階の補正（1進化＋5、2進化＋10） ＋ サブスキル ＋ リボン。捕まえたときの姿や、その後の進化回数には左右されません。性格による所持数補正はありません。');
+function boxStatSummary(item,p,calc,kind){
+ const b=calc.breakdown,lines=[],num=value=>window.PS_NUMBERS.display(value);
+ const change=factor=>(factor<1?'−':'＋')+num(Math.abs(factor-1)*100)+'%';
+ const factor=(label,value)=>{if(value==null)lines.push(label+'：未確認');else if(value!==1)lines.push(label+'：'+change(value))};
+ if(kind==='carry'){
+  lines.push('基礎：'+(Number.isFinite(p?.carry)?num(p.carry):'未確認'));
+  if(b.evolutionCarry)lines.push('進化段階（'+b.evolutionStage+'進化）：＋'+num(b.evolutionCarry));
+  if(b.subskillCarry)lines.push('サブスキル：＋'+num(b.subskillCarry));
+  if(calc.ribbon.capacity)lines.push('リボン：＋'+num(calc.ribbon.capacity));
+ }else if(kind==='speed'){
+  factor('Lv.'+item.level+'・時間',b.levelFactor);
+  factor('性格・時間',b.natureSpeed);
+  factor('サブスキル・時間',1-b.soloSpeedReduction);
+  factor('リボン・時間',calc.ribbon.time);
  }else{
-  const base=kind==='food'?p?.foodRate:p?.skillRate,nature=kind==='food'?b.natureFood:b.natureSkill,bonus=kind==='food'?b.foodBonus:b.skillBonus;
-  add('基礎確率（推定）',Number.isFinite(base)?num(base)+'%':'未確認');
-  add(natureLabel,'×'+percent(nature));
-  add('有効サブスキルの合計','＋'+percent(bonus)+' → ×'+percent(1+bonus));
-  notes.push('基礎確率 × 性格補正 ×（1 ＋ サブスキル補正の合計）。確率への直接加算ではありません。上限100%。','確率は推定値です。');
+  const nature=kind==='food'?b.natureFood:b.natureSkill,bonus=kind==='food'?b.foodBonus:b.skillBonus;
+  factor('性格・確率',nature);
+  if(bonus)lines.push('サブスキル・確率：＋'+num(bonus*100)+'%（倍率補正）');
  }
- SUBSKILL_LEVELS.forEach((unlock,index)=>{
-  const name=item.subskills?.[index],skill=SUBSKILLS[name];if(skill?.effect!==effectKinds[kind])return;
-  const active=unlock<=item.level&&(!p?.mythicalSettings||item.mythicalState?.subskillUnlocked?.[index]===true);
-  const status=active?'有効':unlock>item.level?'Lv未到達':item.mythicalState?.subskillUnlocked?.[index]===false?'未解放':'解放未確認';
-  add('Lv.'+unlock+' '+name+'（'+status+'）',active?(kind==='carry'?'＋'+num(skill.value):(kind==='speed'?'−':'＋')+percent(skill.value)):'補正対象外');
- });
- if(kind!=='carry'&&!item.nature&&!item.mint)notes.push('性格が未設定のため、無補正として仮計算しています。');
- if(calc.unknown.length)notes.push('未確認の補正：'+calc.unknown.join('・'));
- return {rows,notes,result:result==null?'未確認':num(result)+unit};
+ if(!lines.length)lines.push('補正なし');
+ if(kind!=='carry'&&!item.nature&&!item.mint)lines.push('性格未設定（暫定）');
+ if(calc.unknown.length)lines.push('未確認の補正あり');
+ if(calc[kind]==null)lines.push('基礎データ未確認');
+ else if(kind==='food'||kind==='skill')lines.push('確率は推定値');
+ return lines;
 }
 const boxStatPopover=document.getElementById('boxStatPopover');
 let boxStatPopoverOwner=null;
@@ -47,11 +36,22 @@ function openBoxStatPopover(button,item,p,calc,kind,title){
  if(boxStatPopover.matches(':popover-open'))boxStatPopover.hidePopover();
  boxStatPopoverOwner?.setAttribute('aria-expanded','false');
  if(wasSame){boxStatPopoverOwner=null;return}
- const detail=boxStatBreakdown(item,p,calc,kind);
  document.getElementById('boxStatPopoverTitle').textContent=title+'の補正';
- document.getElementById('boxStatPopoverBody').innerHTML='<dl>'+detail.rows.map(([label,value])=>'<dt>'+boxEsc(label)+'</dt><dd>'+boxEsc(value)+'</dd>').join('')+'</dl><p class="psg-stat-result">表示値：'+boxEsc(detail.result)+'</p>'+detail.notes.map(note=>'<p class="psg-stat-note">'+boxEsc(note)+'</p>').join('');
+ document.getElementById('boxStatPopoverBody').innerHTML=boxStatSummary(item,p,calc,kind).map(line=>'<p>'+boxEsc(line)+'</p>').join('');
  boxStatPopoverOwner=button;button.setAttribute('aria-expanded','true');boxStatPopover.showPopover();
+ positionBoxStatPopover();
 }
+function positionBoxStatPopover(){
+ if(!boxStatPopoverOwner||!boxStatPopover.matches(':popover-open'))return;
+ const anchor=boxStatPopoverOwner.getBoundingClientRect(),bubble=boxStatPopover.getBoundingClientRect(),view=window.visualViewport;
+ const leftEdge=(view?.offsetLeft||0)+12,topEdge=(view?.offsetTop||0)+12,width=view?.width||innerWidth,height=view?.height||innerHeight;
+ const left=Math.max(leftEdge,Math.min(anchor.right-bubble.width,leftEdge+width-24-bubble.width));
+ const below=anchor.bottom+6,bottom=topEdge+height-24;
+ const top=Math.max(topEdge,Math.min(below+bubble.height<=bottom?below:anchor.top-bubble.height-6,bottom-bubble.height));
+ boxStatPopover.style.left=left+'px';boxStatPopover.style.top=top+'px';
+}
+window.addEventListener('resize',positionBoxStatPopover,{passive:true});
+window.addEventListener('scroll',positionBoxStatPopover,{passive:true});
 function syncBoxFlags(item=state.selected){
  if(!item)return;
  for(const [id,field,labels] of [['boxFavorite','favorite',['お気に入り','favorite']],['boxTraining','training',['育成対象','training']]]){

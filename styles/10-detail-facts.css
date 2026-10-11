@@ -119,14 +119,8 @@ main:has(#boxDetail.active){background:var(--box-page-bg,#eaf7ed);min-height:cal
 #boxDetail #boxHeaderEdit{width:80px;box-sizing:border-box;background:#fff;border-radius:10px}
 #boxDetail .psg-box-hero{border-bottom:1px solid #dce0e3}
 
-/* Top-layer corrections sheet: tap outside or Escape to dismiss. */
-#boxStatPopover{position:fixed;inset:auto 12px calc(var(--psg-nav-height,68px) + env(safe-area-inset-bottom) + 12px);box-sizing:border-box;width:min(420px,calc(100vw - 24px));max-height:60dvh;margin-inline:auto;padding:14px;border:1px solid #d9e5df;border-radius:16px;background:#fff;color:#111;box-shadow:0 8px 28px #0003;overflow:auto;font-size:13px;line-height:1.5}
-#boxStatPopover::backdrop{background:#0002}
-#boxStatPopover header{position:static;height:auto;border:0;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-#boxStatPopover h3{margin:0;font-size:16px}
-#boxStatPopover header button{width:40px;min-height:40px;padding:0;border:1px solid #d9e5df;border-radius:10px;background:#fff;font:inherit;font-size:20px}
-#boxStatPopover dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}
-#boxStatPopover dt,#boxStatPopover dd{margin:0;overflow-wrap:anywhere}
-#boxStatPopover dd{font-weight:800;text-align:right}
-#boxStatPopover .psg-stat-result{margin:10px 0 0;padding:8px;background:#f0f6f2;border-radius:9px;font-weight:850}
-#boxStatPopover .psg-stat-note{margin:8px 0 0;font-size:12px;color:#4d5953}
+/* Small anchored correction hint, matching the Dex EXP supplement. */
+#boxStatPopover{position:fixed;inset:0 auto auto 0;box-sizing:border-box;width:min(290px,calc(100vw - 24px));max-height:min(240px,calc(100dvh - 24px));margin:0;padding:10px 12px;border:1px solid #dfe8e4;border-radius:12px;background:#fff;color:#111;box-shadow:0 2px 6px #0002;overflow:auto;font-size:14px;font-weight:650;line-height:1.5}
+#boxStatPopover::backdrop{background:transparent}
+#boxStatPopover .psg-stat-popover-title{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#boxStatPopover p{margin:0;overflow-wrap:anywhere}
