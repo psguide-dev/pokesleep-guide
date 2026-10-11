@@ -40,6 +40,7 @@ function openBoxStatPopover(button,item,p,calc,kind,title){
  if(boxStatPopover.matches(':popover-open'))boxStatPopover.hidePopover();
  boxStatPopoverOwner?.setAttribute('aria-expanded','false');
  if(wasSame){boxStatPopoverOwner=null;return}
+ boxStatPopover.classList.remove('psg-box-skill-popover');
  document.getElementById('boxStatPopoverTitle').textContent=title+'の補正';
  document.getElementById('boxStatPopoverBody').innerHTML=boxStatSummary(item,p,calc,kind).map(line=>'<p>'+boxEsc(line)+'</p>').join('');
  boxStatPopoverOwner=button;button.setAttribute('aria-expanded','true');boxStatPopover.showPopover();
@@ -61,7 +62,7 @@ function resizeBoxSkillBlock(){
  if(!section||!unit||!host.getBoundingClientRect().height)return;
  const style=getComputedStyle(section);
  const required=host.getBoundingClientRect().height+['paddingTop','paddingBottom','borderTopWidth','borderBottomWidth'].reduce((sum,key)=>sum+(parseFloat(style[key])||0),0);
- const rows=Math.max(2.5,Math.ceil((required-0.01)/(unit/2))/2);
+ const rows=Math.max(2,Math.ceil((required-0.01)/(unit/2))/2);
  section.style.height=(rows*unit)+'px';
 }
 if(typeof ResizeObserver!=='undefined'){
@@ -138,12 +139,24 @@ function syncLevel({refreshEditor=true}={}){
  const skillLv=Math.min(Math.max(1,item.skillLevel||1),skill?.maxLevel||7);
  const currentEffect=skill?.levels?.[skillLv];
  const effect=skill?.displayNote&&currentEffect?.description?`１回の効果量：${boxEsc(currentEffect.description)}`:skill?.effectType==='random_ingredients'&&currentEffect?.amount!=null?`１回の効果量：ランダムな食材 ${currentEffect.amount}個`:skill?.effectType==='fixed_energy'&&currentEffect?.energy!=null?`１回の効果量：カビゴンのエナジーを ${currentEffect.energy.toLocaleString()} 増やす`:skill?.effectType==='variable_energy'&&currentEffect?.min!=null&&currentEffect?.max!=null?`１回の効果量：カビゴンのエナジーを ${currentEffect.min.toLocaleString()}～${currentEffect.max.toLocaleString()} 増やす`:skill?.effectType==='team_energy_recovery'&&currentEffect?.recovery!=null?`１回の効果量：チーム各匹のげんき＋${currentEffect.recovery}`:currentEffect?.description?`１回の効果量：${boxEsc(currentEffect.description)}`:'効果量 未確認';
- const skillName=boxEsc(skill?.name||'未確認').replace(/([（(])/,'<br>$1');
+ const skillName=boxEsc((skill?window.PS_SKILL_DISPLAY?.name(skill):null)||skill?.name||'未確認');
  const skillArt=skill?.image?window.PS_DEV_ASSETS.image(skill.image,'skill',skill.id,'full',skill.name):'';
- const isBoost=skill?.effectType?.startsWith('helper_boost_')&&currentEffect?.helps!=null;
- const summary=isBoost?`チーム全員が各${currentEffect.helps}回分おてつだい＋タイプ種類数ボーナス`:effect.replace(/^１回の効果量：/,'');
- document.getElementById('boxMainSkill').innerHTML=`<div class="psg-box-skill-grid"><div class="psg-box-skill-identity">${skillArt?`<span class="psg-box-skill-art">${skillArt}</span>`:''}<div class="psg-box-skill-heading"><strong>${skillName}</strong><b class="psg-box-skill-level">Lv.${skillLv}</b></div></div><p class="psg-box-effect">${summary}</p><div class="psg-box-skill-forecast" id="boxDaySkill" aria-label="1日のスキル発動予想">${boxDailySkillForecast(daily)}</div></div>`;
- if(p?.mythicalSettings?.mainSkill.individualSkillSelectionRequired)document.getElementById('boxMainSkill').insertAdjacentHTML('afterbegin',`<p class="psg-box-effect">セット中：${boxEsc(item.mythicalState?.selectedEffect||'未確認')}</p><details class="psg-box-explanation"><summary>習得済みの効果</summary><p>${boxEsc(item.mythicalState?.learnedEffects?.join('・')||'未確認')}</p><p class="psg-box-muted">セット効果の上限を超えるLvの効果量と日産は未計算です。</p></details>`);
+ const summary=skill?window.PS_SKILL_DISPLAY.effect(skill,skillLv,p):'効果量 未確認';
+ const host=document.getElementById('boxMainSkill');
+ host.innerHTML=`<div class="psg-box-skill-grid"><button type="button" class="psg-box-skill-copy" aria-label="${skillName}：タップして表と注意を表示" aria-haspopup="dialog" aria-controls="boxStatPopover" aria-expanded="false"><span class="psg-box-skill-identity">${skillArt?`<span class="psg-box-skill-art">${skillArt}</span>`:''}<span class="psg-box-skill-heading"><strong>${skillName}</strong><b class="psg-box-skill-level">Lv.${skillLv}</b></span></span><span class="psg-box-effect">${summary}</span></button><div class="psg-box-skill-forecast" id="boxDaySkill" aria-label="1日のスキル発動予想">${boxDailySkillForecast(daily)}</div></div>`;
+ host.querySelector('.psg-box-skill-copy').onclick=event=>{
+  const button=event.currentTarget,wasSame=boxStatPopoverOwner===button&&boxStatPopover.matches(':popover-open');
+  if(boxStatPopover.matches(':popover-open'))boxStatPopover.hidePopover();
+  if(wasSame)return;
+  document.getElementById('boxStatPopoverTitle').textContent=(skill?.name||'スキル')+' Lv.'+skillLv;
+  const notes=[...(skill?.gameNotes||[]),...(skill?.ruleNotes||[]).map(n=>n.label+'：'+n.text),skill?.displayNote].filter(Boolean);
+  let content=`<p>${summary}</p>`+(skill?dexSkillTable(skill,currentEffect):'');
+  content+=notes.map(note=>`<p class="note">${boxEsc(note)}</p>`).join('');
+  if(p?.mythicalSettings?.mainSkill.individualSkillSelectionRequired)content+=`<p>セット中：${boxEsc(item.mythicalState?.selectedEffect||'未確認')}</p><p>習得済み：${boxEsc(item.mythicalState?.learnedEffects?.join('・')||'未確認')}</p><p class="note">セット効果の上限を超えるLvの効果量と日産は未計算です。</p>`;
+  document.getElementById('boxStatPopoverBody').innerHTML=content;
+  boxStatPopover.classList.add('psg-box-skill-popover');
+  boxStatPopoverOwner=button;button.setAttribute('aria-expanded','true');boxStatPopover.showPopover();positionBoxStatPopover();
+ };
  const mintIcon=`<span class="psg-mint-mark" title="まっしろミント適用済み" aria-label="まっしろミント適用済み">${window.PS_UI_ART.icon('items','まっしろミント')}</span>`;
  const labels={speed:'おてつだい',energy:'げんき',food:'食材',skill:'スキル',exp:'EXP'};
  const natureText=item.mint?'ミント適用：性格補正なし':!item.nature?'性格未入力（無補正として仮計算）':!NATURE_EFFECTS[item.nature]?'性格名未対応（無補正として仮計算）':calc.nature.up?`${labels[calc.nature.up]}↑ / ${labels[calc.nature.down]}↓`:'性格補正なし';
