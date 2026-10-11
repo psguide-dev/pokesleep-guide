@@ -19,11 +19,26 @@
   const ids=[...new Set(candidates.map(r=>r.id))],species=[...new Set(named.map(r=>r.speciesId))];
   return {speciesId:species.length===1?species[0]:null,styleId:ids.length===1&&names.length===1&&sleepNames.length<=1&&starValues.length<=1&&(sleepNames.length===1||starValues.length===1)?ids[0]:null,candidates,stars:starValues.length===1?starValues[0]:null};
  }
+ // One species header can precede several sleep-style rows in the game's detail list.
+ function parseMany(text,rows){
+  const single=parse(text,rows);if(!single.speciesId)return [single];
+  const lines=String(text||'').split(/\r?\n/).map(compact).filter(Boolean);
+  const speciesRows=rows.filter(r=>r.speciesId===single.speciesId);
+  const names=[...new Set(speciesRows.map(r=>r.name))].filter(name=>name&&lines.includes(compact(name)));
+  if(names.length<2)return [single];
+  return names.map(name=>{
+   const candidates=speciesRows.filter(r=>r.name===name),ids=[...new Set(candidates.map(r=>r.id))];
+   const start=lines.indexOf(compact(name)),next=lines.slice(start+1).findIndex(line=>names.some(n=>compact(n)===line));
+   const block=lines.slice(start+1,next<0?undefined:start+1+next).join('\n');
+   const unresearched=/リサーチした数[:：-]?0(?!\d)/.test(block);
+   return {speciesId:single.speciesId,styleId:ids.length===1&&!unresearched?ids[0]:null,candidates,stars:null};
+  });
+ }
  function mergeFound(saved,ids,rows){
   if(!saved||typeof saved!=='object'||Array.isArray(saved))throw Error('保存済みデータを確認してください。');
   const known=new Set(rows.map(r=>r.id));if(ids.some(id=>!known.has(id)))throw Error('寝顔を確認してください。');
   return {...saved,...Object.fromEntries(ids.map(id=>[id,true]))};
  }
- window.PS_SLEEP_IMAGE_READER={entries,parse,mergeFound};
+ window.PS_SLEEP_IMAGE_READER={entries,parse,parseMany,mergeFound};
 })();
 </script>

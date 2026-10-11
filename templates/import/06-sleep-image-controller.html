@@ -9,9 +9,10 @@
  function review(texts){
   const entries=window.PS_SLEEP_IMAGE_READER.entries();let found={};try{found=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}')||{}}catch{}
   $('sleepImageResults').replaceChildren();resultRows=[];
-  texts.forEach((text,index)=>{
-   const result=window.PS_SLEEP_IMAGE_READER.parse(text,entries),section=document.createElement('section');section.className='psg-sleep-scan-result';
-   const title=document.createElement('strong');title.textContent=`画像 ${index+1}`;section.append(title);
+  const readings=texts.flatMap((text,index)=>window.PS_SLEEP_IMAGE_READER.parseMany(text,entries).map((result,part)=>({text,index,part,result})));
+  readings.forEach(({text,index,part,result})=>{
+   const section=document.createElement('section');section.className='psg-sleep-scan-result';
+   const title=document.createElement('strong');title.textContent=`画像 ${index+1}・候補 ${part+1}`;section.append(title);
    const checkLabel=document.createElement('label');checkLabel.className='psg-image-check';const check=document.createElement('input');check.type='checkbox';check.checked=true;checkLabel.append(check,document.createTextNode('登録する'));section.append(checkLabel);
    const fields=document.createElement('div');fields.className='psg-image-fields';
    const species=document.createElement('select'),style=document.createElement('select');species.setAttribute('aria-label',`画像${index+1}のポケモン`);style.setAttribute('aria-label',`画像${index+1}の寝顔`);

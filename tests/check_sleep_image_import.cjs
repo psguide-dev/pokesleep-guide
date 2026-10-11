@@ -21,3 +21,10 @@ const all=actual.window.PS_SLEEP_IMAGE_READER.entries();assert(all.length>900);
 const known=new Set([...Object.values(actual.window.PS_CATALOG.sleepStyles).flat(),...Object.values(actual.window.PS_CATALOG.forms.sleepStyleGroups).flatMap(g=>g.styles||[])].map(s=>s.id));
 assert(all.every(r=>known.has(r.id)));for(const r of all)assert(actual.window.PS_SPECIES_CATALOG.all().some(p=>actual.window.PS_SPECIES_CATALOG.key(p)===r.speciesId));
 console.log(`${all.length} real sleep candidates use permanent, backup-compatible IDs`);
+
+const venusaur=all.filter(r=>r.pokemon==='フシギバナ');
+const screenshot='0003\nフシギバナ\nリサーチした数：23\n仲間にした数：0\nID - 1\nこうごうせい寝\nリサーチした数 - 5\nID - 2\nふんばり寝\nリサーチした数 - 11\nID - 3\nツルだし寝\nリサーチした数 - 4\nID - 4\nおなかのうえ寝\nリサーチした数 - 3';
+const batch=actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot,all);assert.equal(batch.length,4);assert(batch.every(r=>r.styleId));assert.deepEqual([...new Set(batch.map(r=>r.styleId))].sort(),Array.from(venusaur,r=>r.id).sort());
+assert.equal(actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot.replace('数 - 4','数 - 0'),all).filter(r=>r.styleId).length,3);
+assert.equal(reader.parseMany('フシギダネ\nピカチュウ\nこうごうせい寝\nまるまり寝',rows).length,1,'multiple species are not cross-associated');
+console.log('Four Venusaur sleep styles in one screenshot text, zero research counts and multi-species ambiguity pass');
