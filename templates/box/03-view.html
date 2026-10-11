@@ -139,7 +139,7 @@ function syncLevel({refreshEditor=true}={}){
  const skillLv=Math.min(Math.max(1,item.skillLevel||1),skill?.maxLevel||7);
  const currentEffect=skill?.levels?.[skillLv];
  const effect=skill?.displayNote&&currentEffect?.description?`１回の効果量：${boxEsc(currentEffect.description)}`:skill?.effectType==='random_ingredients'&&currentEffect?.amount!=null?`１回の効果量：ランダムな食材 ${currentEffect.amount}個`:skill?.effectType==='fixed_energy'&&currentEffect?.energy!=null?`１回の効果量：カビゴンのエナジーを ${currentEffect.energy.toLocaleString()} 増やす`:skill?.effectType==='variable_energy'&&currentEffect?.min!=null&&currentEffect?.max!=null?`１回の効果量：カビゴンのエナジーを ${currentEffect.min.toLocaleString()}～${currentEffect.max.toLocaleString()} 増やす`:skill?.effectType==='team_energy_recovery'&&currentEffect?.recovery!=null?`１回の効果量：チーム各匹のげんき＋${currentEffect.recovery}`:currentEffect?.description?`１回の効果量：${boxEsc(currentEffect.description)}`:'効果量 未確認';
- const skillName=boxEsc((skill?window.PS_SKILL_DISPLAY?.name(skill):null)||skill?.name||'未確認');
+ const skillName=boxEsc((skill?window.PS_SKILL_DISPLAY?.name(skill):null)||skill?.name||'未確認').replace(/([（(])/,'<br>$1');
  const skillArt=skill?.image?window.PS_DEV_ASSETS.image(skill.image,'skill',skill.id,'full',skill.name):'';
  const summary=skill?window.PS_SKILL_DISPLAY.effect(skill,skillLv,p):'効果量 未確認';
  const host=document.getElementById('boxMainSkill');
@@ -150,7 +150,7 @@ function syncLevel({refreshEditor=true}={}){
   if(wasSame)return;
   document.getElementById('boxStatPopoverTitle').textContent=(skill?.name||'スキル')+' Lv.'+skillLv;
   const notes=[...(skill?.gameNotes||[]),...(skill?.ruleNotes||[]).map(n=>n.label+'：'+n.text),skill?.displayNote].filter(Boolean);
-  let content=`<p>${summary}</p>`+(skill?dexSkillTable(skill,currentEffect):'');
+  let content=`<p>${summary}</p>`+(skill?window.PS_SKILL_DISPLAY.table(skill,currentEffect):'');
   content+=notes.map(note=>`<p class="note">${boxEsc(note)}</p>`).join('');
   if(p?.mythicalSettings?.mainSkill.individualSkillSelectionRequired)content+=`<p>セット中：${boxEsc(item.mythicalState?.selectedEffect||'未確認')}</p><p>習得済み：${boxEsc(item.mythicalState?.learnedEffects?.join('・')||'未確認')}</p><p class="note">セット効果の上限を超えるLvの効果量と日産は未計算です。</p>`;
   document.getElementById('boxStatPopoverBody').innerHTML=content;
