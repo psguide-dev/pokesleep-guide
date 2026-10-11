@@ -23,7 +23,7 @@
 #boxDetail .psg-box-art-badge{display:grid;place-items:center;width:30px;height:30px;border-radius:0;background:transparent;border:0;box-shadow:none}
 #boxDetail .psg-box-art-badge img{width:30px;height:30px;object-fit:contain;image-rendering:auto}
 #boxDetail .psg-box-art-badge .filter-pictogram{font-size:12px;font-weight:900}
-#boxDetail .psg-box-hero{border-color:color-mix(in srgb,var(--box-type-accent,#55a66b) 22%,#dfe8e2)}
+#boxDetail .psg-box-hero{border:0;box-shadow:none}
 #boxDetail .psg-box-identity{display:grid;}
 #boxDetail .psg-box-artwork{border:0;position:relative;overflow:hidden;display:grid;place-items:center}
 #boxDetail .psg-box-artwork img{max-width:100%;max-height:100%;object-fit:contain}
@@ -46,10 +46,10 @@
 #boxDetail .psg-mint-mark{display:inline-flex;border:1px solid #8ab99e;border-radius:50%;background:#fff;color:#56966e;width:25px;height:25px;align-items:center;justify-content:center;margin-left:7px;vertical-align:middle}
 #boxDetail .psg-milestone{background:#fff;}
 /* Individual artwork fits beside three equal-height fact rows. */
-#boxDetail .psg-box-hero{--box-fact-row-height:var(--box-unit-height);--box-facts-height:calc(3 * var(--box-fact-row-height) + 4px);--box-portrait-column:min(37%,var(--box-facts-height));padding:2px;background:var(--box-type-bg,#eef8f0);border-radius:18px}
+#boxDetail .psg-box-hero{--box-fact-row-height:var(--box-unit-height);--box-facts-height:calc(3 * var(--box-fact-row-height) + 4px);--box-portrait-column:min(37%,var(--box-facts-height));padding:2px;background:var(--box-type-bg,#eef8f0);border-radius:0}
 #boxDetail .psg-box-identity{grid-template-columns:var(--box-portrait-column) minmax(0,1fr);gap:3px;align-items:start}
 #boxDetail .psg-v106-media{min-width:0;height:var(--box-facts-height)}
-#boxDetail .psg-box-artwork{width:100%;height:100%;min-height:0;aspect-ratio:auto;background:transparent;border-radius:0;margin:0;place-items:center;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+#boxDetail .psg-box-artwork{width:100%;height:100%;min-height:0;aspect-ratio:auto;background:#fff;border:1px solid color-mix(in srgb,var(--box-type-accent,#55a66b) 22%,transparent);border-radius:18px;box-sizing:border-box;margin:0;place-items:center;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
 /* Fit the unchanged image canvas inside a centered frame with a 4px inset. */
 #boxDetail .psg-box-artwork>img{display:block;min-width:0;min-height:0;max-width:100%;max-height:100%;width:calc(100% - 8px);height:calc(100% - 8px);object-fit:contain;object-position:center}
 #boxDetail .psg-box-facts{justify-content:space-between;gap:4px;align-self:stretch}
@@ -103,7 +103,6 @@
   #boxDetail .psg-v106-media .psg-box-traits{align-items:start}}
 /* Duplicate rates are omitted only while the complete identity panel is sticky. */
 @media(max-width:620px) and (orientation:portrait){
-  #boxDetail>.psg-box-hero{box-shadow:0 2px 5px rgba(20,40,30,.10)!important}
   #boxDetail #boxEditor{scroll-margin-top:310px}}
 
 /* v111: align all section frames to the pinned identity card. */

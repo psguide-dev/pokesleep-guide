@@ -26,8 +26,9 @@ function syncLevel({refreshEditor=true}={}){
  const ribbon=document.getElementById('boxRibbon');ribbon.innerHTML=`${window.PS_UI_ART.icon('ribbons',item.ribbonHours)}<small>${item.ribbonHours?item.ribbonHours+'h':'リボンなし'}</small>`;ribbon.setAttribute('aria-label',`おやすみリボン ${item.ribbonHours?item.ribbonHours+'時間':'なし'}`);ribbon.title=`おやすみリボン：${item.ribbonHours?item.ribbonHours+'時間':'なし'}（所持数・残り進化回数による時間補正を反映）`;
  hydrateSpecialtyIcons(document.getElementById('boxTraits'));
  const artwork=document.getElementById('boxArtwork');
- const hero=document.querySelector('#boxDetail .psg-box-hero'),theme=window.PS_TYPE_THEME[p?.type]||['#f3f6f4','#718078'];
+ const hero=document.getElementById('boxDetail'),theme=window.PS_TYPE_THEME[p?.type]||['#f3f6f4','#718078'];
  hero.style.setProperty('--box-type-bg',theme[0]);hero.style.setProperty('--box-type-accent',theme[1]);
+ document.querySelector('main').style.setProperty('--box-page-bg',theme[0]);
  const badges=p?`<div class="psg-box-art-badges"><span class="psg-box-art-badge" title="タイプ：${boxEsc(p.type)}" aria-label="タイプ：${boxEsc(p.type)}">${typeFilterArt(p.type)}</span></div>`:'';
  artwork.innerHTML=(p&&(!p.detailPreviewOnly||p.image||p.faceImage)?window.PS_DEV_ASSETS.image(p.image||p.faceImage,'pokemon',p.no,p.image===p.faceImage?'face':'full',item.name):'No image')+badges;
  hydrateSpecialtyIcons(artwork);
