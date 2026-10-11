@@ -5,12 +5,13 @@
  <div class="dex-filter-controls">
   <div class="filter-select" data-menu="dex-type"><button class="filter-main" aria-expanded="false">タイプ <span>▼</span></button><div class="filter-panel" id="typeFilters" aria-label="タイプで絞り込み"></div></div>
   <div class="filter-select" data-menu="dex-ing"><button class="filter-main" aria-expanded="false">食材 <span>▼</span></button><div class="filter-panel" id="ingredientFilters" aria-label="食材で絞り込み"></div></div>
- </div>
- <div class="spec-row" id="specialtyFilters">
-  <button class="filter-main" data-spec="きのみ"><img class="psg-specialty-icon" data-specialty-icon="berry" alt="">きのみ</button>
-  <button class="filter-main" data-spec="食材"><img class="psg-specialty-icon" data-specialty-icon="ingredient" alt="">食材</button>
-  <button class="filter-main" data-spec="スキル"><img class="psg-specialty-icon" data-specialty-icon="skill" alt="">スキル</button>
-  <button class="filter-main" data-spec="オール"><img class="psg-specialty-icon" data-specialty-icon="all" alt="">オール</button>
+  <div class="filter-select" data-menu="dex-spec"><button class="filter-main" aria-expanded="false">得意 <span>▼</span></button><div class="filter-panel" id="specialtyFilters" aria-label="得意で絞り込み">
+   <button class="filter-option" data-spec="きのみ"><img class="psg-specialty-icon" data-specialty-icon="berry" alt="">きのみ</button>
+   <button class="filter-option" data-spec="食材"><img class="psg-specialty-icon" data-specialty-icon="ingredient" alt="">食材</button>
+   <button class="filter-option" data-spec="スキル"><img class="psg-specialty-icon" data-specialty-icon="skill" alt="">スキル</button>
+   <button class="filter-option" data-spec="オール"><img class="psg-specialty-icon" data-specialty-icon="all" alt="">オール</button>
+  </div></div>
+  <div class="psg-filter-placeholder" aria-hidden="true"></div>
  </div>
 </div>
 <div id="dexSelectedFilters" class="psg-selected-filters" aria-label="選択中の絞り込み条件" hidden></div>

@@ -67,16 +67,16 @@ nav button{border:0;background:#fff;color:#718079;font-weight:800;font-size:11px
 #dexCompactFilters .filter-main,#boxCompactFilters .filter-main{padding-block:7px}
 .filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px}
 .filter-select{position:relative}
-.filter-main{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 10px;font-weight:850;text-align:left;display:flex;justify-content:space-between;align-items:center}
+.filter-main{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 10px;touch-action:manipulation;font-weight:850;text-align:left;display:flex;justify-content:space-between;align-items:center}
 .filter-main.active{background:#e7f6ef;border-color:#79bea0}
 .filter-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:7px;z-index:15;box-shadow:0 8px 20px rgba(35,55,48,.12);max-height:220px;overflow:auto}
 .filter-select.open .filter-panel{display:block}
-.filter-option{width:100%;border:0;background:#fff;border-radius:8px;padding:8px;text-align:left;font-weight:750}
+.filter-option{touch-action:manipulation;width:100%;border:0;background:#fff;border-radius:8px;padding:8px;text-align:left;font-weight:750}
 .filter-option.on{background:#e7f6ef}
-.dex-filter-controls{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px}
+.dex-filter-controls{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:4px}
 .dex-filter-controls>.filter-select{position:static}
 .dex-filter-controls .filter-panel{left:0;right:0;top:calc(100% + 4px);max-height:none;overflow:visible;padding:5px}
-.dex-filter-controls .filter-select.open .filter-panel{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.dex-filter-controls .filter-select.open .filter-panel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
 .dex-filter-controls .filter-select.open #typeFilters{grid-template-columns:repeat(6,minmax(0,1fr))}
 .dex-filter-controls .filter-option{min-height:49px;padding:3px;display:grid;place-items:center;text-align:center;border:1px solid #e2ebe6}
 .dex-filter-controls .filter-option.on{border-color:#46a477}
@@ -87,10 +87,13 @@ nav button{border:0;background:#fff;color:#718079;font-weight:800;font-size:11px
 .dex-filter-controls .filter-option,.box-filter-row:first-child .filter-option{min-height:48px;padding:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;min-width:0}
 .dex-filter-controls .filter-option img,.box-filter-row:first-child .filter-option img{width:24px;height:24px;object-fit:contain}
 .dex-filter-controls .filter-option .filter-caption,.box-filter-row:first-child .filter-option .filter-caption{font-size:9px;line-height:1.12;overflow-wrap:anywhere}
-.spec-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-.spec-row .filter-main{justify-content:center}
-.spec-row .filter-main{min-width:0;gap:2px;font-size:clamp(10px,2.8vw,14px);white-space:nowrap;padding-inline:3px}
-.box-filter-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px}
+#dexCompactFilters .filter-main,#boxCompactFilters .filter-main{min-width:0;padding-inline:7px;gap:2px;font-size:clamp(11px,3.2vw,14px);white-space:nowrap}
+.filter-select.open>.filter-main{background:#e7f6ef;border-color:#79bea0}
+.filter-main:active,.filter-option:active{background:#d7eee3}
+.dex-filter-controls .filter-select.open #specialtyFilters,.box-filter-row .filter-select.open #boxSpecialtyFilters{grid-template-columns:repeat(4,minmax(0,1fr))}
+.box-filter-row .filter-select.open #boxTagFilters{grid-template-columns:repeat(2,minmax(0,1fr))}
+#boxTagFilters .tag-note{grid-column:1/-1}
+.box-filter-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:4px}
 .box-filter-row:first-child{position:relative}
 .box-filter-row:first-child>.filter-select{position:static}
 .box-filter-row:first-child .filter-panel{left:0;right:0;top:calc(100% + 4px);max-height:none;overflow:visible;padding:5px}

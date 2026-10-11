@@ -78,8 +78,8 @@ function matchesDexFilters(p,q,filters){
    &&(!filters.ingredients.size||p.ingredients?.some(x=>filters.ingredients.has(x.name)))
    &&(!filters.specs.size||filters.specs.has(p.specialty));
 }
-function discoveryLabel(p){
- const styles=p.detailPreviewOnly?p.sleepStyles:window.PS_CATALOG.sleepStyles?.[p.no]||[],saved=readSleepBackup();
+function discoveryLabel(p,saved=readSleepBackup()){
+ const styles=p.detailPreviewOnly?p.sleepStyles:window.PS_CATALOG.sleepStyles?.[p.no]||[];
  return styles.length?`${styles.filter(style=>saved[style.id]===true).length}/${styles.length}`:'—/—';
 }
 
@@ -96,7 +96,7 @@ function renderFilters(){
   ingredientFilters.querySelectorAll('[data-ingredient]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.ingredients.has(b.dataset.ingredient)?state.filters.ingredients.delete(b.dataset.ingredient):state.filters.ingredients.add(b.dataset.ingredient);renderDex()});
   boxTypes.querySelectorAll('[data-type]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.boxFilters.types.has(b.dataset.type)?state.boxFilters.types.delete(b.dataset.type):state.boxFilters.types.add(b.dataset.type);renderBox()});
   boxIngredients.querySelectorAll('[data-ingredient]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.boxFilters.ingredients.has(b.dataset.ingredient)?state.boxFilters.ingredients.delete(b.dataset.ingredient):state.boxFilters.ingredients.add(b.dataset.ingredient);renderBox()});
- specialtyFilters.querySelectorAll('[data-spec]').forEach(b=>b.onclick=()=>{b.classList.toggle('active');state.filters.specs.has(b.dataset.spec)?state.filters.specs.delete(b.dataset.spec):state.filters.specs.add(b.dataset.spec);renderDex()});
+ specialtyFilters.querySelectorAll('[data-spec]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.specs.has(b.dataset.spec)?state.filters.specs.delete(b.dataset.spec):state.filters.specs.add(b.dataset.spec);renderDex()});
 }
 function closeFilterMenus(){
  document.querySelectorAll('.filter-select.open').forEach(x=>{x.classList.remove('open');x.querySelector('.filter-main')?.setAttribute('aria-expanded','false')});
