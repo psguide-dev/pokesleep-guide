@@ -4,25 +4,33 @@
  let epoch=0,worker=null,busy=false,timer=null,urls=[],resultRows=[];
  function setBusy(value){busy=value;files.disabled=value;read.disabled=value||!files.files.length;$('sleepImageStop').hidden=!value;$('sleepImageSave').disabled=value}
  function stop(message='読み取りを中止しました。'){epoch++;clearTimeout(timer);timer=null;const old=worker;worker=null;if(old)old.terminate().catch(()=>{});setBusy(false);status.textContent=message}
- function clear(){urls.forEach(url=>URL.revokeObjectURL(url));urls=[];$('sleepImagePreviews').replaceChildren();$('sleepImageResults').replaceChildren();resultRows=[];form.hidden=true;$('sleepImageMessage').textContent=''}
+ function clear(){dialog.classList.remove('is-review');urls.forEach(url=>URL.revokeObjectURL(url));urls=[];$('sleepImagePreviews').replaceChildren();$('sleepImageResults').replaceChildren();resultRows=[];form.hidden=true;$('sleepImageMessage').textContent=''}
  function options(select,rows,empty){select.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent=empty;select.append(blank);for(const row of rows){const option=document.createElement('option');option.value=row.value;option.textContent=row.label;select.append(option)}}
  function review(texts){
   const entries=window.PS_SLEEP_IMAGE_READER.entries();let found={};try{found=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}')||{}}catch{}
   $('sleepImageResults').replaceChildren();resultRows=[];
-  const readings=texts.flatMap((text,index)=>window.PS_SLEEP_IMAGE_READER.parseMany(text,entries).map((result,part)=>({text,index,part,result})));
-  readings.forEach(({text,index,part,result})=>{
+  const speciesRows=[...new Map(entries.map(r=>[r.speciesId,{value:r.speciesId,label:r.pokemon}])).values()];
+  texts.forEach((text,index)=>{
+   const results=window.PS_SLEEP_IMAGE_READER.parseMany(text,entries);
    const section=document.createElement('section');section.className='psg-sleep-scan-result';
-   const title=document.createElement('strong');title.textContent=`画像 ${index+1}・候補 ${part+1}`;section.append(title);
-   const checkLabel=document.createElement('label');checkLabel.className='psg-image-check';const check=document.createElement('input');check.type='checkbox';check.checked=true;checkLabel.append(check,document.createTextNode('登録する'));section.append(checkLabel);
-   const fields=document.createElement('div');fields.className='psg-image-fields';
-   const species=document.createElement('select'),style=document.createElement('select');species.setAttribute('aria-label',`画像${index+1}のポケモン`);style.setAttribute('aria-label',`画像${index+1}の寝顔`);
-   const speciesRows=[...new Map(entries.map(r=>[r.speciesId,{value:r.speciesId,label:r.pokemon}])).values()];options(species,speciesRows,'ポケモンを選択');species.value=result.speciesId||'';
-   const fill=()=>{options(style,entries.filter(r=>r.speciesId===species.value).map(r=>({value:r.id,label:`★${r.stars} ${r.name}${found[r.id]?'（登録済み）':''}`})),'寝顔を選択');style.disabled=!species.value};fill();style.value=result.styleId||'';species.onchange=fill;
-   for(const [name,select] of [['ポケモン（姿・衣装も確認）',species],['寝顔',style]]){const label=document.createElement('label');label.textContent=name;label.append(select);fields.append(label)}section.append(fields);
-   const note=document.createElement('p');note.textContent=result.styleId?'読み取り候補を画像と照合してください。':'判定できない項目があります。候補を選ぶかチェックを外してください。';section.append(note);
+   const heading=document.createElement('div');heading.className='psg-sleep-scan-heading';
+   const title=document.createElement('strong');title.textContent=`画像 ${index+1}`;
+   const species=document.createElement('select');species.setAttribute('aria-label',`画像${index+1}のポケモン（姿・衣装も確認）`);
+   options(species,speciesRows,'ポケモンを選択');species.value=results[0]?.speciesId||'';heading.append(title,species);section.append(heading);
+   const imageRows=[];
+   results.forEach((result,part)=>{
+    const row=document.createElement('div');row.className='psg-sleep-scan-row';
+    const checkLabel=document.createElement('label');checkLabel.className='psg-image-check';
+    const check=document.createElement('input');check.type='checkbox';check.checked=true;check.setAttribute('aria-label',`画像${index+1}の候補${part+1}を登録`);checkLabel.append(check);
+    const style=document.createElement('select');style.setAttribute('aria-label',`画像${index+1}の候補${part+1}の寝顔`);
+    const fill=()=>{options(style,entries.filter(r=>r.speciesId===species.value).map(r=>({value:r.id,label:`★${r.stars} ${r.name}${found[r.id]?'（登録済み）':''}`})),'寝顔を選択（未判定）');style.disabled=!species.value};fill();style.value=result.styleId||'';
+    row.append(checkLabel,style);section.append(row);imageRows.push(fill);resultRows.push({check,species,style});
+   });
+   species.onchange=()=>imageRows.forEach(fill=>fill());
    const details=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');summary.textContent='読み取りテキスト';pre.textContent=text||'文字を読み取れませんでした。';details.append(summary,pre);section.append(details);
-   $('sleepImageResults').append(section);resultRows.push({check,species,style});
-  });form.hidden=false;dialog.scrollLeft=0;
+   $('sleepImageResults').append(section);
+  });form.hidden=false;dialog.classList.add('is-review');dialog.scrollLeft=0;
+
  }
  $('sleepImageOpen').onclick=()=>{stop();clear();files.value='';setBusy(false);status.textContent='初回は読み取りデータを取得します。';dialog.showModal();dialog.scrollLeft=0};
  $('sleepImageClose').onclick=()=>dialog.close();dialog.addEventListener('close',()=>{stop();clear();files.value=''});dialog.addEventListener('cancel',()=>stop());$('sleepImageStop').onclick=()=>stop();
@@ -33,7 +41,7 @@
   status.textContent=selected.length?`${selected.length}枚を選択しました。「読み取る」を押してください。`:'画像を選んでください。';setBusy(false);
  };
  read.onclick=async()=>{
-  if(busy||!files.files.length)return;const token=++epoch,selected=[...files.files],texts=[];let ownWorker=null;setBusy(true);form.hidden=true;status.textContent='読み取り機能を準備しています…';
+  if(busy||!files.files.length)return;const token=++epoch,selected=[...files.files],texts=[];let ownWorker=null;setBusy(true);form.hidden=true;dialog.classList.remove('is-review');status.textContent='読み取り機能を準備しています…';
   timer=setTimeout(()=>{if(token===epoch)stop('読み取りがタイムアウトしました。枚数を減らして再試行してください。')},180000);
   try{
    const engine=await window.PS_IMAGE_READER.loadEngine();if(token!==epoch)return;
@@ -51,7 +59,7 @@
      texts.push((result.data.text||'')+'\n'+(extra.data.text||''));
     }finally{canvas.width=canvas.height=1;if(right)right.width=right.height=1}
    }
-   if(token!==epoch)return;review(texts);status.textContent='読み取りが終わりました。画像と候補を確認して登録してください。';
+   if(token!==epoch)return;review(texts);status.textContent=`${resultRows.length}件の候補を読み取りました。`;
   }catch(error){if(token===epoch)status.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
   finally{if(ownWorker)try{await ownWorker.terminate()}catch{}if(token===epoch){worker=null;clearTimeout(timer);timer=null;setBusy(false)}}
  };

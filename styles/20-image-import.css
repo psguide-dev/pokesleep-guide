@@ -15,7 +15,19 @@
 #dex .psg-dex-toolbar .psg-screen-title{flex-direction:column;gap:2px}
 #dex #dexCount{line-height:1;font-weight:500}
 #sleepImageOpen{height:var(--psg-ui-unit);padding:0 3px;font-size:clamp(10px,2.7vw,13px);touch-action:manipulation}
-.psg-sleep-scan-result{border-top:1px solid var(--line);padding:12px 0}
+.psg-sleep-scan-result{border-top:1px solid var(--line);padding:8px 0}
+.psg-sleep-scan-heading{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px;margin-bottom:6px;font-size:14px}
+.psg-sleep-scan-row{display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;gap:4px;margin:4px 0}
+.psg-sleep-scan-row .psg-image-check{justify-content:center;min-height:44px;cursor:pointer}
+.psg-sleep-scan-row input{width:20px;height:20px;margin:0}
+.psg-sleep-scan-result select{box-sizing:border-box;width:100%;min-width:0;max-width:100%;min-height:44px;font-size:16px;color:#000;background:#fff;border:1px solid #dce6e2;border-radius:8px;padding:6px}
+#sleepImageDialog .psg-sleep-scan-result summary{padding:5px 0;font-size:12px}
+#sleepImageDialog.is-review .psg-sleep-scan-help{display:none}
+#sleepImageDialog.is-review .psg-image-previews{margin:8px 0}
+#sleepImageDialog.is-review .psg-image-previews img{height:76px;max-width:100px}
+#sleepImageDialog.is-review p{margin:8px 0;font-size:13px}
+#sleepImageMessage:empty{display:none}
+#sleepImageSave{width:100%;margin-top:8px}
 .psg-sleep-scan-result pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
 body:has(#sleepImageDialog[open]){overflow:hidden}
 
