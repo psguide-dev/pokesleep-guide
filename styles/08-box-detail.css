@@ -174,16 +174,16 @@
 #boxDetail .psg-box-day-conditions[open] .psg-conditions-open{display:inline}
 #boxDetail .psg-box-day-conditions[open]{padding-top:5px}
 
-/* Skill identity takes the left two thirds; forecast gets the right third. */
-#boxDetail .psg-box-skill-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);grid-template-rows:auto auto auto;gap:8px;align-items:center}
+/* Skill identity and effect take the left three quarters; forecast gets one quarter. */
+#boxDetail .psg-box-skill-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);grid-template-rows:auto auto auto;gap:8px;align-items:center}
 #boxDetail .psg-box-skill-identity{grid-column:1;grid-row:1;display:grid;grid-template-columns:clamp(40px,12vw,52px) minmax(0,1fr);gap:8px;align-items:center;min-width:0}
 #boxDetail .psg-box-skill-identity>.psg-box-skill-art{display:grid;place-items:center;width:100%;margin:0}
 #boxDetail .psg-box-skill-identity>.psg-box-skill-art img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain}
-#boxDetail .psg-box-skill-heading{display:flex;flex-direction:column;gap:4px;align-items:flex-start;min-width:0}
+#boxDetail .psg-box-skill-heading{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:6px;align-items:center;min-width:0}
 #boxDetail .psg-box-skill-heading>strong{font-size:clamp(14px,4vw,18px);font-weight:900;line-height:1.25;overflow-wrap:anywhere}
 #boxDetail .psg-box-skill-level{font-size:14px;line-height:1.3;white-space:nowrap;padding:0;background:transparent}
-#boxDetail .psg-box-skill-grid>.psg-box-effect{grid-column:1 / -1;grid-row:2;margin:0;font-size:14px;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
-#boxDetail .psg-box-skill-forecast{grid-column:2;grid-row:1;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:68px;box-sizing:border-box;padding:6px 4px;border-radius:10px;background:#fff;color:#111;text-align:center}
+#boxDetail .psg-box-skill-grid>.psg-box-effect{grid-column:1;grid-row:2;margin:0;font-size:14px;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+#boxDetail .psg-box-skill-forecast{grid-column:2;grid-row:1 / 3;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:68px;box-sizing:border-box;padding:6px 4px;border-radius:10px;background:#fff;color:#111;text-align:center}
 #boxDetail .psg-box-skill-forecast small{display:block;font-size:10px;line-height:1.3}
 #boxDetail .psg-box-skill-forecast strong{font-size:clamp(18px,5vw,22px);line-height:1.3;white-space:nowrap}
 #boxDetail .psg-box-skill-forecast .psg-box-without-camp{font-size:10px;color:#666;white-space:nowrap}
