@@ -47,7 +47,7 @@ const unchanged=JSON.stringify(special);run(special,'individualEvaluation');asse
 ctx.p.mythicalSettings=null;assert.equal(run(base,'individualEvaluation').reasons.length,0);
 console.log('Special individuals: pending-skill gate removed, unlocked-only bonus and reference, unknown unlocks, no mutation and ordinary regression passed.');
 
-ctx.item={...base,evolutionCount:1,skillLevel:6};assert.equal(vm.runInContext('individualCorrections(item,p).carry',ctx),21);
-ctx.item={...base,evolutionCount:2};assert.equal(vm.runInContext('individualCorrections(item,p).carry',ctx),26);
+ctx.item={...base,evolutionCount:1,skillLevel:6};assert.equal(vm.runInContext('individualCorrections(item,p).carry',ctx),16);
+ctx.item={...base,evolutionCount:2};assert.equal(vm.runInContext('individualCorrections(item,p).carry',ctx),16);
 ctx.item={...base,evolutionCount:0};assert.equal(vm.runInContext('individualCorrections(item,p).carry',ctx),16);
-console.log('Evolution carry +5/+10 applied once; no species base overwrite.');
+console.log('Legacy capture-history counts cannot change current-species capacity.');

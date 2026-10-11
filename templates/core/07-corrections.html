@@ -23,6 +23,34 @@ function individualRibbon(item,p){
  try{return window.PS_SWAP_ENGINE.ribbon(item.ribbonHours,remainingEvolutionCount(p))}
  catch{return {capacity:null,time:null}}
 }
+// Capacity follows the current species' stage, regardless of capture history.
+const speciesEvolutionStageCache=new WeakMap();
+function speciesEvolutionStage(p,catalog=window.PS_CATALOG){
+ if(!p)return null;
+ const key=value=>value.speciesId||`${String(value.no).padStart(4,'0')}_default`;
+ let stages=speciesEvolutionStageCache.get(catalog);
+ if(!stages){
+  const records=new Map([...Object.values(catalog.pokemon||{}),...(catalog.forms?.species||[])].map(value=>[key(value),value]));
+  const parents=new Map();
+  for(const [id,value] of records){
+   const edges=[...(Array.isArray(value.evolution)?value.evolution:[value.evolution]).filter(edge=>edge?.toNo).map(edge=>`${String(edge.toNo).padStart(4,'0')}_default`),
+     ...(value.evolutionTransitions||[]).filter(edge=>edge.targetSpeciesId&&edge.transitionEnabled!==false).map(edge=>edge.targetSpeciesId)];
+   for(const target of edges){if(!parents.has(target))parents.set(target,[]);parents.get(target).push(id)}
+  }
+  stages=new Map();
+  const visit=(id,seen=new Set())=>{
+   if(stages.has(id))return stages.get(id);if(seen.has(id))return null;
+   const incoming=parents.get(id)||[],value=records.get(id),normal=value?`${String(value.no).padStart(4,'0')}_default`:id;
+   const previous=incoming.map(parent=>visit(parent,new Set([...seen,id])));
+   const stage=previous.some(n=>n==null)?null:previous.length?1+Math.max(...previous):normal!==id&&records.has(normal)?visit(normal,new Set([...seen,id])):0;
+   stages.set(id,stage);return stage;
+  };
+  for(const id of records.keys())visit(id);
+  speciesEvolutionStageCache.set(catalog,stages);
+ }
+ const id=key(p),normal=`${String(p.no).padStart(4,'0')}_default`;
+ return stages.has(id)?stages.get(id):stages.has(normal)?stages.get(normal):0;
+}
 function individualCorrections(item,p,teamSpeedReduction=0){
  const effect=item.mint?{}:NATURE_EFFECTS[item.nature]||{};
  const active=SUBSKILL_LEVELS.map((n,i)=>n<=item.level&&(!p?.mythicalSettings||item.mythicalState?.subskillUnlocked?.[i]===true)?item.subskills?.[i]:null).filter(Boolean);
@@ -36,7 +64,8 @@ function individualCorrections(item,p,teamSpeedReduction=0){
  const speed=speedBase==null?null:speedBase*(1-speedReduction);
  const foodFactor=natureFactor('food')*(1+sum('foodRateBonus'));
  const skillFactor=natureFactor('skill')*(1+sum('skillRateBonus'));
- const carry=Number.isFinite(p?.carry)&&ribbon.capacity!==null?p.carry+5*([0,1,2].includes(item.evolutionCount)?item.evolutionCount:0)+sum('carryBonus')+ribbon.capacity:null;
+ const evolutionStage=speciesEvolutionStage(p),evolutionCarry=evolutionStage==null?null:5*evolutionStage;
+ const carry=Number.isFinite(p?.carry)&&ribbon.capacity!==null&&evolutionCarry!==null?p.carry+evolutionCarry+sum('carryBonus')+ribbon.capacity:null;
  const food=Number.isFinite(p?.foodRate)?Math.min(100,p.foodRate*foodFactor):null;
  const skill=Number.isFinite(p?.skillRate)?Math.min(100,p.skillRate*skillFactor):null;
  const unknown=[...active.filter(name=>!SUBSKILL_NAMES.includes(name)),...(!item.mint&&item.nature&&!NATURE_EFFECTS[item.nature]?[item.nature]:[])];
@@ -45,7 +74,7 @@ function individualCorrections(item,p,teamSpeedReduction=0){
    teamBonus:sum('teamSpeedReduction')>0,energyFactor:natureFactor('energy'),expFactor:natureFactor('exp'),
    breakdown:{levelFactor:1-(item.level-1)*.002,natureSpeed:natureFactor('speed'),natureFood:natureFactor('food'),natureSkill:natureFactor('skill'),
      soloSpeedReduction,speedReduction,teamSpeedReduction,foodBonus:sum('foodRateBonus'),skillBonus:sum('skillRateBonus'),
-     evolutionCarry:5*([0,1,2].includes(item.evolutionCount)?item.evolutionCount:0),subskillCarry:sum('carryBonus')}};
+     evolutionStage,evolutionCarry,subskillCarry:sum('carryBonus')}};
 }
 function teamSpeedContext(ids=team,box=state.box,catalog=window.PS_CATALOG){
  const selected=ids.map(id=>box.find(item=>item.id===id)).filter(Boolean);

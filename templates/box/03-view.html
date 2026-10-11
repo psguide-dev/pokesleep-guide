@@ -16,11 +16,10 @@ function boxStatBreakdown(item,p,calc,kind){
   notes.push('基礎時間 × レベル補正 × 性格補正 × リボン補正 ×（1 − 時間短縮率）。秒数が小さいほど速くなります。','個体単独の値です。チームのおてつだいボーナス・げんき・キャンプ等は含みません。');
  }else if(kind==='carry'){
   add('基礎最大所持数',Number.isFinite(p?.carry)?num(p.carry):'未確認');
-  add('入手後の進化（'+(item.evolutionCount??'未設定')+'回）','＋'+num(b.evolutionCarry));
+  add('現在の進化段階（'+(b.evolutionStage==null?'未確認':b.evolutionStage===0?'未進化':b.evolutionStage+'進化')+'）',b.evolutionCarry==null?'未確認':'＋'+num(b.evolutionCarry));
   add('有効サブスキル','＋'+num(b.subskillCarry));
   add('リボン（'+(item.ribbonHours?item.ribbonHours+'h':'なし')+'）',calc.ribbon.capacity==null?'未確認':'＋'+num(calc.ribbon.capacity));
-  notes.push('基礎所持数 ＋ 入手後の進化回数 × 5 ＋ サブスキル ＋ リボン。性格による所持数補正はありません。');
-  if(![0,1,2].includes(item.evolutionCount))notes.push('入手後の進化回数は未設定のため、0回として仮計算しています。');
+  notes.push('基礎所持数 ＋ 現在の進化段階の補正（1進化＋5、2進化＋10） ＋ サブスキル ＋ リボン。捕まえたときの姿や、その後の進化回数には左右されません。性格による所持数補正はありません。');
  }else{
   const base=kind==='food'?p?.foodRate:p?.skillRate,nature=kind==='food'?b.natureFood:b.natureSkill,bonus=kind==='food'?b.foodBonus:b.skillBonus;
   add('基礎確率（推定）',Number.isFinite(base)?num(base)+'%':'未確認');
