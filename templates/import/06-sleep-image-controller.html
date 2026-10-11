@@ -20,7 +20,15 @@
    for(const item of speciesRows.filter(r=>!sameNo.some(e=>e.value===r.value))){const option=document.createElement('option');option.value=item.value;option.textContent=item.label;other.append(option)}species.append(other);
    species.value=allChoice.length?'__all__':group.speciesId||'';card.append(species);
    const name=document.createElement('div');name.className='psg-sleep-overview-name';card.prepend(name);
-   const updateName=()=>{const label=species.selectedOptions[0]?.textContent||`No.${group.no}`;name.replaceChildren();const parts=label.split(/(?=[（(])/);for(const [i,part] of parts.entries()){if(i)name.append(document.createElement('br'));name.append(document.createTextNode(part))}};
+   const updateName=()=>{
+    const full=species.selectedOptions[0]?.textContent||`No.${group.no}`;name.title=full;
+    const label=full.replace(/[（(]([^）)]*)[）)]/g,(whole,content)=>{
+     const short=content.includes('キャプテン')?'CP':content.includes('ハロウィン')?'HW':content.includes('ホリデー')?'HD':content==='姿・衣装合計'?'合計':content;
+     return `(${short})`;
+    });
+    name.replaceChildren();const parts=label.split(/(?=[（(])/);
+    for(const [i,part] of parts.entries()){if(i)name.append(document.createElement('br'));const line=document.createElement('span');line.className=i?'psg-sleep-overview-form':'psg-sleep-overview-species';line.textContent=part;name.append(line)}
+   };
    species.title='ポケモン・姿を変更';
    const note=document.createElement('small');card.append(note);
    const stars=document.createElement('div');stars.className='psg-sleep-overview-stars';card.append(stars);
