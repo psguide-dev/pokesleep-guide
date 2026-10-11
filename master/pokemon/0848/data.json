@@ -97,5 +97,64 @@
     "checkedAt": "2026-10-01",
     "status": "攻略・検証Wiki記載値（ゲーム内全件照合未実施）",
     "transferCandyStatus": "資料確認"
-  }
+  },
+  "evolutionTransitions": [
+    {
+      "targetSpeciesId": "0849_amped",
+      "conditionsSource": {
+        "レベル": 23,
+        "アメ個数": 80,
+        "性格": "いじっぱり・やんちゃ・ゆうかん・わんぱく・のうてんき・うっかりや・なまいき・せっかち・ようき・むじゃき・がんばりや・すなお・きまぐれ"
+      },
+      "allowedNatures": [
+        "いじっぱり",
+        "やんちゃ",
+        "ゆうかん",
+        "わんぱく",
+        "のうてんき",
+        "うっかりや",
+        "なまいき",
+        "せっかち",
+        "ようき",
+        "むじゃき",
+        "がんばりや",
+        "すなお",
+        "きまぐれ"
+      ],
+      "transitionEnabled": true,
+      "status": "資料確認",
+      "source": {
+        "file": "data-import/PSG_forms20_and_box_rules_20261001.json",
+        "url": "https://wikiwiki.jp/poke_sleep/エレズン/エレズンの進化"
+      }
+    },
+    {
+      "targetSpeciesId": "0849_low_key",
+      "conditionsSource": {
+        "レベル": 23,
+        "アメ個数": 80,
+        "性格": "さみしがり・ずぶとい・のんき・ひかえめ・おっとり・れいせい・おだやか・おとなしい・しんちょう・おくびょう・てれや・まじめ"
+      },
+      "allowedNatures": [
+        "さみしがり",
+        "ずぶとい",
+        "のんき",
+        "ひかえめ",
+        "おっとり",
+        "れいせい",
+        "おだやか",
+        "おとなしい",
+        "しんちょう",
+        "おくびょう",
+        "てれや",
+        "まじめ"
+      ],
+      "transitionEnabled": true,
+      "status": "資料確認",
+      "source": {
+        "file": "data-import/PSG_forms20_and_box_rules_20261001.json",
+        "url": "https://wikiwiki.jp/poke_sleep/エレズン/エレズンの進化"
+      }
+    }
+  ]
 }

@@ -9,3 +9,11 @@ form.elements.evolution.value='1';form.elements.evolution.onchange();assert.equa
 ctx.fillBoxSkillLevel(form,target,3);assert.equal(form.elements.skillLevel.value,'3');
 assert.equal(ctx.state.selected.skillLevel,2,'selection preview never changes saved data');
 console.log('Evolution skill policy: target maximum, restore current form and manual adjustment passed.');
+const toxel=JSON.parse(fs.readFileSync('master/pokemon/0848/data.json','utf8'));
+assert.deepEqual(toxel.evolutionTransitions.map(e=>e.targetSpeciesId),['0849_amped','0849_low_key']);
+assert(toxel.evolutionTransitions.every(e=>e.transitionEnabled&&e.conditionsSource.レベル===23&&e.conditionsSource.アメ個数===80));
+const natures=toxel.evolutionTransitions.flatMap(e=>e.allowedNatures);assert.equal(natures.length,25);assert.equal(new Set(natures).size,25);
+const amped={no:849,speciesId:'0849_amped',detailPreviewOnly:true},low={no:849,speciesId:'0849_low_key',detailPreviewOnly:true};
+ctx.boxCatalog=()=>[toxel,amped,low];ctx.speciesKey=p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`;ctx.window.PS_FORMS={resolve:id=>[amped,low].find(p=>p.speciesId===id)};
+for(const p of [toxel,amped,low])assert.deepEqual(Array.from(ctx.boxEvolutionChoices(p),ctx.speciesKey),['0848_default','0849_amped','0849_low_key']);
+console.log('Received Toxel research connects both forms with Lv23, 80 candies and all 25 distinct natures; Box preserves the connected form family.');

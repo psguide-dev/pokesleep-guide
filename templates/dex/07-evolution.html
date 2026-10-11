@@ -73,7 +73,7 @@
    evolutionItemPopoverIndex=0;
    const el=document.getElementById("detailEvolution"),card=document.getElementById("evolutionCard");
    if(!el||!card)return;
-   if(m.detailPreviewOnly){
+   if(m.detailPreviewOnly||m.evolutionTransitions?.length){
      const transitions=m.evolutionTransitions||[];
      card.style.display=transitions.length?'':'none';
      el.replaceChildren();
@@ -81,7 +81,8 @@
        if(!edge.transitionEnabled){const note=document.createElement('p');note.className='note';note.textContent='同サイズへの進化は未確認です。サイズを自動で変更する処理は行いません。';el.append(note);continue}
        const target=window.PS_FORMS.resolve(edge.targetSpeciesId);if(!target)continue;
        const b=document.createElement('button');b.className='btn';b.textContent=`${target.name} ›`;b.dataset.evoNo=target.no;b.onclick=()=>openPokemonDetail(edge.targetSpeciesId,{pushHistory:true});
-       const note=document.createElement('p');note.className='note';note.textContent=Object.entries(edge.conditionsSource||{}).map(([key,value])=>`${key}：${value}`).join('・');el.append(b,note);
+       const note=document.createElement('p');note.className='note';note.textContent=Object.entries(edge.conditionsSource||{}).filter(([key])=>key!=='性格').map(([key,value])=>`${key}：${value}`).join('・');el.append(b,note);
+       if(edge.conditionsSource?.性格){const details=document.createElement('details'),summary=document.createElement('summary'),text=document.createElement('p');summary.textContent='進化する性格';text.textContent=edge.conditionsSource.性格;details.append(summary,text);el.append(details)}
      }
      return;
    }

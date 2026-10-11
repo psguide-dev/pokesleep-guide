@@ -54,6 +54,9 @@ function fillBoxMythicalEditor(item,p){
 }
 function boxEvolutionChoices(p){
  if(!p)return [];
+ const source=boxCatalog().find(base=>(base.evolutionTransitions||[]).some(edge=>edge.transitionEnabled&&edge.targetSpeciesId===speciesKey(p)));
+ const root=source||(p.evolutionTransitions?.length&&!p.detailPreviewOnly?p:null);
+ if(root)return [root,...(root.evolutionTransitions||[]).filter(edge=>edge.transitionEnabled).map(edge=>window.PS_FORMS.resolve(edge.targetSpeciesId)).filter(Boolean)];
  if(!p.detailPreviewOnly)return evolutionFamily(p.no).filter(x=>!x.detailPreviewOnly);
  return [p,...(p.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(e=>window.PS_FORMS.resolve(e.targetSpeciesId)).filter(Boolean)];
 }

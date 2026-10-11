@@ -176,6 +176,10 @@ function syncLevel({refreshEditor=true}={}){
  document.getElementById('boxEvaluation').innerHTML=renderIndividualEvaluation(item,p);
  const milestones=[...new Set([...slots.map(s=>s.unlock).filter(n=>n>1),...SUBSKILL_LEVELS])].filter(n=>n>item.level).sort((a,b)=>a-b).slice(0,2);
  document.getElementById('boxGrowth').innerHTML=renderBoxGrowth(item,p,milestones);
+ if(p?.evolutionTransitions?.length&&!p.detailPreviewOnly){
+  const targets=p.evolutionTransitions.filter(edge=>edge.transitionEnabled).map(edge=>{const target=window.PS_FORMS.resolve(edge.targetSpeciesId),condition=edge.conditionsSource;return target?`${target.name}（Lv.${condition?.レベル}・アメ${condition?.アメ個数}個）`:null}).filter(Boolean);
+  if(targets.length)document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${targets.map(boxEsc).join(' / ')}・性格で分岐</p>`);
+ }
  const parent=p?.evolution;
  if(parent&&!Array.isArray(parent))document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${boxEsc(parent.to||'未確認')}　${parent.level?'Lv.'+parent.level:''}${parent.candy?'・アメ'+parent.candy+'個':''}</p>`);
  if(refreshEditor){fillBoxEditor(item,p);boxEditorDirty=false}else boxEditorDirty=true;
