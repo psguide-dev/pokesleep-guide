@@ -95,3 +95,21 @@ for(const [legacy,count] of [[true,3],[false,0]]){
  assert.equal(old.berryEnergy,next.berryEnergy);
 }
 console.log('Meal counts 0–3: saved boolean migration, recovery timing and legacy forecast equivalence passed.');
+
+// Box forecasts remain available regardless of incomplete EX or changed team settings.
+vm.runInContext(fs.readFileSync(path.join(__dirname,'../templates/box/02-daily-forecast.html'),'utf8').split('function renderBoxDayFood')[0],ctx);
+ctx.dailyCurrentForecast=()=>{throw new Error('Box forecast must not inherit field settings')};
+ctx.fieldProfile={selectedFieldId:'cyan_ex',areaBonuses:{cyan_ex:200}};
+ctx.dailyExContext=()=>({fieldId:'cyan_ex',effect:null,berries:[]});
+ctx.teamInitialEnergy=0;ctx.teamGoodCamp=true;ctx.teamMeals=0;
+const standard=vm.runInContext('boxDailyEstimate(state.box[0])',ctx);
+assert(standard.member&&!standard.member.missing,'incomplete EX cannot block individual food forecast');
+assert.equal(standard.result.interval,4);assert.equal(standard.result.startingEnergy,100);
+assert.equal(standard.result.goodCamp,false);assert.equal(standard.result.mealCount,3);assert.equal(standard.result.areaFactor,1);
+ctx.fieldProfile={selectedFieldId:'wakakusa',areaBonuses:{wakakusa:80}};
+ctx.teamInitialEnergy=150;ctx.teamGoodCamp=false;ctx.teamMeals=3;
+const changedField=vm.runInContext('boxDailyEstimate(state.box[0])',ctx);
+assert.equal(changedField.member.skillTriggers,standard.member.skillTriggers);
+assert.deepEqual([...changedField.member.foods],[...standard.member.foods]);
+assert.equal(changedField.result.berryEnergy,standard.result.berryEnergy);
+console.log('Box standard conditions: incomplete EX, field bonus and team settings cannot change individual forecasts.');
