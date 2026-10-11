@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+let writes=0,images=0,reads=0,cards=[];
+const pokemon=Array.from({length:237},(_,i)=>({no:i+1,name:`個体${i}`,type:i%2?'みず':'くさ',specialty:i%3?'食材':'スキル',ingredients:[{name:i%2?'あまいミツ':'モーモーミルク'}]}));
+const dexGrid={set innerHTML(value){writes++;cards=pokemon.map(()=>({hidden:false}))},querySelectorAll(){return cards}};
+const ctx={master:{pokemon},dexGrid,dexSearch:{value:''},dexCount:{},dexEmpty:{style:{}},state:{filters:{types:new Set(),ingredients:new Set(),specs:new Set()}},readSleepBackup(){reads++;return {}},renderSelectedFilters(){},searchKey:x=>x,discoveryLabel:()=> '0/4',speciesKey:p=>p.no,typeClass:x=>x,cardDisplayName:x=>x,specIcon:()=>'',ingIcon:()=>'',hydrateSpecialtyIcons(){},window:{PS_DEX_ROUTE:{url:no=>`p/${no}`,capture(){}},PS_DEV_ASSETS:{image(){images++;return '<img>'}}}};
+const nav=fs.readFileSync('templates/core/05-navigation-and-filters.html','utf8');const match=nav.slice(nav.indexOf('function matchesDexFilters('),nav.indexOf('function discoveryLabel('));
+vm.createContext(ctx);vm.runInContext(match+fs.readFileSync('templates/dex/00-list-view.html','utf8'),ctx);ctx.renderDex();
+assert.equal(writes,1);assert.equal(reads,1);assert.equal(images,237);assert.equal(ctx.dexCount.textContent,'237 / 237');
+const originals=[...cards];ctx.state.filters.types.add('くさ');ctx.renderDexFilters();assert.equal(cards.filter(c=>!c.hidden).length,119);
+ctx.state.filters.ingredients.add('あまいミツ');ctx.renderDexFilters();assert.equal(ctx.dexEmpty.style.display,'block');
+ctx.state.filters.types.clear();ctx.renderDexFilters();assert.equal(cards.filter(c=>!c.hidden).length,118);
+ctx.state.filters.ingredients.clear();ctx.renderDexFilters();assert.equal(cards.filter(c=>!c.hidden).length,237);
+assert.equal(writes,1,'selection and clearing do not replace the card DOM');assert.equal(images,237,'images are not rebuilt');assert.equal(reads,1,'sleep backup is not reparsed for each filter');cards.forEach((c,i)=>assert.equal(c,originals[i]));
+ctx.dexSearch.value='個体236';ctx.renderDexFilters();assert.equal(cards.filter(c=>!c.hidden).length,1);
+vm.runInContext('dexListDirty=true',ctx);ctx.renderDexFilters();assert.equal(writes,2,'data changes still rebuild cards');assert.equal(reads,2);
+console.log('237 Dex cards reused through selection, clearing, empty results and search; dirty data rebuilds correctly');

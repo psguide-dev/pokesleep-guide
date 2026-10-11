@@ -5,6 +5,7 @@
 header{height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:900;position:sticky;top:0;z-index:20}
 main{max-width:720px;margin:auto;padding:0 12px 86px}.screen{display:none}.screen.active{display:block}
 h2{margin:8px 0 12px;font-size:19px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.dex-card[hidden]{display:none!important}
 .empty{text-align:center;padding:34px 16px;color:var(--muted)}button,input,select{font:inherit}
 .btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 12px;font-weight:800}.primary{background:var(--green);color:#fff;border-color:var(--green)}
 .psg-team-card .note{margin:8px 0}

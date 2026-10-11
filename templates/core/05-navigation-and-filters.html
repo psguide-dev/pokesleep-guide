@@ -92,11 +92,11 @@ function renderFilters(){
   const boxIngredients=document.getElementById('boxIngredientFilters');
   boxTypes.innerHTML=types.length?types.map(t=>`<button class="filter-option type-${typeClass(t)}${state.boxFilters.types.has(t)?' on':''}" data-type="${t}" aria-label="${t}">${typeFilterArt(t)}${filterCaption(t)}</button>`).join(''):'<button class="filter-option" disabled>データ投入後に生成</button>';
   boxIngredients.innerHTML=ingredients.length?ingredients.map(name=>`<button class="filter-option${state.boxFilters.ingredients.has(name)?' on':''}" data-ingredient="${name}" aria-label="${name}" title="${name}">${ingredientFilterArt(name)}${filterCaption(name)}</button>`).join(''):'<button class="filter-option" disabled>データ投入後に生成</button>';
-  typeFilters.querySelectorAll('[data-type]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.types.has(b.dataset.type)?state.filters.types.delete(b.dataset.type):state.filters.types.add(b.dataset.type);renderDex()});
-  ingredientFilters.querySelectorAll('[data-ingredient]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.ingredients.has(b.dataset.ingredient)?state.filters.ingredients.delete(b.dataset.ingredient):state.filters.ingredients.add(b.dataset.ingredient);renderDex()});
+  typeFilters.querySelectorAll('[data-type]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.types.has(b.dataset.type)?state.filters.types.delete(b.dataset.type):state.filters.types.add(b.dataset.type);renderDexFilters()});
+  ingredientFilters.querySelectorAll('[data-ingredient]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.ingredients.has(b.dataset.ingredient)?state.filters.ingredients.delete(b.dataset.ingredient):state.filters.ingredients.add(b.dataset.ingredient);renderDexFilters()});
   boxTypes.querySelectorAll('[data-type]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.boxFilters.types.has(b.dataset.type)?state.boxFilters.types.delete(b.dataset.type):state.boxFilters.types.add(b.dataset.type);renderBox()});
   boxIngredients.querySelectorAll('[data-ingredient]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.boxFilters.ingredients.has(b.dataset.ingredient)?state.boxFilters.ingredients.delete(b.dataset.ingredient):state.boxFilters.ingredients.add(b.dataset.ingredient);renderBox()});
- specialtyFilters.querySelectorAll('[data-spec]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.specs.has(b.dataset.spec)?state.filters.specs.delete(b.dataset.spec):state.filters.specs.add(b.dataset.spec);renderDex()});
+ specialtyFilters.querySelectorAll('[data-spec]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.filters.specs.has(b.dataset.spec)?state.filters.specs.delete(b.dataset.spec):state.filters.specs.add(b.dataset.spec);renderDexFilters()});
 }
 function closeFilterMenus(){
  document.querySelectorAll('.filter-select.open').forEach(x=>{x.classList.remove('open');x.querySelector('.filter-main')?.setAttribute('aria-expanded','false')});
@@ -130,8 +130,8 @@ function renderSelectedFilters(kind){
   for(const option of document.querySelectorAll(`#${kind}CompactFilters [data-${fields[key]}]`)){
    const active=values.has(option.dataset[fields[key]]);option.classList.toggle(option.classList.contains('filter-option')?'on':'active',active);option.setAttribute('aria-pressed',String(active));
   }
-  for(const value of values){const chip=document.createElement('button');chip.type='button';chip.textContent=`${labels[key]}：${key==='tags'?tags[value]:value} ×`;chip.setAttribute('aria-label',`${labels[key]} ${key==='tags'?tags[value]:value}の条件を解除`);chip.onclick=()=>{values.delete(value);kind==='box'?renderBox():renderDex()};node.append(chip)}
+  for(const value of values){const chip=document.createElement('button');chip.type='button';chip.textContent=`${labels[key]}：${key==='tags'?tags[value]:value} ×`;chip.setAttribute('aria-label',`${labels[key]} ${key==='tags'?tags[value]:value}の条件を解除`);chip.onclick=()=>{values.delete(value);kind==='box'?renderBox():renderDexFilters()};node.append(chip)}
  }
  node.hidden=!node.childElementCount;
- if(!node.hidden){const clear=document.createElement('button');clear.type='button';clear.className='psg-filter-clear';clear.textContent='全解除';clear.onclick=()=>{Object.values(filters).forEach(values=>values.clear());kind==='box'?renderBox():renderDex()};node.append(clear)}
+ if(!node.hidden){const clear=document.createElement('button');clear.type='button';clear.className='psg-filter-clear';clear.textContent='全解除';clear.onclick=()=>{Object.values(filters).forEach(values=>values.clear());kind==='box'?renderBox():renderDexFilters()};node.append(clear)}
 }
