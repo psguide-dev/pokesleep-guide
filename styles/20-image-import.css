@@ -33,7 +33,7 @@ body:has(#sleepImageDialog[open]){overflow:hidden}
 
 @media(max-width:480px){.psg-image-dialog{padding:12px}.psg-image-fields{grid-template-columns:minmax(0,1fr)}}
 
-.psg-sleep-overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}
+.psg-sleep-overview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:6px;margin-top:8px}
 .psg-sleep-overview-card{min-width:0;padding:6px;border:1px solid #dce6e2;border-radius:10px;background:#f6faf8}
 #sleepImageDialog .psg-sleep-overview-card select{padding:4px 2px;min-height:36px;font-size:16px;border:0;background:transparent}
 .psg-sleep-overview-card small{display:block;font-size:11px;color:#52645b;margin:2px 0}
