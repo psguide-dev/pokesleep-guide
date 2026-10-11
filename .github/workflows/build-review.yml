@@ -61,6 +61,7 @@ jobs:
         run: |
           node tests/check_saved_teams.cjs
           node tests/check_box_update_paths.cjs
+          node tests/check_filter_menu_dismissal.cjs
           node tests/check_box_stat_popover.cjs
           node tests/check_image_import.cjs
           node tests/check_ingredient_import.cjs

@@ -75,17 +75,17 @@ nav button{border:0;background:#fff;color:#718079;font-weight:800;font-size:11px
 .filter-option.on{background:#e7f6ef}
 .dex-filter-controls{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px}
 .dex-filter-controls>.filter-select{position:static}
-.dex-filter-controls .filter-panel{left:0;right:0;top:calc(100% + 4px)}
+.dex-filter-controls .filter-panel{left:0;right:0;top:calc(100% + 4px);max-height:none;overflow:visible;padding:5px}
 .dex-filter-controls .filter-select.open .filter-panel{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
-.dex-filter-controls .filter-select.open #typeFilters{grid-template-columns:repeat(4,minmax(0,1fr))}
+.dex-filter-controls .filter-select.open #typeFilters{grid-template-columns:repeat(6,minmax(0,1fr))}
 .dex-filter-controls .filter-option{min-height:49px;padding:3px;display:grid;place-items:center;text-align:center;border:1px solid #e2ebe6}
 .dex-filter-controls .filter-option.on{border-color:#46a477}
 .dex-filter-controls .filter-pictogram{font-size:23px;line-height:1}
 .dex-filter-controls .filter-pictogram img{width:26px;height:26px;object-fit:contain}
 .dex-filter-controls .filter-type-label{font-size:10px;line-height:1.1}
 .dex-filter-controls .filter-option.text-fallback{grid-column:span 2;font-size:11px;line-height:1.2;overflow-wrap:anywhere}
-.dex-filter-controls .filter-option,.box-filter-row:first-child .filter-option{min-height:60px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;min-width:0}
-.dex-filter-controls .filter-option img,.box-filter-row:first-child .filter-option img{width:30px;height:30px;object-fit:contain}
+.dex-filter-controls .filter-option,.box-filter-row:first-child .filter-option{min-height:48px;padding:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;text-align:center;min-width:0}
+.dex-filter-controls .filter-option img,.box-filter-row:first-child .filter-option img{width:24px;height:24px;object-fit:contain}
 .dex-filter-controls .filter-option .filter-caption,.box-filter-row:first-child .filter-option .filter-caption{font-size:9px;line-height:1.12;overflow-wrap:anywhere}
 .spec-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
 .spec-row .filter-main{justify-content:center}
@@ -93,8 +93,9 @@ nav button{border:0;background:#fff;color:#718079;font-weight:800;font-size:11px
 .box-filter-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px}
 .box-filter-row:first-child{position:relative}
 .box-filter-row:first-child>.filter-select{position:static}
-.box-filter-row:first-child .filter-panel{left:0;right:0;top:calc(100% + 4px)}
-.box-filter-row:first-child .filter-select.open .filter-panel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.box-filter-row:first-child .filter-panel{left:0;right:0;top:calc(100% + 4px);max-height:none;overflow:visible;padding:5px}
+.box-filter-row:first-child .filter-select.open .filter-panel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+.box-filter-row:first-child .filter-select.open #boxTypeFilters{grid-template-columns:repeat(6,minmax(0,1fr))}
 .tag-note{font-size:10px;color:var(--muted);padding:5px 7px 2px}
 
 /* source: stable-v5-dex-detail-style */

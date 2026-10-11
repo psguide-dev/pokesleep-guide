@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const source=fs.readFileSync('templates/core/05-navigation-and-filters.html','utf8');
+const listeners={};
+const menu=()=>{const classes=new Set(),attrs={};const host={classList:{contains:c=>classes.has(c),add:c=>classes.add(c),remove:c=>classes.delete(c)},querySelector:()=>button};const button={parentElement:host,setAttribute:(k,v)=>attrs[k]=v};return {host,button,attrs}};
+const first=menu(),second=menu(),menus=[first,second],panel={};
+const document={querySelectorAll:s=>s==='.filter-select.open'?menus.filter(m=>m.host.classList.contains('open')).map(m=>m.host):s==='.filter-select>.filter-main'?menus.map(m=>m.button):s==='.filter-panel'?[panel]:[],querySelector:s=>menus.find(m=>m.host.classList.contains('open'))?.host,addEventListener:(type,fn,capture)=>listeners[type]={fn,capture}};
+vm.runInNewContext(source.slice(source.indexOf('function closeFilterMenus()'),source.indexOf('function renderSelectedFilters('))+'\nsetupMenus();',{document});
+const click=(inside=false)=>({target:{closest:()=>inside?{}:null},preventDefault(){this.prevented=true},stopImmediatePropagation(){this.blocked=true},stopPropagation(){}});
+first.button.onclick(click());assert.equal(first.attrs['aria-expanded'],'true');
+let navigated=false;const outside=click();listeners.click.fn(outside);if(!outside.blocked)navigated=true;
+assert.equal(listeners.click.capture,true);assert.equal(navigated,false);assert.equal(outside.prevented,true);assert.equal(first.attrs['aria-expanded'],'false');
+const next=click();listeners.click.fn(next);assert.equal(next.blocked,undefined,'the next tap reaches the card normally');
+first.button.onclick(click());const inside=click(true);listeners.click.fn(inside);assert.equal(inside.blocked,undefined);assert(first.host.classList.contains('open'),'filter selections keep the menu open');
+second.button.onclick(click());assert(!first.host.classList.contains('open'));assert(second.host.classList.contains('open'));
+listeners.keydown.fn({key:'Escape'});assert(!second.host.classList.contains('open'));
+console.log('Outside dismissal consumes the card tap; next tap, inside selections, menu switch and Escape pass');

@@ -98,14 +98,22 @@ function renderFilters(){
   boxIngredients.querySelectorAll('[data-ingredient]').forEach(b=>b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');state.boxFilters.ingredients.has(b.dataset.ingredient)?state.boxFilters.ingredients.delete(b.dataset.ingredient):state.boxFilters.ingredients.add(b.dataset.ingredient);renderBox()});
  specialtyFilters.querySelectorAll('[data-spec]').forEach(b=>b.onclick=()=>{b.classList.toggle('active');state.filters.specs.has(b.dataset.spec)?state.filters.specs.delete(b.dataset.spec):state.filters.specs.add(b.dataset.spec);renderDex()});
 }
+function closeFilterMenus(){
+ document.querySelectorAll('.filter-select.open').forEach(x=>{x.classList.remove('open');x.querySelector('.filter-main')?.setAttribute('aria-expanded','false')});
+}
 function setupMenus(){
  document.querySelectorAll('.filter-select>.filter-main').forEach(btn=>btn.onclick=e=>{
    e.stopPropagation();const host=btn.parentElement,was=host.classList.contains('open');
-   document.querySelectorAll('.filter-select.open').forEach(x=>x.classList.remove('open'));
-   if(!was)host.classList.add('open');
+   closeFilterMenus();
+   if(!was){host.classList.add('open');btn.setAttribute('aria-expanded','true')}
  });
  document.querySelectorAll('.filter-panel').forEach(p=>p.onclick=e=>e.stopPropagation());
- document.addEventListener('click',()=>document.querySelectorAll('.filter-select.open').forEach(x=>x.classList.remove('open')));
+ // Capture the dismissal tap before a card or navigation handler can receive it.
+ document.addEventListener('click',e=>{
+  if(!document.querySelector('.filter-select.open')||e.target.closest('.filter-panel,.filter-main'))return;
+  closeFilterMenus();e.preventDefault();e.stopImmediatePropagation();
+ },true);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFilterMenus()});
  document.querySelectorAll('#boxSpecialtyFilters [data-spec]').forEach(b=>b.onclick=()=>{const v=b.dataset.spec;b.classList.toggle('on');state.boxFilters.specs.has(v)?state.boxFilters.specs.delete(v):state.boxFilters.specs.add(v);renderBox()});
  document.querySelectorAll('#boxTagFilters [data-tag]').forEach(b=>b.onclick=()=>{b.classList.toggle('on');const v=b.dataset.tag;state.boxFilters.tags.has(v)?state.boxFilters.tags.delete(v):state.boxFilters.tags.add(v);renderBox()});
 }
