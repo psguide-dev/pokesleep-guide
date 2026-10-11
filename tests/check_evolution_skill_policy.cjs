@@ -17,3 +17,13 @@ const amped={no:849,speciesId:'0849_amped',detailPreviewOnly:true},low={no:849,s
 ctx.boxCatalog=()=>[toxel,amped,low];ctx.speciesKey=p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`;ctx.window.PS_FORMS={resolve:id=>[amped,low].find(p=>p.speciesId===id)};
 for(const p of [toxel,amped,low])assert.deepEqual(Array.from(ctx.boxEvolutionChoices(p),ctx.speciesKey),['0848_default','0849_amped','0849_low_key']);
 console.log('Received Toxel research connects both forms with Lv23, 80 candies and all 25 distinct natures; Box preserves the connected form family.');
+const evoCtx={V:{pokemon:{848:toxel}},byNo:id=>id==='0849_amped'?amped:id==='0849_low_key'?low:Number(id)===848?toxel:null,detailEsc:String,iconForType:()=>'',window:{PS_IMAGE_FILES:{items:{},pokemonFaces:{}},PS_DEV_ASSETS:{image:()=>'<img>'},PS_TYPE_ART:()=>''}};
+vm.createContext(evoCtx);vm.runInContext(fs.readFileSync('templates/dex/07-evolution.html','utf8'),evoCtx);
+assert.equal(evoCtx.rootOf(amped),toxel);assert.equal(evoCtx.rootOf(low),toxel);
+assert.equal(evoCtx.descendantsOf(toxel).length,3);
+const tree=evoCtx.nestedEvolutionTree(toxel,'0849_low_key');
+assert.equal((tree.match(/<img>/g)||[]).length,3);
+assert(tree.includes('data-evo-species="0849_amped"'));assert(tree.includes('data-evo-species="0849_low_key"'));
+assert.equal((tree.match(/v31-evo-node is-current/g)||[]).length,1);
+assert(tree.includes('Lv.23'));assert(tree.includes('アメ×80'));assert(tree.includes('性格で分岐'));assert(tree.includes('popover="auto"'));
+console.log('Toxel uses the shared three-image branching tree, correct form navigation/current highlight and condition popovers.');

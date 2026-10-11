@@ -1,6 +1,9 @@
+ function evoIdentity(p){return p.speciesId||`${String(p.no).padStart(4,'0')}_default`}
+ function evoTarget(edge){return byNo(edge.targetSpeciesId||edge.toNo)}
  function evolutionEntries(m){
-   if(!m?.evolution)return [];
-   return Array.isArray(m.evolution)?m.evolution:[m.evolution];
+   if(!m)return [];
+   const regular=m.detailPreviewOnly?[]:(Array.isArray(m.evolution)?m.evolution:[m.evolution]).filter(e=>e?.toNo);
+   return [...regular,...(m.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(e=>({...e,toNo:evoTarget(e)?.no,level:e.conditionsSource?.レベル,candy:e.conditionsSource?.アメ個数,extra:e.allowedNatures?.length?'性格で分岐':null}))];
  }
  let evolutionItemPopoverIndex=0;
  function evolutionConditions(e){
@@ -23,47 +26,51 @@
    return detailEsc(value);
  }
  function parentsOf(no){
-   return Object.values(V.pokemon).filter(p=>evolutionEntries(p).some(e=>Number(e.toNo)===Number(no)));
+   return Object.values(V.pokemon||{}).filter(p=>evolutionEntries(p).some(e=>e.targetSpeciesId?e.targetSpeciesId===String(no):Number(e.toNo)===Number(no)));
  }
  function rootOf(m){
    let cur=m,seen=new Set();
-   while(cur&&!seen.has(cur.no)){
-     seen.add(cur.no);const ps=parentsOf(cur.no);if(!ps.length)break;cur=ps[0];
+   while(cur&&!seen.has(evoIdentity(cur))){
+     seen.add(evoIdentity(cur));const ps=parentsOf(cur.speciesId||cur.no);if(!ps.length)break;cur=ps[0];
    }
    return cur||m;
  }
  function descendantsOf(root){
    const out=[],seen=new Set();
-   const walk=p=>{if(!p||seen.has(p.no))return;seen.add(p.no);out.push(p);evolutionEntries(p).forEach(e=>walk(byNo(e.toNo)))};
+   const walk=p=>{if(!p||seen.has(evoIdentity(p)))return;seen.add(evoIdentity(p));out.push(p);evolutionEntries(p).forEach(e=>walk(evoTarget(e)))};
    walk(root);return out;
  }
  function evoNode(p,currentNo,cls="",condition=null,incoming=false){
    if(!p)return "";
-   const face=window.PS_IMAGE_FILES.pokemonFaces?.[p.no]||(p.faceImage&&p.faceImage!==p.image?p.faceImage:null);
-   const image=window.PS_DEV_ASSETS.image(face,'pokemon',p.no,'face',p.name);
-   const isCurrent=Number(p.no)===Number(currentNo);
+   const face=p.speciesId?(p.faceImage||p.image):window.PS_IMAGE_FILES.pokemonFaces?.[p.no]||(p.faceImage&&p.faceImage!==p.image?p.faceImage:null);
+   const image=window.PS_DEV_ASSETS.image(face,'pokemon',p.speciesId||p.no,'face',p.name);
+   const isCurrent=String(currentNo).includes('_')?evoIdentity(p)===String(currentNo):Number(p.no)===Number(currentNo);
    const conditions=condition?`<span class="v106-evo-conditions">${evolutionConditions(condition).map((x,i)=>`<span>${evolutionConditionMarkup(x)}${i===0&&!incoming?'<span class="v111-evo-next" aria-hidden="true">›</span>':''}</span>`).join("")}</span>`:"";
-   return `<div class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}"><span class="v111-evo-body"><button type="button" class="psg-evo-open" aria-label="${detailEsc(p.name)}の詳細"><span class="v31-evo-name">${detailEsc(p.name)}</span><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span></button>${conditions}</span></div>`;
+   return `<div class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}" data-evo-species="${evoIdentity(p)}"><span class="v111-evo-body"><button type="button" class="psg-evo-open" aria-label="${detailEsc(p.name)}の詳細"><span class="v31-evo-name">${detailEsc(p.name)}</span><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span></button>${conditions}</span></div>`;
+ }
+ function evoNatureMarkup(condition){
+   const id=`psg-evo-natures-${++evolutionItemPopoverIndex}`;
+   return `<button type="button" class="psg-evo-items" popovertarget="${id}" aria-label="進化する性格を確認">性格で分岐</button><span id="${id}" class="psg-evo-item-popover" popover="auto">${condition.allowedNatures.map(detailEsc).join('・')}</span>`;
  }
  function evoEdgeMarkup(condition){
    const rows=evolutionConditions(condition);
-   return `<div class="psg-evo-edge" aria-label="進化条件">${rows.map(row=>`<span class="psg-evo-edge-condition">${evolutionConditionMarkup(row)}</span>`).join('')}<span class="psg-evo-edge-arrow" aria-hidden="true" style="grid-row:1 / span ${Math.max(2,rows.length)}">›</span></div>`;
+   return `<div class="psg-evo-edge" aria-label="進化条件">${rows.map(row=>`<span class="psg-evo-edge-condition">${row==='性格で分岐'&&condition.allowedNatures?.length?evoNatureMarkup(condition):evolutionConditionMarkup(row)}</span>`).join('')}<span class="psg-evo-edge-arrow" aria-hidden="true" style="grid-row:1 / span ${Math.max(2,rows.length)}">›</span></div>`;
  }
  function nestedEvolutionTree(root,currentNo){
    const leafCount=(p,seen=new Set())=>{
-     if(!p||seen.has(p.no))return 0;
-     const next=new Set(seen).add(p.no),edges=evolutionEntries(p).filter(e=>byNo(e.toNo));
-     return edges.length?edges.reduce((n,e)=>n+leafCount(byNo(e.toNo),next),0):1;
+     if(!p||seen.has(evoIdentity(p)))return 0;
+     const next=new Set(seen).add(evoIdentity(p)),edges=evolutionEntries(p).filter(e=>evoTarget(e));
+     return edges.length?edges.reduce((n,e)=>n+leafCount(evoTarget(e),next),0):1;
    };
    let columns=1;const cells=[];
    const walk=(p,depth,row,incoming=null,seen=new Set())=>{
-     if(!p||seen.has(p.no))return;
-     const next=new Set(seen).add(p.no),span=Math.max(1,leafCount(p,seen));columns=Math.max(columns,depth+1);
+     if(!p||seen.has(evoIdentity(p)))return;
+     const next=new Set(seen).add(evoIdentity(p)),span=Math.max(1,leafCount(p,seen));columns=Math.max(columns,depth+1);
      if(incoming)cells.push(`<div class="psg-evo-tree-edge" style="grid-column:${depth*2};grid-row:${row} / span ${span}">${evoEdgeMarkup(incoming)}</div>`);
      cells.push(`<div class="psg-evo-tree-cell" data-depth="${depth}" style="grid-column:${depth*2+1};grid-row:${row} / span ${span}">${evoNode(p,currentNo,'psg-evo-tree-node')}</div>`);
      let childRow=row;
      for(const edge of evolutionEntries(p)){
-       const child=byNo(edge.toNo);if(!child||next.has(child.no))continue;
+       const child=evoTarget(edge);if(!child||next.has(evoIdentity(child)))continue;
        walk(child,depth+1,childRow,edge,next);childRow+=Math.max(1,leafCount(child,next));
      }
    };
@@ -73,7 +80,7 @@
    evolutionItemPopoverIndex=0;
    const el=document.getElementById("detailEvolution"),card=document.getElementById("evolutionCard");
    if(!el||!card)return;
-   if(m.detailPreviewOnly||m.evolutionTransitions?.length){
+   if(m.detailPreviewOnly&&rootOf(m)===m){
      const transitions=m.evolutionTransitions||[];
      card.style.display=transitions.length?'':'none';
      el.replaceChildren();
@@ -106,19 +113,19 @@
          if(e.extra.includes('06:00〜18:00'))conditions.push('昼 06:00〜18:00');
          else if(e.extra.includes('18:00〜06:00'))conditions.push('夜 18:00〜06:00');
        }
-       return evoNode(byNo(e.toNo),m.no,'psg-eevee-destination',{conditions},true);
+       return evoNode(evoTarget(e),m.no,'psg-eevee-destination',{conditions},true);
      }).join('');
      el.innerHTML=`<div class="psg-eevee-family"><div class="psg-eevee-origin">${evoNode(root,m.no,'psg-eevee-root')}<div class="psg-eevee-common">進化先を選ぶ${commonCandy!=null?`<strong>共通：アメ×${commonCandy}</strong>`:''}</div></div><div class="psg-eevee-grid">${cells}</div></div>`;
    }else if(family.some(p=>evolutionEntries(p).length>1)){
      // All branching families use the same depth/row tree, including later stages.
-     el.innerHTML=nestedEvolutionTree(root,m.no);
+     el.innerHTML=nestedEvolutionTree(root,m.speciesId||m.no);
    }else{
      const chain=[];let cur=root,guard=0;
-     while(cur&&guard++<12){chain.push(cur);const es=evolutionEntries(cur);if(es.length!==1)break;cur=byNo(es[0].toNo)}
+     while(cur&&guard++<12){chain.push(cur);const es=evolutionEntries(cur);if(es.length!==1)break;cur=evoTarget(es[0])}
      let html=`<div class="v31-evo-line" style="--evo-columns:${chain.length*2-1}">`;
      chain.forEach((p,i)=>{
        const edge=i<chain.length-1?evolutionEntries(p)[0]:null;
-       html+=evoNode(p,m.no);
+       html+=evoNode(p,m.speciesId||m.no);
        if(edge)html+=evoEdgeMarkup(edge);
      });
      html+='</div>';el.innerHTML=html;
@@ -135,5 +142,5 @@
        });
      });
    });
-   el.querySelectorAll("[data-evo-no]").forEach(btn=>btn.onclick=event=>{if(event.target.closest('.psg-evo-items,.psg-evo-item-popover'))return;const no=Number(btn.dataset.evoNo);if(no&&no!==currentNo)openPokemonDetail(no,{pushHistory:true})});
+   el.querySelectorAll("[data-evo-no]").forEach(btn=>btn.onclick=event=>{if(event.target.closest('.psg-evo-items,.psg-evo-item-popover'))return;const id=btn.dataset.evoSpecies||btn.dataset.evoNo;if(id&&id!==evoIdentity(m))openPokemonDetail(id,{pushHistory:true})});
  }
