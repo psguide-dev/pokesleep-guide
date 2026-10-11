@@ -22,9 +22,9 @@
    const note=document.createElement('p');note.textContent=result.styleId?'読み取り候補を画像と照合してください。':'判定できない項目があります。候補を選ぶかチェックを外してください。';section.append(note);
    const details=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');summary.textContent='読み取りテキスト';pre.textContent=text||'文字を読み取れませんでした。';details.append(summary,pre);section.append(details);
    $('sleepImageResults').append(section);resultRows.push({check,species,style});
-  });form.hidden=false;
+  });form.hidden=false;dialog.scrollLeft=0;
  }
- $('sleepImageOpen').onclick=()=>{stop();clear();files.value='';setBusy(false);status.textContent='初回は読み取りデータを取得します。';dialog.showModal()};
+ $('sleepImageOpen').onclick=()=>{stop();clear();files.value='';setBusy(false);status.textContent='初回は読み取りデータを取得します。';dialog.showModal();dialog.scrollLeft=0};
  $('sleepImageClose').onclick=()=>dialog.close();dialog.addEventListener('close',()=>{stop();clear();files.value=''});dialog.addEventListener('cancel',()=>stop());$('sleepImageStop').onclick=()=>stop();
  files.onchange=()=>{
   stop();clear();const selected=[...files.files];
@@ -39,7 +39,18 @@
    const engine=await window.PS_IMAGE_READER.loadEngine();if(token!==epoch)return;
    ownWorker=await engine.createWorker(['jpn','eng'],1,{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0',logger:event=>{if(token===epoch&&event.status==='recognizing text')status.textContent=`画像 ${texts.length+1}/${selected.length} 読み取り中 ${Math.round(event.progress*100)}%`}});
    if(token!==epoch)return;worker=ownWorker;await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT,preserve_interword_spaces:'1'});
-   for(const file of selected){if(token!==epoch)return;const canvas=await window.PS_IMAGE_READER.canvas(file);try{const result=await worker.recognize(canvas);if(token!==epoch)return;texts.push(result.data.text||'')}finally{canvas.width=canvas.height=1}}
+   for(const file of selected){
+    if(token!==epoch)return;const canvas=await window.PS_IMAGE_READER.canvas(file);let right=null;
+    try{
+     const result=await worker.recognize(canvas);if(token!==epoch)return;
+     // The detail list keeps its names on the right, separate from the illustrations.
+     const width=canvas.width*.50,height=canvas.height*.75,scale=Math.min(1.5,Math.sqrt(3000000/(width*height)));
+     right=document.createElement('canvas');right.width=Math.round(width*scale);right.height=Math.round(height*scale);
+     right.getContext('2d').drawImage(canvas,canvas.width*.46,canvas.height*.12,width,height,0,0,right.width,right.height);
+     const extra=await worker.recognize(right);if(token!==epoch)return;
+     texts.push((result.data.text||'')+'\n'+(extra.data.text||''));
+    }finally{canvas.width=canvas.height=1;if(right)right.width=right.height=1}
+   }
    if(token!==epoch)return;review(texts);status.textContent='読み取りが終わりました。画像と候補を確認して登録してください。';
   }catch(error){if(token===epoch)status.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
   finally{if(ownWorker)try{await ownWorker.terminate()}catch{}if(token===epoch){worker=null;clearTimeout(timer);timer=null;setBusy(false)}}

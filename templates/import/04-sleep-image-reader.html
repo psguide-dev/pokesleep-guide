@@ -8,13 +8,30 @@
    return styles.filter(s=>s.id&&!seen.has(`${p.name}|${s.id}`)).map(s=>{seen.add(`${p.name}|${s.id}`);return {speciesId:window.PS_SPECIES_CATALOG.key(p),pokemon:p.name,no:p.no,...s}});
   });
  }
+ const readingKey=s=>compact(s).replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-96));
+ function oneEdit(a,b){
+  if(Math.abs(a.length-b.length)>1)return false;let i=0,j=0,edits=0;
+  while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue}if(++edits>1)return false;if(a.length>=b.length)i++;if(b.length>=a.length)j++}
+  return edits+a.length-i+b.length-j<=1;
+ }
+ function sleepNameHits(lines,rows){
+  const names=[...new Set(rows.map(r=>r.name))].filter(Boolean),found=new Map();
+  lines.forEach((line,index)=>{
+   for(const value of [line,lines[index+1]?line+lines[index+1]:'']){
+    if(!value)continue;const clean=readingKey(value.replace(/^[★☆][1-5][:：]?/,''));
+    const exact=names.filter(name=>readingKey(name)===clean);
+    const matches=exact.length?exact:names.filter(name=>clean.length>=5&&oneEdit(clean,readingKey(name)));
+    if(matches.length===1&&!found.has(matches[0]))found.set(matches[0],index);
+   }
+  });return [...found].map(([name,index])=>({name,index}));
+ }
  function parse(text,rows){
   const lines=String(text||'').split(/\r?\n/).map(compact).filter(Boolean),whole=lines.join('\n');
   const names=[...new Set(rows.map(r=>r.pokemon))].filter(name=>lines.some(line=>line===compact(name)||line.replace(/^No\.?\d+[:：]?/i,'')===compact(name)));
   const stars=[...new Set([...whole.matchAll(/(?:[★☆]\s*([1-5])|([1-5])\s*[★☆]|星[:：]?([1-5]))/g)].map(m=>Number(m[1]||m[2]||m[3])))];
   for(const line of lines)if(/^[★]{1,5}$/.test(line))stars.push(line.length);
   const starValues=[...new Set(stars)],named=rows.filter(r=>names.includes(r.pokemon));
-  const sleepNames=[...new Set(named.map(r=>r.name))].filter(name=>name&&lines.some(line=>line===compact(name)||line.replace(/^[★☆][1-5][:：]?/,'')===compact(name)));
+  const sleepNames=sleepNameHits(lines,named).map(hit=>hit.name);
   const candidates=named.filter(r=>(!sleepNames.length||sleepNames.includes(r.name))&&(!starValues.length||starValues.includes(Number(r.stars))));
   const ids=[...new Set(candidates.map(r=>r.id))],species=[...new Set(named.map(r=>r.speciesId))];
   return {speciesId:species.length===1?species[0]:null,styleId:ids.length===1&&names.length===1&&sleepNames.length<=1&&starValues.length<=1&&(sleepNames.length===1||starValues.length===1)?ids[0]:null,candidates,stars:starValues.length===1?starValues[0]:null};
@@ -24,12 +41,12 @@
   const single=parse(text,rows);if(!single.speciesId)return [single];
   const lines=String(text||'').split(/\r?\n/).map(compact).filter(Boolean);
   const speciesRows=rows.filter(r=>r.speciesId===single.speciesId);
-  const names=[...new Set(speciesRows.map(r=>r.name))].filter(name=>name&&lines.includes(compact(name)));
+  const hits=sleepNameHits(lines,speciesRows),names=hits.map(hit=>hit.name);
   if(names.length<2)return [single];
   return names.map(name=>{
    const candidates=speciesRows.filter(r=>r.name===name),ids=[...new Set(candidates.map(r=>r.id))];
-   const start=lines.indexOf(compact(name)),next=lines.slice(start+1).findIndex(line=>names.some(n=>compact(n)===line));
-   const block=lines.slice(start+1,next<0?undefined:start+1+next).join('\n');
+   const start=hits.find(hit=>hit.name===name).index,next=hits.filter(hit=>hit.index>start).map(hit=>hit.index).sort((a,b)=>a-b)[0];
+   const block=lines.slice(start+1,next).join('\n');
    const unresearched=/リサーチした数[:：-]?0(?!\d)/.test(block);
    return {speciesId:single.speciesId,styleId:ids.length===1&&!unresearched?ids[0]:null,candidates,stars:null};
   });

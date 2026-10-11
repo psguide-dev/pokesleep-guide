@@ -28,3 +28,7 @@ const batch=actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot,all);assert
 assert.equal(actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot.replace('数 - 4','数 - 0'),all).filter(r=>r.styleId).length,3);
 assert.equal(reader.parseMany('フシギダネ\nピカチュウ\nこうごうせい寝\nまるまり寝',rows).length,1,'multiple species are not cross-associated');
 console.log('Four Venusaur sleep styles in one screenshot text, zero research counts and multi-species ambiguity pass');
+
+const repaired=actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot.replace('こうごうせい寝','こうごう\nせい寝').replace('ツルだし寝','ッルだし寝'),all);assert.equal(repaired.filter(r=>r.styleId).length,4,'split OCR lines and one-character kana error preserve four reviewed candidates');
+assert.equal(actual.window.PS_SLEEP_IMAGE_READER.parseMany(screenshot.replace('ツルだし寝','全然ちがう寝'),all).filter(r=>r.styleId).length,3,'unrelated words do not become a sleep style');
+console.log('Split sleep names and unique single-character OCR repair pass');
