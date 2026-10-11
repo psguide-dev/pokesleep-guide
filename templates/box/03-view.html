@@ -54,6 +54,21 @@ function positionBoxStatPopover(){
  const top=Math.max(topEdge,Math.min(below+bubble.height<=bottom?below:anchor.top-bubble.height-6,bottom-bubble.height));
  boxStatPopover.style.left=left+'px';boxStatPopover.style.top=top+'px';
 }
+// Fit the whole skill block to half-row steps, including its padding and border.
+function resizeBoxSkillBlock(){
+ const host=document.getElementById('boxMainSkill'),section=host?.closest('.psg-box-skill-section');
+ const unit=document.querySelector('#boxSubskillRows .psg-box-subskill')?.getBoundingClientRect().height;
+ if(!section||!unit||!host.getBoundingClientRect().height)return;
+ const style=getComputedStyle(section);
+ const required=host.getBoundingClientRect().height+['paddingTop','paddingBottom','borderTopWidth','borderBottomWidth'].reduce((sum,key)=>sum+(parseFloat(style[key])||0),0);
+ const rows=Math.max(2.5,Math.ceil((required-0.01)/(unit/2))/2);
+ section.style.height=(rows*unit)+'px';
+}
+if(typeof ResizeObserver!=='undefined'){
+ const skillHost=document.getElementById('boxMainSkill');
+ if(skillHost)new ResizeObserver(resizeBoxSkillBlock).observe(skillHost);
+}
+window.addEventListener('resize',resizeBoxSkillBlock,{passive:true});
 window.addEventListener('resize',positionBoxStatPopover,{passive:true});
 window.addEventListener('scroll',positionBoxStatPopover,{passive:true});
 function syncBoxFlags(item=state.selected){
@@ -143,4 +158,5 @@ function syncLevel({refreshEditor=true}={}){
  const parent=p?.evolution;
  if(parent&&!Array.isArray(parent))document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${boxEsc(parent.to||'未確認')}　${parent.level?'Lv.'+parent.level:''}${parent.candy?'・アメ'+parent.candy+'個':''}</p>`);
  if(refreshEditor){fillBoxEditor(item,p);boxEditorDirty=false}else boxEditorDirty=true;
+ requestAnimationFrame(resizeBoxSkillBlock);
 }

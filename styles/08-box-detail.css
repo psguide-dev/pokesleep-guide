@@ -175,6 +175,7 @@
 #boxDetail .psg-box-day-conditions[open]{padding-top:5px}
 
 /* Skill identity and effect take the left three quarters; forecast gets one quarter. */
+#boxDetail .psg-box-skill-section{box-sizing:border-box;min-height:calc(2.5 * var(--box-unit-height))}
 #boxDetail .psg-box-skill-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);grid-template-rows:auto auto;gap:8px;align-items:center}
 #boxDetail .psg-box-skill-identity{grid-column:1;grid-row:1;display:grid;grid-template-columns:clamp(40px,12vw,52px) minmax(0,1fr);gap:8px;align-items:center;min-width:0}
 #boxDetail .psg-box-skill-identity>.psg-box-skill-art{display:grid;place-items:center;width:100%;margin:0}
