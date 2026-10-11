@@ -15,6 +15,7 @@ on:
       - 'PSG_received_art.py'
       - 'data-import/received-v506/**'
       - 'data-import/reference-v544/**'
+      - 'data-import/reference-v548/**'
       - 'data-import/retired-ui-images-v545.json'
       - 'PSG_biblo_assets.py'
       - 'PSG_retired_images.py'

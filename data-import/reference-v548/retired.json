@@ -1,0 +1,20 @@
+{
+  "version": 548,
+  "images": [
+    {
+      "path": "assets/pokemon/biblo-v347/0000.webp",
+      "sha256": "fb963b8bfce91dd27e171820fa8870f6d0f5b4adc3f294226ae16a5b491c13a5",
+      "replacement": "assets/pokemon/0084_default_face.webp"
+    },
+    {
+      "path": "assets/pokemon/biblo-v347/0002.webp",
+      "sha256": "aa6f376d70fe49191650a1ecd8f35b657afc9029a6e1d889b8179e80656b5e2e",
+      "replacement": "assets/pokemon/0085_default_face.webp"
+    },
+    {
+      "path": "assets/ui/ranking.webp",
+      "sha256": "4805f52e2c376467aaf2f05a974823e21a6a5345491b00a30287d0e716280251",
+      "replacement": "assets/ui/info_ranking.webp"
+    }
+  ]
+}

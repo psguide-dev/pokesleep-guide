@@ -20,5 +20,7 @@
   "info_bookshelf": "assets/ui/info_bookshelf.webp",
   "info_exp": "assets/ui/info_exp.webp",
   "info_account": "assets/ui/info_account.webp",
-  "specialty_all": "assets/ui/specialty_all.webp"
+  "specialty_all": "assets/ui/specialty_all.webp",
+  "info_natures": "assets/ui/info_natures.webp",
+  "info_ranking": "assets/ui/info_ranking.webp"
 }

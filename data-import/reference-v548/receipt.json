@@ -1,0 +1,57 @@
+{
+  "version": 548,
+  "images": [
+    {
+      "path": "assets/pokemon/0084_default_face.webp",
+      "sha256": "6998a27942044b458ac54ca5cd980646cb9fdf7d72812b43b53bd5f1d21e9a04",
+      "key": "84",
+      "PNG": "data-import/reference-v548/PNG/0084_default_face.png",
+      "bbox": [
+        3,
+        2,
+        253,
+        254
+      ]
+    },
+    {
+      "path": "assets/pokemon/0085_default_face.webp",
+      "sha256": "a4ede066b2bedb722d896a6790ae5cb533d74e26aa08d63c5bed2c79ecfc251b",
+      "key": "85",
+      "PNG": "data-import/reference-v548/PNG/0085_default_face.png",
+      "bbox": [
+        2,
+        2,
+        254,
+        254
+      ]
+    },
+    {
+      "path": "assets/ui/info_natures.webp",
+      "sha256": "f382289264cee774f76081df031ef8c334a471bc4db7ae259146fbb864b2bd6b",
+      "key": "info_natures",
+      "PNG": "data-import/reference-v548/PNG/info_natures.png",
+      "bbox": [
+        16,
+        16,
+        240,
+        240
+      ]
+    },
+    {
+      "path": "assets/ui/info_ranking.webp",
+      "sha256": "bcd6a912988d1854996ce931f6e22a72046737d75eb8c2e15a4b3eb092b53f3e",
+      "key": "info_ranking",
+      "PNG": "data-import/reference-v548/PNG/info_ranking.png",
+      "bbox": [
+        16,
+        16,
+        240,
+        240
+      ]
+    }
+  ],
+  "sourceLibraryIds": [
+    "libfile_2598d50192948191823c5323fa603ce7",
+    "libfile_d6005d60b7d481919bc489d88463bebc"
+  ]
+}

@@ -25,6 +25,10 @@ def retired_images(root):
         name = row['path']
         assert name.startswith(('assets/ui/', 'master/specialties/')) and '..' not in name.split('/') and name not in rows
         rows[name] = row
+    for row in json.loads((root / 'data-import/reference-v548/retired.json').read_text())['images']:
+        name = row['path']
+        assert name in ('assets/pokemon/biblo-v347/0000.webp', 'assets/pokemon/biblo-v347/0002.webp', 'assets/ui/ranking.webp') and name not in rows
+        rows[name] = row
     return rows
 
 

@@ -75,7 +75,7 @@ def catalog_and_images():
             assert path.startswith('assets/ui-icons/') and (ROOT/path).is_file(), path
             images[kind][name] = path
     images['ui'] = json.loads((ROOT / 'assets/ui/manifest.json').read_text())
-    assert len(images['ui']) == 22
+    assert len(images['ui']) == 24
     for path in images['ui'].values():
         assert path.startswith('assets/ui/') and (ROOT/path).is_file(), path
     catalog = {**data,'pokemon':{},'sleepStyles':{},'recipes':{},'skills':{},'ingredientAssets':{},'berries':{},'fields':{},
@@ -388,6 +388,11 @@ def build():
     restore_standard_art(ROOT, catalog, images)
     restore_biblo_assets(ROOT, catalog, images)
     bind_received_art(received, images)
+    replacement = json.loads((ROOT / 'data-import/reference-v548/receipt.json').read_text())
+    for row in replacement['images']:
+        assert hashlib.sha256((ROOT / row['path']).read_bytes()).hexdigest() == row['sha256']
+        if row['key'] in ('84', '85'):
+            images['pokemonFaces'][row['key']] = row['path']
     clean_retired_references(ROOT, images)
     core = ('help','carry','berryQty','foodRate','skillRate','ingredientSlots')
     missing = [(f'{int(no):04d} {obj["name"]}',[field for field in core if field not in obj])
@@ -400,7 +405,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v547') == 2
+    assert source.count('Review v548') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'

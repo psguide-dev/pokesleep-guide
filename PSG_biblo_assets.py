@@ -68,7 +68,7 @@ def restore_biblo_assets(root, catalog, images):
         if sid.endswith('_default') and str(int(sid.split('_')[0])) in catalog['pokemon']:
             images['sleepStyles'].update(bindings)
     apply_sleep_corrections(root, catalog, images, manifest)
-    print('Biblo: 942 sleep / 11 portraits / 6 normal bodies restored; v348 user corrections applied')
+    print('Biblo: 942 sleep / 9 portraits / 6 normal bodies restored; v348 user corrections applied')
 
 
 def apply_sleep_corrections(root, catalog, images, manifest):

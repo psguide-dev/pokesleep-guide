@@ -5,7 +5,7 @@ const received=JSON.parse(fs.readFileSync(path.join(root,"data-import/received-v
 assert.equal(received.retired.length,128);
 const ui=JSON.parse(fs.readFileSync(path.join(root,'data-import/retired-ui-images-v545.json')));
 assert.equal(ui.images.length,12);
-retired.images.push(...received.retired,...ui.images);
+retired.images.push(...received.retired,...ui.images,...JSON.parse(fs.readFileSync(path.join(root,'data-import/reference-v548/retired.json'))).images);
 for(const row of retired.images)assert(!fs.existsSync(path.join(root,row.path)),`retired file returned: ${row.path}`);
 const scripts=[...fs.readFileSync(path.join(root,'review.html'),'utf8').matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 const c={window:{},console};vm.createContext(c);
@@ -24,4 +24,4 @@ for(const sid of ['0590_default','0591_default']){
  const p=c.window.PS_FORMS.resolve(sid);assert.equal(p.boxEligible,true);
  const pending=c.window.PS_CATALOG.pendingSleepArtwork[sid];assert.equal(pending.length,4);pending.forEach(r=>check(r.image));
 }
-console.log('1305 retired paths absent; every runtime image exists; all current faces/bodies and 8 pending Foongus-family sleep images preserved');
+console.log('1308 retired paths absent; every runtime image exists; all current faces/bodies and 8 pending Foongus-family sleep images preserved');
