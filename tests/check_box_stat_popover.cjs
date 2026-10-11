@@ -28,4 +28,5 @@ assert(read('styles/07-current-ui.css').includes('inset:0 -12px;background:var(-
 assert(!read('styles/07-current-ui.css').includes('box-shadow:0 0 0 12px var(--box-type-bg'));
 assert(source.includes("artwork.classList.toggle('psg-special-portrait',p?.specialTeamLimited===true)"));
 assert(source.includes('aria-haspopup="dialog"'));assert(read('templates/10-box-detail.html').includes('popover="auto"'));
+assert(read('styles/10-detail-facts.css').includes('.psg-fact-speed>.psg-detail-stat{width:100%;height:100%}'));
 console.log('Box corrections: same-engine factors, active/locked skills, nature/mint, ribbon/evolution, cap, missing rate, special frame and bounded sticky backing passed.');
