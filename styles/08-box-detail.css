@@ -174,18 +174,19 @@
 #boxDetail .psg-box-day-conditions[open] .psg-conditions-open{display:inline}
 #boxDetail .psg-box-day-conditions[open]{padding-top:5px}
 
-/* Separate skill identity, daily forecast and effect into readable rows. */
-#boxDetail .psg-box-skill-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto;gap:8px;align-items:stretch}
-#boxDetail .psg-box-skill-heading{grid-column:1;grid-row:1;display:grid;grid-template-columns:36px minmax(0,1fr) max-content;gap:8px;align-items:center;min-width:0}
-#boxDetail .psg-box-skill-heading .psg-box-skill-art{display:grid;place-items:center;width:36px;height:36px;margin:0}
-#boxDetail .psg-box-skill-heading .psg-box-skill-art img{width:36px;height:36px;object-fit:contain}
-#boxDetail .psg-box-skill-heading>strong{font-size:clamp(16px,4.2vw,18px);font-weight:900;line-height:1.3;overflow-wrap:anywhere}
-#boxDetail .psg-box-skill-level{font-size:16px;white-space:nowrap;padding:4px 8px;border-radius:8px;background:#fff}
-#boxDetail .psg-box-skill-grid>.psg-box-effect{grid-column:1;grid-row:3;margin:0;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
-#boxDetail .psg-box-skill-forecast{grid-column:1;grid-row:2;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 10px;min-width:0;min-height:40px;box-sizing:border-box;padding:6px 10px;border-radius:10px;background:#fff;color:#111;text-align:center}
-#boxDetail .psg-box-skill-forecast small{display:block;font-size:12px;line-height:1.4}
-#boxDetail .psg-box-skill-forecast strong{font-size:20px;line-height:1.3;white-space:nowrap}
-#boxDetail .psg-box-skill-forecast .psg-box-without-camp{font-size:12px;color:#666;white-space:nowrap}
+/* Match the Dex skill card: large art beside a single compact text body. */
+#boxDetail .psg-box-skill-grid{position:relative;display:grid;grid-template-columns:clamp(52px,15vw,64px) minmax(0,1fr);grid-template-rows:auto auto auto auto;gap:5px 10px;align-items:start}
+#boxDetail .psg-box-skill-grid>.psg-box-skill-art{grid-column:1;grid-row:1 / 4;display:grid;place-items:center;width:100%;margin:5px 0 0;align-self:start}
+#boxDetail .psg-box-skill-grid>.psg-box-skill-art img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain}
+#boxDetail .psg-box-skill-heading{grid-column:2;grid-row:1;display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:6px;align-items:start;min-width:0;padding-right:30px}
+#boxDetail .psg-box-skill-heading>strong{font-size:clamp(16px,4.2vw,18px);font-weight:900;line-height:1.25;overflow-wrap:anywhere}
+#boxDetail .psg-box-skill-level{font-size:13px;line-height:1.5;white-space:nowrap;padding:0;background:transparent}
+#boxDetail .psg-box-skill-grid>.psg-box-effect{grid-column:2;grid-row:2;margin:0;font-size:14px;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+#boxDetail .psg-box-skill-forecast{grid-column:2;grid-row:3;display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:flex-start;gap:2px 7px;min-width:0;min-height:0;padding:3px 0 0;background:transparent;color:#111;text-align:left}
+#boxDetail .psg-box-skill-forecast small{display:block;font-size:11px;line-height:1.4}
+#boxDetail .psg-box-skill-forecast>small:first-child{flex-basis:100%;color:#555}
+#boxDetail .psg-box-skill-forecast strong{font-size:18px;line-height:1.3;white-space:nowrap}
+#boxDetail .psg-box-skill-forecast .psg-box-without-camp{font-size:11px;color:#666;white-space:nowrap}
 #boxDetail .psg-box-skill-forecast b{display:block;font-size:14px;line-height:1.3}
 
 #boxDetail #boxSubskillRows{grid-template-rows:repeat(2,var(--box-unit-height));gap:3px}
@@ -203,9 +204,11 @@
 #boxDetail .psg-box-nature-tile .psg-box-muted{font-size:9px;line-height:1.05}
 #boxDetail .psg-box-nature-tile .psg-mint-mark{width:12px;height:12px;margin-left:1px;border:0}
 #boxDetail .psg-box-nature-tile .psg-mint-mark .psg-ui-icon{width:12px;height:12px;margin:0}
-#boxDetail .psg-box-skill-calculation{grid-column:1;grid-row:4;margin:0;font-size:11px;color:#111}
-#boxDetail .psg-box-skill-calculation summary{width:max-content;max-width:100%;min-height:32px;display:flex;align-items:center;justify-content:flex-end;margin-left:auto;color:#111;text-align:right}
-#boxDetail .psg-box-skill-calculation p{font-size:10px}
+#boxDetail .psg-box-skill-calculation{grid-column:1 / -1;grid-row:4;margin:0;min-height:0;font-size:11px;color:#111}
+#boxDetail .psg-box-skill-calculation>summary{position:absolute;right:0;top:-3px;box-sizing:border-box;width:30px;height:30px;display:grid;place-items:center;margin:0;padding:0;color:#111;font-size:19px;list-style:none;cursor:pointer}
+#boxDetail .psg-box-skill-calculation>summary::-webkit-details-marker{display:none}
+#boxDetail .psg-box-skill-calculation[open]{padding-top:8px;border-top:1px solid #dfe5ef}
+#boxDetail .psg-box-skill-calculation p{font-size:11px}
 
 /* v316: centered nature, side-by-side evaluation and growth summaries. */
 #boxDetail .psg-box-nature-effects{text-align:center;justify-items:center}
