@@ -52,14 +52,14 @@
   });
  }
  // A count alone identifies styles only when the full catalog for one identity is collected.
- function isOverview(text){const value=compact(text);return (value.match(/No\.?\d+/gi)||[]).length>=4&&(value.match(/[0-5]\/[1-5]/g)||[]).length>=4}
+ function isOverview(text){const value=compact(text);return (value.match(/No\.?\d+/gi)||[]).length>=4&&(value.match(/\d{1,2}\/[1-9]\d?/g)||[]).length>=4}
  function parseOverview(columns,rows){
   const results=[];
   columns.forEach((text,column)=>{
    const value=String(text||'').split(/\r?\n/).map(compact).join('\n'),markers=[...value.matchAll(/No\.?(\d{1,4})(?!\d)/gi)];
    markers.forEach((marker,index)=>{
     const no=Number(marker[1]),block=value.slice(marker.index+marker[0].length,markers[index+1]?.index);
-    const counts=[...block.matchAll(/([0-5])\/([1-5])/g)];
+    const counts=[...block.matchAll(/(?<!\d)(\d{1,2})\/([1-9]\d?)(?!\d)/g)];
     const candidates=rows.filter(r=>Number(r.no)===no),species=[...new Set(candidates.map(r=>r.speciesId))];
     const count=counts.length===1?Number(counts[0][1]):null,total=counts.length===1?Number(counts[0][2]):null;
     const speciesId=species.length===1?species[0]:null,styles=candidates.filter(r=>r.speciesId===speciesId);
@@ -68,11 +68,15 @@
    });
   });return results.sort((a,b)=>a.index-b.index||a.column-b.column);
  }
+ function selectedOverviewStyles(group,speciesId,rows){
+  const styles=rows.filter(r=>r.speciesId===speciesId&&Number(r.no)===group.no);
+  return group.count===group.total&&group.total>0&&new Set(styles.map(r=>r.id)).size===group.total?styles.map(r=>r.id):[];
+ }
  function mergeFound(saved,ids,rows){
   if(!saved||typeof saved!=='object'||Array.isArray(saved))throw Error('保存済みデータを確認してください。');
   const known=new Set(rows.map(r=>r.id));if(ids.some(id=>!known.has(id)))throw Error('寝顔を確認してください。');
   return {...saved,...Object.fromEntries(ids.map(id=>[id,true]))};
  }
- window.PS_SLEEP_IMAGE_READER={entries,parse,parseMany,isOverview,parseOverview,mergeFound};
+ window.PS_SLEEP_IMAGE_READER={entries,parse,parseMany,isOverview,parseOverview,selectedOverviewStyles,mergeFound};
 })();
 </script>

@@ -51,3 +51,16 @@ assert.equal(overviewReader.parseOverview(['No.1\n4/4\n2/4'],all)[0].styleIds.le
 const alternate=Array.from(all).concat([{...all.find(r=>r.no===1),speciesId:'alternate',id:'alternate-sleep'}]);
 assert.equal(overviewReader.parseOverview(['No.1\n4/4'],alternate)[0].speciesId,null,'No. alone cannot select an alternate identity');
 console.log('Actual overview OCR maps 16 identities to 64 sleep IDs; partial, ambiguous and mismatched counts remain unselected');
+
+for(const no of [37,38]){
+ const group=overviewReader.parseOverview([`No.${no}\n4/4`],all)[0];assert.equal(group.speciesId,null);
+ for(const suffix of ['default','alola']){const key=String(no).padStart(4,'0')+'_'+suffix,ids=overviewReader.selectedOverviewStyles(group,key,all);assert.equal(ids.length,4);assert(ids.every(id=>all.some(r=>r.id===id&&r.speciesId===key)));}
+ assert.equal(overviewReader.selectedOverviewStyles({...group,count:2},String(no).padStart(4,'0')+'_alola',all).length,0);
+ assert.equal(overviewReader.selectedOverviewStyles(group,'0001_default',all).length,0,'No. correction never inherits complete checks');
+}
+const costumeGroup=overviewReader.parseOverview(['No.25\n2/2'],all)[0];
+assert.equal(overviewReader.selectedOverviewStyles(costumeGroup,'0025_holiday',all).length,2);
+assert.equal(overviewReader.selectedOverviewStyles(costumeGroup,'0025_default',all).length,0);
+assert.equal(overviewReader.parseOverview(['No.25\n9/9'],all)[0].total,9);
+assert.equal(overviewReader.parseOverview(['No.25\n16/16'],all)[0].total,16);
+console.log('Explicit regional/costume choice selects its own complete styles, keeps partial counts manual and reads larger totals');
