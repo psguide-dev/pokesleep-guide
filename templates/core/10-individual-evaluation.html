@@ -40,7 +40,7 @@ function individualFixedIdeals(p){
 function individualIdeal(p,level){
  return Object.fromEntries(Object.entries(individualFixedIdeals(p)).map(([role,ideal])=>[role,ideal?{...ideal,rate:individualOpportunities({level,nature:ideal.nature,subskills:ideal.subskills},p)[role]}:null]));
 }
-function individualEvaluation(item,p){
+function individualEvaluationReasons(item,p){
  const reasons=[],count=SUBSKILL_LEVELS.filter(n=>n<=item.level).length,active=SUBSKILL_LEVELS.slice(0,count).map((_,i)=>!p.mythicalSettings||item.mythicalState?.subskillUnlocked?.[i]===true?item.subskills?.[i]:null);
  if(!item.mint&&!Object.hasOwn(NATURE_EFFECTS,item.nature))reasons.push('性格を設定してください');
  for(let i=0;i<count;i++){
@@ -50,6 +50,10 @@ function individualEvaluation(item,p){
  }
  if(new Set(active.filter(Boolean)).size!==active.filter(Boolean).length)reasons.push('サブスキルの重複を修正してください');
  if(!Number.isInteger(item.level)||item.level<1||item.level>MAX_POKEMON_LEVEL)reasons.push('対応範囲内のレベルを設定してください');
+ return reasons;
+}
+function individualEvaluation(item,p){
+ const reasons=individualEvaluationReasons(item,p);
  if(reasons.length)return {reasons,rows:[]};
  const rates=individualOpportunities(item,p),neutral=individualOpportunities({level:item.level,mint:true,subskills:[],mythicalState:item.mythicalState},p),ideal=individualIdeal({...p,mythicalSettings:null},item.level);
  if(p.mythicalSettings)for(const [role,reference] of Object.entries(ideal))if(reference)reference.rate=individualOpportunities({level:item.level,nature:reference.nature,subskills:reference.subskills,mythicalState:item.mythicalState},p)[role];

@@ -1,0 +1,53 @@
+// No adopted standard population or rank bands yet. Production references stay empty.
+window.PS_EVALUATION_ENGINE_VERSION='daily-v594';
+window.PS_STANDARD_REFERENCES={version:null,engineVersion:window.PS_EVALUATION_ENGINE_VERSION,entries:{}};
+function individualStandardContext(item,p){
+ const skill=window.PS_CATALOG.skills?.[p.mainSkillId];
+ return {species:p.no,form:speciesKey(p),level:item.level,
+  ingredients:[1,30,60].map(unlock=>{const slot=p.ingredientSlots?.find(s=>s.unlock===unlock);return item.ingredients?.[unlock]||(slot?.candidates?.length===1?slot.candidates[0].name:null)}),
+  skillLevel:Math.min(Math.max(1,item.skillLevel||1),skill?.maxLevel||7),ribbon:item.ribbonHours||0,
+  evolutionStage:speciesEvolutionStage(p),engineVersion:window.PS_EVALUATION_ENGINE_VERSION,referenceVersion:window.PS_STANDARD_REFERENCES.version};
+}
+function individualStandardEvaluation(item,p,simple){
+ const table=window.PS_STANDARD_REFERENCES,adapter=window.PS_STANDARD_EVAL;
+ const pending=reason=>({status:'pending',reason,rank:null});
+ if(!table.version)return pending('reference_missing');
+ if(table.engineVersion!==window.PS_EVALUATION_ENGINE_VERSION)return pending('reference_mismatch');
+ const context=individualStandardContext(item,p),specialty=simple.specialty==='food'?'ingredient':simple.specialty;
+ try{
+  const reference=table.entries[adapter.contextKey(context)];
+  return adapter.simpleEvaluate(context,specialty,{conditions:adapter.CONDITIONS,values:{berry:simple.actual.values.berry,ingredient:simple.actual.values.food,skill:simple.actual.values.skill}},reference);
+ }catch{return pending('reference_mismatch')}
+}
+function renderIndividualEvaluation(item,p,options={}){
+ if(typeof dailyBaseline!=='function')return renderIndividualEvaluationLegacy(item,p,options);
+ if(!p)return '<p class="psg-box-muted">姿が未確認のため評価できません。</p>';
+ if(item.level>MAX_POKEMON_LEVEL)return '<p class="psg-box-muted">未実装Lvのため、解放後の比較は未計算です。</p>';
+ const evaluation=individualSimpleEvaluation(item,p,options.member,{neutral:!window.PS_STANDARD_REFERENCES.version});
+ if(evaluation.reasons.length)return `<div class="psg-evaluation-pending"><p>評価待ち</p><ul>${evaluation.reasons.map(reason=>`<li>${boxEsc(reason)}</li>`).join('')}</ul></div>`;
+ const labels={berry:'きのみ',food:'食材',skill:'スキル'},units={berry:'エナジー',food:'個',skill:'回'},role=evaluation.specialty;
+ const number=value=>value==null?'未確認':window.PS_NUMBERS.display(value),standard=individualStandardEvaluation(item,p,evaluation);
+ const score=standard.status==='ready'?`標準比 <b>${number(standard.standardIndex)}</b>${standard.rank?`　${boxEsc(standard.rank)}`:''}`:evaluation.neutral?`無補正比 <b>${number(evaluation.mainIndex)}</b>（試作）`:'標準比：未判定';
+ const reference=standard.status==='ready'?`標準 ${number(standard.standard)}${units[role]}`:evaluation.neutral?`無補正 ${number(evaluation.neutral.values[role])}${units[role]}`:'標準 未確認';
+ const status=standard.status==='ready'?`標準差 ${standard.standardDifferencePercent>=0?'＋':''}${number(standard.standardDifferencePercent)}%`:'標準個体との比較：基準準備中';
+ const summary=`<div class="psg-individual-row is-primary" data-role="${role}"><div class="psg-individual-score"><strong>${labels[role]}の簡易評価</strong><p>${score}</p><p class="psg-box-muted">${labels[role]}／日 ${number(evaluation.actual.values[role])}${units[role]}　${reference}</p><p class="psg-box-muted">${status}</p></div></div>`;
+ if(options.compact)return summary;
+ return `${summary}<p class="psg-box-muted">キャンチケあり・4時間回収。回収頻度によって実際の食材数・スキル発動数は変わります。</p><button type="button" class="btn psg-evaluation-open" aria-expanded="false" aria-controls="boxEvaluationDetails">詳しい評価を見る</button><div id="boxEvaluationDetails" class="psg-evaluation-detail" hidden></div>`;
+}
+function bindIndividualEvaluation(host,item,p){
+ const button=host.querySelector('.psg-evaluation-open'),detail=host.querySelector('.psg-evaluation-detail');if(!button||!detail)return;
+ const snapshot=structuredClone(item),key=individualTrialKey(snapshot,p);let loaded=false,pending=false;
+ button.onclick=()=>{
+  const open=button.getAttribute('aria-expanded')!=='true';button.setAttribute('aria-expanded',String(open));
+  detail.hidden=!open;button.textContent=open?'詳しい評価を閉じる':'詳しい評価を見る';
+  if(!open||loaded||pending)return;
+  pending=true;detail.textContent='評価を計算しています…';detail.setAttribute('aria-busy','true');
+  // Yield a paint before the requested comparisons, and discard detached/stale work.
+  requestAnimationFrame(()=>setTimeout(()=>{
+   if(!host.contains(button)||key!==individualTrialKey(item,p)){pending=false;return}
+   try{detail.innerHTML=renderIndividualEvaluationDetails(snapshot,p);loaded=true}
+   catch{detail.textContent='評価を計算できませんでした。もう一度開いてください。'}
+   finally{pending=false;detail.removeAttribute('aria-busy')}
+  },0));
+ };
+}

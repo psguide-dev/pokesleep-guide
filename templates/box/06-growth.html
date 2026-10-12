@@ -36,8 +36,18 @@ function renderBoxGrowth(item,p,milestones){
   const ready=result.status==='estimate';
   const candy=ready?`約${result.candy.toLocaleString()}個`:'計算保留';
   const shards=ready?`約${result.shards.toLocaleString()}`:'計算保留';
-  const comparison=unavailable?'<p class="psg-box-muted">未実装Lvのため、必要数・個体比較は未計算です。</p>':renderIndividualEvaluation({...item,level:target},p,{compact:true});
-  return `<div class="psg-growth-target${unavailable?' is-unavailable':''}"><div class="psg-milestone"${ready?'':` title="${boxEsc(result.reason)}"`}><b>Lv.${target} ${labels.join('・')}${unavailable?'（未実装）':''}</b><div><span>アメ</span><strong>${candy}</strong></div><div><span>ゆめのかけら</span><strong>${shards}</strong></div></div><details class="psg-growth-comparison"><summary>解放後の個体比較 ▼</summary>${comparison}</details></div>`;
+  const comparison=unavailable?'<p class="psg-box-muted">未実装Lvのため、必要数・個体比較は未計算です。</p>':'<div class="psg-growth-evaluation"></div>';
+  return `<div class="psg-growth-target${unavailable?' is-unavailable':''}"><div class="psg-milestone"${ready?'':` title="${boxEsc(result.reason)}"`}><b>Lv.${target} ${labels.join('・')}${unavailable?'（未実装）':''}</b><div><span>アメ</span><strong>${candy}</strong></div><div><span>ゆめのかけら</span><strong>${shards}</strong></div></div><details class="psg-growth-comparison" data-level="${target}"><summary>解放後の個体比較 ▼</summary>${comparison}</details></div>`;
  }).join('');
  return `<div class="psg-growth-milestones">${rows}</div>`+(p?.mythicalSettings?'<p class="psg-box-muted">Lv到達だけでは枠を解放しません。解放状態は個体を編集して記録してください。</p>':'');
+}
+
+function bindBoxGrowthComparisons(host,item,p){
+ for(const panel of host.querySelectorAll('.psg-growth-comparison')){
+  const target=Number(panel.dataset.level),content=panel.querySelector('.psg-growth-evaluation');if(!content)continue;
+  let loaded=false;panel.ontoggle=()=>{
+   if(!panel.open||loaded||!host.contains(panel))return;
+   content.innerHTML=renderIndividualEvaluation({...item,level:target},p,{compact:true});loaded=true;
+  };
+ }
 }

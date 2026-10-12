@@ -13,32 +13,60 @@ function evaluateIndividualTrial(specialty,actual,neutral,unlimited,controls={})
  const eligible=candidates.filter(c=>c.label==='両立候補');
  return {indices,retention,candidates,mainIndex:indices[specialty],type:eligible.length?eligible.map(c=>`${labels[specialty]}−${labels[c.role]}型`).join(' / '):`${labels[specialty]}型`};
 }
-function individualTrialEvaluation(item,p){
+const INDIVIDUAL_SIMPLE_CACHE=new WeakMap();
+function individualTrialKey(item,p){
+ return JSON.stringify([item,p,window.PS_EVALUATION_ENGINE_VERSION||'daily-v594',window.PS_STANDARD_REFERENCES?.version||null]);
+}
+function individualTrialCache(store){
+ const catalog=window.PS_CATALOG;let cache=store.get(catalog);
+ if(!cache){cache=new Map();store.set(catalog,cache)}return cache;
+}
+function cacheIndividualTrial(cache,key,value){
+ if(cache.size>=64)cache.delete(cache.keys().next().value);cache.set(key,value);return value;
+}
+function individualTrialSnapshot(member){
+ if(!member||member.missing)return {member,reasons:member?.reasons||['日産計算の入力を確認してください']};
+ const food=member.normalFoods?[...member.normalFoods.values()].reduce((n,q)=>n+q,0):null;
+ return {member,values:{berry:Number.isFinite(member.normalBerries)?member.normalBerries*berryEnergyAtLevel(member.berryBase,member.level):null,food,skill:Number.isFinite(member.stats?.skill)&&member.skillName?member.skillTriggers:null}};
+}
+function calculateIndividualTrial(record,unlimitedCarry=false){
+ const result=dailyBaseline([record.id],[record],window.PS_CATALOG,4,100,true,3,[],0,{},null,{},null,{unlimitedCarry});
+ return individualTrialSnapshot(result.members.find(m=>m.id===record.id));
+}
+function individualSimpleEvaluation(item,p,member,options={}){
  const specialty={きのみ:'berry',食材:'food',スキル:'skill'}[p?.specialty];
  if(!specialty)return {reasons:['この得意の新基軸は設計待ちです']};
- const reasons=individualEvaluation(item,p).reasons;if(reasons.length)return {reasons};
- const catalog=window.PS_CATALOG;
- let cache=INDIVIDUAL_TRIAL_CACHE.get(catalog);if(!cache){cache=new Map();INDIVIDUAL_TRIAL_CACHE.set(catalog,cache)}
- const key=JSON.stringify([item,p.no,p.speciesId,p.help,p.carry,p.foodRate,p.skillRate,p.mainSkillId,p.specialty,p.berryQty,p.ingredientSlots]);if(cache.has(key))return cache.get(key);
- const calculate=(record,unlimitedCarry=false)=>{
-  const result=dailyBaseline([record.id],[record],catalog,4,100,true,3,[],0,{},null,{},null,{unlimitedCarry});
-  const member=result.members.find(m=>m.id===record.id);
-  if(!member||member.missing)return {member,reasons:member?.reasons||['日産計算の入力を確認してください']};
-  const food=member.normalFoods?[...member.normalFoods.values()].reduce((n,q)=>n+q,0):null;
-  return {member,values:{berry:Number.isFinite(member.normalBerries)?member.normalBerries*berryEnergyAtLevel(member.berryBase,member.level):null,food,skill:Number.isFinite(member.stats?.skill)&&member.skillName?member.skillTriggers:null}};
- };
- const actual=calculate(item),neutral=calculate({...item,mint:true,subskills:[]}),unlimited=calculate(item,true);
- if(actual.reasons||neutral.reasons||unlimited.reasons)return {reasons:[...new Set([...(actual.reasons||[]),...(neutral.reasons||[]),...(unlimited.reasons||[])])]};
+ const reasons=individualEvaluationReasons(item,p);if(reasons.length)return {reasons};
+ const key=individualTrialKey(item,p),cache=individualTrialCache(INDIVIDUAL_SIMPLE_CACHE);
+ let result=cache.get(key);
+ if(!result){
+  // Reuse the camp-only member already calculated for the food/skill forecast.
+  const actual=member?individualTrialSnapshot(member):calculateIndividualTrial(item);
+  if(actual.reasons)return actual;
+  result=cacheIndividualTrial(cache,key,{reasons:[],specialty,actual,neutral:null,mainIndex:null});
+ }
+ // Adopted standard references require no neutral simulation on the summary path.
+ if(options.neutral!==false&&!result.neutral){
+  const neutral=calculateIndividualTrial({...item,mint:true,subskills:[]});if(neutral.reasons)return neutral;
+  result.neutral=neutral;result.mainIndex=trialRatio(result.actual.values[specialty],neutral.values[specialty]);
+ }
+ return result;
+}
+function individualTrialEvaluation(item,p){
+ const simple=individualSimpleEvaluation(item,p);if(simple.reasons.length)return simple;
+ const {specialty,actual,neutral}=simple,cache=individualTrialCache(INDIVIDUAL_TRIAL_CACHE),key=individualTrialKey(item,p);
+ if(cache.has(key))return cache.get(key);
+ const unlimited=calculateIndividualTrial(item,true);if(unlimited.reasons)return unlimited;
  const effects={berry:'berryQtyBonus',food:'foodRateBonus',skill:'skillRateBonus'},controls={};
  for(const role of ['berry','food','skill'].filter(k=>k!==specialty)){
   const index=(item.subskills||[]).findIndex((name,i)=>SUBSKILL_LEVELS[i]<=item.level&&(!p.mythicalSettings||item.mythicalState?.subskillUnlocked?.[i]===true)&&SUBSKILLS[name]?.effect===effects[role]);
   if(index<0)continue;
-  const subskills=[...item.subskills],removed=subskills[index];subskills[index]='';const control=calculate({...item,subskills});if(!control.reasons)controls[role]={...control,removed};
+  const subskills=[...item.subskills],removed=subskills[index];subskills[index]='';const control=calculateIndividualTrial({...item,subskills});if(!control.reasons)controls[role]={...control,removed};
  }
  const result={reasons:[],specialty,actual,neutral,unlimited,...evaluateIndividualTrial(specialty,actual.values,neutral.values,unlimited.values,controls)};
- if(cache.size>=64)cache.delete(cache.keys().next().value);cache.set(key,result);return result;
+ return cacheIndividualTrial(cache,key,result);
 }
-function renderIndividualEvaluation(item,p,options={}){
+function renderIndividualEvaluationDetails(item,p,options={}){
  // Isolated legacy tests/contexts may not load the daily engine.
  if(typeof dailyBaseline!=='function')return renderIndividualEvaluationLegacy(item,p,options);
  if(!p)return '<p class="psg-box-muted">姿が未確認のため評価できません。</p>';

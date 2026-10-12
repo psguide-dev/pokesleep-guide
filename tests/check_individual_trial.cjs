@@ -1,7 +1,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync('review.html','utf8'),catalog=JSON.parse(html.split('window.PS_CATALOG=')[1].split(';\n')[0]);
 const ctx={window:{PS_CATALOG:catalog},structuredClone,boxEsc:String};vm.createContext(ctx);
-for(const file of ['templates/00-number-format.html','templates/core/07-corrections.html','templates/core/10-individual-evaluation.html','templates/core/12-individual-trial.html'])vm.runInContext(fs.readFileSync(file,'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+for(const file of ['templates/00-number-format.html','templates/core/07-corrections.html','templates/core/10-individual-evaluation.html','templates/core/12-individual-trial.html','templates/core/13-individual-simple.html'])vm.runInContext(fs.readFileSync(file,'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 vm.runInContext(require('./daily_kernel.cjs'),ctx);
 const actual=ctx.dailyBaseline,calls=[];ctx.dailyBaseline=(...args)=>{calls.push(args);return actual(...args)};
 const p=catalog.pokemon[1],item={id:'trial',no:1,level:25,skillLevel:3,nature:'がんばりや',role:'きのみ',ingredients:{1:p.ingredientSlots[0].candidates[0].name},subskills:['きのみの数S','食材確率アップM'],ribbonHours:0};
@@ -12,7 +12,7 @@ assert.equal(e.candidates.find(c=>c.role==='berry').removed,'きのみの数S');
 assert(calls.every(a=>a[3]===4&&a[4]===100&&a[5]===true&&a[6]===3&&a[7].length===0&&a[8]===0&&a[12]===null));assert.equal(calls.filter(a=>a[13].unlimitedCarry).length,1);
 assert.equal(e.actual.member.stockLimit,e.unlimited.member.stockLimit);
 const count=calls.length;assert.equal(ctx.individualTrialEvaluation(item,p),e);assert.equal(calls.length,count);
-const output=ctx.renderIndividualEvaluation(item,p);assert(output.includes('主軸指数'));assert(output.includes('試作'));assert(!output.includes('理想比'));assert(output.includes('キャンチケあり'));assert(!output.includes('Infinity'));
+const output=ctx.renderIndividualEvaluationDetails(item,p);assert(output.includes('主軸指数'));assert(output.includes('試作'));assert(!output.includes('理想比'));assert(output.includes('キャンチケあり'));assert(!output.includes('Infinity'));
 const neutral=ctx.individualTrialEvaluation({...item,level:1,mint:true,subskills:[]},p);assert(Math.abs(neutral.mainIndex-100)<1e-10);
 const input={berry:1700,food:125,skill:4},reference={berry:1000,food:100,skill:3},unlimited={berry:1800,food:150,skill:5},controls={berry:{values:{berry:1100,food:125,skill:4.5},removed:'きのみの数S'}};
 assert.equal(ctx.evaluateIndividualTrial('food',input,reference,unlimited,controls).candidates[0].label,'両立候補');

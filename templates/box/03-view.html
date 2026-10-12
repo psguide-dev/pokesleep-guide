@@ -173,9 +173,12 @@ function syncLevel({refreshEditor=true}={}){
  natureHost.title=[natureText,...calc.unknown].join('・');natureHost.setAttribute('aria-label',`性格 ${item.nature||'未設定'}・${natureHost.title}`);
  natureHost.innerHTML=`<div class="psg-box-nature-row"><div class="psg-box-nature-name"><small>性格</small><strong>${boxEsc(item.nature||'未設定')}${item.mint?mintIcon:''}</strong></div><div class="psg-box-nature-effects">${natureEffects}</div></div>`;
  document.getElementById('boxEvaluationRole').textContent='（得意：'+(p?.specialty||'未設定')+'・試作）';
- document.getElementById('boxEvaluation').innerHTML=renderIndividualEvaluation(item,p);
+ const evaluationHost=document.getElementById('boxEvaluation');
+ evaluationHost.innerHTML=renderIndividualEvaluation(item,p,{member:daily.member});
+ bindIndividualEvaluation(evaluationHost,item,p);
  const milestones=[...new Set([...slots.map(s=>s.unlock).filter(n=>n>1),...SUBSKILL_LEVELS])].filter(n=>n>item.level).sort((a,b)=>a-b).slice(0,2);
  document.getElementById('boxGrowth').innerHTML=renderBoxGrowth(item,p,milestones);
+ bindBoxGrowthComparisons(document.getElementById('boxGrowth'),item,p);
  if(p?.evolutionTransitions?.length&&!p.detailPreviewOnly){
   const targets=p.evolutionTransitions.filter(edge=>edge.transitionEnabled).map(edge=>{const target=window.PS_FORMS.resolve(edge.targetSpeciesId),condition=edge.conditionsSource;return target?`${target.name}（Lv.${condition?.レベル}・アメ${condition?.アメ個数}個）`:null}).filter(Boolean);
   if(targets.length)document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${targets.map(boxEsc).join(' / ')}・性格で分岐</p>`);

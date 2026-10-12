@@ -1,0 +1,36 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync('review.html','utf8'),catalog=JSON.parse(html.split('window.PS_CATALOG=')[1].split(';\n')[0]);
+const frames=[],timers=[];
+const ctx={window:{PS_CATALOG:catalog},structuredClone,boxEsc:String,speciesKey:p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`,requestAnimationFrame:fn=>frames.push(fn),setTimeout:fn=>timers.push(fn)};
+vm.createContext(ctx);
+for(const f of ['templates/00-number-format.html','templates/00-standard-evaluation.html','templates/core/07-corrections.html','templates/core/10-individual-evaluation.html','templates/core/12-individual-trial.html','templates/core/13-individual-simple.html','templates/box/06-growth.html'])vm.runInContext(fs.readFileSync(f,'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+vm.runInContext(require('./daily_kernel.cjs'),ctx);
+const calculate=ctx.dailyBaseline,calls=[];ctx.dailyBaseline=(...args)=>{calls.push(args);return calculate(...args)};
+ctx.individualIdealCandidates=()=>{throw Error('Population enumeration must not run on the detail page')};
+const p=catalog.pokemon[1],item={id:'lazy',no:1,level:25,skillLevel:3,nature:'がんばりや',ingredients:{1:p.ingredientSlots[0].candidates[0].name},subskills:['きのみの数S','食材確率アップM'],ribbonHours:0};
+const forecast=ctx.dailyBaseline([item.id],[item],catalog,4,100,true,3).members[0],before=calls.length;
+const simpleHTML=ctx.renderIndividualEvaluation(item,p,{member:forecast});
+assert.equal(calls.length,before+1,'reuse the actual forecast; only the neutral comparison is added');
+assert(calls.every(args=>!args[13]?.unlimitedCarry),'unlimited carry stays on the explicit detail path');
+assert(simpleHTML.includes('無補正比'));assert(simpleHTML.includes('基準準備中'));assert(simpleHTML.includes('詳しい評価を見る'));assert(!simpleHTML.includes('主軸を削る副軸'));
+const initial=calls.length;ctx.renderBoxGrowth(item,p,[30]);assert.equal(calls.length,initial,'closed growth comparisons do not calculate evaluation');
+function makeHost(){
+ const button={attrs:{'aria-expanded':'false'},getAttribute(k){return this.attrs[k]},setAttribute(k,v){this.attrs[k]=v}},detail={hidden:true,setAttribute(){},removeAttribute(){}};
+ const host={attached:true,querySelector:s=>s==='.psg-evaluation-open'?button:detail,contains:()=>host.attached};return {host,button,detail};
+}
+const {host,button,detail}=makeHost();ctx.bindIndividualEvaluation(host,item,p);assert.equal(calls.length,initial);
+button.onclick();assert.equal(calls.length,initial,'click yields a paint before comparisons');assert.equal(detail.hidden,false);
+frames.shift()();timers.shift()();assert.equal(calls.length,initial+2,'only unlimited and a berry removal comparison remain');
+assert(detail.innerHTML.includes('副軸・両立の確認'));assert(calls.at(-2)[13].unlimitedCarry);
+const loaded=calls.length;button.onclick();button.onclick();assert.equal(calls.length,loaded,'close/reopen reuses the unchanged detail result');
+const stale=makeHost();ctx.bindIndividualEvaluation(stale.host,item,p);stale.button.onclick();stale.host.attached=false;frames.shift()();timers.shift()();assert.equal(calls.length,loaded,'detached page work is discarded');
+const snapshot=ctx.individualSimpleEvaluation(item,p),table=ctx.window.PS_STANDARD_REFERENCES;
+table.version='fixture-only';let context=ctx.individualStandardContext(item,p),key=ctx.window.PS_STANDARD_EVAL.contextKey(context);
+table.entries[key]={key,specialty:'ingredient',conditions:ctx.window.PS_STANDARD_EVAL.CONDITIONS,standard:snapshot.actual.values.food,ideal:snapshot.actual.values.food*2,rankBands:null};
+const matched=ctx.individualStandardEvaluation(item,p,snapshot);assert.equal(matched.status,'ready');assert.equal(matched.standardIndex,100);assert.equal(matched.rank,null);
+const readyBefore=calls.length;assert(ctx.renderIndividualEvaluation(item,p,{member:forecast}).includes('標準比'));assert.equal(calls.length,readyBefore,'a supplied standard uses lookup and ratios without an extra simulation');
+assert.equal(ctx.individualStandardEvaluation({...item,ingredients:{...item.ingredients,30:'different'}},p,snapshot).status,'pending','ingredient configuration mismatches never reuse a reference');
+table.engineVersion='stale';assert.equal(ctx.individualStandardEvaluation(item,p,snapshot).status,'pending');
+table.engineVersion=ctx.window.PS_EVALUATION_ENGINE_VERSION;table.entries[key].standard=0;assert.equal(ctx.individualStandardEvaluation(item,p,snapshot).status,'pending','zero references are not zero scores');
+const changed=ctx.individualTrialEvaluation({...item,skillLevel:4},p);assert.notEqual(changed,snapshot);assert(calls.length>loaded,'changed individual inputs invalidate detail comparisons');
+console.log('Forecast reuse, no enumeration/hidden comparisons, explicit deferred detail, unchanged reuse, stale-page cancellation and future standard matching verified');
