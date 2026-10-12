@@ -31,7 +31,7 @@
  function rootOf(m){
    let cur=m,seen=new Set();
    while(cur&&!seen.has(evoIdentity(cur))){
-     seen.add(evoIdentity(cur));const ps=parentsOf(cur.speciesId||cur.no);if(!ps.length)break;cur=ps[0];
+     seen.add(evoIdentity(cur));const ps=parentsOf(cur.speciesId||cur.no);const origin=cur.evolutionFromSpeciesId?byNo(cur.evolutionFromSpeciesId):null;if(origin&&!ps.includes(origin))ps.unshift(origin);if(!ps.length)break;cur=ps[0];
    }
    return cur||m;
  }

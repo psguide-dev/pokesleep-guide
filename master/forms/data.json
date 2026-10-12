@@ -5540,7 +5540,8 @@
       "boxEligible": true,
       "calculationStatus": "individual_record_supported_daily_pending",
       "dataNote": "Box登録・個体設定に対応。特殊スキルを含む日産は未対応。",
-      "dailyCalculationStatus": "pending_special_skill"
+      "dailyCalculationStatus": "pending_special_skill",
+      "evolutionFromSpeciesId": "0848_default"
     },
     {
       "speciesId": "0849_low_key",
@@ -5694,7 +5695,8 @@
       "boxEligible": true,
       "calculationStatus": "individual_record_supported_daily_pending",
       "dataNote": "Box登録・個体設定に対応。特殊スキルを含む日産は未対応。",
-      "dailyCalculationStatus": "pending_special_skill"
+      "dailyCalculationStatus": "pending_special_skill",
+      "evolutionFromSpeciesId": "0848_default"
     }
   ],
   "detailFormGroups": [

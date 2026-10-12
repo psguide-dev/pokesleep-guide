@@ -180,8 +180,13 @@ function syncLevel({refreshEditor=true}={}){
   const targets=p.evolutionTransitions.filter(edge=>edge.transitionEnabled).map(edge=>{const target=window.PS_FORMS.resolve(edge.targetSpeciesId),condition=edge.conditionsSource;return target?`${target.name}（Lv.${condition?.レベル}・アメ${condition?.アメ個数}個）`:null}).filter(Boolean);
   if(targets.length)document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${targets.map(boxEsc).join(' / ')}・性格で分岐</p>`);
  }
+ const origin=p?.evolutionFromSpeciesId?window.PS_FORMS.resolve(p.evolutionFromSpeciesId):null;
+ if(origin){
+  const edge=origin.evolutionTransitions?.find(edge=>edge.transitionEnabled&&edge.targetSpeciesId===speciesKey(p)),condition=edge?.conditionsSource;
+  if(condition)document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化元：${boxEsc(origin.name)}　Lv.${condition.レベル}・アメ${condition.アメ個数}個・性格で分岐</p>`);
+ }
  const parent=p?.evolution;
- if(parent&&!Array.isArray(parent))document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${boxEsc(parent.to||'未確認')}　${parent.level?'Lv.'+parent.level:''}${parent.candy?'・アメ'+parent.candy+'個':''}</p>`);
+ if(parent?.toNo&&!Array.isArray(parent))document.getElementById('boxGrowth').insertAdjacentHTML('beforeend',`<p class="psg-box-muted">進化先：${boxEsc(parent.to||'未確認')}　${parent.level?'Lv.'+parent.level:''}${parent.candy?'・アメ'+parent.candy+'個':''}</p>`);
  if(refreshEditor){fillBoxEditor(item,p);boxEditorDirty=false}else boxEditorDirty=true;
  requestAnimationFrame(resizeBoxSkillBlock);
 }
