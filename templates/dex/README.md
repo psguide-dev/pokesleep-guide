@@ -10,6 +10,7 @@
 | 詳細の配置 | 02-detail-screen.html |
 | 詳細の状態・DOM参照 | 03-detail-controller.html |
 | 寝顔・フィールド | 04-sleep-and-fields.html |
+| 寝顔カード・月・星の表示 | ../../styles/dex/02-sleep-cards.css |
 | 基本能力・姿切り替え | 05-identity.html |
 | 食材表示 | 06-food.html |
 | 進化 | 07-evolution.html |
@@ -20,5 +21,7 @@
 スキル表示は ../detail/05-skill*.html と ../skills/ を共通のまま使います。画像は ../images/、マスターは master/、ボックス一覧は ../core/06-lists.html に残します。共有のCSSは styles/ の既存ファイルを使います。
 
 通常種や姿の追加はマスターを編集します。今回の分離では保存形式、計算、DOM、見た目を変更していません。
+
+進化は条件の正規化、系統の探索、通常・分岐・イーブイの描画、イベント接続を分けています。`renderEvolution` は表示先の更新を担当します。通常と姿違いは同じ系統探索を使います。
 
 検証: python3 PSG_build_master.py → .github/workflows/build-review.yml の必須チェック。比較基準がある場合は node tests/check_fragment_assembly.cjs <基準フォルダー> でJavaScript完全一致を確認できます。

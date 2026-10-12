@@ -217,18 +217,7 @@
 .psg-recipe-provider-missing{font-size:9px;color:#708178}
 .psg-recipe-provider-art small{position:absolute;bottom:-2px;right:-2px;border-radius:5px;background:#fff;padding:2px;font-size:9px;color:#111}
 @media(max-width:620px){.psg-recipe-sticky .psg-subpage-head h2{font-size:17px}.psg-recipe-energy .psg-recipe-energy-max{font-size:16px}}
-#v12Sleep .psg-sleep-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-#v12Sleep .psg-sleep-card{min-width:0;overflow:hidden;background:#fff;border:1px solid #e4e1eb;border-radius:15px;padding:7px}
-#v12Sleep .psg-sleep-photo{position:relative;aspect-ratio:4/3;display:grid;place-items:center;border-radius:10px;background:var(--sleep-tab-bg,#f2ecff);overflow:hidden}
-#v12Sleep .psg-sleep-photo img{display:block;width:100%;height:100%;object-fit:contain}
-#v12Sleep .psg-sleep-no-image{font-size:13px;color:#75827c;font-weight:700}
-#v12Sleep .psg-sleep-toggle{position:static;flex:0 0 30px;display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:transparent;color:#6d7a73;font-size:21px;line-height:1;box-shadow:none;cursor:pointer}
-#v12Sleep .psg-sleep-toggle .psg-sleep-moon{display:block;width:24px;height:24px;object-fit:contain}
-#v12Sleep .psg-sleep-toggle:focus-visible{outline:2px solid #368cff;outline-offset:2px}
-#v12Sleep .psg-sleep-caption{display:flex;align-items:center;justify-content:center;gap:4px;padding:5px 0 0;color:#111;font-size:12px;font-weight:800;text-align:center;overflow-wrap:anywhere}
-#dexDetail .v12-tabs .psg-sleep-tab-count{display:inline;font-size:.83em;font-weight:800;white-space:nowrap}
-#v12Sleep .psg-sleep-stars{flex:none;color:#d6a500;font-size:14px}
-#v12Sleep .psg-sleep-empty{margin:0;padding:22px 14px;border:1px solid #e4e1eb;border-radius:15px;background:#fff;color:#55645c;font-size:13px;line-height:1.6}
+
 
 /* The tab strip follows the type-colored identity card and stays pinned with it. */
 @media(max-width:620px){

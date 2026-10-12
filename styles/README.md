@@ -12,9 +12,11 @@
 | `04-basic-blocks.css` | 詳細の情報ブロック、通常進化・分岐進化 |
 | `05-responsive-detail.css` | 図鑑詳細の画面幅別調整 |
 | `06-mobile-overrides.css` | スマホの固定ヘッダー・詳細の配置調整 |
-| `07-current-ui.css` | 現行の共通画像、料理、情報、寝顔、進化など |
+| `07-current-ui.css` | 現行の共通画像、料理、情報、進化など |
+| `dex/02-sleep-cards.css` | 寝顔カード、寝顔名の後ろの月、星の色 |
 | `08-box-detail.css` | ボックス個体詳細と編集フォーム |
-| `09-list-cards.css` | 図鑑カードの見出し・画像・下部アイコン |
+| `dex/01-list-cards.css` | 図鑑カードの見出し・画像・下部アイコン |
+| `09-list-cards.css` | 図鑑・ボックス・チームの通常枠と特別枠 |
 | `14-comparisons.css` | 比較表示 |
 | `10-page-headers.css` | 共通の見出し・戻るボタン・情報ページ固定行 |
 | `21-skills.css` | スキル一覧 |

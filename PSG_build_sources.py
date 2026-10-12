@@ -136,6 +136,7 @@ STYLE_NAMES = (
     '05-responsive-detail.css',
     '06-mobile-overrides.css',
     '07-current-ui.css',
+    'dex/02-sleep-cards.css',
     '08-box-detail.css',
     'dex/01-list-cards.css',
     '09-list-cards.css',

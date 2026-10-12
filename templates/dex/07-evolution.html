@@ -1,9 +1,17 @@
  function evoIdentity(p){return p.speciesId||`${String(p.no).padStart(4,'0')}_default`}
  function evoTarget(edge){return byNo(edge.targetSpeciesId||edge.toNo)}
+ function evoMatches(p,key){
+   return String(key).includes('_')?evoIdentity(p)===String(key):Number(p.no)===Number(key);
+ }
+ function normalizeEvolutionTransition(edge){
+   const source=edge.conditionsSource||{};
+   return {...edge,toNo:evoTarget(edge)?.no,level:source.レベル??source.最低レベル,
+     item:source.道具,candy:source.アメ個数,extra:edge.allowedNatures?.length?'性格で分岐':null};
+ }
  function evolutionEntries(m){
    if(!m)return [];
    const regular=m.detailPreviewOnly?[]:(Array.isArray(m.evolution)?m.evolution:[m.evolution]).filter(e=>e?.toNo);
-   return [...regular,...(m.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(e=>({...e,toNo:evoTarget(e)?.no,level:e.conditionsSource?.レベル??e.conditionsSource?.最低レベル,item:e.conditionsSource?.道具,candy:e.conditionsSource?.アメ個数,extra:e.allowedNatures?.length?'性格で分岐':null}))];
+   return [...regular,...(m.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(normalizeEvolutionTransition)];
  }
  let evolutionItemPopoverIndex=0;
  function evolutionConditions(e){
@@ -28,7 +36,7 @@
  }
  function parentsOf(no){
    const all=[...Object.values(V.pokemon||{}),...(window.PS_FORMS?.records.values()||[])];
-   return all.filter(p=>evolutionEntries(p).some(e=>{const target=evoTarget(e);return target&&(String(no).includes('_')?evoIdentity(target)===String(no):Number(target.no)===Number(no))}));
+   return all.filter(p=>evolutionEntries(p).some(e=>{const target=evoTarget(e);return target&&evoMatches(target,no)}));
  }
  function rootOf(m){
    let cur=m,seen=new Set();
@@ -46,7 +54,7 @@
    if(!p)return "";
    const face=p.speciesId?(p.faceImage||p.image):window.PS_IMAGE_FILES.pokemonFaces?.[p.no]||(p.faceImage&&p.faceImage!==p.image?p.faceImage:null);
    const image=window.PS_DEV_ASSETS.image(face,'pokemon',p.speciesId||p.no,'face',p.name);
-   const isCurrent=String(currentNo).includes('_')?evoIdentity(p)===String(currentNo):Number(p.no)===Number(currentNo);
+   const isCurrent=evoMatches(p,currentNo);
    const conditions=condition?`<span class="v106-evo-conditions">${evolutionConditions(condition).map((x,i)=>`<span>${evolutionConditionMarkup(x)}${i===0&&!incoming?'<span class="v111-evo-next" aria-hidden="true">›</span>':''}</span>`).join("")}</span>`:"";
    return `<div class="v31-evo-node ${isCurrent?"is-current":""} ${cls}" data-evo-no="${p.no}" data-evo-species="${evoIdentity(p)}"><span class="v111-evo-body"><button type="button" class="psg-evo-open" aria-label="${detailEsc(p.name)}の詳細"><span class="v31-evo-name">${detailEsc(p.name)}</span><span class="v31-evo-image">${image}<span class="v31-evo-type">${window.PS_TYPE_ART?.(p.type)||iconForType(p.type)}</span></span></button>${conditions}</span></div>`;
  }
@@ -78,19 +86,8 @@
    };
    walk(root,0,1);return `<div class="psg-evolution-tree" style="--evo-columns:${columns*2-1}">${cells.join('')}</div>`;
  }
- function renderEvolution(m){
-   evolutionItemPopoverIndex=0;
-   const el=document.getElementById("detailEvolution"),card=document.getElementById("evolutionCard");
-   if(!el||!card)return;
-   const root=rootOf(m),family=descendantsOf(root),rootBranches=evolutionEntries(root);
-   if(family.length<=1){
-     card.style.display=m.evolutionStatus==="未確認"?"":"none";
-     el.textContent=m.evolutionStatus==="未確認"?"進化条件未確認":"";
-     return;
-   }
-   card.style.display="";
-   // Eevee's eight destinations need the full width for readable requirements.
-   if(Number(root.no)===133&&rootBranches.length>1){
+ // Layout builders return markup; only renderEvolution updates the host.
+ function eeveeEvolutionMarkup(root,rootBranches,m){
      const commonCandy=rootBranches.every(e=>e.candy===rootBranches[0].candy)?rootBranches[0].candy:null;
      const cells=rootBranches.map(e=>{
        const conditions=[];
@@ -104,11 +101,9 @@
        }
        return evoNode(evoTarget(e),m.no,'psg-eevee-destination',{conditions},true);
      }).join('');
-     el.innerHTML=`<div class="psg-eevee-family"><div class="psg-eevee-origin">${evoNode(root,m.no,'psg-eevee-root')}<div class="psg-eevee-common">進化先を選ぶ${commonCandy!=null?`<strong>共通：アメ×${commonCandy}</strong>`:''}</div></div><div class="psg-eevee-grid">${cells}</div></div>`;
-   }else if(family.some(p=>evolutionEntries(p).length>1)){
-     // All branching families use the same depth/row tree, including later stages.
-     el.innerHTML=nestedEvolutionTree(root,m.speciesId||m.no);
-   }else{
+     return `<div class="psg-eevee-family"><div class="psg-eevee-origin">${evoNode(root,m.no,'psg-eevee-root')}<div class="psg-eevee-common">進化先を選ぶ${commonCandy!=null?`<strong>共通：アメ×${commonCandy}</strong>`:''}</div></div><div class="psg-eevee-grid">${cells}</div></div>`;
+ }
+ function linearEvolutionMarkup(root,m){
      const chain=[];let cur=root,guard=0;
      while(cur&&guard++<12){chain.push(cur);const es=evolutionEntries(cur);if(es.length!==1)break;cur=evoTarget(es[0])}
      let html=`<div class="v31-evo-line" style="--evo-columns:${chain.length*2-1}">`;
@@ -117,8 +112,9 @@
        html+=evoNode(p,m.speciesId||m.no);
        if(edge)html+=evoEdgeMarkup(edge);
      });
-     html+='</div>';el.innerHTML=html;
-   }
+     return html+'</div>';
+ }
+ function bindEvolutionControls(el,m){
    el.querySelectorAll('.psg-evo-items').forEach(button=>{
      const panel=document.getElementById(button.getAttribute('popovertarget'));
      if(!panel)return;
@@ -131,5 +127,22 @@
        });
      });
    });
-   el.querySelectorAll("[data-evo-no]").forEach(btn=>btn.onclick=event=>{if(event.target.closest('.psg-evo-items,.psg-evo-item-popover'))return;const id=btn.dataset.evoSpecies||btn.dataset.evoNo;if(id&&id!==evoIdentity(m))openPokemonDetail(id,{pushHistory:true})});
+   el.querySelectorAll("[data-evo-no]").forEach(btn=>btn.onclick=event=>{if(event.target.closest('.psg-evo-items,.psg-evo-item-popover'))return;const id=btn.dataset.evoSpecies||btn.dataset.evoNo;if(id&&id!==evoIdentity(m))openPokemonDetail(id,{pushHistory:true})}); }
+ function renderEvolution(m){
+   evolutionItemPopoverIndex=0;
+   const el=document.getElementById("detailEvolution"),card=document.getElementById("evolutionCard");
+   if(!el||!card)return;
+   const root=rootOf(m),family=descendantsOf(root),rootBranches=evolutionEntries(root);
+   if(family.length<=1){
+     card.style.display=m.evolutionStatus==="未確認"?"":"none";
+     el.textContent=m.evolutionStatus==="未確認"?"進化条件未確認":"";
+     return;
+   }
+   card.style.display="";
+   el.innerHTML=Number(root.no)===133&&rootBranches.length>1
+     ? eeveeEvolutionMarkup(root,rootBranches,m)
+     : family.some(p=>evolutionEntries(p).length>1)
+       ? nestedEvolutionTree(root,m.speciesId||m.no)
+       : linearEvolutionMarkup(root,m);
+   bindEvolutionControls(el,m);
  }
