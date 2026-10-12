@@ -3,12 +3,12 @@
 .screen .psg-subpage-head,#dexDetail .detail-head,#boxDetail .detail-head,.screen>.psg-screen-title,#home .psg-home-heading>h2{
  background:#fff;box-shadow:-12px 0 #fff,12px 0 #fff;
 }
-/* List headings and the app header share the canvas behind their sticky filters. */
-#dex .psg-screen-toolbar,#box .psg-screen-toolbar{
- background:var(--bg);box-shadow:-12px 0 var(--bg),12px 0 var(--bg);
+/* The entire fixed list area shares a white background. */
+#dex .psg-list-sticky,#box .psg-list-sticky,#dex .psg-screen-toolbar,#box .psg-screen-toolbar{
+ background:#fff;box-shadow:-12px 0 #fff,12px 0 #fff;
 }
 body:has(:is(#dex,#box).active)>.psg-app-header{
- background:var(--bg)!important;border-bottom:0!important;
+ background:#fff!important;border-bottom:0!important;
 }
 :root{--psg-page-header-height:calc(1.5 * var(--psg-ui-unit))}
 .screen .psg-subpage-head,#dexDetail .detail-head,#boxDetail .detail-head,#dex .psg-screen-toolbar,#box .psg-screen-toolbar,.screen>.psg-screen-title{
