@@ -2,7 +2,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('nod
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const ctx={window:{PS_CATALOG:{natures:JSON.parse(read('master/natures/data.json')),subskills:JSON.parse(read('master/subskills/data.json'))}},boxEsc:String};
 if(!Array.isArray(ctx.window.PS_CATALOG.subskills))ctx.window.PS_CATALOG.subskills=ctx.window.PS_CATALOG.subskills.records;
-vm.createContext(ctx);vm.runInContext(read('templates/00-number-format.html').replace(/<\/?script[^>]*>/g,''),ctx);vm.runInContext(read('templates/core/07-corrections.html')+read('templates/core/10-individual-evaluation.html'),ctx);
+vm.createContext(ctx);vm.runInContext(read('templates/00-number-format.html').replace(/<\/?script[^>]*>/g,''),ctx);vm.runInContext(read('templates/core/07-corrections.html')+read('templates/core/10-individual-evaluation.html')+read('templates/core/12-individual-trial.html'),ctx);
 ctx.p={no:1,help:3600,carry:10,foodRate:20,skillRate:5,berryQty:2,specialty:'きのみ'};
 const run=(item,fn='individualOpportunities')=>{ctx.item=item;return vm.runInContext(`${fn}(item,p)`,ctx)};
 const base={level:10,nature:'がんばりや',subskills:['最大所持数アップS']},a=run(base);

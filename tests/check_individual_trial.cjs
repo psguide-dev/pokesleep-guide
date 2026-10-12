@@ -1,0 +1,31 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync('review.html','utf8'),catalog=JSON.parse(html.split('window.PS_CATALOG=')[1].split(';\n')[0]);
+const ctx={window:{PS_CATALOG:catalog},structuredClone,boxEsc:String};vm.createContext(ctx);
+for(const file of ['templates/00-number-format.html','templates/core/07-corrections.html','templates/core/10-individual-evaluation.html','templates/core/12-individual-trial.html'])vm.runInContext(fs.readFileSync(file,'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+vm.runInContext(require('./daily_kernel.cjs'),ctx);
+const actual=ctx.dailyBaseline,calls=[];ctx.dailyBaseline=(...args)=>{calls.push(args);return actual(...args)};
+const p=catalog.pokemon[1],item={id:'trial',no:1,level:25,skillLevel:3,nature:'がんばりや',role:'きのみ',ingredients:{1:p.ingredientSlots[0].candidates[0].name},subskills:['きのみの数S','食材確率アップM'],ribbonHours:0};
+const before=JSON.stringify(item),e=ctx.individualTrialEvaluation(item,p);
+assert.deepEqual(Array.from(e.reasons),[]);assert.equal(e.specialty,'food');assert.equal(JSON.stringify(item),before);
+assert(e.actual.member.normalHelps>0);assert(e.actual.values.food>0);assert(e.unlimited.values.food>=e.actual.values.food);
+assert.equal(e.candidates.find(c=>c.role==='berry').removed,'きのみの数S');assert(e.candidates.find(c=>c.role==='berry').maintained<=100);
+assert(calls.every(a=>a[3]===4&&a[4]===100&&a[5]===true&&a[6]===3&&a[7].length===0&&a[8]===0&&a[12]===null));assert.equal(calls.filter(a=>a[13].unlimitedCarry).length,1);
+assert.equal(e.actual.member.stockLimit,e.unlimited.member.stockLimit);
+const count=calls.length;assert.equal(ctx.individualTrialEvaluation(item,p),e);assert.equal(calls.length,count);
+const output=ctx.renderIndividualEvaluation(item,p);assert(output.includes('主軸指数'));assert(output.includes('試作'));assert(!output.includes('理想比'));assert(output.includes('キャンチケあり'));assert(!output.includes('Infinity'));
+const neutral=ctx.individualTrialEvaluation({...item,level:1,mint:true,subskills:[]},p);assert(Math.abs(neutral.mainIndex-100)<1e-10);
+const input={berry:1700,food:125,skill:4},reference={berry:1000,food:100,skill:3},unlimited={berry:1800,food:150,skill:5},controls={berry:{values:{berry:1100,food:125,skill:4.5},removed:'きのみの数S'}};
+assert.equal(ctx.evaluateIndividualTrial('food',input,reference,unlimited,controls).candidates[0].label,'両立候補');
+assert.equal(ctx.evaluateIndividualTrial('food',{...input,food:95},reference,unlimited,controls).candidates[0].label,'主軸を削る副軸強化');
+assert.equal(ctx.evaluateIndividualTrial('skill',{...input,skill:3.2},reference,unlimited,controls).candidates[0].label,'主軸を削る副軸強化');
+assert.equal(ctx.trialRatio(0,3),0);assert.equal(ctx.trialRatio(3,0),null);assert.equal(ctx.trialRatio(null,3),null);
+assert(ctx.individualTrialEvaluation(item,{...p,specialty:'オール'}).reasons.length);
+for(const [no,primary] of [[25,'berry'],[54,'skill']]){
+ const species=catalog.pokemon[no],record={...item,id:'trial'+no,no,ingredients:{1:species.ingredientSlots[0].candidates[0].name},subskills:['きのみの数S','スキル確率アップM']};
+ const result=ctx.individualTrialEvaluation(record,species);assert.equal(result.reasons.length,0);assert.equal(result.specialty,primary);assert(Number.isFinite(result.mainIndex));
+}
+const supportCatalog={...catalog,pokemon:{...catalog.pokemon,1:{...p,mainSkillId:'trial_support'}},skills:{...catalog.skills,trial_support:{id:'trial_support',name:'test extra',maxLevel:1,effectType:'extra_help',levels:{1:{helps:6}}}}};
+ctx.window.PS_CATALOG=supportCatalog;
+const r=ctx.dailyBaseline([item.id],[item],supportCatalog,4,100,true,3),m=r.members[0];assert(m.skillExtraHelps>0);
+assert([...m.foods.values()].reduce((n,x)=>n+x,0)>[...m.normalFoods.values()].reduce((n,x)=>n+x,0));assert(m.berries>m.normalBerries);
+console.log('New individual trial connects real catalog to shared daily engine: fixed specialty, camp-only A/neutral/B/C, carry pressure, stock preservation, neutral100, no double skill yield, null/zero, cache and unchanged inputs pass.');

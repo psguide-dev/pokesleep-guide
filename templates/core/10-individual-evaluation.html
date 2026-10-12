@@ -69,7 +69,7 @@ function individualEvaluationRole(item,p){
 function individualIdealSlots(p,level,role,ideal){
  return [...ideal.subskills];
 }
-function renderIndividualEvaluation(item,p,options={}){
+function renderIndividualEvaluationLegacy(item,p,options={}){
  if(!p)return '<p class="psg-box-muted">姿が未確認のため評価できません。衣装・サイズを確認してください。</p>';
  if(item.level>MAX_POKEMON_LEVEL)return '<p class="psg-box-muted">未実装Lvのため、解放後の比較は未計算です。</p>';
  const e=individualEvaluation(item,p),labels={berry:'きのみ',food:'食材おてつだい',skill:'スキル発動機会'},roles={きのみ:'berry',食材:'food',スキル:'skill'};

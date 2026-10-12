@@ -304,3 +304,11 @@
 #boxStatPopover.psg-box-skill-popover th,#boxStatPopover.psg-box-skill-popover td{border:1px solid #d9dee7;padding:6px 3px;text-align:center;overflow-wrap:anywhere;color:#111}
 #boxStatPopover.psg-box-skill-popover thead{background:#f2f0fc}
 #boxStatPopover.psg-box-skill-popover .note{font-size:12px;font-weight:500;line-height:1.5;color:#333}
+
+/* Trial metrics use one readable column, with diagnostics folded beneath. */
+#boxDetail .psg-box-evaluation-section:has(.psg-individual-trial){height:auto;min-height:0;grid-template-rows:auto auto}
+#boxDetail #boxEvaluation:has(.psg-individual-trial){display:block}
+#boxDetail .psg-individual-trial .psg-individual-row{grid-template-columns:minmax(0,1fr)}
+#boxDetail .psg-individual-trial>.psg-box-muted{margin:5px 0;font-size:11px}
+#boxDetail .psg-individual-trial>details{margin:5px 0;font-size:12px}
+#boxDetail .psg-individual-trial .psg-individual-score p>b{font-size:20px}

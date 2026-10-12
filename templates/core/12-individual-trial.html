@@ -1,0 +1,56 @@
+// Enigma trial v1: adapt shared simulator outputs; never create a second clock.
+const INDIVIDUAL_TRIAL_CACHE=new WeakMap();
+function trialRatio(value,reference){return Number.isFinite(value)&&value>=0&&Number.isFinite(reference)&&reference>0?100*value/reference:null}
+function evaluateIndividualTrial(specialty,actual,neutral,unlimited,controls={}){
+ const axes=['berry','food','skill'],labels={berry:'きのみ',food:'食材',skill:'スキル'};
+ const indices=Object.fromEntries(axes.map(k=>[k,trialRatio(actual[k],neutral[k])])),retention=Object.fromEntries(axes.map(k=>[k,trialRatio(actual[k],unlimited[k])]));
+ const candidates=axes.filter(k=>k!==specialty).map(k=>{
+  const control=controls[k],maintained=control?trialRatio(actual[specialty],control.values[specialty]):null,gain=control?trialRatio(actual[k],control.values[k]):null;
+  const benefit=indices[k]!=null&&indices[k]>=115&&(gain==null||gain>100);
+  const label=!benefit?'副軸候補なし':indices[specialty]==null||maintained==null?'両立未確認':indices[specialty]<100||maintained<95?'主軸を削る副軸強化':'両立候補';
+  return {role:k,label,maintained,gain,removed:control?.removed||null};
+ });
+ const eligible=candidates.filter(c=>c.label==='両立候補');
+ return {indices,retention,candidates,mainIndex:indices[specialty],type:eligible.length?eligible.map(c=>`${labels[specialty]}−${labels[c.role]}型`).join(' / '):`${labels[specialty]}型`};
+}
+function individualTrialEvaluation(item,p){
+ const specialty={きのみ:'berry',食材:'food',スキル:'skill'}[p?.specialty];
+ if(!specialty)return {reasons:['この得意の新基軸は設計待ちです']};
+ const reasons=individualEvaluation(item,p).reasons;if(reasons.length)return {reasons};
+ const catalog=window.PS_CATALOG;
+ let cache=INDIVIDUAL_TRIAL_CACHE.get(catalog);if(!cache){cache=new Map();INDIVIDUAL_TRIAL_CACHE.set(catalog,cache)}
+ const key=JSON.stringify([item,p.no,p.speciesId,p.help,p.carry,p.foodRate,p.skillRate,p.mainSkillId,p.specialty,p.berryQty,p.ingredientSlots]);if(cache.has(key))return cache.get(key);
+ const calculate=(record,unlimitedCarry=false)=>{
+  const result=dailyBaseline([record.id],[record],catalog,4,100,true,3,[],0,{},null,{},null,{unlimitedCarry});
+  const member=result.members.find(m=>m.id===record.id);
+  if(!member||member.missing)return {member,reasons:member?.reasons||['日産計算の入力を確認してください']};
+  const food=member.normalFoods?[...member.normalFoods.values()].reduce((n,q)=>n+q,0):null;
+  return {member,values:{berry:Number.isFinite(member.normalBerries)?member.normalBerries*berryEnergyAtLevel(member.berryBase,member.level):null,food,skill:Number.isFinite(member.stats?.skill)&&member.skillName?member.skillTriggers:null}};
+ };
+ const actual=calculate(item),neutral=calculate({...item,mint:true,subskills:[]}),unlimited=calculate(item,true);
+ if(actual.reasons||neutral.reasons||unlimited.reasons)return {reasons:[...new Set([...(actual.reasons||[]),...(neutral.reasons||[]),...(unlimited.reasons||[])])]};
+ const effects={berry:'berryQtyBonus',food:'foodRateBonus',skill:'skillRateBonus'},controls={};
+ for(const role of ['berry','food','skill'].filter(k=>k!==specialty)){
+  const index=(item.subskills||[]).findIndex((name,i)=>SUBSKILL_LEVELS[i]<=item.level&&(!p.mythicalSettings||item.mythicalState?.subskillUnlocked?.[i]===true)&&SUBSKILLS[name]?.effect===effects[role]);
+  if(index<0)continue;
+  const subskills=[...item.subskills],removed=subskills[index];subskills[index]='';const control=calculate({...item,subskills});if(!control.reasons)controls[role]={...control,removed};
+ }
+ const result={reasons:[],specialty,actual,neutral,unlimited,...evaluateIndividualTrial(specialty,actual.values,neutral.values,unlimited.values,controls)};
+ if(cache.size>=64)cache.delete(cache.keys().next().value);cache.set(key,result);return result;
+}
+function renderIndividualEvaluation(item,p,options={}){
+ // Isolated legacy tests/contexts may not load the daily engine.
+ if(typeof dailyBaseline!=='function')return renderIndividualEvaluationLegacy(item,p,options);
+ if(!p)return '<p class="psg-box-muted">姿が未確認のため評価できません。</p>';
+ if(item.level>MAX_POKEMON_LEVEL)return '<p class="psg-box-muted">未実装Lvのため、解放後の比較は未計算です。</p>';
+ const evaluation=individualTrialEvaluation(item,p),labels={berry:'きのみ',food:'食材',skill:'スキル'},units={berry:'エナジー',food:'個',skill:'回'};
+ const number=value=>value==null?'未確認':window.PS_NUMBERS.display(value),index=value=>value==null?'比較不能':number(value);
+ if(evaluation.reasons.length)return `<div class="psg-evaluation-pending"><p>新基軸・試作：評価待ち</p><ul>${evaluation.reasons.map(reason=>`<li>${boxEsc(reason)}</li>`).join('')}</ul></div>`;
+ const role=evaluation.specialty,main=evaluation.mainIndex;
+ const summary=`<div class="psg-individual-row is-primary" data-role="${role}"><div class="psg-individual-score"><strong>${boxEsc(evaluation.type)}（試作）</strong><p>主軸指数 <b>${index(main)}</b></p><p class="psg-box-muted">${labels[role]}／日 ${number(evaluation.actual.values[role])}${units[role]}　基準 ${number(evaluation.neutral.values[role])}${units[role]}</p></div></div>`;
+ if(options.compact)return summary;
+ const secondary=evaluation.candidates.map(c=>`<div class="psg-individual-row"><div class="psg-individual-score"><strong>${labels[c.role]}指数 ${index(evaluation.indices[c.role])}・${c.label}</strong><p class="psg-box-muted">${labels[c.role]}／日 ${number(evaluation.actual.values[c.role])}${units[c.role]}　基準 ${number(evaluation.neutral.values[c.role])}${units[c.role]}</p>${c.removed?`<p>${boxEsc(c.removed)}を外した場合との主軸維持率：${number(c.maintained)}%</p>`:'<p class="psg-box-muted">単独で外す副軸補正がないため、両立の判定は未確認。</p>'}</div></div>`).join('');
+ const capacity=['berry','food','skill'].map(k=>`<p>${labels[k]}：${number(evaluation.retention[k])}${evaluation.retention[k]==null?'':'%'}</p>`).join('');
+ const foods=[...evaluation.actual.member.normalFoods].map(([name,qty])=>`${boxEsc(name)} ${number(qty)}個`).join('・');
+ return `<div class="psg-individual-trial">${summary}<p class="psg-box-muted">100＝同条件の無補正個体。100点満点ではありません。</p><details class="psg-evaluation-other"><summary>副軸・両立の確認</summary>${secondary}</details><details class="psg-box-explanation"><summary>所持数による維持率</summary>${capacity}<p class="psg-box-muted">所持数だけを無制限にした同じ個体との比較。スキルストック上限は維持。主軸指数から損失を再び引きません。</p></details><details class="psg-box-explanation"><summary>評価条件・内訳</summary><p>キャンチケあり・4時間回収・覚醒16時間＋睡眠8時間・開始げんき100・食事3回。フィールド・好物・EX・イベント補正と外部のチーム支援なし。同種族・同フォーム・同Lv・同食材構成・同登録スキルLv・同リボン・同進化段階で比較。</p><p>通常おてつだいの食材：${foods}。スキル由来の食材・きのみ・追加おてつだいは各収集軸に二重加点しません。自身の回復が通常収集へ与える影響は日産計算に含みます。チーム支援やスキル効果自体の実用性は別評価です。</p><p class="psg-box-muted">期待値は共通日産エンジンの推定。スキル保証・変動確率の精密再現は未対応。副軸115・主軸100・主軸維持95%は試案の仮境界です。性格による副軸強化や複数補正の単独比較は未接続なら両立未確認。S/A等の等級・厳選確率は出しません。</p></details></div>`;
+}

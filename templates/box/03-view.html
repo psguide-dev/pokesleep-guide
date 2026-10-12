@@ -172,7 +172,7 @@ function syncLevel({refreshEditor=true}={}){
  const natureHost=document.getElementById('boxNature');
  natureHost.title=[natureText,...calc.unknown].join('・');natureHost.setAttribute('aria-label',`性格 ${item.nature||'未設定'}・${natureHost.title}`);
  natureHost.innerHTML=`<div class="psg-box-nature-row"><div class="psg-box-nature-name"><small>性格</small><strong>${boxEsc(item.nature||'未設定')}${item.mint?mintIcon:''}</strong></div><div class="psg-box-nature-effects">${natureEffects}</div></div>`;
- document.getElementById('boxEvaluationRole').textContent='（役割：'+({berry:'きのみ',food:'食材',skill:'スキル'}[individualEvaluationRole(item,p||{}).role]||'未設定')+'）';
+ document.getElementById('boxEvaluationRole').textContent='（得意：'+(p?.specialty||'未設定')+'・試作）';
  document.getElementById('boxEvaluation').innerHTML=renderIndividualEvaluation(item,p);
  const milestones=[...new Set([...slots.map(s=>s.unlock).filter(n=>n>1),...SUBSKILL_LEVELS])].filter(n=>n>item.level).sort((a,b)=>a-b).slice(0,2);
  document.getElementById('boxGrowth').innerHTML=renderBoxGrowth(item,p,milestones);

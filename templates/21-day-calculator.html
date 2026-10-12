@@ -1,6 +1,6 @@
 // Shared daily estimate: collection timeline and team totals.
 // Keep the unused pot argument for compatibility with PS.dailyResult callers.
-function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},_legacyPotSettings=null,memberStartingEnergies={},exContext=null){
+function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collectionHours=4,initialEnergy=100,goodCamp=false,threeMeals=true,favoriteBerries=[],areaBonus=0,berryZones={},_legacyPotSettings=null,memberStartingEnergies={},exContext=null,evaluationOptions={}){
  if(exContext&&(!['berry','ingredients','skill'].includes(exContext.effect)||exContext.berries.length!==3||new Set(exContext.berries).size!==3||exContext.berries.some(n=>!Object.hasOwn(catalog.berries,n))||(exContext.fieldId==='cyan_ex'&&!['モモンのみ','シーヤのみ','オレンのみ'].includes(exContext.berries[0]))))return {members:[],foods:new Map(),pendingReason:'EXの好物①（メイン）・②③（サブ）と週効果を設定してください。シアンEXのメインはモモン・シーヤ・オレンです。'};
  const interval=[1,2,4,8].includes(Number(collectionHours))?Number(collectionHours):4;
  const mealCount=threeMeals===true?3:threeMeals===false?0:Number.isInteger(threeMeals)&&threeMeals>=0&&threeMeals<=3?threeMeals:3;
@@ -22,11 +22,13 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
   for(const member of valid){
    const helps=dailyAdvanceLinkedMember(member,hours,elapsedTicks,mealTicks,goodCamp);
    member.normalHelps=(member.normalHelps||0)+helps;
-   const regular=Math.min(helps,member.stats.carry*(goodCamp?1.2:1)/member.averageSize);
+   const regular=evaluationOptions.unlimitedCarry===true?helps:Math.min(helps,member.stats.carry*(goodCamp?1.2:1)/member.averageSize);
    const extra=Math.max(0,helps-regular);
    const triggers=Number.isFinite(member.stats.skill)&&member.skillName?expectedStoredSkills(regular,member.stats.skill,member.stockLimit):0;
    periodTriggers.set(member.id,triggers);
    for(const slot of member.slots)member.foods.set(slot.name,(member.foods.get(slot.name)||0)+regular*member.chance*(slot.qty+(member.exIngredientAdd||0))/member.slots.length);
+   for(const slot of member.slots)member.normalFoods.set(slot.name,(member.normalFoods.get(slot.name)||0)+regular*member.chance*(slot.qty+(member.exIngredientAdd||0))/member.slots.length);
+   member.normalBerries+=regular*(1-member.chance)*member.stats.berryQty+extra*member.stats.berryQty;
    member.berries+=regular*(1-member.chance)*member.stats.berryQty+extra*member.stats.berryQty;
    member.overflow+=extra*member.stats.berryQty;
   }

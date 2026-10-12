@@ -44,6 +44,7 @@ TEMPLATE_NAMES = (
     'core/06-lists.html',
     'core/07-corrections.html',
     'core/10-individual-evaluation.html',
+    'core/12-individual-trial.html',
     'core/08-fields.html',
     'fields/02-gallery.html',
     'fields/03-details.html',

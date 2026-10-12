@@ -28,7 +28,7 @@ function dailyMemberContext(item,speedContext,items,catalog,startingEnergy,exCon
   const stockLimit=['スキル','オール'].includes(species.specialty)?2:1;
   return {id:item.id,name:item.name,exIngredientAdd:ex.ingredients,exFavoriteFactor:ex.favoriteFactor,stats,slots,chance,averageSize,stockLimit,
    berryBase:catalog.berries[species.berry],berryName:species.berry,level:item.level,
-   foods:new Map(),berries:0,overflow:0,skillTriggers:0,energy:startingEnergy,skillExtraHelps:0,randomIngredients:0,
+   normalFoods:new Map(),normalBerries:0,foods:new Map(),berries:0,overflow:0,skillTriggers:0,energy:startingEnergy,skillExtraHelps:0,randomIngredients:0,
    skillId:skill?.id||species.mainSkillId,skillLevel,skillCalculationNote:skill?.calculationNote||null,skillName:skill?.name||null,skillEffectType:skill?.effectType,
    skillAmount:skillEffect?.amount,skillEnergy:skillEffect?.energy ??
     (Number.isFinite(skillEffect?.min)&&Number.isFinite(skillEffect?.max)?(skillEffect.min+skillEffect.max)/2:null),

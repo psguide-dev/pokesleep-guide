@@ -92,6 +92,7 @@ jobs:
           node tests/check_evolution_skill_policy.cjs
           node tests/check_whistle.cjs
           node tests/check_individual_evaluation.cjs
+          node tests/check_individual_trial.cjs
       - name: Check image-first species and received artwork
         run: |
           node tests/check_reference_lists.cjs
