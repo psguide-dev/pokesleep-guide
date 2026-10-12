@@ -12,7 +12,20 @@ const {firefox}=require(process.env.PSG_PLAYWRIGHT_MODULE||'playwright');
   await page.evaluate(id=>{const p=PS_FORMS.resolve(id),x={id:'retain-size',no:710,speciesId:id,name:p.name,level:1,nature:'まじめ',favorite:true};PS.state.box=[x];PS.state.selected=x;PS.refreshBoxDetail();PS.go('boxDetail');document.getElementById('boxEditor').open=true},id);
   assert.deepEqual(await page.locator('#boxEditEvolution option').evaluateAll(els=>els.map(x=>x.value)),[id,target]);
   await page.locator('#boxEditEvolution').selectOption(target);await page.evaluate(()=>document.getElementById('boxEditForm').requestSubmit());assert.equal(await page.evaluate(()=>PS.state.box[0].speciesId),target);assert.equal(await page.evaluate(()=>PS.state.box[0].id),'retain-size');
-  await page.evaluate(id=>openDexCard(id),id);await page.locator('#detailEvolution [data-evo-no]').click();assert.equal(await page.locator('.psg-dex-costume').inputValue(),target);
+  await page.evaluate(id=>openDexCard(id),id);await page.locator(`#detailEvolution [data-evo-species="${target}"] .psg-evo-open`).click();assert.equal(await page.locator('.psg-dex-costume').inputValue(),target);
  }
+ for(const [origin,target,item] of [['0037_alola','0038_alola','こおりのいし'],['0194_paldea','0980_default',null]]){
+  for(const id of [origin,target]){
+   await page.evaluate(id=>openDexCard(id),id);
+   const nodes=await page.locator('#detailEvolution [data-evo-species]').evaluateAll(els=>els.map(el=>el.dataset.evoSpecies));
+   assert.deepEqual(nodes,[origin,target],`${id}: complete family without normal-form mixing`);
+   assert.equal(await page.locator('#detailEvolution .psg-evo-edge').count(),1);
+   if(item)assert.equal(await page.locator('#detailEvolution .psg-evo-items').getAttribute('aria-label'),item);
+   else assert.ok((await page.locator('#detailEvolution').innerText()).includes('Lv.15'));
+  }
+ }
+ await page.evaluate(()=>openDexCard(475));
+ assert.equal(await page.locator('#detailEvolution .psg-evo-gender').innerText(),'♂\uFE0Eのみ');
+ assert.equal(await page.locator('#detailEvolution .psg-evo-gender').evaluate(el=>getComputedStyle(el).whiteSpace),'nowrap');
  assert.deepEqual(errors,[]);console.log('4 sizes × 2 species × 9 ribbon boundaries; same-size Box/Dex evolution and individual ID preserved');
 }finally{await b.close()}})().catch(e=>{console.error(e.stack);process.exitCode=1});

@@ -3,7 +3,7 @@
  function evolutionEntries(m){
    if(!m)return [];
    const regular=m.detailPreviewOnly?[]:(Array.isArray(m.evolution)?m.evolution:[m.evolution]).filter(e=>e?.toNo);
-   return [...regular,...(m.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(e=>({...e,toNo:evoTarget(e)?.no,level:e.conditionsSource?.レベル,candy:e.conditionsSource?.アメ個数,extra:e.allowedNatures?.length?'性格で分岐':null}))];
+   return [...regular,...(m.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(e=>({...e,toNo:evoTarget(e)?.no,level:e.conditionsSource?.レベル??e.conditionsSource?.最低レベル,item:e.conditionsSource?.道具,candy:e.conditionsSource?.アメ個数,extra:e.allowedNatures?.length?'性格で分岐':null}))];
  }
  let evolutionItemPopoverIndex=0;
  function evolutionConditions(e){
@@ -23,10 +23,12 @@
      const id=`psg-evo-items-${++evolutionItemPopoverIndex}`,label=names.join('＋');
      return `<button type="button" class="psg-evo-items" popovertarget="${id}" aria-label="${detailEsc(label)}">${names.map(name=>window.PS_UI_ART.icon('items',name)).join('')}</button><span id="${id}" class="psg-evo-item-popover" popover="auto">${detailEsc(label)}</span>`;
    }
+   if(/[♂♀]/.test(value))return `<span class="psg-evo-gender">${detailEsc(value.replace(/[♂♀]/g,symbol=>symbol+'\uFE0E'))}</span>`;
    return detailEsc(value);
  }
  function parentsOf(no){
-   return Object.values(V.pokemon||{}).filter(p=>evolutionEntries(p).some(e=>e.targetSpeciesId?e.targetSpeciesId===String(no):Number(e.toNo)===Number(no)));
+   const all=[...Object.values(V.pokemon||{}),...(window.PS_FORMS?.records.values()||[])];
+   return all.filter(p=>evolutionEntries(p).some(e=>{const target=evoTarget(e);return target&&(String(no).includes('_')?evoIdentity(target)===String(no):Number(target.no)===Number(no))}));
  }
  function rootOf(m){
    let cur=m,seen=new Set();
@@ -80,19 +82,6 @@
    evolutionItemPopoverIndex=0;
    const el=document.getElementById("detailEvolution"),card=document.getElementById("evolutionCard");
    if(!el||!card)return;
-   if(m.detailPreviewOnly&&rootOf(m)===m){
-     const transitions=m.evolutionTransitions||[];
-     card.style.display=transitions.length?'':'none';
-     el.replaceChildren();
-     for(const edge of transitions){
-       if(!edge.transitionEnabled){const note=document.createElement('p');note.className='note';note.textContent='同サイズへの進化は未確認です。サイズを自動で変更する処理は行いません。';el.append(note);continue}
-       const target=window.PS_FORMS.resolve(edge.targetSpeciesId);if(!target)continue;
-       const b=document.createElement('button');b.className='btn';b.textContent=`${target.name} ›`;b.dataset.evoNo=target.no;b.onclick=()=>openPokemonDetail(edge.targetSpeciesId,{pushHistory:true});
-       const note=document.createElement('p');note.className='note';note.textContent=Object.entries(edge.conditionsSource||{}).filter(([key])=>key!=='性格').map(([key,value])=>`${key}：${value}`).join('・');el.append(b,note);
-       if(edge.conditionsSource?.性格){const details=document.createElement('details'),summary=document.createElement('summary'),text=document.createElement('p');summary.textContent='進化する性格';text.textContent=edge.conditionsSource.性格;details.append(summary,text);el.append(details)}
-     }
-     return;
-   }
    const root=rootOf(m),family=descendantsOf(root),rootBranches=evolutionEntries(root);
    if(family.length<=1){
      card.style.display=m.evolutionStatus==="未確認"?"":"none";

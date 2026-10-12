@@ -429,6 +429,7 @@
 /* Dedicated edge columns place requirements halfway between portraits. */
 #dexDetail .psg-evo-edge{display:grid;grid-template-columns:minmax(0,1fr) 12px;grid-auto-rows:minmax(18px,auto);align-items:center;justify-items:center;gap:1px 2px;min-width:0;min-height:var(--box-unit-height);transform:translateY(7px);font-size:clamp(9px,2.35vw,11px);font-weight:850;line-height:1.2;color:#000;text-align:center}
 #dexDetail .psg-evo-edge-condition{grid-column:1;min-width:0;max-width:100%;overflow-wrap:anywhere}
+#dexDetail .psg-evo-gender{display:inline-block;white-space:nowrap;font-family:Arial,sans-serif;line-height:1.2;vertical-align:baseline}
 #dexDetail .psg-evo-edge-arrow{grid-column:2;display:flex;align-items:center;justify-content:center;align-self:stretch;font-size:36px;font-weight:700;line-height:1;color:#000}
 #dexDetail .psg-evo-tree-edge{min-width:0;align-self:center}
 #dexDetail .psg-evo-edge .psg-evo-items{justify-content:center;min-height:22px}

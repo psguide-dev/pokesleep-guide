@@ -22,7 +22,7 @@ const {firefox}=require(process.env.PSG_PLAYWRIGHT_MODULE||'playwright');
     const stats=await page.locator('#dexDetail .psg-detail-stats').innerText();assert.ok(stats.includes(expected.help.toLocaleString()+'秒'));assert.ok(stats.includes(String(expected.carry)));
     assert.ok((await page.locator('.psg-sleep-tab-count').innerText()).endsWith('/'+expected.styles));
     assert.equal(await page.locator('#detailArt .psg-form-no-image').count(),expected.preview?1:0);
-    assert.equal(await page.locator('#detailEvolution [data-evo-no]').count()>0,expected.preview?no===710:[25,133,363].includes(no));
+    assert.equal(await page.locator('#detailEvolution [data-evo-no]').count()>0,expected.preview?[710,711].includes(no):[25,133,363].includes(no));
     await page.evaluate(()=>PSG_REFRESH_DEX_DETAIL());assert.equal(await select.inputValue(),id);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
    }
