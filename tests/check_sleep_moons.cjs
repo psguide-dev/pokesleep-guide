@@ -19,7 +19,7 @@ Object.assign(c,{document:{createElement:()=>new Node()},localStorage:{getItem:k
 Object.assign(c.window,{addEventListener(){},PS:{renderDex(){throw Error("Full Dex rendering must not run on a moon toggle")},refreshDexSleep(no,saved){assert.equal(no,25);dexRefreshes++}},PS_SLEEP_PROGRESS:{progress(){return {count:6,total:9,unknown:6}}}});
 vm.runInContext(fs.readFileSync('templates/dex/04-sleep-and-fields.html','utf8'),c);
 c.renderSleepStyles({no:25,name:'ピカチュウ'});
-const toggle=()=>sleep.children.find(x=>x.className==='psg-sleep-grid').children[0].children[0].children.at(-1);
+const toggle=()=>sleep.children.find(x=>x.className==='psg-sleep-grid').children[0].children.find(x=>x.className==='psg-sleep-caption').children.find(x=>x.className==='psg-sleep-toggle');
 assert.equal(count.textContent,'0/1','current form count ignores aggregate observations');
 const originalGrid=sleep.children[0],originalToggle=toggle();
 assert.equal(toggle().attributes['aria-pressed'],'false','count-only observations do not invent an individual discovery');

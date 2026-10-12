@@ -48,11 +48,11 @@
        try{localStorage.setItem(SLEEP_FOUND_KEY,JSON.stringify(updated));sleepFound=updated;updateToggle();updateCount();window.PS?.refreshDexSleep?.(m.no,updated)}
        catch{toggle.setAttribute('aria-label','保存できませんでした。端末の保存設定を確認してください')}
      };
-     photo.appendChild(toggle);card.appendChild(photo);
+     card.appendChild(photo);
      const caption=document.createElement('div');caption.className='psg-sleep-caption';
      const stars=document.createElement('strong');stars.className='psg-sleep-stars';stars.textContent=`★${style.stars}`;
      const name=document.createElement('span');name.textContent=style.name||'名称未確認';
-     caption.append(stars,name);card.appendChild(caption);grid.appendChild(card);
+     caption.append(stars,name,toggle);card.appendChild(caption);grid.appendChild(card);
    });
    sleep.appendChild(grid);renderPendingSleepArtwork(m);
  }
