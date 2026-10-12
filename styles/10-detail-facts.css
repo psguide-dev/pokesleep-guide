@@ -130,3 +130,13 @@ main:has(#boxDetail.active){background:var(--box-page-bg,#eaf7ed);min-height:cal
 #dexDetail .v51-head-name:has(.psg-dex-name-form){white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
 #dexDetail .psg-dex-name-base{display:block;white-space:nowrap;font-size:clamp(14px,4.5vw,19px);line-height:1.15}
 #dexDetail .psg-dex-name-form{display:block;font-size:12px;font-weight:750;line-height:1.2;white-space:normal;overflow-wrap:anywhere;margin-top:2px}
+
+/* Keep the sticky panels' containing blocks through the entire scroll range.
+   Footer clearance belongs inside the active detail, not outside its boundary. */
+@media(max-width:620px) and (orientation:portrait){
+ html:has(#dexDetail.active),html:has(#boxDetail.active),
+ body:has(#dexDetail.active),body:has(#boxDetail.active){overscroll-behavior-y:none}
+ body:has(#dexDetail.active)>main,body:has(#boxDetail.active)>main{padding-bottom:0}
+ #dexDetail.active,#boxDetail.active{padding-bottom:86px}
+ #dexDetail>.psg-dex-sticky{background:var(--type-bg,#f1f7ff)!important}
+}

@@ -11,3 +11,8 @@ for(const file of ['styles/06-mobile-overrides.css','styles/07-current-ui.css'])
 }
 assert(fs.readFileSync('styles/07-current-ui.css','utf8').includes('body:has(#boxDetail.active)>main{padding-top:var(--psg-header-height)}'));
 console.log('Box fixed app header retains its flow space; ingredient slots remain in the normal scrolling food section.');
+const detailCss=fs.readFileSync('styles/10-detail-facts.css','utf8');
+assert(detailCss.includes('body:has(#dexDetail.active)>main,body:has(#boxDetail.active)>main{padding-bottom:0}'));
+assert(detailCss.includes('#dexDetail.active,#boxDetail.active{padding-bottom:86px}'));
+assert(detailCss.includes('body:has(#dexDetail.active),body:has(#boxDetail.active){overscroll-behavior-y:none}'));
+console.log('Detail footer clearance remains inside sticky ancestors; root overscroll is contained without locking scrolling.');
