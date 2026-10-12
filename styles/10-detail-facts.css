@@ -124,3 +124,9 @@ main:has(#boxDetail.active){background:var(--box-page-bg,#eaf7ed);min-height:cal
 #boxStatPopover::backdrop{background:transparent}
 #boxStatPopover .psg-stat-popover-title{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 #boxStatPopover p{margin:0;overflow-wrap:anywhere}
+
+/* Independent forms keep their identity readable in the shared detail heading. */
+#dexDetail .psg-dex-title-line:has(.psg-dex-name-form){grid-template-columns:40px minmax(0,1fr);align-items:center}
+#dexDetail .v51-head-name:has(.psg-dex-name-form){white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+#dexDetail .psg-dex-name-base{display:block;white-space:nowrap;font-size:clamp(14px,4.5vw,19px);line-height:1.15}
+#dexDetail .psg-dex-name-form{display:block;font-size:12px;font-weight:750;line-height:1.2;white-space:normal;overflow-wrap:anywhere;margin-top:2px}

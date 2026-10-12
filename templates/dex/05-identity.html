@@ -5,7 +5,9 @@
      const title=head.querySelector("h2");
      const speciesId=m.speciesId||`${String(m.no).padStart(4,'0')}_default`;
      const group=window.PS_FORMS?.groupFor(speciesId);
-     if(title) title.innerHTML=`<span class="psg-dex-title-line"><span class="v51-head-no">No.${String(m.no).padStart(3,"0")}</span><span class="v51-head-name">${detailEsc(group?.name||m.name)}</span></span>`;
+     const displayName=group?.name||m.name,parts=!group?displayName.match(/^(.+?)([（(].+[）)])$/):null;
+     const nameMarkup=parts?`<span class="psg-dex-name-base">${detailEsc(parts[1])}</span><span class="psg-dex-name-form">${detailEsc(parts[2])}</span>`:detailEsc(displayName);
+     if(title) title.innerHTML=`<span class="psg-dex-title-line"><span class="v51-head-no">No.${String(m.no).padStart(3,"0")}</span><span class="v51-head-name">${nameMarkup}</span></span>`;
      if(title&&group?.choices.length>1){
        const costume=document.createElement('select');costume.className='psg-dex-costume';
        costume.setAttribute('aria-label',group.kind==='size'?'サイズ':'衣装');
