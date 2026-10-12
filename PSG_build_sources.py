@@ -3,6 +3,7 @@
 TEMPLATE_NAMES = (
     '01-shell-head.html',
     '00-number-format.html',
+    '00-moon-status.html',
     '01-species-catalog.html',
     '01-field-routing.html',
     '01-info-routing.html',

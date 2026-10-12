@@ -98,6 +98,7 @@ jobs:
         run: |
           node tests/check_reference_lists.cjs
           node tests/check_image_first.cjs
+          node tests/check_sleep_moons.cjs
           node tests/check_biblo_assets.cjs
           node tests/check_retired_images.cjs
           python tests/check_image_archives.py

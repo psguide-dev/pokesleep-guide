@@ -3,10 +3,10 @@ function renderDex(){
  dexListDirty=false;
  const all=master.pokemon,savedSleep=readSleepBackup();
  const sleepSnapshot=window.PS_SLEEP_PROGRESS?{counts:window.PS_SLEEP_PROGRESS.read(),rows:window.PS_SLEEP_IMAGE_READER.entries()}:undefined;
- dexGrid.innerHTML=all.map(p=>`<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}" class="poke dex-card ${p.specialTeamLimited===true?'psg-special-card':''} type-${typeClass(p.type)}" data-no="${p.no}" data-species-id="${p.speciesId||''}" aria-label="No.${String(p.no).padStart(3,'0')} ${p.name}の詳細を見る">
-   <div class="dex-heading"><div class="dex-identity"><div class="dex-number-row"><span class="dex-no">No.${String(p.no).padStart(3,'0')}</span><span class="dex-discovery" aria-label="寝顔登録数 ${discoveryLabel(p,savedSleep,sleepSnapshot)}">${discoveryLabel(p,savedSleep,sleepSnapshot)}</span></div><span class="dex-name">${cardDisplayName(p.name)}</span></div></div>
+ dexGrid.innerHTML=all.map(p=>{const discovery=discoveryLabel(p,savedSleep,sleepSnapshot);return `<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}" class="poke dex-card ${p.specialTeamLimited===true?'psg-special-card':''} type-${typeClass(p.type)}" data-no="${p.no}" data-species-id="${p.speciesId||''}" aria-label="No.${String(p.no).padStart(3,'0')} ${p.name}の詳細を見る">
+   <div class="dex-heading"><div class="dex-identity"><div class="dex-number-row"><span class="dex-no">No.${String(p.no).padStart(3,'0')}</span><span class="dex-discovery" aria-label="寝顔登録数 ${discovery}">${window.PS_SLEEP_MOON.labelArt(discovery)}${discovery}</span></div><span class="dex-name">${cardDisplayName(p.name)}</span></div></div>
    <div class="dex-art">${p.detailPreviewOnly&&!p.faceImage?'<small>No image</small>':window.PS_DEV_ASSETS.image(p.faceImage||p.image,'pokemon',p.no,'face','')}</div><div class="dex-bottom"><span title="得意: ${p.specialty||'未確認'}">${specIcon(p.specialty)}</span>${[0,1,2].map(i=>`<span title="食材${['A','B','C'][i]}: ${p.ingredients?.[i]?.name||'未確認'}">${ingIcon(p.ingredients?.[i])}</span>`).join('')}</div>
-  </a>`).join('');
+  </a>`}).join('');
  hydrateSpecialtyIcons(dexGrid);
  dexRenderedPokemon=all;
  dexRenderedCards=[...dexGrid.querySelectorAll('[data-no]')];

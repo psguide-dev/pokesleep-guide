@@ -4,7 +4,7 @@ const pokemon=Array.from({length:237},(_,i)=>({no:i+1,name:`個体${i}`,type:i%2
 const dexGrid={set innerHTML(value){writes++;cards=pokemon.map(()=>({hidden:false}))},querySelectorAll(){return cards}};
 const ctx={master:{pokemon},dexGrid,dexSearch:{value:''},dexCount:{},dexEmpty:{style:{}},state:{filters:{types:new Set(),ingredients:new Set(),specs:new Set()}},readSleepBackup(){reads++;return {}},renderSelectedFilters(){},searchKey:x=>x,discoveryLabel:()=> '0/4',speciesKey:p=>p.no,typeClass:x=>x,cardDisplayName:x=>x,specIcon:()=>'',ingIcon:()=>'',hydrateSpecialtyIcons(){},window:{PS_DEX_ROUTE:{url:no=>`p/${no}`,capture(){}},PS_DEV_ASSETS:{image(){images++;return '<img>'}}}};
 const nav=fs.readFileSync('templates/core/05-navigation-and-filters.html','utf8');const match=nav.slice(nav.indexOf('function matchesDexFilters('),nav.indexOf('function discoveryLabel('));
-vm.createContext(ctx);vm.runInContext(match+fs.readFileSync('templates/dex/00-list-view.html','utf8'),ctx);ctx.renderDex();
+vm.createContext(ctx);vm.runInContext(fs.readFileSync('templates/00-moon-status.html','utf8').replace(/<\/?script[^>]*>/g,''),ctx);vm.runInContext(match+fs.readFileSync('templates/dex/00-list-view.html','utf8'),ctx);ctx.renderDex();
 assert.equal(writes,1);assert.equal(reads,1);assert.equal(images,237);assert.equal(ctx.dexCount.textContent,'237 / 237');
 const originals=[...cards];ctx.state.filters.types.add('くさ');ctx.renderDexFilters();assert.equal(cards.filter(c=>!c.hidden).length,119);
 ctx.state.filters.ingredients.add('あまいミツ');ctx.renderDexFilters();assert.equal(ctx.dexEmpty.style.display,'block');

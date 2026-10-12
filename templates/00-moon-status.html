@@ -1,0 +1,22 @@
+<script id="psg-sleep-moons">
+// One shared phase policy; counts and saved sleep-style IDs remain authoritative.
+window.PS_SLEEP_MOON=(()=>{
+ function phase(count,total){
+  if(!Number.isFinite(count)||!Number.isFinite(total)||count<0||total<=0)return null;
+  if(count===0)return 'new';
+  if(count>=total)return 'full';
+  if(count<=total/3)return 'crescent';
+  if(count<=total*2/3)return 'quarter';
+  return 'gibbous';
+ }
+ function art(count,total){
+  const name=phase(count,total);
+  return name?`<img class="psg-sleep-moon" src="assets/ui/moons/moon_${name}_64.webp" width="64" height="64" alt="" decoding="async">`:'';
+ }
+ function labelArt(label){
+  const parts=/^(\d+)\/(\d+)$/.exec(label);
+  return parts?art(Number(parts[1]),Number(parts[2])):'';
+ }
+ return Object.freeze({phase,art,labelArt});
+})();
+</script>

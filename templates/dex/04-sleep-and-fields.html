@@ -36,7 +36,7 @@
      const toggle=document.createElement('button');toggle.type='button';toggle.className='psg-sleep-toggle';
      toggle.setAttribute('aria-pressed',sleepFound[style.id]?'true':'false');
      toggle.setAttribute('aria-label',`${m.name} ${style.name||'寝顔'} ${sleepFound[style.id]?'登録済み。タップして未登録にする':'未登録。タップして登録する'}`);
-     toggle.textContent=sleepFound[style.id]?'✓':'○';
+     toggle.innerHTML=window.PS_SLEEP_MOON.art(sleepFound[style.id]?1:0,1);
      toggle.onclick=()=>{
        const updated={...sleepFound};
        if(updated[style.id])delete updated[style.id];else updated[style.id]=true;
