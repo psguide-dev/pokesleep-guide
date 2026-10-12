@@ -100,7 +100,14 @@
         "Lv.18＋カヌチャンのアメx40"
       ],
       "level": 18,
-      "candy": 40
+      "candy": 40,
+      "verification": {
+        "status": "実機確認済み",
+        "checkedAt": "2026-10-13",
+        "sourceType": "ユーザー提供のゲーム内進化画面",
+        "sourceImage": "IMG_2838.png",
+        "confirmedFields": ["level", "candy"]
+      }
     }
   ],
   "transferCandy": 5,

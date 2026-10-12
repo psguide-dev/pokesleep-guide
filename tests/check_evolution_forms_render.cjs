@@ -42,3 +42,10 @@ let portraits=0;for(const p of all.filter(p=>graph.get(key(p)).size)){
  assert(image,`${key(p)}: missing evolution portrait`);assert(fs.existsSync(image),`${key(p)}: portrait file absent`);portraits++;
 }
 console.log(`${all.length} records: ${families.size} families / ${edges} transitions / ${connected} connected stages / ${portraits} portraits verified`);
+for(const [no,target,level,candy,image] of [[957,958,18,40,'IMG_2838.png'],[958,959,29,80,'IMG_2839.png']]){
+ const edge=catalog.pokemon[no].evolution.find(e=>e.toNo===target);
+ assert.equal(edge.level,level);assert.equal(edge.candy,candy);
+ assert.equal(edge.verification.status,'実機確認済み');
+ assert.equal(edge.verification.sourceImage,image);
+ assert.deepEqual(edge.verification.confirmedFields,['level','candy']);
+}
