@@ -78,10 +78,8 @@ function matchesDexFilters(p,q,filters){
    &&(!filters.ingredients.size||p.ingredients?.some(x=>filters.ingredients.has(x.name)))
    &&(!filters.specs.size||filters.specs.has(p.specialty));
 }
-function discoveryLabel(p,saved=readSleepBackup(),snapshot){
- const aggregate=window.PS_SLEEP_PROGRESS?.progress(p.no,saved,snapshot?.counts,snapshot?.rows);
- if(aggregate?.total)return `${aggregate.count}/${aggregate.total}`;
- const styles=p.detailPreviewOnly?p.sleepStyles:window.PS_CATALOG.sleepStyles?.[p.no]||[];
+function discoveryLabel(p,saved=readSleepBackup()){
+ const styles=p.detailPreviewOnly?(p.sleepStyles||[]):window.PS_CATALOG.sleepStyles?.[p.no]||[];
  return styles.length?`${styles.filter(style=>saved[style.id]===true).length}/${styles.length}`:'—/—';
 }
 

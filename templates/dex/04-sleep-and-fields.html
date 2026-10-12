@@ -12,12 +12,13 @@
    sleep.replaceChildren();
    const styles=(m.detailPreviewOnly?(m.sleepStyles||[]):V.sleepStyles?.[m.no]||[]).filter(x=>x&&x.id&&Number.isInteger(Number(x.stars))&&Number(x.stars)>=1&&Number(x.stars)<=5)
      .slice().sort((a,b)=>Number(a.stars)-Number(b.stars)||Number(a.order||0)-Number(b.order||0)||String(a.id).localeCompare(String(b.id)));
-   const registered=styles.filter(x=>sleepFound[x.id]).length;
-   const aggregate=window.PS_SLEEP_PROGRESS?.progress(m.no,sleepFound);
-   if(aggregate?.total){const note=document.createElement('p');note.className='psg-sleep-progress-note';note.textContent=`通常・姿・衣装の合計 ${aggregate.count}/${aggregate.total}${aggregate.unknown?`（内訳未設定 ${aggregate.unknown}件）`:''}`;sleep.append(note)}
    const sleepTab=tabs.querySelector('[data-v12tab="sleep"]');
-   sleepTab.querySelector('.psg-sleep-tab-count').textContent=`${aggregate?.count??registered}/${aggregate?.total||styles.length}`;
-   sleepTab.setAttribute('aria-label',`寝顔図鑑、${aggregate?.total||styles.length}種類中${aggregate?.count??registered}種類登録済み`);
+   const updateCount=()=>{
+     const registered=styles.filter(x=>sleepFound[x.id]===true).length;
+     sleepTab.querySelector('.psg-sleep-tab-count').textContent=`${registered}/${styles.length}`;
+     sleepTab.setAttribute('aria-label',`寝顔図鑑、${styles.length}種類中${registered}種類登録済み`);
+   };
+   updateCount();
    if(!styles.length){
      const empty=document.createElement('p');empty.className='psg-sleep-empty';
      empty.textContent='寝顔データ未登録。確認できた寝顔をマスターデータに追加すると、ここに★順で表示します。';
@@ -34,13 +35,17 @@
        photo.appendChild(img);
      }else photo.appendChild(fallback);
      const toggle=document.createElement('button');toggle.type='button';toggle.className='psg-sleep-toggle';
-     toggle.setAttribute('aria-pressed',sleepFound[style.id]?'true':'false');
-     toggle.setAttribute('aria-label',`${m.name} ${style.name||'寝顔'} ${sleepFound[style.id]?'登録済み。タップして未登録にする':'未登録。タップして登録する'}`);
-     toggle.innerHTML=window.PS_SLEEP_MOON.art(sleepFound[style.id]?1:0,1);
+     const updateToggle=()=>{
+       const found=sleepFound[style.id]===true;
+       toggle.setAttribute('aria-pressed',found?'true':'false');
+       toggle.setAttribute('aria-label',`${m.name} ${style.name||'寝顔'} ${found?'登録済み。タップして未登録にする':'未登録。タップして登録する'}`);
+       toggle.innerHTML=window.PS_SLEEP_MOON.art(found?1:0,1);
+     };
+     updateToggle();
      toggle.onclick=()=>{
        const updated={...sleepFound};
        if(updated[style.id])delete updated[style.id];else updated[style.id]=true;
-       try{localStorage.setItem(SLEEP_FOUND_KEY,JSON.stringify(updated));sleepFound=updated;renderSleepStyles(m);window.PS?.renderDex?.()}
+       try{localStorage.setItem(SLEEP_FOUND_KEY,JSON.stringify(updated));sleepFound=updated;updateToggle();updateCount();window.PS?.refreshDexSleep?.(m.no,updated)}
        catch{toggle.setAttribute('aria-label','保存できませんでした。端末の保存設定を確認してください')}
      };
      photo.appendChild(toggle);card.appendChild(photo);
