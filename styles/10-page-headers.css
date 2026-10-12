@@ -7,7 +7,7 @@
 #dex .psg-list-sticky,#box .psg-list-sticky,#dex .psg-screen-toolbar,#box .psg-screen-toolbar{
  background:#fff;box-shadow:-12px 0 #fff,12px 0 #fff;
 }
-body:has(:is(#dex,#box).active)>.psg-app-header{
+body:has(:is(#dex,#box,#home).active)>.psg-app-header{
  background:#fff!important;border-bottom:0!important;
 }
 :root{--psg-page-header-height:calc(1.5 * var(--psg-ui-unit))}
@@ -27,7 +27,7 @@ body:has(:is(#dex,#box).active)>.psg-app-header{
 }
 .screen>.psg-screen-title{display:flex;align-items:center;margin:0}
 #home .psg-home-heading{grid-template-rows:var(--psg-page-header-height) var(--home-row-height);margin-top:0}
-#home .psg-home-heading{background:linear-gradient(#fff 0 var(--psg-page-header-height),var(--bg) var(--psg-page-header-height) 100%)}
+#home .psg-home-heading,#home .psg-home-heading::before{background:#fff}
 #home .psg-home-heading>h2{box-sizing:border-box;height:var(--psg-page-header-height)}
 #home #teamManagerToggle{height:var(--home-row-height)}
 .psg-recipe-sticky{padding-top:0}

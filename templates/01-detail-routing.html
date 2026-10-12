@@ -18,7 +18,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   if(isDetail)return;
   const ps=window.PS;if(!ps)return;
   const filters=ps.state.filters;
-  write({origin:screens.has(origin||ps.state.screen)?origin||ps.state.screen:'dex',returnURL:location.href,search:document.getElementById('dexSearch').value,types:[...filters.types],ingredients:[...filters.ingredients],specs:[...filters.specs],scroll:Math.max(0,window.scrollY||0),history:ps.state.history.filter(x=>screens.has(x)),field:ps.state.screen==='fieldDetail'?window.PS_FIELD_DETAIL?.fieldId:null,savedAt:Date.now()});
+  write({origin:screens.has(origin||ps.state.screen)?origin||ps.state.screen:'dex',returnURL:location.href,search:document.getElementById('dexSearch').value,types:[...filters.types],ingredients:[...filters.ingredients],specs:[...filters.specs],sleep:[...(filters.sleep||[])],scroll:Math.max(0,window.scrollY||0),history:ps.state.history.filter(x=>screens.has(x)),field:ps.state.screen==='fieldDetail'?window.PS_FIELD_DETAIL?.fieldId:null,savedAt:Date.now()});
  }
  function url(species,tab='ability'){
   const target=new URL('pokemon.html',location.href);target.searchParams.set('species',String(species));
@@ -49,7 +49,7 @@ html.psg-pokemon-page main>.screen:not(#dexDetail){display:none!important}
   const saved=read(),ps=window.PS;if(!saved||!ps)return null;
   const values=key=>Array.isArray(saved[key])?saved[key].filter(x=>typeof x==='string').slice(0,100):[];
   document.getElementById('dexSearch').value=typeof saved.search==='string'?saved.search.slice(0,200):'';
-  for(const key of ['types','ingredients','specs'])ps.state.filters[key]=new Set(values(key));
+  for(const key of ['types','ingredients','specs','sleep'])ps.state.filters[key]=new Set(values(key));
   ps.state.history=Array.isArray(saved.history)?saved.history.filter(x=>screens.has(x)):[];
   ps.refreshAssetViews();return saved;
  }

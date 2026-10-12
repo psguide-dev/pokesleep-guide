@@ -1,3 +1,4 @@
+document.getElementById('dexSleepMissing').onclick=()=>{const values=state.filters.sleep;values.size?values.clear():values.add('未登録');renderDexFilters()};
 boxSearch.oninput=renderBox;dexSearch.oninput=renderDex;
 function closeBoxAdd(){boxAddPanel.hidden=true;addBtn.setAttribute('aria-expanded','false')}
 addBtn.onclick=()=>{

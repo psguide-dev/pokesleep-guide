@@ -72,11 +72,12 @@ const specIcon=s=>specialtyIconPaths[s]?`<img class="psg-specialty-icon" data-sp
 const ingredientVisual=name=>window.PS_CATALOG?.ingredientVisual(name);
 const ingIcon=ingredient=>{const name=ingredient?.name,visual=ingredientVisual(name);return !name?'◌':visual?.image?window.PS_DEV_ASSETS.image(visual.image,'ingredient',name,'full',name):'<small class="psg-mini-missing" aria-label="No image">No<br>image</small>'};
 const searchKey=text=>String(text||'').normalize('NFKC').replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-96)).toLowerCase();
-function matchesDexFilters(p,q,filters){
+function matchesDexFilters(p,q,filters,sleepMissing=false){
  return (!q||searchKey(p.name).includes(q))
    &&(!filters.types.size||filters.types.has(p.type))
    &&(!filters.ingredients.size||p.ingredients?.some(x=>filters.ingredients.has(x.name)))
-   &&(!filters.specs.size||filters.specs.has(p.specialty));
+   &&(!filters.specs.size||filters.specs.has(p.specialty))
+   &&(!filters.sleep?.size||sleepMissing);
 }
 function discoveryLabel(p,saved=readSleepBackup()){
  const styles=p.detailPreviewOnly?(p.sleepStyles||[]):window.PS_CATALOG.sleepStyles?.[p.no]||[];
@@ -121,7 +122,7 @@ function renderSelectedFilters(kind){
  const filters=kind==='box'?state.boxFilters:state.filters;
  const node=document.getElementById(kind+'SelectedFilters');if(!node)return;
  node.replaceChildren();
- const labels={types:'タイプ',ingredients:'食材',specs:'得意',tags:'タグ'};
+ const labels={types:'タイプ',ingredients:'食材',specs:'得意',tags:'タグ',sleep:'寝顔'};
  const tags={favorite:'★ お気に入り',training:'🌱 育成',special:'✨ 特別',shiny:'🌈 色違い'};
  const fields={types:'type',ingredients:'ingredient',specs:'spec',tags:'tag'};
  for(const [key,values] of Object.entries(filters)){
@@ -140,6 +141,7 @@ function renderSelectedFilters(kind){
    chip.onclick=()=>{values.delete(value);kind==='box'?renderBox():renderDexFilters()};node.append(chip);
   }
  }
+ if(kind==='dex'){const button=document.getElementById('dexSleepMissing'),active=!!filters.sleep?.size;button?.classList.toggle('active',active);button?.setAttribute('aria-pressed',String(active))}
  hydrateSpecialtyIcons(node);
  node.hidden=!node.childElementCount;
  if(!node.hidden){const clear=document.createElement('button');clear.type='button';clear.className='psg-filter-clear';clear.textContent='全解除';clear.onclick=()=>{Object.values(filters).forEach(values=>values.clear());kind==='box'?renderBox():renderDexFilters()};node.append(clear)}

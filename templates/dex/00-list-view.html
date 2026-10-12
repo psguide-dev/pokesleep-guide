@@ -1,10 +1,11 @@
-let dexListDirty=true,dexRenderedPokemon=null,dexRenderedCards=[];
+let dexListDirty=true,dexRenderedPokemon=null,dexRenderedCards=[],dexMissingSleep=[];
 function renderDex(){
  dexListDirty=false;
  const all=master.pokemon,savedSleep=readSleepBackup();
- dexGrid.innerHTML=all.map(p=>{const discovery=discoveryLabel(p,savedSleep);return `<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}" class="poke dex-card ${p.specialTeamLimited===true?'psg-special-card':''} type-${typeClass(p.type)}" data-no="${p.no}" data-species-id="${p.speciesId||''}" aria-label="No.${String(p.no).padStart(3,'0')} ${p.name}の詳細を見る">
+ dexMissingSleep=[];
+ dexGrid.innerHTML=all.map(p=>{const discovery=discoveryLabel(p,savedSleep),[found,total]=discovery.split('/').map(Number);dexMissingSleep.push(Number.isFinite(total)&&total>0&&found<total);return `<a href="${window.PS_DEX_ROUTE.url(speciesKey(p))}" class="poke dex-card ${p.specialTeamLimited===true?'psg-special-card':''} type-${typeClass(p.type)}" data-no="${p.no}" data-species-id="${p.speciesId||''}" aria-label="No.${String(p.no).padStart(3,'0')} ${p.name}の詳細を見る">
    <div class="dex-heading"><div class="dex-identity"><div class="dex-number-row"><span class="dex-no">No.${String(p.no).padStart(3,'0')}</span><span class="dex-discovery" aria-label="寝顔登録数 ${discovery}">${window.PS_SLEEP_MOON.labelArt(discovery)}</span></div><span class="dex-name">${cardDisplayName(p.name)}</span></div></div>
-   <div class="dex-art">${p.detailPreviewOnly&&!p.faceImage?'<small>No image</small>':window.PS_DEV_ASSETS.image(p.faceImage||p.image,'pokemon',p.no,'face','')}</div><div class="dex-bottom"><span title="得意: ${p.specialty||'未確認'}">${specIcon(p.specialty)}</span>${[0,1,2].map(i=>`<span title="食材${['A','B','C'][i]}: ${p.ingredients?.[i]?.name||'未確認'}">${ingIcon(p.ingredients?.[i])}</span>`).join('')}</div>
+   <div class="dex-art">${p.detailPreviewOnly&&!p.faceImage?'<small>No image</small>':window.PS_DEV_ASSETS.image(p.faceImage||p.image,'pokemon',p.no,'face','')}</div><div class="dex-bottom"><span title="得意: ${p.specialty||'未確認'}">${specIcon(p.specialty)}</span>${[0,1,2].filter(i=>i!==2||p.ingredients?.[i]?.name).map(i=>`<span title="食材${['A','B','C'][i]}: ${p.ingredients?.[i]?.name||'未確認'}">${ingIcon(p.ingredients?.[i])}</span>`).join('')}</div>
   </a>`}).join('');
  hydrateSpecialtyIcons(dexGrid);
  dexRenderedPokemon=all;
@@ -22,10 +23,12 @@ function refreshDexSleep(no,saved){
  dexRenderedPokemon.forEach((p,index)=>{
   if(Number(p.no)!==Number(no))return;
   const badge=dexRenderedCards[index]?.querySelector('.dex-discovery');if(!badge)return;
-  const label=discoveryLabel(p,saved);
+  const label=discoveryLabel(p,saved),[found,total]=label.split('/').map(Number);
+  dexMissingSleep[index]=Number.isFinite(total)&&total>0&&found<total;
   badge.innerHTML=window.PS_SLEEP_MOON.labelArt(label);
   badge.setAttribute('aria-label',`寝顔登録数 ${label}`);
  });
+ if(state.filters.sleep?.size)renderDexFilters();
 }
 // Filter the existing cards so clearing a condition does not rebuild every image and handler.
 function renderDexFilters(){
@@ -34,7 +37,7 @@ function renderDexFilters(){
  const q=searchKey(dexSearch.value.trim());
  let visible=0;
  dexRenderedCards.forEach((card,index)=>{
-  const match=matchesDexFilters(dexRenderedPokemon[index],q,state.filters);
+  const match=matchesDexFilters(dexRenderedPokemon[index],q,state.filters,dexMissingSleep[index]);
   card.hidden=!match;if(match)visible++;
  });
  dexCount.textContent=`${visible} / ${dexRenderedPokemon.length}`;
