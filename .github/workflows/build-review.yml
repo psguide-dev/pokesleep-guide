@@ -9,6 +9,7 @@ on:
       - 'styles/**'
       - 'vendor/enigma-swap/**'
       - 'vendor/enigma-special/**'
+      - 'vendor/enigma-standard/**'
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
       - 'PSG_build_sources.py'

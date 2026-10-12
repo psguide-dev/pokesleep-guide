@@ -401,6 +401,14 @@ def build():
     for name,fields in missing:
         print(f'Forecast data pending: {name}: {", ".join(fields)}')
     print(f'Forecast core fields: {len(catalog["pokemon"])-len(missing)}/{len(catalog["pokemon"])} species complete')
+    # Bundle Enigma's adapter from its one canonical module; no browser import wait.
+    standard_source = (ROOT / 'vendor/enigma-standard/standard_eval_v2.mjs').read_text()
+    standard_script = ('<script id="psg-standard-evaluation-adapter">\nwindow.PS_STANDARD_EVAL=(()=>{\n'
+                       + standard_source.replace('export ', '')
+                       + '\nreturn Object.freeze({CONDITIONS,contextKey,simpleEvaluate});\n})();\n</script>\n')
+    standard_template = ROOT / 'templates/00-standard-evaluation.html'
+    if standard_template.read_text() != standard_script:
+        standard_template.write_text(standard_script)
     source = ''.join(path.read_text() for path in TEMPLATE_PARTS)
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
