@@ -68,7 +68,7 @@
 #dexDetail .v106-evo-conditions{order:2!important;font-weight:850;color:#111;}
 #dexDetail .v31-evo-step{min-width:19px!important;width:19px!important}
 @media(max-width:620px){
-  main:has(#boxDetail.active),main:has(#dexDetail.active){padding-top:0!important}
+  main:has(#dexDetail.active){padding-top:0!important}
   #boxDetail .detail-head,#dexDetail .detail-head{margin-top:0!important;margin-bottom:3px!important}
   #dexDetail .hero-info>.stats .stat{min-height:42px!important;padding:2px!important;gap:1px!important}
   #dexDetail{border-radius:0!important}
@@ -97,6 +97,7 @@
   #boxDetail>.psg-box-hero::before{content:"";position:absolute;inset:0 -12px;background:var(--box-type-bg,var(--bg));z-index:-1;pointer-events:none}
   #boxDetail>.psg-box-hero::after{content:"";position:absolute;top:-12px;left:-12px;right:-12px;height:12px;background:var(--box-type-bg,var(--bg));z-index:-1;pointer-events:none}
   body:has(#boxDetail.active)>.psg-app-header{position:fixed!important;inset:0 0 auto!important;width:100%}
+  /* The fixed app header is out of flow: reserve its height before detail content. */
   body:has(#boxDetail.active)>main{padding-top:var(--psg-header-height)}
   #boxDetail>.psg-box-hero::before{border-bottom:1px solid #dce0e3}
   /* Opaque backing also covers the header gap and rounded card corners. */

@@ -161,8 +161,7 @@
 .psg-evaluation-role{margin:8px 0}.psg-individual-row.is-primary{background:#fff;border:1px solid #d9e5df;border-radius:12px;padding:12px}.psg-evaluation-other{margin:12px 0}
 
 /* Food rows share the same height and ingredient-area width. */
-#boxDetail :is(.psg-box-food-section,.psg-box-food-pinned) .psg-v106-ingredient{position:relative;box-sizing:border-box;height:var(--box-unit-height);min-height:0;border:1px solid #fff;padding:2px}
-#boxDetail .psg-box-food-pinned{padding:4px 6px;margin-top:3px;border-radius:12px;background:#f3f7ff}
+#boxDetail .psg-box-food-section .psg-v106-ingredient{position:relative;box-sizing:border-box;height:var(--box-unit-height);min-height:0;border:1px solid #fff;padding:2px}
 #boxDetail .psg-v106-ingredient[data-slot="A"]{background:#e9f8ee}
 #boxDetail .psg-v106-ingredient[data-slot="B"]{background:#fdf0f3}
 #boxDetail .psg-v106-ingredient[data-slot="C"]{background:#fdf6e9}
