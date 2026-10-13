@@ -40,6 +40,14 @@ console.log('Actual Japanese-only screenshot OCR resolves all four reviewed slee
 
 const overviewOCR=JSON.parse(fs.readFileSync(__dirname+'/fixtures/sleep-overview-ocr.json','utf8'));
 const overviewReader=actual.window.PS_SLEEP_IMAGE_READER;
+// IMG_2888: first number row starts at y=354, above the old 14.5% crop (371px).
+for(const scale of [1,.5,2])for(let column=0;column<4;column++){
+ const crop=reader.overviewCrop(1179*scale,2556*scale,column);
+ assert(crop.y<=354*scale,'short-header first-row numbers must remain inside the OCR crop');
+ assert(crop.y+crop.height>=2165*scale,'last-row collection counts must remain inside the OCR crop');
+ assert(crop.x>=0&&crop.x+crop.width<=1179*scale);
+}
+assert(form.includes('PS_SLEEP_IMAGE_READER.overviewCrop('),'controller uses the tested crop geometry');
 assert(overviewReader.isOverview(overviewOCR.full));assert(!overviewReader.isOverview(screenshot));
 const overview=overviewReader.parseOverview(overviewOCR.columns,all);
 assert.deepEqual(Array.from(overview,r=>r.no),overviewOCR.expectedNos);assert(overview.every(r=>r.speciesId&&r.styleIds.length===4));

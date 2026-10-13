@@ -53,6 +53,10 @@
  }
  // A count alone identifies styles only when the full catalog for one identity is collected.
  function isOverview(text){const value=compact(text);return (value.match(/No\.?\d+/gi)||[]).length>=4&&(value.match(/\d{1,2}\/[1-9]\d?/g)||[]).length>=4}
+ // Keep the first number row when the game's header is shorter than usual.
+ function overviewCrop(width,height,column){
+  return {x:width*(.04+.23*column),y:height*.12,width:width*.23,height:height*.76};
+ }
  function parseOverview(columns,rows){
   const results=[];
   columns.forEach((text,column)=>{
@@ -116,6 +120,6 @@
   const count=Math.min(ids.length,Math.max(confirmed,counts[no]?.count||0));return {count,total:ids.length,confirmed,unknown:count-confirmed};
  }
  window.PS_SLEEP_PROGRESS={key:COUNT_KEY,normalize:normalizeCounts,read:readCounts,merge:mergeCounts,progress};
- window.PS_SLEEP_IMAGE_READER={entries,parse,parseMany,isOverview,parseOverview,groupOverview,selectedOverviewStyles,mergeFound};
+ window.PS_SLEEP_IMAGE_READER={entries,parse,parseMany,isOverview,overviewCrop,parseOverview,groupOverview,selectedOverviewStyles,mergeFound};
 })();
 </script>

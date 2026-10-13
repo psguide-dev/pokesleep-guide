@@ -123,9 +123,9 @@
       const columns=[];await worker.reinitialize('eng');if(token!==epoch)return;
       await worker.setParameters({tessedit_pageseg_mode:engine.PSM.SPARSE_TEXT,preserve_interword_spaces:'1'});
       for(let column=0;column<4;column++){
-       if(token!==epoch)return;const width=canvas.width*.23,height=canvas.height*.735,scale=Math.min(2,Math.sqrt(3000000/(width*height)));
+       if(token!==epoch)return;const crop=window.PS_SLEEP_IMAGE_READER.overviewCrop(canvas.width,canvas.height,column),{width,height}=crop,scale=Math.min(2,Math.sqrt(3000000/(width*height)));
        right=document.createElement('canvas');right.width=Math.round(width*scale);right.height=Math.round(height*scale);
-       right.getContext('2d').drawImage(canvas,canvas.width*(.04+.23*column),canvas.height*.145,width,height,0,0,right.width,right.height);
+       right.getContext('2d').drawImage(canvas,crop.x,crop.y,width,height,0,0,right.width,right.height);
        const extra=await worker.recognize(right);if(token!==epoch)return;columns.push(extra.data.text||'');right.width=right.height=1;right=null;
       }
       const overview=window.PS_SLEEP_IMAGE_READER.parseOverview(columns,window.PS_SLEEP_IMAGE_READER.entries());
