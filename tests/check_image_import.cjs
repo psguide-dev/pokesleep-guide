@@ -34,6 +34,14 @@ rectangle(36,565,188,44,[250,235,140]);rectangle(255,565,188,44,[195,235,255]);r
 const regions=reader.regionsFromPixels(pixels,480,1040);assert.equal(regions.filter(r=>r.kind==='subskill').length,5);assert.ok(regions.some(r=>r.kind==='nature'));assert.ok(regions.some(r=>r.kind==='main'));
 assert.equal(regions.find(r=>r.index===4).y,717);assert.equal(reader.regionsFromPixels(new Uint8ClampedArray(480*1040*4).fill(255),480,1040).length,0,'no grid guessed on a different screenshot');
 // Lv.14: only the first card is unlocked; pale locked blue still anchors column 2.
+// All five white cards: section headers and six border bands anchor the grid.
+const white=new Uint8ClampedArray(480*1040*4).fill(255);
+const whiteRect=(x,y,w,h,color)=>{for(let row=y;row<y+h;row++)for(let col=x;col<x+w;col++)white.set([...color,255],4*(row*480+col))};
+whiteRect(24,365,430,26,[30,210,90]);whiteRect(24,815,430,26,[30,210,90]);
+whiteRect(34,530,412,2,[160,160,160]);
+for(let i=0;i<5;i++){const x=i%2?252:34,y=560+Math.floor(i/2)*75;whiteRect(x,y,194,48,[170,170,170]);whiteRect(x+2,y+2,190,44,[250,250,250])}
+const whiteGrid=reader.regionsFromPixels(white,480,1040).filter(r=>r.kind==='subskill');assert.equal(whiteGrid.length,5);assert.equal(whiteGrid[0].y,560);assert.equal(whiteGrid[4].y,710,'main-panel bottom is not mistaken for row one');
+whiteRect(24,815,430,26,[255,255,255]);assert.equal(reader.regionsFromPixels(white,480,1040).filter(r=>r.kind==='subskill').length,0,'without both section headers no white grid is guessed');
 rectangle(255,565,188,44,[239,252,254]);
 assert.equal(reader.regionsFromPixels(pixels,480,1040).filter(r=>r.kind==='subskill').length,5,'pale locked card completes the validated grid');
 // Exercise the production save validation with catalog-backed options, without touching storage.

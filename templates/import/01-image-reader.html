@@ -62,6 +62,27 @@
    subskills:slots.map(single),candidates:unique([...lines.flatMap(hits),...regionCandidates]),
    conflicts:[speciesIds.length>1?'ポケモン':null,levelValues.length>1?'レベル':null,natureNames.length>1?'性格':null,...slots.map((v,i)=>unique(v).length>1?`Lv.${levels[i]} サブスキル`:null)].filter(Boolean)};
  }
+ // Card borders also locate white cards; the green section headers bound the search.
+ function gridFromBorders(pixels,width,height,headers){
+  const details=headers.at(-1),main=headers.at(-2);if(!main||!details||main.end<height*.1||details.start-main.end<width*.65||details.start-main.end>width*1.5)return [];
+  const bands=[];
+  for(let y=Math.max(1,Math.ceil(main.end+width*.18));y<Math.min(height,details.start-width*.04);y++){
+   let left=0,right=0,gap=0;
+   for(let x=Math.floor(width*.10);x<Math.floor(width*.45);x++){const i=(y*width+x)*4,j=i-width*4;if(Math.abs(pixels[i]-pixels[j])+Math.abs(pixels[i+1]-pixels[j+1])+Math.abs(pixels[i+2]-pixels[j+2])>12)left++}
+   for(let x=Math.floor(width*.56);x<Math.floor(width*.90);x++){const i=(y*width+x)*4,j=i-width*4;if(Math.abs(pixels[i]-pixels[j])+Math.abs(pixels[i+1]-pixels[j+1])+Math.abs(pixels[i+2]-pixels[j+2])>12)right++}
+   for(let x=Math.floor(width*.485);x<Math.floor(width*.515);x++){const i=(y*width+x)*4;if(Math.min(pixels[i],pixels[i+1],pixels[i+2])>240)gap++}
+   if(Math.max(left/(width*.35),right/(width*.34))>.65&&gap/(width*.03)>.7){
+    if(bands.length&&y-bands.at(-1).end<=3)bands.at(-1).end=y;else bands.push({start:y,end:y});
+   }
+  }
+  for(let i=0;i+5<bands.length;i++){
+   const b=bands.slice(i,i+6),stride=b[2].start-b[0].start,h=b[1].end-b[0].start;
+   if(stride<width*.13||stride>width*.20||h<width*.06||h>width*.13||h<stride*.55||h>stride*.8||Math.abs(b[4].start-b[2].start-stride)>width*.015)continue;
+   if([1,3,5].some((j,k)=>Math.abs(b[j].end-b[j-1].start-h)>width*.02))continue;
+   return Array.from({length:5},(_,index)=>({kind:'subskill',index,x:width*(index%2?.526:.072),y:b[0].start+Math.floor(index/2)*stride,width:width*.403,height:h+1}));
+  }
+  return [];
+ }
  // Locate the game's two-column, five-card grid from the colored unlocked cards.
  // Require both columns and a second row: do not guess a grid from an arbitrary crop.
  function regionsFromPixels(pixels,width,height){
@@ -96,6 +117,10 @@
      if(mainHeader)regions.push({kind:'main',x:width*.04,y:mainHeader.end+2,width:width*.92,height:first.y-mainHeader.end-8});
     }
    }
+  }
+  if(!regions.some(r=>r.kind==='subskill')){
+   const grid=gridFromBorders(pixels,width,height,headers);regions.push(...grid);
+   if(grid.length){const main=headers.at(-2);regions.push({kind:'main',x:width*.04,y:main.end+2,width:width*.92,height:grid[0].y-main.end-8})}
   }
   const details=headers.at(-1);
   if(details&&details.start>height*.55&&details.end<height*.9)regions.push({kind:'nature',x:width*.02,y:details.end+3,width:width*.50,height:Math.min(height*.095,height-details.end-3)});
