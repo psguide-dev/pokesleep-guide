@@ -24,8 +24,16 @@ const combined=reader.parse('Lv.35 フシギダネ\nLv.60\nメインスキル・
 assert.equal(reader.parse('',{...dictionary,subskills:['おてつだいボーナス']},[{kind:'subskill',index:0,text:'おてつだいボポーナス'}]).subskills[0],'おてつだいボーナス');
 assert.equal(reader.parse('',dictionary,[{kind:'subskill',index:0,text:'スキル確率アップM'}]).subskills[0],null,'never replace an S/M/L grade');
 assert.equal(reader.parse('おてつだいボポーナス',{...dictionary,subskills:['おてつだいボーナス']}).subskills[0],null,'approximate names require a located card');
+assert.equal(reader.parse('',{...dictionary,subskills:['おてつだいボーナス']},[{kind:'subskill',index:3,text:'おてつだいボポボーナス'}]).subskills[3],'おてつだいボーナス','real duplicated voiced kana is corrected only in a located bonus card');
+assert.equal(reader.parse('おてつだいボポボーナス',{...dictionary,subskills:['おてつだいボーナス']}).subskills[3],null,'whole-image text cannot assign a bonus slot');
+assert.equal(reader.parse('',{...dictionary,subskills:['おてつだいボーナス','おてつたいボーナス']},[{kind:'subskill',index:3,text:'おてつだいポーナス'}]).subskills[3],null,'ambiguous dictionary corrections remain unassigned');
 assert.equal(combined.speciesId,'0001_default');assert.equal(combined.level,35);assert.equal(combined.skillLevel,3);assert.equal(combined.nature,'いじっぱり');assert.deepEqual(Array.from(combined.subskills),dictionary.subskills);
 // Same two-column layout as the game: unlocked cards retain colored backgrounds,
+const productionCatalog=JSON.parse(read('review.html').split('window.PS_CATALOG=')[1].split(';\n')[0]);
+for(const fixture of JSON.parse(read('tests/fixtures/subskill-local-ocr.json'))){
+ const result=reader.parse('',{subskills:productionCatalog.subskills.map(s=>s.name)},fixture.text.map((text,index)=>({kind:'subskill',index,text})));
+ assert.deepEqual(Array.from(result.subskills),fixture.expected,fixture.source+' actual local OCR matches all five screenshot labels');
+}
 // locked cards do not. Their positions come from the validated grid, not Lv text.
 const pixels=new Uint8ClampedArray(480*1040*4).fill(255);
 function rectangle(x,y,w,h,color){for(let row=y;row<y+h;row++)for(let col=x;col<x+w;col++)pixels.set([...color,255],4*(row*480+col))}

@@ -48,11 +48,12 @@
   const regionCandidates=[];
   for(const region of regions){
    const value=compact(region.text);let names=unique(hits(value));
-   // A single extra/missing kana is accepted only inside one located skill card,
+   // Small OCR edits are accepted only inside one located skill card,
    // with one unique dictionary match and the same S/M/L suffix.
    if(region.kind==='subskill'&&!names.length){
-    const oneEdit=(a,b)=>{if(Math.abs(a.length-b.length)>1)return false;let i=0,j=0,edits=0;while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue}if(++edits>1)return false;if(a.length>=b.length)i++;if(b.length>=a.length)j++}return edits+a.length-i+b.length-j<=1};
-    const clean=value.replace(/[$|]/g,'');names=subskills.filter(name=>clean.length>=7&&(/[SML]$/.exec(clean)?.[0]||'')===(/[SML]$/.exec(name)?.[0]||'')&&oneEdit(clean,compact(name)));
+    const near=(a,b,limit)=>{if(Math.abs(a.length-b.length)>limit)return false;let row=Array.from({length:b.length+1},(_,i)=>i);for(let i=1;i<=a.length;i++){const next=[i];for(let j=1;j<=b.length;j++)next[j]=Math.min(next[j-1]+1,row[j]+1,row[j-1]+(a[i-1]===b[j-1]?0:1));row=next}return row[b.length]<=limit};
+    // Voiced-kana duplication is frequent in the long bonus names; grades stay exact.
+    const clean=value.replace(/[$|]/g,'');names=subskills.filter(name=>clean.length>=7&&(/[SML]$/.exec(clean)?.[0]||'')===(/[SML]$/.exec(name)?.[0]||'')&&near(clean,compact(name),name.endsWith('ボーナス')?2:1));
    }
    if(region.kind==='subskill'&&Number.isInteger(region.index)&&names.length===1){slots[region.index].push(names[0]);regionCandidates.push(names[0])}
    if(region.kind==='main')for(const m of value.matchAll(/Lv[.:・]?([1-8])(?!\d)/gi))skillValues.push(Number(m[1]));
