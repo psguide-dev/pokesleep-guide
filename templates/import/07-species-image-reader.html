@@ -1,0 +1,51 @@
+<script id="psg-species-image-reader">
+// Local full-body reference comparison. No screenshots leave the device.
+(()=>{
+ function locate(pixels,width,height){
+  // Require the orange individual-summary card, not an arbitrary face crop.
+  const x0=Math.floor(width*.2),x1=Math.floor(width*.5);
+  for(let y=Math.floor(width*.07);y<Math.min(height,width*.5);y++){
+   let orange=0;for(let x=x0;x<x1;x++){const i=(y*width+x)*4,r=pixels[i],g=pixels[i+1],b=pixels[i+2];if(r>245&&g>70&&g<170&&b<150)orange++}
+   if(orange/(x1-x0)>.8)return {x:Math.floor(width*.04),y:Math.floor(y+width*.012),width:Math.floor(width*.19)-Math.floor(width*.04),height:Math.floor(y+width*.155)-Math.floor(y+width*.012)};
+  }
+  return null;
+ }
+ function feature(pixels,width,height,box=null){
+  box=box||{x:0,y:0,width,height};
+  const mask=new Uint8Array(width*height);let minX=width,minY=height,maxX=-1,maxY=-1,count=0;
+  for(let y=box.y;y<Math.min(height,box.y+box.height);y++)for(let x=box.x;x<Math.min(width,box.x+box.width);x++){
+   const i=(y*width+x)*4,r=pixels[i],g=pixels[i+1],b=pixels[i+2];
+   if(pixels[i+3]>100&&!(r>240&&g>230&&b>180)){mask[y*width+x]=1;minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);count++}
+  }
+  if(count<10)return null;
+  const w=maxX-minX+1,h=maxY-minY+1,values=[];
+  for(let y=0;y<16;y++)for(let x=0;x<16;x++){
+   const ax=minX+Math.floor(x*w/16),ay=minY+Math.floor(y*h/16),bx=Math.max(minX+Math.floor((x+1)*w/16),ax+1),by=Math.max(minY+Math.floor((y+1)*h/16),ay+1);
+   let n=0,r=0,g=0,b=0;
+   for(let yy=ay;yy<by;yy++)for(let xx=ax;xx<bx;xx++)if(mask[yy*width+xx]){const i=(yy*width+xx)*4;n++;r+=pixels[i];g+=pixels[i+1];b+=pixels[i+2]}
+   values.push(n?r/n/255:0,n?g/n/255:0,n?b/n/255:0,n/((bx-ax)*(by-ay)));
+  }
+  return values;
+ }
+ function rank(values,references){
+  if(!values)return [];
+  return references.map(ref=>{const bytes=typeof ref.values==='string'?Uint8Array.from(atob(ref.values),c=>c.charCodeAt(0)):ref.values;let error=0;
+   for(let i=0;i<values.length;i++)error+=(values[i]-bytes[i]/255)**2;
+   return {speciesIds:ref.speciesIds,error:error/values.length};
+  }).sort((a,b)=>a.error-b.error).slice(0,3);
+ }
+ function select(readings){
+  const strong=readings.filter(r=>r[0]&&r[0].error<=.09&&r[0].speciesIds.length===1&&r[1]&&r[1].error-r[0].error>=.05);
+  const ids=[...new Set(strong.map(r=>r[0].speciesIds[0]))];
+  return {speciesId:ids.length===1?ids[0]:null,conflict:ids.length>1,candidates:[...new Set(readings.flatMap(r=>r.flatMap(c=>c.speciesIds)))]};
+ }
+ let promise=null;
+ async function read(canvas){
+  if(!promise)promise=fetch('assets/import/species-fullbody-fingerprints.json').then(r=>{if(!r.ok)throw Error('姿の見本を取得できませんでした');return r.json()}).catch(e=>{promise=null;throw e});
+  const context=canvas.getContext('2d',{willReadFrequently:true}),data=context.getImageData(0,0,canvas.width,canvas.height).data;
+  const box=locate(data,canvas.width,canvas.height);if(!box)return [];
+  const references=await promise;return rank(feature(data,canvas.width,canvas.height,box),references.entries);
+ }
+ window.PS_SPECIES_IMAGE_READER={locate,feature,rank,select,read};
+})();
+</script>

@@ -17,7 +17,7 @@
   const namedLevels=lines.filter(line=>exactNames.some(p=>nameLine(line)===compact(p.name))).flatMap(line=>{const m=line.match(/^Lv[.:・]?(\d{1,3})/i);return m?[Number(m[1])]:[]});
   const levelValues=namedLevels.length?unique(namedLevels):unique(header.filter(line=>!hits(line).length&&!/スキル|あと|EXP|必要|解放/.test(line)).flatMap(line=>{
    const match=line.match(/(?:^|レベル|ポケモン)L[vV][.:・]?(\d{1,3})(?!\d)/i)||line.match(/^レベル[:：]?(\d{1,3})(?!\d)/);
-   return match&&(speciesIds.length||/RP|ポケモン|レベル/.test(whole))?[Number(match[1])]:[];
+   return match&&(speciesIds.length||/RP|SP|ポケモン|レベル/.test(whole))?[Number(match[1])]:[];
   }));
   const slots=levels.map(()=>[]),skillValues=[];
   const slotIndex=level=>{const i=levels.indexOf(level);return i>=0?i:level===75?3:level===100?4:-1};

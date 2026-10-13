@@ -1,0 +1,22 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const ctx={window:{},atob};vm.createContext(ctx);
+for(const f of ['templates/import/01-image-reader.html','templates/import/07-species-image-reader.html'])vm.runInContext(fs.readFileSync(f,'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+const reader=ctx.window.PS_SPECIES_IMAGE_READER,refs=JSON.parse(fs.readFileSync('assets/import/species-fullbody-fingerprints.json')).entries;
+const probes=JSON.parse(fs.readFileSync('tests/fixtures/species-image-probes.json'));
+assert(refs.length>200);assert.equal(new Set(refs.flatMap(r=>r.speciesIds)).size,250);
+const readings=probes.map(p=>{const f=Array.from(Buffer.from(p.values,'base64'),x=>x/255),ranked=reader.rank(f,refs);assert.equal(ranked[0].speciesIds[0],p.expected);assert.equal(reader.select([ranked]).speciesId,p.expected);return ranked});
+for(const ref of refs){const f=Array.from(Buffer.from(ref.values,'base64'),x=>x/255),ranked=reader.rank(f,refs);assert.equal(ranked[0].error,0);assert.deepEqual(Array.from(ranked[0].speciesIds),ref.speciesIds)}
+assert.equal(reader.select([readings[0],readings[1]]).speciesId,null,'different individuals are never merged into one identity');
+assert(reader.select([readings[0],readings[1]]).conflict);
+assert.equal(reader.select([[{speciesIds:['same','form'],error:0},{speciesIds:['other'],error:.2}]]).speciesId,null,'identical reference artwork cannot resolve variants');
+assert.equal(reader.select([[{speciesIds:['same'],error:.03},{speciesIds:['other'],error:.04}]]).speciesId,null,'close candidates stay unassigned');
+assert.equal(reader.feature(new Uint8Array(100*100*4).fill(255),100,100),null);
+assert.equal(reader.locate(new Uint8Array(100*100*4).fill(255),100,100),null);
+const species=[{no:20,name:'ラッタ'},{no:85,name:'ドードリオ'},{no:157,name:'バクフーン'}];
+Object.assign(ctx,{boxCatalog:()=>species,speciesKey:p=>String(p.no).padStart(4,'0')+'_default',NATURE_EFFECTS:{},SUBSKILL_NAMES:[],SUBSKILL_LEVELS:[10,25,50,70,80]});
+ctx.window.PS_INGREDIENT_READER={mergeChoices:()=>({ingredients:[],conflicts:[]})};
+const actions=fs.readFileSync('templates/box/07-image-import.html','utf8');vm.runInContext(actions.slice(actions.indexOf('function parseImageTexts'),actions.indexOf('function applyImageReading')),ctx);
+const inferred=ctx.parseImageTexts(['トム\nLv.30\nSP1251'],[],[],[readings[0]]);assert.equal(inferred.speciesId,'0020_default');assert.equal(inferred.level,30);assert.equal(inferred.speciesFromImage,true);
+const conflict=ctx.parseImageTexts(['ドードリオ\nLv.30'],[],[],[readings[0]]);assert.equal(conflict.speciesId,null);assert(conflict.conflicts.some(x=>x.includes('画像と文字')));
+assert.equal(ctx.parseImageTexts(['トム\nLv.30\nSP1251']).speciesId,null,'no image evidence means no inferred species');
+console.log('Full-body comparison: 3 real probes top-1; 244 reference groups; unknown/form/conflict and nickname integration verified');

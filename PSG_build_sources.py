@@ -16,6 +16,7 @@ TEMPLATE_NAMES = (
     'import/04-sleep-image-reader.html',
     'import/05-sleep-image-dialog.html',
     'import/03-ingredient-reader.html',
+    'import/07-species-image-reader.html',
     'dex/01-list-screen.html',
     '05-info.html',
     '06-skills.html',

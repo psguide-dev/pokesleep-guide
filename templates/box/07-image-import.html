@@ -1,6 +1,6 @@
 // New individuals only: reading/reviewing screenshots never changes saved Box data.
 const imageDialog=document.getElementById('boxImageDialog'),imageForm=document.getElementById('boxImageForm'),imageFiles=document.getElementById('boxImageFiles'),imageRead=document.getElementById('boxImageRead'),imageStop=document.getElementById('boxImageStop'),imageStatus=document.getElementById('boxImageStatus');
-let imageEpoch=0,imageWorker=null,imageBusy=false,imageURLs=[],imageWatchdog=null,imageFoodChoices=[],imageReadFoods=[];
+let imageEpoch=0,imageWorker=null,imageBusy=false,imageURLs=[],imageWatchdog=null,imageFoodChoices=[],imageReadFoods=[],imageReadSpecies=[];
 const imageOptions=(select,values,empty='未確認')=>{
  select.replaceChildren();const option=document.createElement('option');option.value='';option.textContent=empty;select.append(option);
  for(const value of values){const option=document.createElement('option');option.value=typeof value==='string'?value:value.value;option.textContent=typeof value==='string'?value:value.label;select.append(option)}
@@ -34,7 +34,7 @@ function stopImageRead(message='読み取りを中止しました。'){
 }
 function clearImagePreviews(){imageURLs.forEach(url=>URL.revokeObjectURL(url));imageURLs=[];document.getElementById('boxImagePreviews').replaceChildren()}
 function setupImageForm(){
- imageFoodChoices=[];imageReadFoods=[];
+ imageFoodChoices=[];imageReadFoods=[];imageReadSpecies=[];
  imageForm.reset();imageForm.hidden=true;document.getElementById('boxImageText').value='';
  document.getElementById('boxImageMessage').textContent='';document.getElementById('boxImageConflicts').textContent='';document.getElementById('boxImageCandidates').textContent='';
  imageOptions(imageForm.elements.species,boxCatalog().map(p=>({value:speciesKey(p),label:`No.${String(p.no).padStart(3,'0')} ${p.name}`})),'選択してください');
@@ -46,10 +46,15 @@ function setupImageForm(){
  });
  fillImageSpeciesFields();
 }
-function parseImageTexts(texts,regions=[],foods=[]){
+function parseImageTexts(texts,regions=[],foods=[],pictures=[]){
  const dictionary={species:boxCatalog(),natures:Object.keys(NATURE_EFFECTS),subskills:SUBSKILL_NAMES,levels:SUBSKILL_LEVELS};
  const result=window.PS_IMAGE_READER.merge(texts.map((text,i)=>window.PS_IMAGE_READER.parse(text,dictionary,regions[i]||[])));
- const choices=window.PS_INGREDIENT_READER.mergeChoices(foods);result.ingredients=choices.ingredients;result.conflicts.push(...choices.conflicts);return result;
+ const choices=window.PS_INGREDIENT_READER.mergeChoices(foods);result.ingredients=choices.ingredients;result.conflicts.push(...choices.conflicts);
+ const valid=new Set(boxCatalog().map(speciesKey)),visual=window.PS_SPECIES_IMAGE_READER?.select(pictures)||{speciesId:null,candidates:[]};
+ result.speciesCandidates=visual.candidates.filter(id=>valid.has(id));
+ if(visual.conflict||result.speciesId&&visual.speciesId&&result.speciesId!==visual.speciesId){result.speciesId=null;result.conflicts.push('ポケモン（画像と文字を確認）')}
+ else if(!result.conflicts.includes('ポケモン')&&!result.speciesId&&valid.has(visual.speciesId)){result.speciesId=visual.speciesId;result.speciesFromImage=true}
+ return result;
 }
 function applyImageReading(result){
  imageForm.hidden=false;imageForm.elements.species.value=result.speciesId||'';
@@ -61,7 +66,14 @@ function applyImageReading(result){
  const warnings=[...result.conflicts];if(result.level!==null&&(result.level<1||result.level>MAX_POKEMON_LEVEL))warnings.push('レベルの対応範囲');
  document.getElementById('boxImageConflicts').textContent=warnings.length?`${warnings.join('・')}を確認してください。複数の候補は自動設定していません。`:'';
  const assigned=new Set(result.subskills.filter(Boolean)),unassigned=result.candidates.filter(name=>!assigned.has(name));
- document.getElementById('boxImageCandidates').textContent=unassigned.length?`読み取り候補（枠を確認）：${unassigned.join('・')}`:'';
+ const visualNames=(result.speciesCandidates||[]).map(id=>boxCatalog().find(p=>speciesKey(p)===id)?.name).filter(Boolean);
+ const visualMessage=result.speciesFromImage?`姿から${boxCatalog().find(p=>speciesKey(p)===result.speciesId)?.name||'ポケモン'}を推定しました。確認してください。`:visualNames.length?`姿の候補（推定・確認してください）：${visualNames.join('・')}`:'';
+ document.getElementById('boxImageCandidates').textContent=[visualMessage,unassigned.length?`読み取り候補（枠を確認）：${unassigned.join('・')}`:''].filter(Boolean).join('\n');
+ if(!result.speciesFromImage)for(const id of result.speciesCandidates||[]){
+  const p=boxCatalog().find(p=>speciesKey(p)===id);if(!p)continue;
+  const button=document.createElement('button');button.type='button';button.className='btn psg-species-candidate';button.textContent=p.name;
+  button.onclick=()=>{imageForm.elements.species.value=id;fillImageSpeciesFields()};document.getElementById('boxImageCandidates').append(button);
+ }
  document.getElementById('boxImageMessage').textContent='';
 }
 document.getElementById('boxImageOpen').onclick=()=>{
@@ -85,7 +97,7 @@ imageFiles.onchange=()=>{
 };
 imageRead.onclick=async()=>{
  if(imageBusy||!imageFiles.files.length)return;
- const token=++imageEpoch,files=[...imageFiles.files],texts=[],readRegions=[],readFoods=[];let worker=null;
+ const token=++imageEpoch,files=[...imageFiles.files],texts=[],readRegions=[],readFoods=[],readSpecies=[];let worker=null;
  imageForm.hidden=true;imageBusyState(true);imageStatus.textContent='読み取り機能を準備しています…';
  imageWatchdog=setTimeout(()=>{if(token===imageEpoch)stopImageRead('読み取りがタイムアウトしました。枚数を減らして再試行してください。')},180000);
  try{
@@ -108,12 +120,13 @@ imageRead.onclick=async()=>{
      finally{cropped.width=cropped.height=1}
     }
     let foods=[];try{foods=await window.PS_INGREDIENT_READER.read(canvas)}catch{}if(token!==imageEpoch)return;
-    texts.push(result.data.text||'');readRegions.push(extra);readFoods.push(foods);
+    let pictures=[];try{pictures=await window.PS_SPECIES_IMAGE_READER.read(canvas)}catch{}if(token!==imageEpoch)return;
+    texts.push(result.data.text||'');readRegions.push(extra);readFoods.push(foods);readSpecies.push(pictures);
    }
    finally{canvas.width=canvas.height=1}
   }
   if(token!==imageEpoch)return;
-  imageReadFoods=readFoods;document.getElementById('boxImageText').value=texts.map((text,i)=>text+readRegions[i].map(r=>`\n[${r.kind==='subskill'?`Lv.${SUBSKILL_LEVELS[r.index]} サブスキル`:r.kind==='nature'?'性格':'メインスキル'}]\n${r.text}`).join('')).join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions,readFoods));
+  imageReadFoods=readFoods;imageReadSpecies=readSpecies;document.getElementById('boxImageText').value=texts.map((text,i)=>text+readRegions[i].map(r=>`\n[${r.kind==='subskill'?`Lv.${SUBSKILL_LEVELS[r.index]} サブスキル`:r.kind==='nature'?'性格':'メインスキル'}]\n${r.text}`).join('')).join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions,readFoods,readSpecies));
   imageStatus.textContent=texts.some(text=>text.trim())?'読み取りが終わりました。確認後に登録してください。':'文字を読み取れませんでした。画像を確認するか、各項目を選んで登録できます。';
  }catch(error){if(token===imageEpoch)imageStatus.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
  finally{
@@ -121,7 +134,7 @@ imageRead.onclick=async()=>{
   if(token===imageEpoch){imageWorker=null;clearTimeout(imageWatchdog);imageWatchdog=null;imageBusyState(false)}
  }
 };
-document.getElementById('boxImageReparse').onclick=()=>{if(!imageBusy)applyImageReading(parseImageTexts(document.getElementById('boxImageText').value.split('\n--- 画像 ---\n'),[],imageReadFoods))};
+document.getElementById('boxImageReparse').onclick=()=>{if(!imageBusy)applyImageReading(parseImageTexts(document.getElementById('boxImageText').value.split('\n--- 画像 ---\n'),[],imageReadFoods,imageReadSpecies))};
 function validatedImageIndividual(data,p){
  if(!p||!boxCatalog().some(x=>speciesKey(x)===speciesKey(p)))return {error:'ポケモンを選んでください。'};
  const level=Number(data.get('level')),skillLevel=Number(data.get('skillLevel'));
