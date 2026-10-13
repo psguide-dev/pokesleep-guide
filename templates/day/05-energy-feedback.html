@@ -14,6 +14,8 @@ function dailyAdvanceLinkedMember(member,hours,elapsedTicks,mealTicks,goodCamp){
   let remaining=600;
   while(member.pendingHelpSeconds<=remaining+1e-9){
    remaining=Math.max(0,remaining-member.pendingHelpSeconds);helps++;
+   const probe=member.carryFillProbe;
+   if(probe&&probe.seconds==null&&helps*member.averageSize>=probe.capacity-1e-9)probe.seconds=tick*600+600-remaining;
    if(helps>50000)throw new Error('おてつだい予測の計算上限');
    // Lock each new help's interval. Recovery never restarts an unfinished help.
    member.pendingHelpSeconds=interval(Math.max(0,member.energy-(remaining<1e-9?1:0)));

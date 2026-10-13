@@ -11,6 +11,7 @@ const p=catalog.pokemon[1],item={id:'lazy',no:1,level:25,skillLevel:3,nature:'�
 const forecast=ctx.dailyBaseline([item.id],[item],catalog,4,100,true,3).members[0],before=calls.length;
 const simpleHTML=ctx.renderIndividualEvaluation(item,p,{member:forecast});
 assert.equal(calls.length,before+1,'reuse the actual forecast; only the neutral comparison is added');
+assert(simpleHTML.includes('満杯目安：'),'carry-fill summary reuses the actual member without another simulation');
 assert(calls.every(args=>!args[13]?.unlimitedCarry),'unlimited carry stays on the explicit detail path');
 assert(simpleHTML.includes('無補正比'));assert(simpleHTML.includes('基準準備中'));assert(simpleHTML.includes('詳しい評価を見る'));assert(!simpleHTML.includes('主軸を削る副軸'));
 const initial=calls.length;ctx.renderBoxGrowth(item,p,[30]);assert.equal(calls.length,initial,'closed growth comparisons do not calculate evaluation');

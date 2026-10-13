@@ -19,6 +19,18 @@ function individualStandardEvaluation(item,p,simple){
   return adapter.simpleEvaluate(context,specialty,{conditions:adapter.CONDITIONS,values:{berry:simple.actual.values.berry,ingredient:simple.actual.values.food,skill:simple.actual.values.skill}},reference);
  }catch{return pending('reference_mismatch')}
 }
+// Enigma carry-fill display: observe the existing clock; never simulate for this line.
+function carryFillSummary(member){
+ const windows=member?.carryFillWindows;
+ if(!windows?.length)return {status:'unknown',text:'満杯目安：未計算'};
+ const waking=windows.filter(w=>!w.sleep);
+ if(!waking.length)return {status:'unknown',text:'満杯目安：未計算'};
+ const full=waking.filter(w=>Number.isFinite(w.seconds)&&w.seconds>=0);
+ if(!full.length)return {status:'not_reached',text:'満杯目安：日中は4時間以内に満杯にならない予想'};
+ const seconds=Math.min(...full.map(w=>w.seconds)),minutes=Math.ceil(seconds/60);
+ const time=minutes>=60?`${Math.floor(minutes/60)}時間${minutes%60?`${minutes%60}分`:''}`:`${minutes}分`;
+ return {status:'estimated',text:`満杯目安：約${time}`,earliestWakingSeconds:seconds};
+}
 function renderIndividualEvaluation(item,p,options={}){
  if(typeof dailyBaseline!=='function')return renderIndividualEvaluationLegacy(item,p,options);
  if(!p)return '<p class="psg-box-muted">姿が未確認のため評価できません。</p>';
@@ -31,8 +43,9 @@ function renderIndividualEvaluation(item,p,options={}){
  const reference=standard.status==='ready'?`標準 ${number(standard.standard)}${units[role]}`:evaluation.neutral?`無補正 ${number(evaluation.neutral.values[role])}${units[role]}`:'標準 未確認';
  const status=standard.status==='ready'?`標準差 ${standard.standardDifferencePercent>=0?'＋':''}${number(standard.standardDifferencePercent)}%`:'標準個体との比較：基準準備中';
  const summary=`<div class="psg-individual-row is-primary" data-role="${role}"><div class="psg-individual-score"><strong>${labels[role]}の簡易評価</strong><p>${score}</p><p class="psg-box-muted">${labels[role]}／日 ${number(evaluation.actual.values[role])}${units[role]}　${reference}</p><p class="psg-box-muted">${status}</p></div></div>`;
- if(options.compact)return summary;
- return `${summary}<p class="psg-box-muted">キャンチケあり・4時間回収。回収頻度によって実際の食材数・スキル発動数は変わります。</p><button type="button" class="btn psg-evaluation-open" aria-expanded="false" aria-controls="boxEvaluationDetails">詳しい評価を見る</button><div id="boxEvaluationDetails" class="psg-evaluation-detail" hidden></div>`;
+ const fill=carryFillSummary(evaluation.actual.member),fillLine=`<p class="psg-box-muted psg-carry-fill" title="空の状態から通常収集の平均数量が容量に達する目安。げんきや実際の抽選で前後します。">${boxEsc(fill.text)}</p>`;
+ if(options.compact)return summary+fillLine;
+ return `${summary}${fillLine}<p class="psg-box-muted">キャンチケあり・4時間回収。回収頻度によって実際の食材数・スキル発動数は変わります。</p><button type="button" class="btn psg-evaluation-open" aria-expanded="false" aria-controls="boxEvaluationDetails">詳しい評価を見る</button><div id="boxEvaluationDetails" class="psg-evaluation-detail" hidden></div>`;
 }
 function bindIndividualEvaluation(host,item,p){
  const button=host.querySelector('.psg-evaluation-open'),detail=host.querySelector('.psg-evaluation-detail');if(!button||!detail)return;

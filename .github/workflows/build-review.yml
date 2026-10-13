@@ -96,6 +96,7 @@ jobs:
           node tests/check_individual_evaluation.cjs
           node tests/check_individual_trial.cjs
           node tests/check_individual_lazy.cjs
+          node tests/check_carry_fill.cjs
           node tests/check_box_header_spacing.cjs
       - name: Check image-first species and received artwork
         run: |

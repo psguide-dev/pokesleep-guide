@@ -20,7 +20,12 @@ function dailyBaseline(ids=team,box=state.box,catalog=window.PS_CATALOG,collecti
  periods.forEach((hours,periodIndex)=>{
   let teamRecovery=0,allyRecovery=0,bonusHelps=0;const periodTriggers=new Map();
   for(const member of valid){
+   if(evaluationOptions.trackCarryFill!==false)member.carryFillProbe={capacity:member.stats.carry*(goodCamp?1.2:1),seconds:null};
    const helps=dailyAdvanceLinkedMember(member,hours,elapsedTicks,mealTicks,goodCamp);
+   if(member.carryFillProbe){
+    (member.carryFillWindows||(member.carryFillWindows=[])).push({startHour:elapsedTicks/6,durationHours:hours,sleep:periodIndex===periods.length-1,seconds:member.carryFillProbe.seconds,observedSeconds:hours*3600,capacity:member.carryFillProbe.capacity,averageItemsPerHelp:member.averageSize,model:'expected_occupancy',emptyAtStart:true});
+    delete member.carryFillProbe;
+   }
    member.normalHelps=(member.normalHelps||0)+helps;
    const regular=evaluationOptions.unlimitedCarry===true?helps:Math.min(helps,member.stats.carry*(goodCamp?1.2:1)/member.averageSize);
    const extra=Math.max(0,helps-regular);
