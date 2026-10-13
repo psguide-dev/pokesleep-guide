@@ -8,6 +8,9 @@ assert.equal(parsed.speciesId,'0001_default');assert.equal(parsed.level,35);asse
 assert.deepEqual(Array.from(parsed.subskills),dictionary.subskills);
 const nickname=reader.parse('わがやのエース\nLv. 62\nRP 2,345\nサブスキル\nLv.10\nきのみの数S\nLv.25\nおてつだいスピードM',dictionary);
 assert.equal(nickname.speciesId,null);assert.equal(nickname.level,62);
+assert.equal(reader.parse('Lv.60\n食材\nメインスキル Lv.2',dictionary,[{kind:'level',text:'Lv.51'}]).level,51,'located individual level takes priority over ingredient unlock text');
+assert.equal(reader.parse('食材\nLv.60\n[個体レベル]\nLv.34',dictionary).level,34,'annotated local level survives text-only reparse');
+assert.equal(reader.parse('Lv.30\nRP1200',dictionary,[{kind:'level',text:'Lv.51\nLv.52'}]).level,null,'conflicting localized levels stay unknown');
 assert.equal(reader.parse('トム\nLv.30\nSP1251\n食材',dictionary).level,30,'nickname headers use the game SP label too');
 const cropped=reader.parse('サブスキル\nLv.10 きのみの数S\nLv.25 おてつだいスピードM\nメインスキル\nLv.4',dictionary);
 assert.equal(cropped.level,null);assert.equal(cropped.skillLevel,4);

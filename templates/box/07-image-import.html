@@ -119,14 +119,17 @@ imageRead.onclick=async()=>{
      try{await worker.setParameters({tessedit_pageseg_mode:region.kind==='main'?engine.PSM.SPARSE_TEXT:engine.PSM.SINGLE_LINE});const part=await worker.recognize(cropped);if(token!==imageEpoch)return;extra.push({...region,text:part.data.text||''})}
      finally{cropped.width=cropped.height=1}
     }
-    let foods=[];try{foods=await window.PS_INGREDIENT_READER.read(canvas)}catch{}if(token!==imageEpoch)return;
     let pictures=[];try{pictures=await window.PS_SPECIES_IMAGE_READER.read(canvas)}catch{}if(token!==imageEpoch)return;
+    const visualId=window.PS_SPECIES_IMAGE_READER.select([pictures]).speciesId;
+    const textId=window.PS_IMAGE_READER.parse(result.data.text||'',{species:boxCatalog()}).speciesId;
+    const foodSpecies=visualId&&textId&&visualId!==textId?null:boxCatalog().find(p=>speciesKey(p)===(visualId||textId));
+    let foods=[];try{foods=await window.PS_INGREDIENT_READER.read(canvas,foodSpecies)}catch{}if(token!==imageEpoch)return;
     texts.push(result.data.text||'');readRegions.push(extra);readFoods.push(foods);readSpecies.push(pictures);
    }
    finally{canvas.width=canvas.height=1}
   }
   if(token!==imageEpoch)return;
-  imageReadFoods=readFoods;imageReadSpecies=readSpecies;document.getElementById('boxImageText').value=texts.map((text,i)=>text+readRegions[i].map(r=>`\n[${r.kind==='subskill'?`Lv.${SUBSKILL_LEVELS[r.index]} サブスキル`:r.kind==='nature'?'性格':'メインスキル'}]\n${r.text}`).join('')).join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions,readFoods,readSpecies));
+  imageReadFoods=readFoods;imageReadSpecies=readSpecies;document.getElementById('boxImageText').value=texts.map((text,i)=>text+readRegions[i].map(r=>`\n[${r.kind==='subskill'?`Lv.${SUBSKILL_LEVELS[r.index]} サブスキル`:r.kind==='level'?'個体レベル':r.kind==='nature'?'性格':'メインスキル'}]\n${r.text}`).join('')).join('\n--- 画像 ---\n');applyImageReading(parseImageTexts(texts,readRegions,readFoods,readSpecies));
   imageStatus.textContent=texts.some(text=>text.trim())?'読み取りが終わりました。確認後に登録してください。':'文字を読み取れませんでした。画像を確認するか、各項目を選んで登録できます。';
  }catch(error){if(token===imageEpoch)imageStatus.textContent=error?.message||'読み取れませんでした。もう一度お試しください。'}
  finally{

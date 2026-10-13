@@ -15,7 +15,9 @@
   const firstSection=lines.findIndex(line=>/食材|メインスキル|サブスキル|せいかく|性格/.test(line));
   const header=firstSection<0?lines.slice(0,5):lines.slice(0,firstSection);
   const namedLevels=lines.filter(line=>exactNames.some(p=>nameLine(line)===compact(p.name))).flatMap(line=>{const m=line.match(/^Lv[.:・]?(\d{1,3})/i);return m?[Number(m[1])]:[]});
-  const levelValues=namedLevels.length?unique(namedLevels):unique(header.filter(line=>!hits(line).length&&!/スキル|あと|EXP|必要|解放/.test(line)).flatMap(line=>{
+  const localLevels=unique(regions.filter(r=>r.kind==='level').flatMap(r=>[...compact(r.text).matchAll(/Lv[.:・]?(\d{1,3})(?!\d)/gi)].map(m=>Number(m[1]))));
+  const annotatedLevels=unique(lines.flatMap((line,i)=>line==='[個体レベル]'&&lines[i+1]?[...lines[i+1].matchAll(/Lv[.:・]?(\d{1,3})(?!\d)/gi)].map(m=>Number(m[1])):[]));
+  const levelValues=localLevels.length?localLevels:annotatedLevels.length?annotatedLevels:namedLevels.length?unique(namedLevels):unique(header.filter(line=>!hits(line).length&&!/スキル|あと|EXP|必要|解放/.test(line)).flatMap(line=>{
    const match=line.match(/(?:^|レベル|ポケモン)L[vV][.:・]?(\d{1,3})(?!\d)/i)||line.match(/^レベル[:：]?(\d{1,3})(?!\d)/);
    return match&&(speciesIds.length||/RP|SP|ポケモン|レベル/.test(whole))?[Number(match[1])]:[];
   }));
@@ -125,6 +127,15 @@
   }
   const details=headers.at(-1);
   if(details&&details.start>height*.55&&details.end<height*.9)regions.push({kind:'nature',x:width*.02,y:details.end+3,width:width*.50,height:Math.min(height*.095,height-details.end-3)});
+  const summary=window.PS_SPECIES_IMAGE_READER?.locate(pixels,width,height);
+  if(summary){
+   const top=summary.y-width*.012;let minX=width,minY=height,maxX=-1,maxY=-1,count=0;
+   for(let y=Math.max(0,Math.floor(top+width*.055));y<Math.min(height,top+width*.16);y++)for(let x=Math.floor(width*.20);x<Math.floor(width*.34);x++){
+    const i=(y*width+x)*4,r=pixels[i],g=pixels[i+1],b=pixels[i+2];
+    if(g>125&&g>r*1.3&&g>b*1.25){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);count++}
+   }
+   if(count>10&&maxX-minX>width*.035&&maxY-minY>width*.01&&maxY-minY<width*.06)regions.push({kind:'level',x:Math.max(0,minX-3),y:Math.max(0,minY-3),width:maxX-minX+7,height:maxY-minY+7});
+  }
   return regions;
  }
  function regions(canvas){

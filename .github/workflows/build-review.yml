@@ -68,6 +68,7 @@ jobs:
           node tests/check_box_stat_popover.cjs
           node tests/check_image_import.cjs
           node tests/check_species_image_reader.cjs
+          node tests/check_ingredient_image_reader.cjs
           node tests/check_ingredient_import.cjs
           node tests/check_fragment_assembly.cjs
           node tests/check_rankings.cjs
