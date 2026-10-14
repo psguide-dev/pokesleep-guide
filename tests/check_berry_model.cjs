@@ -2,7 +2,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const root=path.resolve(__dirname,'..');const {createRuntime}=require('./berry_model_runtime.cjs');
 const {catalog,ctx}=createRuntime(root);
 ctx.speciesKey=p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`;
-for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/13-role-model-helpers.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 const data=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/berry_model_refs_v5.json')));ctx.window.PS_BERRY_MODEL_DATA=data;
 let checks=0;
 for(const reference of Object.values(data.entries)){

@@ -1,0 +1,46 @@
+// Shared presentation and distribution helpers for berry and skill reference models.
+// Reference loading, species validation and production calculation stay in each role.
+function roleEvaluationLevel(item,field){
+ const selected=item[field];
+ return [50,60,70,80].includes(selected)?selected:item.level>=70?70:item.level>=60?60:50;
+}
+function roleModelRank(e){
+ const grade=p=>p<=3?'SS':p<=10?'S':p<=25?'A':p<=50?'B':'C';
+ if(!Number.isFinite(e?.strongerLower)||!Number.isFinite(e?.strongerUpper))return '未判定';
+ const lo=grade(e.strongerLower),hi=grade(e.strongerUpper);
+ return lo===hi?lo:`${lo}〜${hi}（境界）`;
+}
+function roleShareBound(value){
+ return value===0?'0':value<.01?Number(value).toPrecision(3):Number(value).toFixed(2);
+}
+function roleStrongerText(e){
+ if(e.strongerUpper===0)return '0%';
+ // A positive share below display precision must not become zero.
+ if(e.strongerUpper<.01)return '0.01%未満';
+ if(e.strongerLower<.01&&e.strongerUpper>=.01)return `${roleShareBound(e.strongerLower)}〜${roleShareBound(e.strongerUpper)}%`;
+ return `${e.strongerUpper>e.strongerLower?'約':''}${Number(e.strongerPercent).toFixed(2)}%`;
+}
+function roleDistributionComparison(reference,value){
+ const bins=reference.distributionBounds,total=reference.count;
+ // Strictly greater values only; the same tolerance applies to both bounds.
+ const lower=100*bins.reduce((n,row)=>n+(row[0]>value+1e-9?row[2]:0),0)/total;
+ const upper=100*bins.reduce((n,row)=>n+(row[1]>value+1e-9?row[2]:0),0)/total;
+ return {strongerLower:lower,strongerUpper:upper,strongerPercent:(lower+upper)/2};
+}
+function roleTime(seconds){
+ const minutes=Math.ceil(seconds/60);
+ return minutes>=60?`${Math.floor(minutes/60)}時間${minutes%60?`${minutes%60}分`:''}`:`${minutes}分`;
+}
+function roleCarryFillText(member){
+ const windows=member.carryFillWindows||[];
+ const day=windows.filter(w=>!w.sleep&&Number.isFinite(w.seconds)),sleep=windows.find(w=>w.sleep);
+ return {
+  fill:windows.length?day.length?`約${roleTime(Math.min(...day.map(w=>w.seconds)))}`:'4時間以内には満杯にならない予想':'未計算',
+  night:sleep?Number.isFinite(sleep.seconds)?`約${roleTime(sleep.seconds)}`:'8時間以内には満杯にならない予想':'未計算'
+ };
+}
+function cacheRoleEvaluation(cache,key,result){
+ if(cache.size>=64)cache.delete(cache.keys().next().value);
+ cache.set(key,result);
+ return result;
+}

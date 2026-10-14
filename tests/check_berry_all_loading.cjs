@@ -1,6 +1,6 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),{createRuntime}=require('./berry_model_runtime.cjs'),{catalog,ctx}=createRuntime(root);ctx.speciesKey=p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`;
-for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/13-role-model-helpers.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/berry_manifest_v6.json')));let requests=[];
 ctx.fetch=async url=>{requests.push(url);const data=url.endsWith('berry_manifest_v6.json')?JSON.parse(JSON.stringify(manifest)):JSON.parse(fs.readFileSync(path.join(root,url)));return {ok:true,json:async()=>data}};
 (async()=>{let checks=0;assert.equal(requests.length,0);checks++;

@@ -4,11 +4,6 @@ let berryModelLoading=null,berryModelError=null;
 const BERRY_MODEL_CACHE=new Map();
 window.PS_BERRY_TOTAL_DATA=null;
 let berryTotalLoading=null,berryTotalError=null;
-function roleModelRank(e){
- const grade=p=>p<=3?'SS':p<=10?'S':p<=25?'A':p<=50?'B':'C';
- if(!Number.isFinite(e?.strongerLower)||!Number.isFinite(e?.strongerUpper))return '未判定';
- const lo=grade(e.strongerLower),hi=grade(e.strongerUpper);return lo===hi?lo:`${lo}〜${hi}（境界）`;
-}
 function loadBerryTotalReferences(){
  if(window.PS_BERRY_TOTAL_DATA)return Promise.resolve(window.PS_BERRY_TOTAL_DATA);
  if(!berryTotalLoading)berryTotalLoading=fetch('assets/evaluation/berry_total_refs_v1.json').then(r=>{if(!r.ok)throw Error('total reference load');return r.json()}).then(data=>{
@@ -28,8 +23,8 @@ function berryTotalComparison(e){
  if(!Number.isFinite(unit)||!Number.isFinite(m.skillTriggers))return {status:'pending',text:'スキルの効果量を確認できませんでした'};
  const extra=m.skillTriggers*unit,value=e.value+extra;
  if(value>reference.ideal+1e-9)return {status:'pending',text:'換算込み理想値を超えたため基準を確認中です'};
- const bins=reference.distributionBounds,lower=100*bins.reduce((n,r)=>n+(r[0]>value+1e-9?r[2]:0),0)/reference.count,upper=100*bins.reduce((n,r)=>n+(r[1]>value+1e-9?r[2]:0),0)/reference.count;
- return {status:'ready',value,extra,ideal:reference.ideal,idealPercent:value/reference.ideal*100,strongerLower:lower,strongerUpper:upper,strongerPercent:(lower+upper)/2,idealRecord:reference.idealRecord,type,ingredientMean:data.ingredientMean,ingredientCount:data.ingredientPool.length};
+ const comparison=roleDistributionComparison(reference,value);
+ return {status:'ready',value,extra,ideal:reference.ideal,idealPercent:value/reference.ideal*100,...comparison,idealRecord:reference.idealRecord,type,ingredientMean:data.ingredientMean,ingredientCount:data.ingredientPool.length};
 }
 function renderBerryTotalResult(e){
  const result=berryTotalComparison(e),n=window.PS_NUMBERS.display;
@@ -39,7 +34,7 @@ function renderBerryTotalResult(e){
 }
 const renderIndividualBeforeBerry=renderIndividualEvaluation;
 const bindIndividualBeforeBerry=bindIndividualEvaluation;
-function berryRoleLevel(item){return [50,60,70,80].includes(item.berryEvaluationLevel)?item.berryEvaluationLevel:item.level>=70?70:item.level>=60?60:50}
+function berryRoleLevel(item){return roleEvaluationLevel(item,'berryEvaluationLevel')}
 function berryModelSkillLevel(p){return Math.min(1+speciesEvolutionStage(p),window.PS_CATALOG.skills[p.mainSkillId]?.maxLevel||1)}
 const berrySpeciesLoading=new Map(),berrySpeciesErrors=new Map();
 function loadBerryModelReferences(id=null){
@@ -78,28 +73,16 @@ function berryRoleEvaluation(item,p,overrideSkillLevel=null){
  const snapshot=calculateIndividualTrial(normalized);if(snapshot.reasons)return pending(snapshot.reasons.join('／'));
  const value=snapshot.values.berry;if(!Number.isFinite(value)||value<0||!Number.isFinite(reference.ideal)||reference.ideal<=0)return pending('日産を確認できませんでした');
  if(value>reference.ideal+1e-9)return pending('理想値を超えたため基準を確認中です');
- const total=reference.count,bins=reference.distributionBounds;
- const lower=100*bins.reduce((n,row)=>n+(row[0]>value+1e-9?row[2]:0),0)/total;
- const upper=100*bins.reduce((n,row)=>n+(row[1]>value+1e-9?row[2]:0),0)/total;
- const output={status:'ready',speciesId:speciesKey(p),level,skillLevel,value,ideal:reference.ideal,idealPercent:value/reference.ideal*100,strongerPercent:(lower+upper)/2,strongerLower:lower,strongerUpper:upper,idealRecord:reference.idealRecord,member:snapshot.member};
- if(BERRY_MODEL_CACHE.size>=64)BERRY_MODEL_CACHE.delete(BERRY_MODEL_CACHE.keys().next().value);
- BERRY_MODEL_CACHE.set(key,output);return output;
+ const comparison=roleDistributionComparison(reference,value);
+ const output={status:'ready',speciesId:speciesKey(p),level,skillLevel,value,ideal:reference.ideal,idealPercent:value/reference.ideal*100,...comparison,idealRecord:reference.idealRecord,member:snapshot.member};
+ return cacheRoleEvaluation(BERRY_MODEL_CACHE,key,output);
 }
-function berryRoleTime(seconds){const m=Math.ceil(seconds/60);return m>=60?`${Math.floor(m/60)}時間${m%60?`${m%60}分`:''}`:`${m}分`}
-function berryShareBound(value){return value===0?'0':value<.01?Number(value).toPrecision(3):Number(value).toFixed(2)}
-function berryStrongerText(e){
- const number=v=>Number(v).toFixed(2);
- if(e.strongerUpper===0)return '0%';
- // Do not turn a tiny but positive share into a displayed zero.
- if(e.strongerUpper<.01)return '0.01%未満';
- if(e.strongerLower<.01&&e.strongerUpper>=.01)return `${berryShareBound(e.strongerLower)}〜${berryShareBound(e.strongerUpper)}%`;
- return `${e.strongerUpper>e.strongerLower?'約':''}${number(e.strongerPercent)}%`;
-}
+function berryRoleTime(seconds){return roleTime(seconds)}
+function berryShareBound(value){return roleShareBound(value)}
+function berryStrongerText(e){return roleStrongerText(e)}
 function renderBerryDetailsResult(e){
  if(e.status!=='ready')return `<p>${boxEsc(e.text)}</p>`;
- const n=window.PS_NUMBERS.display,windows=e.member.carryFillWindows||[],full=windows.filter(w=>!w.sleep&&Number.isFinite(w.seconds)),sleep=windows.find(w=>w.sleep);
- const fill=windows.length?full.length?`約${berryRoleTime(Math.min(...full.map(w=>w.seconds)))}`:'4時間以内には満杯にならない予想':'未計算';
- const night=sleep?Number.isFinite(sleep.seconds)?`約${berryRoleTime(sleep.seconds)}`:'8時間以内には満杯にならない予想':'未計算';
+ const n=window.PS_NUMBERS.display,{fill,night}=roleCarryFillText(e.member);
  const ideal=e.idealRecord;
  return `<p><b>きのみ ${roleModelRank(e)}</b></p><p>理想比 <b>${n(e.idealPercent)}%</b>　上回る構成 <b>${berryStrongerText(e)}</b></p><p>評価Lv.${e.level}・スキルLv.${e.skillLevel}でのきのみ／日：${n(e.value)}エナジー<br>理想：${n(e.ideal)}エナジー／日</p><p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><p>理想の性格：${boxEsc(ideal.nature)}<br>サブスキル：${ideal.subskills.filter((_,i)=>SUBSKILL_LEVELS[i]<=e.level).map(boxEsc).join('・')}<br>食材：${ideal.ingredients.filter(Boolean).map(boxEsc).join('／')}</p><p class="psg-box-muted">上回る構成の集計範囲：${berryShareBound(e.strongerLower)}〜${berryShareBound(e.strongerUpper)}%。日産が同じ構成は含めません。</p><div class="psg-berry-total-result">${renderBerryTotalResult(e)}</div>`;
 }

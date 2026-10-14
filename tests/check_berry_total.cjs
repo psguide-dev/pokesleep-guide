@@ -1,6 +1,6 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),{createRuntime}=require('./berry_model_runtime.cjs'),{catalog,ctx}=createRuntime(root);ctx.speciesKey=p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`;
-for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/13-role-model-helpers.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 ctx.window.PS_BERRY_MODEL_DATA=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/berry_model_refs_v5.json')));
 const data=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/berry_total_refs_v1.json')));ctx.window.PS_BERRY_TOTAL_DATA=data;let checks=0;
 const cases=[[0,'SS'],[3,'SS'],[3.00001,'S'],[10,'S'],[10.00001,'A'],[25,'A'],[25.00001,'B'],[50,'B'],[50.00001,'C'],[100,'C']];

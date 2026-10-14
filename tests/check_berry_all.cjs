@@ -1,7 +1,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),{createRuntime}=require('./berry_model_runtime.cjs'),{catalog,ctx}=createRuntime(root);
 ctx.window.PS_IMAGE_FILES={berries:{}};vm.runInContext(fs.readFileSync(path.join(root,'templates/01-species-catalog.html'),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);ctx.speciesKey=ctx.window.PS_SPECIES_CATALOG.key;
-for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/13-role-model-helpers.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/berry_manifest_v6.json')));ctx.window.PS_BERRY_MODEL_DATA=manifest;
 ctx.window.PS_BERRY_TOTAL_DATA={version:1,axis:'berry_plus_convertible_skill',ingredientPool:manifest.ingredientPool,ingredientMean:manifest.ingredientMean,entries:{}};
 let checks=0,groups=0,totalGroups=0;

@@ -1,9 +1,9 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const {createRuntime}=require('./skill_model_runtime.cjs'),root=path.resolve(__dirname,'..'),{catalog,ctx}=createRuntime(root);
 ctx.speciesKey=ctx.window.PS_SPECIES_CATALOG.key;
-for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/14-berry-role.html','templates/core/15-skill-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/13-role-model-helpers.html','templates/core/14-berry-role.html','templates/core/15-skill-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 const data=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/skill_manifest_v2.json')));for(const meta of Object.values(data.species))Object.assign(data.entries,JSON.parse(fs.readFileSync(path.join(root,meta.file))).entries);ctx.window.PS_SKILL_MODEL_DATA=data;
-const production=createRuntime(root,false).ctx;production.speciesKey=production.window.PS_SPECIES_CATALOG.key;for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/14-berry-role.html','templates/core/15-skill-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),production);production.window.PS_SKILL_MODEL_DATA=data;
+const production=createRuntime(root,false).ctx;production.speciesKey=production.window.PS_SPECIES_CATALOG.key;for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/13-role-model-helpers.html','templates/core/14-berry-role.html','templates/core/15-skill-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),production);production.window.PS_SKILL_MODEL_DATA=data;
 let checks=0;
 assert.deepEqual(Object.keys(data.species).sort(),Array.from(ctx.window.PS_SPECIES_CATALOG.all()).filter(p=>p.specialty==='スキル'&&p.boxEligible!==false).map(ctx.speciesKey).sort());checks++;
 ctx.individualIdealCandidates=()=>{throw Error('Population enumeration must stay offline')};
