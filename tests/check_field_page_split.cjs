@@ -54,7 +54,9 @@ assert(fs.readFileSync('templates/08-fields.html','utf8').includes('class="btn p
 const expected=new Map(),actual=new Map();
 for(const [fieldId,field] of Object.entries(data.window.PS_FIELD_DATA.fields))for(const row of field.encounters)expected.set(fieldId+':'+row.sleepStyleId,JSON.stringify(row));
 const sizes=[];
-for(const [no,pokemon] of Object.entries(common.pokemon)){
+const fieldSpecies={...common.pokemon};
+for(const form of common.forms.species.filter(p=>p.sizeSharedFields))fieldSpecies[form.no]=form;
+for(const [no,pokemon] of Object.entries(fieldSpecies)){
  const ctx={window:{}};const script=fs.readFileSync(pokemon.fieldDataURL,'utf8');vm.runInNewContext(script,ctx);sizes.push(Buffer.byteLength(script));
  const payload=ctx.window.PS_POKEMON_FIELDS[no];assert(payload);
  for(const [fieldId,field] of Object.entries(payload)){

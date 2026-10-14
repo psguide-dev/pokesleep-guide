@@ -6,7 +6,7 @@
   count.textContent=`${matches.length} / ${all.length}`;
   list.replaceChildren();
   if(!matches.length){const empty=document.createElement('p');empty.className='note';empty.textContent='該当するスキルはありません。';list.append(empty);return}
-  const dexSpecies=window.PS_SPECIES_CATALOG.all(catalog);
+  const dexSpecies=window.PS_SPECIES_CATALOG.reference(catalog);
   matches.forEach(skill=>{
    const species=dexSpecies.filter(p=>p.dexVisible&&p.mainSkillId===skill.id);
    const item=document.createElement('details');item.className='psg-skill-entry';

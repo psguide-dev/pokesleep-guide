@@ -2,12 +2,13 @@
   const section=document.createElement('section');section.className='psg-recipe-provider-group';
   const heading=document.createElement('strong');heading.append(icon(item.name),document.createTextNode(item.name));section.append(heading);
   // Use only species whose own verified slots contain the ingredient; evolution does not imply the same slot.
-  const providers=window.PS_SPECIES_CATALOG.all(catalog).filter(p=>p.dexVisible).flatMap(p=>{
+  const providers=window.PS_SPECIES_CATALOG.reference(catalog).filter(p=>p.dexVisible).flatMap(p=>{
    const slots=p.ingredientSlots?.filter(s=>s.candidates.some(c=>c.name===item.name))||[];
    return slots.length?[{species:p,unlock:Math.min(...slots.map(s=>s.unlock))}]:[];
   });
   if(!providers.length){const empty=document.createElement('span');empty.className='note';empty.textContent='図鑑データ未確認';section.append(empty);return section}
   const terminal=providers.filter(({species})=>{
+   if(species.sizeGroupedReference)return true;
    if(species.speciesId)return !(species.evolutionTransitions||[]).some(e=>e.transitionEnabled&&e.targetSpeciesId);
    const edges=Array.isArray(species.evolution)?species.evolution:species.evolution?[species.evolution]:[];
    return !edges.some(edge=>edge.toNo);

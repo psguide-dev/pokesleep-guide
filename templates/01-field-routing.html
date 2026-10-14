@@ -38,7 +38,7 @@ html.psg-field-page main>.screen:not(#fieldPage):not(#fieldDetail){display:none!
   const cached=window.PS_POKEMON_FIELDS?.[no];if(cached)return Promise.resolve(cached);
   if(requests.has(no))return requests.get(no);
   const promise=new Promise((resolve,reject)=>{
-   const script=document.createElement('script');script.src=window.PS_CATALOG.pokemon[no].fieldDataURL;script.async=true;
+   const script=document.createElement('script');script.src=(window.PS_CATALOG.pokemon[no]||window.PS_SPECIES_CATALOG.referenceByNo(no)).fieldDataURL;script.async=true;
    script.onload=()=>{const data=window.PS_POKEMON_FIELDS?.[no];if(!data){requests.delete(no);script.remove();reject(new Error('Species field data unavailable'));return;}resolve(data)};
    script.onerror=()=>{requests.delete(no);script.remove();reject(new Error('Species field data load failed'))};
    document.head.append(script);

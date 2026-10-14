@@ -247,6 +247,10 @@ def catalog_and_images():
         # Keep source files separate; details share the face until full art is supplied.
         if key not in images['pokemon'] and key in images['pokemonFaces']:
             images['pokemon'][key] = images['pokemonFaces'][key]
+    size_forms = json.loads((MASTER / 'forms/data.json').read_text())
+    for no in (710, 711):
+        group = size_forms['sleepStyleGroups'][f'{no:04d}_sizes']
+        catalog['sleepStyles'][str(no)] = [[s['name'], s['stars'], s['id']] for s in group['styles']]
     style_index = {style[2]:(no,style) for no,styles in catalog['sleepStyles'].items() for style in styles}
     tiers = {'ノーマル','スーパー','ハイパー','マスター'}
     drowsy_by_style = {}
@@ -350,7 +354,7 @@ def special_engine():
 
 def pokemon_field_payloads(catalog):
     """Derive species encounters from the canonical field records, then audit coverage."""
-    result = {no: {} for no in catalog['pokemon']}
+    result = {no: {} for no in catalog['sleepStyles']}
     for field_id, field in catalog['fields'].items():
         for encounter in field.get('encounters', []):
             no = str(int(encounter['sleepStyleId'].split('_')[0]))
@@ -362,7 +366,7 @@ def pokemon_field_payloads(catalog):
 
 
 def validate_pokemon_field_payloads(catalog, payloads):
-    assert set(payloads) == set(catalog['pokemon']), 'species field coverage mismatch'
+    assert set(payloads) == set(catalog['sleepStyles']), 'species field coverage mismatch'
     actual = {}
     for no, fields in payloads.items():
         known_styles = {row[2] for row in catalog['sleepStyles'].get(no, [])}
@@ -413,7 +417,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v620') == 2
+    assert source.count('Review v621') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
@@ -434,7 +438,14 @@ def build():
         path = data_dir / species_asset
         path.parent.mkdir(exist_ok=True)
         path.write_text(f'window.PS_POKEMON_FIELDS??={{}};window.PS_POKEMON_FIELDS["{no}"]=' + species_data + ';')
-        common_catalog['pokemon'][no]['fieldDataURL'] = 'data/' + species_asset
+        if no in common_catalog['pokemon']:
+            common_catalog['pokemon'][no]['fieldDataURL'] = 'data/' + species_asset
+        else:
+            assert int(no) in (710, 711), f'unsupported shared-size species {no}'
+            for form in common_catalog['forms']['species']:
+                if form['no'] == int(no):
+                    form['fieldDataURL'] = 'data/' + species_asset
+                    form['sizeSharedFields'] = True
     js_data = serialize(common_catalog)
     js_images = json.dumps(images,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     injection = ('window.PS_CATALOG='+js_data+';\n'

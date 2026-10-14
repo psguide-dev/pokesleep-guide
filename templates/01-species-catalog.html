@@ -38,6 +38,15 @@
 window.PS_SPECIES_CATALOG={
  key:p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`,
  all:(catalog=window.PS_CATALOG)=>[...Object.values(catalog?.pokemon||{}),...(catalog===window.PS_CATALOG?[...(window.PS_FORMS?.records.values()||[])]:catalog?.forms?.species||[])],
+ reference:(catalog=window.PS_CATALOG)=>{
+  const seen=new Set();
+  return window.PS_SPECIES_CATALOG.all(catalog).flatMap(p=>{
+   if(![710,711].includes(Number(p.no)))return [p];
+   if(seen.has(p.no))return [];seen.add(p.no);
+   return [{...p,name:Number(p.no)===710?'バケッチャ':'パンプジン',sizeGroupedReference:true}];
+  });
+ },
+ referenceByNo:no=>window.PS_SPECIES_CATALOG.reference().find(p=>Number(p.no)===Number(no)),
  box:()=>window.PS_SPECIES_CATALOG.all().filter(p=>p.speciesId?p.boxEligible!==false:p.dexVisible).sort((a,b)=>a.no-b.no||Number(!!a.speciesId)-Number(!!b.speciesId)||window.PS_SPECIES_CATALOG.key(a).localeCompare(window.PS_SPECIES_CATALOG.key(b)))
 };
 </script>

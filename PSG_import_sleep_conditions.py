@@ -22,6 +22,9 @@ def run(archive):
   fields[name]['rankThresholds']=threshold
  for row in data['寝顔一覧']:
   p=pokemon.get(f"{row['全国図鑑番号']:04d}")
+  if row['全国図鑑番号'] in (710,711):
+   forms=json.loads((ROOT/'master/forms/data.json').read_text())
+   p={'name':row['ポケモン'],'sleepStyles':forms['sleepStyleGroups'][f"{row['全国図鑑番号']:04d}_sizes"]['styles']}
   if not p or p['name']!=row['ポケモン']:
    pending.append(row);continue
   styles=[s for s in p.get('sleepStyles',[]) if s['name']==row['寝顔'] and s['stars']==row['星']]

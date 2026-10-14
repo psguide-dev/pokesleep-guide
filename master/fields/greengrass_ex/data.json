@@ -9892,6 +9892,150 @@
       "verifiedAt": "2026-10-01",
       "status": "攻略資料掲載値・ゲーム内未照合",
       "eventOnly": false
+    },
+    {
+      "sleepStyleId": "0710_sizes_01",
+      "drowsyPower": 7334000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/pumpkaboo-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "ノーマル",
+        "level": 1
+      },
+      "unlockEnergy": 0,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
+    },
+    {
+      "sleepStyleId": "0710_sizes_02",
+      "drowsyPower": 37810000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/pumpkaboo-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "スーパー",
+        "level": 2
+      },
+      "unlockEnergy": 414995,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
+    },
+    {
+      "sleepStyleId": "0710_sizes_03",
+      "drowsyPower": 133304000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/pumpkaboo-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "ハイパー",
+        "level": 3
+      },
+      "unlockEnergy": 1374658,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
+    },
+    {
+      "sleepStyleId": "0710_sizes_04",
+      "drowsyPower": 153824000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/pumpkaboo-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "マスター",
+        "level": 1
+      },
+      "unlockEnergy": 2014314,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
+    },
+    {
+      "sleepStyleId": "0711_sizes_01",
+      "drowsyPower": 88046000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/gourgeist-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "ハイパー",
+        "level": 1
+      },
+      "unlockEnergy": 997610,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
+    },
+    {
+      "sleepStyleId": "0711_sizes_02",
+      "drowsyPower": 179588000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/gourgeist-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "ハイパー",
+        "level": 5
+      },
+      "unlockEnergy": 1797364,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
+    },
+    {
+      "sleepStyleId": "0711_sizes_03",
+      "drowsyPower": 367156000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/gourgeist-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "マスター",
+        "level": 7
+      },
+      "unlockEnergy": 3667816,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
+    },
+    {
+      "sleepStyleId": "0711_sizes_04",
+      "drowsyPower": 453188000,
+      "drowsyPowerSource": "https://wiki.pokesleep.com/ja/pokemon/gourgeist-medium-variety",
+      "drowsyPowerVerifiedAt": "2026-10-01",
+      "drowsyPowerStatus": "非公式コミュニティ資料の掲載値・ゲーム内実測未照合",
+      "rank": {
+        "tier": "マスター",
+        "level": 9
+      },
+      "unlockEnergy": 4378519,
+      "source": "https://wikiwiki.jp/poke_sleep/出現ポケモン一覧/うとうと",
+      "verifiedAt": "2026-10-01",
+      "status": "攻略資料掲載値・ゲーム内未照合",
+      "eventOnly": false,
+      "sizeShared": true,
+      "sizeSharedStatus": "2026-10-14 ユーザー確認：全サイズ共通"
     }
   ],
   "rankThresholds": [
