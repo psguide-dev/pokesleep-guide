@@ -91,6 +91,7 @@ TEMPLATE_NAMES = (
     'detail/05-skill-view.html',
     'dex/07-evolution.html',
     'dex/08-navigation.html',
+    'import/08-sleep-image-review.html',
     'import/06-sleep-image-controller.html',
     '15-auto-images.html',
     'images/02-type-alignment.html',

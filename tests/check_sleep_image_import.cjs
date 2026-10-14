@@ -60,6 +60,46 @@ const alternate=Array.from(all).concat([{...all.find(r=>r.no===1),speciesId:'alt
 assert.equal(overviewReader.parseOverview(['No.1\n4/4'],alternate)[0].speciesId,null,'No. alone cannot select an alternate identity');
 console.log('Actual overview OCR maps 16 identities to 64 sleep IDs; partial, ambiguous and mismatched counts remain unselected');
 
+// Render production review UI without storage writes. Changing one card must
+// replace its submitted IDs while preserving the other cards' edited checks.
+class ReviewNode{
+ constructor(tag){this.tagName=tag;this.children=[];this.value='';this.textContent='';this.attrs={}}
+ append(...nodes){this.children.push(...nodes)}
+ prepend(...nodes){this.children.unshift(...nodes)}
+ replaceChildren(...nodes){this.children=nodes}
+ setAttribute(name,value){this.attrs[name]=value}
+ get options(){return this.children.flatMap(n=>n.tagName==='option'?[n]:n.options||[])}
+ get selectedOptions(){return this.options.filter(n=>n.value===this.value)}
+}
+actual.document={createElement:tag=>new ReviewNode(tag),createTextNode:text=>({textContent:text})};
+actual.localStorage={getItem:()=>null,setItem(){throw Error('review must not save')}};
+vm.runInContext(read('templates/import/08-sleep-image-review.html').replace(/<\/?script[^>]*>/g,''),actual);
+const root=new ReviewNode('div'),view=actual.window.PS_SLEEP_IMAGE_REVIEW;
+const reviewGroups=overviewReader.parseOverview(['No.135\n4/4','No.136\n4/4','No.149\n3/4'],all);
+const selection=view.render([{text:'overview',overview:reviewGroups}],root);
+assert.equal(selection.resultRows.filter(r=>r.check.checked).length,8);
+assert.equal(selection.countRows.length,1);
+assert.equal(selection.countRows[0].group.count,3);
+assert(selection.countRows[0].check.checked);
+assert(selection.resultRows.filter(r=>r.species.value==='0149_default').every(r=>!r.check.checked));
+const flareon=selection.resultRows.find(r=>r.species.value==='0136_default');
+flareon.check.checked=false;
+const jolteon=selection.resultRows.find(r=>r.species.value==='0135_default');
+const oldIds=selection.resultRows.filter(r=>r.group===jolteon.group).map(r=>r.style.value);
+jolteon.species.value='0136_default';jolteon.species.onchange();
+assert.equal(selection.resultRows.filter(r=>r.group===jolteon.group).length,4);
+assert(selection.resultRows.filter(r=>r.group===jolteon.group).every(r=>!oldIds.includes(r.style.value)));
+assert(selection.resultRows.filter(r=>r.group===jolteon.group).every(r=>!r.check.checked),'a corrected species with a different No. requires manual checks');
+assert.equal(flareon.check.checked,false,'editing another card preserves a manual exclusion');
+const second=view.render([screenshot],root);
+assert.equal(root.children.length,1,'re-reading replaces the previous result UI');
+assert.equal(second.resultRows.length,4);
+assert(second.resultRows.every(r=>r.check.checked&&r.style.value));
+assert.equal(second.countRows.length,0,'previous count-only records do not leak into detail scans');
+second.resultRows[0].check.checked=false;
+assert.equal(selection.resultRows.filter(r=>r.check.checked).length,3,'separate reviews own separate selection state');
+console.log('Review split: complete/partial checks, species corrections, manual exclusions and isolated re-reads pass');
+
 for(const no of [37,38]){
  const group=overviewReader.parseOverview([`No.${no}\n4/4`],all)[0];assert.equal(group.speciesId,null);
  for(const suffix of ['default','alola']){const key=String(no).padStart(4,'0')+'_'+suffix,ids=overviewReader.selectedOverviewStyles(group,key,all);assert.equal(ids.length,4);assert(ids.every(id=>all.some(r=>r.id===id&&r.speciesId===key)));}

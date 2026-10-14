@@ -1,0 +1,105 @@
+<script id="psg-sleep-image-review">
+(()=>{
+ // Render editable candidates; reading, cancellation and storage stay in the controller.
+ function render(texts,root){
+  const selection={resultRows:[],countRows:[]};
+  function options(select,rows,empty){select.replaceChildren();const blank=document.createElement('option');blank.value='';blank.textContent=empty;select.append(blank);for(const row of rows){const option=document.createElement('option');option.value=row.value;option.textContent=row.label;select.append(option)}}
+  function readingDetails(text){
+   const details=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');
+   summary.textContent='読み取りテキスト';pre.textContent=text;details.append(summary,pre);return details;
+  }
+  function overviewCards(groups,entries,speciesRows,found){
+   const grid=document.createElement('div');grid.className='psg-sleep-overview-grid';
+   const cards=groups.flatMap(group=>group.aggregateStyles?.length&&group.count===group.total?
+    [...new Set(group.aggregateStyles.map(r=>r.speciesId))].map(id=>({...group,aggregateStyles:[],speciesId:id,styleIds:group.aggregateStyles.filter(r=>r.speciesId===id).map(r=>r.id),variant:true})): [group]);
+   for(const group of cards){
+    const card=document.createElement('section');card.className='psg-sleep-overview-card';
+    const species=document.createElement('select');species.setAttribute('aria-label',`No.${group.no}のポケモン（姿・衣装も確認）`);
+    const sameNo=speciesRows.filter(r=>group.candidates.some(e=>e.speciesId===r.value));
+    const allChoice=group.aggregateStyles?.length?[{value:'__all__',label:`${sameNo.find(r=>r.value.endsWith('_default'))?.label||'No.'+group.no}（姿・衣装合計）`}]:[];
+    options(species,[...allChoice,...sameNo.map(r=>({...r,label:sameNo.length>1&&r.value.endsWith('_default')?`${r.label}（通常）`:r.label}))],`No.${group.no} 姿・衣装を選択`);
+    const other=document.createElement('optgroup');other.label='No.の読み取りを修正';
+    for(const item of speciesRows.filter(r=>!sameNo.some(e=>e.value===r.value))){const option=document.createElement('option');option.value=item.value;option.textContent=item.label;other.append(option)}species.append(other);
+    species.value=allChoice.length?'__all__':group.speciesId||'';card.append(species);
+    const name=document.createElement('div');name.className='psg-sleep-overview-name';card.prepend(name);
+    const updateName=()=>{
+     const full=species.selectedOptions[0]?.textContent||`No.${group.no}`;name.title=full;
+     const label=full.replace(/[（(]([^）)]*)[）)]/g,(whole,content)=>{
+      const short=content.includes('キャプテン')?'CP':content.includes('ハロウィン')?'HW':content.includes('ホリデー')?'HD':content==='姿・衣装合計'?'合計':content;
+      return `(${short})`;
+     });
+     name.replaceChildren();const parts=label.split(/(?=[（(])/);
+     for(const [i,part] of parts.entries()){if(i)name.append(document.createElement('br'));const line=document.createElement('span');line.className=i?'psg-sleep-overview-form':'psg-sleep-overview-species';line.textContent=part;name.append(line)}
+    };
+    species.title='ポケモン・姿を変更';
+    const note=document.createElement('small');card.append(note);
+    const stars=document.createElement('div');stars.className='psg-sleep-overview-stars';card.append(stars);
+    const countOnly=group.aggregateStyles?.length&&group.count!==group.total;
+    if(countOnly){card.classList.add('is-count-only');
+     const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=true;
+     label.className='psg-sleep-count-check';label.append(check,document.createTextNode('数を登録'));stars.append(label);
+     const hint=document.createElement('small');hint.textContent='内訳は未設定';stars.append(hint);
+     species.disabled=true;selection.countRows.push({check,group});note.textContent=`No.${group.no} · ${group.count}/${group.total}`;updateName();species.onchange=updateName;grid.append(card);continue;
+    }
+    const fill=(initial=false)=>{updateName();
+     selection.resultRows=selection.resultRows.filter(r=>r.group!==card);stars.replaceChildren();
+     const aggregate=species.value==='__all__';stars.className='psg-sleep-overview-stars'+(aggregate?' is-aggregate':'');
+     const styles=aggregate?group.aggregateStyles:entries.filter(r=>r.speciesId===species.value).sort((a,b)=>Number(a.stars)-Number(b.stars));
+     const selectedIds=initial?group.styleIds:aggregate?(group.count===group.total?styles.map(r=>r.id):[]):window.PS_SLEEP_IMAGE_READER.selectedOverviewStyles(group,species.value,entries);
+     const subgroups=new Map();
+     note.textContent=group.count===null?'数を確認':`No.${group.no} · ${group.variant?styles.length:group.count}/${group.variant?styles.length:group.total}${selectedIds.length?'':'・星を選択'}`;
+     for(const style of styles){
+      const label=document.createElement('label'),check=document.createElement('input'),text=document.createElement('span');check.type='checkbox';check.checked=selectedIds.includes(style.id);
+      check.setAttribute('aria-label',`${style.pokemon} ★${style.stars} ${style.name}を登録`);label.title=`${style.name}${found[style.id]?'（登録済み）':''}`;
+      text.textContent=`★${style.stars}`;label.append(text,check);
+      let host=stars;
+      if(aggregate){
+       if(!subgroups.has(style.speciesId)){
+        const section=document.createElement('div'),heading=document.createElement('small'),checks=document.createElement('div');checks.className='psg-sleep-overview-stars';
+        heading.textContent=style.speciesId.endsWith('_default')?'通常':style.pokemon.includes('ハロウィン')?'ハロウィン（共通）':style.pokemon.match(/[（(](.*)[）)]/)?.[1]||style.pokemon;
+        section.append(heading,checks);stars.append(section);subgroups.set(style.speciesId,checks);
+       }host=subgroups.get(style.speciesId);
+      }
+      host.append(label);selection.resultRows.push({check,species:aggregate?{value:style.speciesId}:species,style:{value:style.id},group:card});
+     }
+    };fill(true);species.onchange=()=>fill();
+    if(group.speciesId&&group.count!==null&&group.count<group.total){
+     const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=true;label.className='psg-sleep-count-check';label.append(check,document.createTextNode(`${group.count}/${group.total} 数を登録`));card.append(label);selection.countRows.push({check,group});
+    }grid.append(card);
+   }return grid;
+  }
+  const entries=window.PS_SLEEP_IMAGE_READER.entries();let found={};try{found=JSON.parse(localStorage.getItem('psg-sleep-discoveries-v1')||'{}')||{}}catch{}
+  root.replaceChildren();
+  const speciesRows=[...new Map(entries.map(r=>[r.speciesId,{value:r.speciesId,label:r.pokemon}])).values()];
+  texts.forEach((reading,index)=>{
+   const text=typeof reading==='string'?reading:reading.text;
+   if(reading.overview?.length){
+    const section=document.createElement('section');section.className='psg-sleep-scan-result';
+    const title=document.createElement('strong');title.textContent=`画像 ${index+1}・${reading.overview.length}体`;section.append(title,overviewCards(window.PS_SLEEP_IMAGE_READER.groupOverview(reading.overview),entries,speciesRows,found));
+    section.append(readingDetails(text));root.append(section);return;
+   }
+   const results=window.PS_SLEEP_IMAGE_READER.parseMany(text,entries);
+   const section=document.createElement('section');section.className='psg-sleep-scan-result';
+   const heading=document.createElement('div');heading.className='psg-sleep-scan-heading';
+   const title=document.createElement('strong');title.textContent=`画像 ${index+1}`;
+   const species=document.createElement('select');species.setAttribute('aria-label',`画像${index+1}のポケモン（姿・衣装も確認）`);
+   options(species,speciesRows,'ポケモンを選択');species.value=results[0]?.speciesId||'';heading.append(title,species);section.append(heading);
+   const imageRows=[];
+   results.forEach((result,part)=>{
+    const row=document.createElement('div');row.className='psg-sleep-scan-row';
+    const checkLabel=document.createElement('label');checkLabel.className='psg-image-check';
+    const check=document.createElement('input');check.type='checkbox';check.checked=true;check.setAttribute('aria-label',`画像${index+1}の候補${part+1}を登録`);checkLabel.append(check);
+    const style=document.createElement('select');style.setAttribute('aria-label',`画像${index+1}の候補${part+1}の寝顔`);
+    const fill=()=>{options(style,entries.filter(r=>r.speciesId===species.value).map(r=>({value:r.id,label:`★${r.stars} ${r.name}${found[r.id]?'（登録済み）':''}`})),'寝顔を選択（未判定）');style.disabled=!species.value};fill();style.value=result.styleId||'';
+    row.append(checkLabel,style);section.append(row);imageRows.push(fill);selection.resultRows.push({check,species,style});
+   });
+   species.onchange=()=>imageRows.forEach(fill=>fill());
+   section.append(readingDetails(text||'文字を読み取れませんでした。'));
+   root.append(section);
+  });
+
+  return selection;
+ }
+ window.PS_SLEEP_IMAGE_REVIEW={render};
+})();
+</script>
