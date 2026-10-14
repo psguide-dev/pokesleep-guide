@@ -33,5 +33,5 @@ function dailyMemberContext(item,speedContext,items,catalog,startingEnergy,exCon
    skillAmount:skillEffect?.amount,skillEnergy:skillEffect?.energy ??
     (Number.isFinite(skillEffect?.min)&&Number.isFinite(skillEffect?.max)?(skillEffect.min+skillEffect.max)/2:null),
    skillShards:skillEffect?.shards ?? (skill?.effectType==='variable_dream_shards'&&Number.isFinite(skillEffect?.min)&&Number.isFinite(skillEffect?.max)?(skillEffect.min+skillEffect.max)/2:null),
-   skillRecovery:skillEffect?.recovery,skillHelps:boost?boost.helps:skillEffect?.helps,boost,missing:false};
+   skillRecovery:skillEffect?.recovery,skillSelfRecovery:skillEffect?.selfRecovery,skillHelps:boost?boost.helps:skillEffect?.helps,boost,missing:false};
 }

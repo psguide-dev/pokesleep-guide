@@ -4,6 +4,10 @@ function dailyCollectionSkills(member,triggers,hasFollowingPeriod,teamSize){
    if(member.boost&&Number.isFinite(member.skillHelps))bonusHelps+=triggers*member.skillHelps;
    if(member.skillEffectType==='extra_help'&&Number.isFinite(member.skillHelps))bonusHelps+=triggers*member.skillHelps/teamSize;
    if(member.skillEffectType==='random_ingredients'&&Number.isFinite(member.skillAmount))member.randomIngredients+=triggers*member.skillAmount;
+   // Moonlight's guaranteed self recovery is known; the extra success/target recovery is not modeled.
+   if(hasFollowingPeriod&&member.skillEffectType==='moonlight_energy_recovery'){
+    if(Number.isFinite(member.skillSelfRecovery))member.energy=Math.min(150,member.energy+triggers*member.skillSelfRecovery*member.stats.energyFactor);
+   }
    if(member.skillEffectType==='team_energy_recovery'&&Number.isFinite(member.skillRecovery))teamRecovery+=triggers*member.skillRecovery;
    if(hasFollowingPeriod&&member.skillEffectType==='self_energy_recovery'&&Number.isFinite(member.skillRecovery))
     member.energy=Math.min(150,member.energy+triggers*member.skillRecovery*member.stats.energyFactor);

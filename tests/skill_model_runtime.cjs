@@ -1,4 +1,4 @@
-function createRuntime(rootPath){
+function createRuntime(rootPath,project=true){
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),cp=require('node:child_process'),assert=require('node:assert/strict');
 const root=path.resolve(rootPath);
 const read=f=>fs.readFileSync(path.join(root,f),'utf8');
@@ -16,7 +16,7 @@ ctx.window.PS_SPECIAL_ENGINE={...specialModule,tables,kernel:specialModule.creat
 for(const f of ['templates/00-number-format.html','templates/core/07-corrections.html','templates/core/10-individual-evaluation.html','templates/core/12-individual-trial.html']){
  let source=read(f).replace(/<\/?script[^>]*>/g,'');
  // Prediction sandbox ONLY. Production cap/source are not changed.
- if(f.endsWith('07-corrections.html')){
+ if(project&&f.endsWith('07-corrections.html')){
   if(!source.includes('const MAX_POKEMON_LEVEL=70;'))throw new Error('Review cap before projection');
   source=source.replace('const MAX_POKEMON_LEVEL=70;','const MAX_POKEMON_LEVEL=80;');
  }
