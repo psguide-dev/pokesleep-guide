@@ -354,7 +354,7 @@ def special_engine():
 
 def pokemon_field_payloads(catalog):
     """Derive species encounters from the canonical field records, then audit coverage."""
-    result = {no: {} for no in catalog['sleepStyles']}
+    result = {no: {} for no in set(catalog['pokemon']) | set(catalog['sleepStyles'])}
     for field_id, field in catalog['fields'].items():
         for encounter in field.get('encounters', []):
             no = str(int(encounter['sleepStyleId'].split('_')[0]))
@@ -366,7 +366,7 @@ def pokemon_field_payloads(catalog):
 
 
 def validate_pokemon_field_payloads(catalog, payloads):
-    assert set(payloads) == set(catalog['sleepStyles']), 'species field coverage mismatch'
+    assert set(payloads) == set(catalog['pokemon']) | set(catalog['sleepStyles']), 'species field coverage mismatch'
     actual = {}
     for no, fields in payloads.items():
         known_styles = {row[2] for row in catalog['sleepStyles'].get(no, [])}
