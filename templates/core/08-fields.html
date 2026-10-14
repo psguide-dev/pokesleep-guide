@@ -52,8 +52,6 @@ function syncDayControls(){
  document.getElementById('teamInitialEnergy').value=String(teamInitialEnergy);
  document.getElementById('teamMeals').value=String(teamMeals);
  document.getElementById('teamInitialEnergyRange').value=String(teamInitialEnergy);
- document.getElementById('teamCollectionSummary').textContent=`${daySettings.collectionHours}時間`;
- document.getElementById('teamEnergySummary').textContent=String(teamInitialEnergy);
  syncExEffectControls();
  const camp=document.getElementById('teamGoodCamp'),campText=`いいキャンプ：${teamGoodCamp?'ON':'OFF'}`;
  camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;

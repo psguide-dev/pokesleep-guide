@@ -581,12 +581,3 @@
 #whistleToggle img{width:24px;height:24px;object-fit:contain}
 .psg-team-card:has(#teamManagerPanel[hidden]):has(#savedTeamStatus[hidden]){display:none}
 
-/* Forecast settings collapse without changing the calculation values. */
-.psg-day-collection{grid-column:span 2;min-width:0;font-size:12px}
-.psg-day-collection summary,.psg-day-energy-details summary{cursor:pointer;min-height:var(--psg-ui-unit);display:flex;align-items:center;justify-content:space-between;gap:4px;font-size:12px;font-weight:700}
-.psg-day-collection summary::after,.psg-day-energy-details summary::after{content:"▾"}
-.psg-day-collection[open] summary::after,.psg-day-energy-details[open] summary::after{content:"▴"}
-.psg-day-collection summary small,.psg-day-energy-details summary small{margin-left:auto;font:inherit}
-.psg-day-collection select{width:100%;min-width:0;height:var(--psg-ui-unit);padding:0 3px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#111;text-align:center}
-.psg-day-energy-details{margin-top:6px}
-.psg-day-energy-details .psg-day-energy{margin-top:0}
