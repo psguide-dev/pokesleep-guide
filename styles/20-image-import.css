@@ -12,8 +12,8 @@
 #boxImageConflicts,#boxImageMessage{color:#b22}#boxImageCandidates:empty,#boxImageConflicts:empty,#boxImageMessage:empty{display:none}
 #boxImageSave{margin-top:12px;width:100%}body:has(#boxImageDialog[open]){overflow:hidden}
 
-#dex .psg-dex-toolbar .psg-screen-title{flex-direction:column;gap:2px}
-#dex #dexCount{line-height:1;font-weight:500}
+#dex .psg-dex-toolbar .psg-screen-title,#box .psg-screen-toolbar .psg-screen-title{flex-direction:column;gap:2px}
+#dex #dexCount,#box #boxCount{line-height:1;font-weight:500}
 #sleepImageOpen{height:var(--psg-ui-unit);padding:0 3px;font-size:clamp(10px,2.7vw,13px);touch-action:manipulation}
 .psg-sleep-scan-result{border-top:1px solid var(--line);padding:8px 0}
 .psg-sleep-scan-heading{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px;margin-bottom:6px;font-size:14px}

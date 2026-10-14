@@ -26,9 +26,9 @@ body:has(:is(#dex,#box,#home).active)>.psg-app-header{
  content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-sizing:border-box;width:clamp(65px,18cqw,70px);max-width:calc(100% - 8px);height:var(--psg-ui-unit);border:1px solid var(--line);border-radius:10px;pointer-events:none;
 }
 .screen>.psg-screen-title{display:flex;align-items:center;margin:0}
-#home .psg-home-heading{grid-template-rows:var(--psg-page-header-height) var(--home-row-height);margin-top:0}
+#home .psg-home-heading{grid-template-rows:repeat(3,var(--home-row-height));margin-top:0}
 #home .psg-home-heading,#home .psg-home-heading::before{background:#fff}
-#home .psg-home-heading>h2{box-sizing:border-box;height:var(--psg-page-header-height)}
+#home .psg-home-heading>h2{box-sizing:border-box;height:calc(2 * var(--home-row-height) + 2px)}
 #home #teamManagerToggle{height:var(--home-row-height)}
 .psg-recipe-sticky{padding-top:0}
 

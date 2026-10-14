@@ -17,6 +17,7 @@ function renderBox(){
  });
   document.querySelector('[data-menu="box-type"]>.filter-main')?.classList.toggle('active',state.boxFilters.types.size>0);
   document.querySelector('[data-menu="box-ing"]>.filter-main')?.classList.toggle('active',state.boxFilters.ingredients.size>0);
+ document.getElementById('boxCount').textContent=`${a.length} / ${state.box.length}`;
  boxGrid.innerHTML=a.map(x=>{
   const species=speciesFor(x);
   const foods=[1,30,60].map((unlock,i)=>{

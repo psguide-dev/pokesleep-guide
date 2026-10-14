@@ -162,9 +162,9 @@
 
 /* Food rows share the same height and ingredient-area width. */
 #boxDetail .psg-box-food-section .psg-v106-ingredient{position:relative;box-sizing:border-box;height:var(--box-unit-height);min-height:0;border:1px solid #fff;padding:2px}
-#boxDetail .psg-v106-ingredient[data-slot="A"]{background:#e9f8ee}
-#boxDetail .psg-v106-ingredient[data-slot="B"]{background:#fdf0f3}
-#boxDetail .psg-v106-ingredient[data-slot="C"]{background:#fdf6e9}
+#boxDetail .psg-v106-ingredient[data-slot="A"]{background:#eaf3fd}
+#boxDetail .psg-v106-ingredient[data-slot="B"]{background:#f1ecfb}
+#boxDetail .psg-v106-ingredient[data-slot="C"]{background:#fff0e5}
 #boxDetail .psg-box-day-food-amounts{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:3px 8px;box-sizing:border-box;min-width:0;height:calc(var(--box-unit-height) - 2px);min-height:0;padding:2px;border:0;border-radius:0;background:transparent;color:#111}
 #boxDetail .psg-box-day-food-amounts.psg-box-pending{margin:0;font-size:10px}
 #boxDetail .psg-box-day-conditions{margin:0;color:#111}
