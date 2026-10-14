@@ -100,6 +100,7 @@ jobs:
           node tests/check_individual_lazy.cjs
           node tests/check_carry_fill.cjs
           node tests/check_berry_role_ui.cjs
+          node tests/check_berry_model_interaction.cjs
           node tests/check_box_header_spacing.cjs
       - name: Check image-first species and received artwork
         run: |
