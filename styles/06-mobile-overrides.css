@@ -116,7 +116,7 @@
 @media(max-width:620px){
   :root{--psg-header-height:calc(38px + env(safe-area-inset-top))}
   /* Unified app header + 1-1. Safe-area aware; left/right top labels preserve the center zone. */
-  .psg-app-header{
+  body:not(:has(#startPage.active))>.psg-app-header{
     position:sticky!important;top:0!important;z-index:70!important;
     height:calc(38px + env(safe-area-inset-top))!important;
     min-height:calc(38px + env(safe-area-inset-top))!important;
