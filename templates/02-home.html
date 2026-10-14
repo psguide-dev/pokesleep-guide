@@ -1,4 +1,18 @@
-<section id="startPage" class="screen active"><div class="card psg-start-intro"><img class="psg-start-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></div><div class="card"><div class="psg-calendar-heading"><button type="button" id="calendarPrev" class="btn" aria-label="前の週">‹</button><strong id="calendarMonth"></strong><button type="button" id="calendarNext" class="btn" aria-label="次の週">›</button></div><div id="gameCalendar" class="psg-game-calendar" aria-labelledby="calendarMonth"></div><button type="button" id="calendarToday" class="btn psg-calendar-reset" hidden>今週に戻る</button><div id="gameEvents"></div></div><div class="psg-start-links"><button type="button" class="card psg-start-link" data-screen="home"><img src="assets/ui/menu_team.webp" width="56" height="56" alt=""><strong>チーム</strong></button><button type="button" class="card psg-start-link" data-screen="box"><img src="assets/ui/menu_box.webp" width="56" height="56" alt=""><strong>ボックス</strong></button><button type="button" class="card psg-start-link" data-screen="dex"><img src="assets/ui/menu_dex.webp" width="56" height="56" alt=""><strong>図鑑</strong></button><button type="button" class="card psg-start-link" data-screen="info"><img src="assets/ui/menu_info.webp" width="56" height="56" alt=""><strong>情報</strong></button></div><div class="card"><div class="section-title">更新履歴</div><div id="homeUpdates"></div></div></section>
+<section id="startPage" class="screen active">
+ <div class="psg-start-top">
+  <div class="psg-start-left">
+   <div class="card psg-start-intro"><img class="psg-start-logo" src="assets/ui/site_logo.png" width="1774" height="887" alt="P Sleep Nexus" decoding="async"></div>
+   <div class="card psg-start-calendar">
+    <div class="psg-calendar-heading"><button type="button" id="calendarPrev" class="btn" aria-label="前の週">‹</button><strong id="calendarMonth"></strong><button type="button" id="calendarNext" class="btn" aria-label="次の週">›</button></div>
+    <div id="gameCalendar" class="psg-game-calendar" aria-labelledby="calendarMonth"></div>
+    <button type="button" id="calendarToday" class="btn psg-calendar-reset" hidden>今週に戻る</button>
+    <div id="gameEvents"></div>
+   </div>
+  </div>
+  <div class="psg-start-links"><button type="button" class="card psg-start-link" data-screen="home"><img src="assets/ui/menu_team.webp" width="56" height="56" alt=""><strong>チーム</strong></button><button type="button" class="card psg-start-link" data-screen="box"><img src="assets/ui/menu_box.webp" width="56" height="56" alt=""><strong>ボックス</strong></button><button type="button" class="card psg-start-link" data-screen="dex"><img src="assets/ui/menu_dex.webp" width="56" height="56" alt=""><strong>図鑑</strong></button><button type="button" class="card psg-start-link" data-screen="info"><img src="assets/ui/menu_info.webp" width="56" height="56" alt=""><strong>情報</strong></button></div>
+ </div>
+ <div class="card psg-start-updates"><div class="section-title">更新履歴</div><div id="homeUpdates"></div></div>
+</section>
 <script id="psg-site-brand">
 {
  const rareLogo=Math.random()<0.1;
@@ -19,7 +33,7 @@
 </section>
 
 <style>
-.psg-calendar-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.psg-game-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.psg-calendar-day{min-height:40px;text-align:center;padding:7px 2px;border-radius:8px;background:#f4f7f5}.psg-calendar-day.is-focus-week{background:#e7f2e9}.psg-calendar-day.is-event{background:#e1edff;color:#255894;font-weight:700}.psg-calendar-day.is-today{outline:2px solid #508d72}.psg-calendar-day.is-focus-week.is-event{background:#cfdef5}.psg-calendar-reset{margin-top:8px}.psg-calendar-weekday{text-align:center;color:#69766f;font-size:12px}.psg-calendar-event{font-size:13px;margin:12px 0}.psg-update-entry{border-top:1px solid #e2e8e4;padding:10px 0}.psg-update-entry small{color:#69766f}.psg-update-heading{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.psg-update-category{font-size:11px;padding:2px 7px;border-radius:6px;background:#edf3ef;color:#415c4a}.psg-update-history{margin-top:10px}.psg-update-history summary{cursor:pointer;font-weight:700}
+.psg-calendar-heading{display:flex;align-items:center;justify-content:space-between;gap:2px;margin-bottom:6px}.psg-calendar-heading strong{min-width:0;text-align:center;font-size:11px;line-height:1.3}.psg-calendar-heading .btn{flex:0 0 28px;min-height:36px;padding:2px;font-size:20px}.psg-game-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}.psg-calendar-day{min-width:0;min-height:28px;text-align:center;padding:6px 0;font-size:11px;border-radius:8px;background:#f4f7f5}.psg-calendar-day.is-focus-week{background:#e7f2e9}.psg-calendar-day.is-event{background:#e1edff;color:#255894;font-weight:700}.psg-calendar-day.is-today{outline:2px solid #508d72}.psg-calendar-day.is-focus-week.is-event{background:#cfdef5}.psg-calendar-reset{margin-top:8px}.psg-calendar-weekday{text-align:center;color:#69766f;font-size:12px}.psg-calendar-event{font-size:12px;line-height:1.45;margin:8px 0;overflow-wrap:anywhere}.psg-calendar-details{font-size:12px;margin-top:6px}.psg-calendar-details summary{cursor:pointer}.psg-calendar-details a{display:block;padding:8px 0}.psg-update-entry{border-top:1px solid #e2e8e4;padding:10px 0}.psg-update-entry small{color:#69766f}.psg-update-heading{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.psg-update-category{font-size:11px;padding:2px 7px;border-radius:6px;background:#edf3ef;color:#415c4a}.psg-update-history{margin-top:10px}.psg-update-history summary{cursor:pointer;font-weight:700}
 </style>
 <script id="psg-home-calendar">
 (()=>{
@@ -32,25 +46,26 @@
  const dateLabel=date=>`${date.getUTCFullYear()}/${date.getUTCMonth()+1}/${date.getUTCDate()}`;
  let weekOffset=0;
  function render(){
-  const monday=addDays(currentMonday,weekOffset*7),firstDay=addDays(monday,-7),lastDay=addDays(monday,13);
-  document.getElementById('calendarMonth').textContent=`${dateLabel(monday)}〜${dateLabel(addDays(monday,6))} ${weekOffset===0?'今週':'の週'}`;
+  const monday=addDays(currentMonday,weekOffset*7),firstDay=monday,lastDay=addDays(monday,6);
+  document.getElementById('calendarMonth').textContent=`${monday.getUTCMonth()+1}/${monday.getUTCDate()}〜${addDays(monday,6).getUTCMonth()+1}/${addDays(monday,6).getUTCDate()}${weekOffset===0?' 今週':''}`;
   document.getElementById('calendarToday').hidden=weekOffset===0;
   const host=document.getElementById('gameCalendar');host.replaceChildren();
   for(const name of ['月','火','水','木','金','土','日']){const el=document.createElement('span');el.className='psg-calendar-weekday';el.textContent=name;host.append(el)}
-  for(let i=0;i<21;i++){
+  for(let i=0;i<7;i++){
    const date=addDays(firstDay,i),key=dateKey(date),events=window.PS_GAME_EVENTS.filter(e=>key>=e.start.slice(0,10)&&key<=e.end.slice(0,10));
-   const el=document.createElement('div');el.className='psg-calendar-day'+(i>=7&&i<14?' is-focus-week':'')+(events.length?' is-event':'')+(key===today?' is-today':'');el.dataset.date=key;
+   const el=document.createElement('div');el.className='psg-calendar-day'+' is-focus-week'+(events.length?' is-event':'')+(key===today?' is-today':'');el.dataset.date=key;
    el.textContent=i%7===0||date.getUTCDate()===1?`${date.getUTCMonth()+1}/${date.getUTCDate()}`:String(date.getUTCDate());el.title=events.map(e=>e.title).join('・');el.setAttribute('aria-label',`${dateLabel(date)}${key===today?' 今日':''}${events.length?' '+events.map(e=>e.title).join('・'):''}`);if(key===today)el.setAttribute('aria-current','date');host.append(el);
   }
   const list=document.getElementById('gameEvents');list.replaceChildren();
   const first=dateKey(firstDay),last=dateKey(lastDay),events=window.PS_GAME_EVENTS.filter(e=>e.start.slice(0,10)<=last&&e.end.slice(0,10)>=first);
-  for(const event of events){const line=document.createElement('p');line.className='psg-calendar-event';const title=document.createElement('strong');title.textContent=event.title;const dates=document.createElement('span');dates.textContent=`${event.start.slice(5,10).replace('-','/')} 4:00〜${event.end.slice(5,10).replace('-','/')} 3:59`;line.append(title,document.createElement('br'),dates);list.append(line)}
+  for(const event of events){const line=document.createElement('p');line.className='psg-calendar-event';const title=document.createElement('strong');title.textContent=event.title;const dates=document.createElement('span');dates.textContent=`${event.start.slice(5,10).replace('-','/')} 4:00〜${event.end.slice(5,10).replace('-','/')} 3:59`;line.append(title,document.createElement('br'),dates);list.append(line);
+   if(event.source){const details=document.createElement('details'),summary=document.createElement('summary'),link=document.createElement('a');details.className='psg-calendar-details';summary.textContent='イベント詳細';link.textContent='公式のお知らせ';link.href=event.source;link.target='_blank';link.rel='noopener noreferrer';details.append(summary,link);list.append(details)}}
   if(!events.length){const line=document.createElement('p');line.className='note';line.textContent='登録されているゲームの予定はありません。';list.append(line)}
  }
  document.getElementById('calendarPrev').onclick=()=>{weekOffset--;render()};
  document.getElementById('calendarNext').onclick=()=>{weekOffset++;render()};
  document.getElementById('calendarToday').onclick=()=>{weekOffset=0;render()};render();
- const updates=[["v610","2026/10/14","8種のきのみ評価を新モデルへ更新。理想比・上回る構成割合と比較用スキルLvを追加。","機能・計算"],["v609","2026/10/14","寝顔スキャンの確認画面を専用ファイルへ分離。描画・読み取り・保存の役割を整理。","表示・軽量化"],["v608","2026/10/13","寝顔スキャンの一覧読取範囲を修正。最上段の図鑑番号の読み落としを改善。","機能・計算"],["v607","2026/10/13","画像登録の個体Lvを切り出して読取。種類別の食材照合と未解放アイコン検出を改善。","機能・計算"],["v606","2026/10/13","画像登録で白いサブスキル枠も検出。5枠を個別に読み取る処理を改善。","機能・計算"],["v605","2026/10/13","全身画で種類を照合する処理を追加。ニックネームでも姿から候補を表示。","機能・計算"],["v604","2026/10/13","8種のきのみ適性を試作接続。評価Lv切替・標準比・理想比を追加。","機能・計算"],["v603","2026/10/13","簡易評価に満杯目安を追加。既存の日産計算の結果は維持。","機能・計算"],["v602","2026/10/13","進化系を点検。寝顔未登録フィルター・情報ボタン・チーム固定部を調整。","表示・軽量化"],["v601","2026/10/13","進化処理を整理し、寝顔カードのCSSを専用ファイルへ分離。","表示・軽量化"]];
+ const updates=[["v611","2026/10/14","ホームを左右に配置。左にロゴ・週カレンダー・イベント、右にメインボタン。","表示・軽量化"],["v610","2026/10/14","8種のきのみ評価を新モデルへ更新。理想比・上回る構成割合と比較用スキルLvを追加。","機能・計算"],["v609","2026/10/14","寝顔スキャンの確認画面を専用ファイルへ分離。描画・読み取り・保存の役割を整理。","表示・軽量化"],["v608","2026/10/13","寝顔スキャンの一覧読取範囲を修正。最上段の図鑑番号の読み落としを改善。","機能・計算"],["v607","2026/10/13","画像登録の個体Lvを切り出して読取。種類別の食材照合と未解放アイコン検出を改善。","機能・計算"],["v606","2026/10/13","画像登録で白いサブスキル枠も検出。5枠を個別に読み取る処理を改善。","機能・計算"],["v605","2026/10/13","全身画で種類を照合する処理を追加。ニックネームでも姿から候補を表示。","機能・計算"],["v604","2026/10/13","8種のきのみ適性を試作接続。評価Lv切替・標準比・理想比を追加。","機能・計算"],["v603","2026/10/13","簡易評価に満杯目安を追加。既存の日産計算の結果は維持。","機能・計算"],["v602","2026/10/13","進化系を点検。寝顔未登録フィルター・情報ボタン・チーム固定部を調整。","表示・軽量化"]];
  const host=document.getElementById('homeUpdates');host.replaceChildren();
  function updateRow([version,date,description,category],target){
   const row=document.createElement('div');row.className='psg-update-entry';const heading=document.createElement('div');heading.className='psg-update-heading';
