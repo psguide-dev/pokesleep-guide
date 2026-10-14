@@ -5,7 +5,7 @@ teamSubskillsToggle.onclick=()=>{
  document.getElementById('teamCardStrip').classList.toggle('is-expanded',expanded);
  teamSubskillsToggle.setAttribute('aria-expanded',String(expanded));
  teamSubskillsToggle.setAttribute('aria-label',expanded?'サブスキルを隠す':'サブスキルを表示');
- teamSubskillsToggle.textContent=expanded?'▲':'▼';
+ teamSubskillsToggle.textContent=expanded?'閉じる':'詳細';
  updateHomeStickyHeight();
 };
 

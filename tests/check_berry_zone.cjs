@@ -25,3 +25,17 @@ vm.runInContext('fieldProfile=normalizeFieldProfile(raw);team=[];saveFieldProfil
 vm.runInContext(read('templates/core/08-fields.html').match(/function selectField\(id\)\{[^\n]+/)[0],ctx);
 ctx.selectField('a');assert.equal(ctx.activeBerryZones()['マゴのみ'],12.4);ctx.selectField('b');assert.deepEqual(Object.keys(ctx.activeBerryZones()),[]);ctx.selectField('a');assert.deepEqual(Object.keys(ctx.activeBerryZones()),[]);
 console.log('Berry zone: mixed berries, favorite/field stacking, overflow, food/skill isolation, bounds, whistle, saved field/week state and team removal passed.');
+// Returning to an ordinary island clears the EX selection and persists the reset.
+{
+ const nodes={},writes=[];
+ const controls={window:{PS_CATALOG:{fields:{ex:{mode:'expert'},normal:{mode:'normal'}}}},fieldProfile:{selectedFieldId:'ex'},daySettings:{exWeeklyEffect:'berry',collectionHours:4,initialEnergy:100},DAY_SETTINGS_KEY:'day',document:{getElementById:id=>nodes[id]??={}},localStorage:{setItem:(key,value)=>writes.push([key,JSON.parse(value)])}};
+ vm.createContext(controls);
+ const source=read('templates/core/08-fields.html');
+ vm.runInContext(source.slice(source.indexOf('function syncExEffectControls(){'),source.indexOf('function syncDayControls(){')),controls);
+ controls.syncExEffectControls();assert.equal(nodes.teamExEffect.value,'berry');assert.equal(nodes.teamExEffect.disabled,false);assert.equal(writes.length,0);
+ controls.fieldProfile.selectedFieldId='normal';controls.syncExEffectControls();
+ assert.equal(nodes.teamExEffect.value,'');assert.equal(nodes.teamExEffect.disabled,true);assert.equal(writes[0][1].exWeeklyEffect,'');assert.equal(writes[0][1].collectionHours,4);assert.equal(writes[0][1].initialEnergy,100);
+ controls.fieldProfile.selectedFieldId='ex';controls.syncExEffectControls();assert.equal(nodes.teamExEffect.value,'');assert.equal(nodes.teamExEffect.disabled,false);
+ controls.daySettings.exWeeklyEffect='skill';controls.fieldProfile.selectedFieldId='normal';controls.localStorage.setItem=()=>{throw Error('quota')};controls.syncExEffectControls();assert.equal(nodes.teamExEffect.value,'');assert.match(nodes.teamDaySaveStatus.textContent,/保存できません/);
+ console.log('EX controls: reset persists on ordinary islands, preserves other conditions, stays unset on return and handles storage failure.');
+}

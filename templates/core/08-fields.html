@@ -39,6 +39,11 @@ function saveCookingSettings(value){
 }
 function syncExEffectControls(){
  const isEx=window.PS_CATALOG?.fields?.[fieldProfile.selectedFieldId]?.mode==='expert';
+ if(!isEx&&daySettings.exWeeklyEffect){
+  daySettings.exWeeklyEffect='';
+  try{localStorage.setItem(DAY_SETTINGS_KEY,JSON.stringify(daySettings))}
+  catch{document.getElementById('teamDaySaveStatus').textContent='EX設定の解除を保存できませんでした。今回の表示には反映しています。'}
+ }
  const select=document.getElementById('teamExEffect');select.value=daySettings.exWeeklyEffect;select.disabled=!isEx;
  select.title=isEx?'EXの週効果':'EXフィールドで選択できます';
 }
@@ -47,6 +52,8 @@ function syncDayControls(){
  document.getElementById('teamInitialEnergy').value=String(teamInitialEnergy);
  document.getElementById('teamMeals').value=String(teamMeals);
  document.getElementById('teamInitialEnergyRange').value=String(teamInitialEnergy);
+ document.getElementById('teamCollectionSummary').textContent=`${daySettings.collectionHours}時間`;
+ document.getElementById('teamEnergySummary').textContent=String(teamInitialEnergy);
  syncExEffectControls();
  const camp=document.getElementById('teamGoodCamp'),campText=`いいキャンプ：${teamGoodCamp?'ON':'OFF'}`;
  camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;
