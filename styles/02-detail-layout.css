@@ -580,4 +580,10 @@
 #whistleToggle{display:inline-flex;align-items:center;justify-content:center;min-height:0;width:28px;height:28px;padding:0;border:1px solid var(--line);border-radius:6px;background:#fff;flex:none;cursor:pointer}
 #whistleToggle img{width:24px;height:24px;object-fit:contain}
 .psg-team-card:has(#teamManagerPanel[hidden]):has(#savedTeamStatus[hidden]){display:none}
-
+.psg-day-toggles{grid-template-columns:repeat(6,minmax(0,1fr))}
+.psg-day-condition-details{margin-top:6px}
+.psg-day-condition-details>summary{display:flex;align-items:center;justify-content:flex-end;min-height:var(--psg-ui-unit);cursor:pointer;font-size:12px;font-weight:700;color:#1768a6}
+.psg-day-condition-details>summary::after{content:" ▾";margin-left:5px}
+.psg-day-condition-details[open]>summary::after{content:" ▴"}
+.psg-day-condition-controls>.psg-day-setting{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:var(--psg-ui-unit);width:50%;gap:4px}
+.psg-day-condition-controls>.psg-day-energy{margin-top:6px}

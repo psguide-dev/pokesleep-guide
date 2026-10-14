@@ -2,17 +2,66 @@
 window.PS_BERRY_MODEL_DATA=null;
 let berryModelLoading=null,berryModelError=null;
 const BERRY_MODEL_CACHE=new Map();
+window.PS_BERRY_TOTAL_DATA=null;
+let berryTotalLoading=null,berryTotalError=null;
+function roleModelRank(e){
+ const grade=p=>p<=3?'SS':p<=10?'S':p<=25?'A':p<=50?'B':'C';
+ if(!Number.isFinite(e?.strongerLower)||!Number.isFinite(e?.strongerUpper))return '未判定';
+ const lo=grade(e.strongerLower),hi=grade(e.strongerUpper);return lo===hi?lo:`${lo}〜${hi}（境界）`;
+}
+function loadBerryTotalReferences(){
+ if(window.PS_BERRY_TOTAL_DATA)return Promise.resolve(window.PS_BERRY_TOTAL_DATA);
+ if(!berryTotalLoading)berryTotalLoading=fetch('assets/evaluation/berry_total_refs_v1.json').then(r=>{if(!r.ok)throw Error('total reference load');return r.json()}).then(data=>{
+  if(data.version!==1||data.axis!=='berry_plus_convertible_skill'||!data.entries||!Number.isFinite(data.ingredientMean))throw Error('total reference version');
+  window.PS_BERRY_TOTAL_DATA=data;berryTotalError=null;return data;
+ }).catch(error=>{berryTotalLoading=null;berryTotalError=error;throw error});return berryTotalLoading;
+}
+function berryTotalComparison(e){
+ if(e.status!=='ready')return {status:'pending',text:e.text};
+ const type=e.member.skillEffectType;
+ if(type==='self_energy_recovery')return {status:'included',text:'自身の回復によるきのみ増加は主軸に含まれています。追加でエナジーを加算しません。'};
+ if(!['fixed_energy','variable_energy','random_ingredients'].includes(type))return {status:'unconverted',text:'このスキルは発動回数・効果量を別に扱い、エナジー換算には加算しません。未換算を0点や弱さとして扱いません。'+(type==='ally_energy_recovery'?'回復によるきのみ収量は既存の単体モデルの推定です。実際の5体への抽選とチーム貢献は未換算です。':'')};
+ const data=window.PS_BERRY_TOTAL_DATA;if(!data)return {status:'pending',text:berryTotalError?'換算基準の読み込みに失敗しました':'換算基準を読み込んでいます…'};
+ const reference=data.entries[JSON.stringify([e.speciesId,e.level,e.skillLevel])];
+ if(!reference)return {status:'pending',text:'この条件の換算基準は準備中です'};
+ const m=e.member,unit=type==='random_ingredients'?m.skillAmount*data.ingredientMean:m.skillEnergy;
+ if(!Number.isFinite(unit)||!Number.isFinite(m.skillTriggers))return {status:'pending',text:'スキルの効果量を確認できませんでした'};
+ const extra=m.skillTriggers*unit,value=e.value+extra;
+ if(value>reference.ideal+1e-9)return {status:'pending',text:'換算込み理想値を超えたため基準を確認中です'};
+ const bins=reference.distributionBounds,lower=100*bins.reduce((n,r)=>n+(r[0]>value+1e-9?r[2]:0),0)/reference.count,upper=100*bins.reduce((n,r)=>n+(r[1]>value+1e-9?r[2]:0),0)/reference.count;
+ return {status:'ready',value,extra,ideal:reference.ideal,idealPercent:value/reference.ideal*100,strongerLower:lower,strongerUpper:upper,strongerPercent:(lower+upper)/2,idealRecord:reference.idealRecord,type,ingredientMean:data.ingredientMean,ingredientCount:data.ingredientPool.length};
+}
+function renderBerryTotalResult(e){
+ const result=berryTotalComparison(e),n=window.PS_NUMBERS.display;
+ if(result.status!=='ready')return `<p>${boxEsc(result.text)}</p>${result.status==='pending'&&berryTotalError?'<button type="button" class="psg-berry-total-retry">換算基準を再読込</button>':''}`;
+ const ingredients=result.type==='random_ingredients';
+ return `<p><b>スキル換算込み ${roleModelRank(result)}</b>　理想比 ${n(result.idealPercent)}%</p><p>この個体を上回る構成 ${berryStrongerText(result)}<br>きのみ ${n(e.value)} ＋ ${ingredients?'食材の素エナジー換算':'スキルの直接エナジー'} ${n(result.extra)} ＝ ${n(result.value)}エナジー／日<br>換算込みの理想：${n(result.ideal)}エナジー／日</p>${ingredients?`<p class="psg-box-muted">全${result.ingredientCount}食材を解放済みとしたモデル。対象食材の平均 ${n(result.ingredientMean)}エナジー × 1回の獲得数 × 発動予想回数で換算。料理・レシピ・大成功補正は含めません。実際の入手済み食材によって平均値は変わります。</p>`:''}<p>換算込み理想の性格：${boxEsc(result.idealRecord.nature)}<br>サブスキル：${result.idealRecord.subskills.filter((_,i)=>SUBSKILL_LEVELS[i]<=e.level).map(boxEsc).join('・')}<br>食材：${result.idealRecord.ingredients.filter(Boolean).map(boxEsc).join('／')}</p><p class="psg-box-muted">換算込みの構成順位はきのみ主軸と別に計算します。集計範囲 ${berryShareBound(result.strongerLower)}〜${berryShareBound(result.strongerUpper)}%。</p>`;
+}
 const renderIndividualBeforeBerry=renderIndividualEvaluation;
 const bindIndividualBeforeBerry=bindIndividualEvaluation;
 function berryRoleLevel(item){return [50,60,70,80].includes(item.berryEvaluationLevel)?item.berryEvaluationLevel:item.level>=70?70:item.level>=60?60:50}
 function berryModelSkillLevel(p){return Math.min(1+speciesEvolutionStage(p),window.PS_CATALOG.skills[p.mainSkillId]?.maxLevel||1)}
-function loadBerryModelReferences(){
- if(window.PS_BERRY_MODEL_DATA)return Promise.resolve(window.PS_BERRY_MODEL_DATA);
- if(!berryModelLoading)berryModelLoading=fetch('assets/evaluation/berry_model_refs_v5.json').then(r=>{if(!r.ok)throw Error('reference load');return r.json()}).then(data=>{
-  if(data.version!==5||!data.species||!data.entries)throw Error('reference version');
-  window.PS_BERRY_MODEL_DATA=data;berryModelError=null;return data;
- }).catch(error=>{berryModelLoading=null;berryModelError=error;throw error});
- return berryModelLoading;
+const berrySpeciesLoading=new Map(),berrySpeciesErrors=new Map();
+function loadBerryModelReferences(id=null){
+ const fetchManifest=()=>{
+  if(window.PS_BERRY_MODEL_DATA)return Promise.resolve(window.PS_BERRY_MODEL_DATA);
+  if(!berryModelLoading)berryModelLoading=fetch('assets/evaluation/berry_manifest_v6.json').then(r=>{if(!r.ok)throw Error('reference load');return r.json()}).then(data=>{
+   if(![5,6].includes(data.version)||!data.species||!data.entries)throw Error('reference version');
+   window.PS_BERRY_MODEL_DATA=data;berryModelError=null;return data;
+  }).catch(error=>{berryModelLoading=null;berryModelError=error;throw error});
+  return berryModelLoading;
+ };
+ return fetchManifest().then(data=>{
+  if(data.version===5||!id||!data.species[id])return data;
+  if(data.loadedSpecies?.[id])return data;
+  if(!berrySpeciesLoading.has(id))berrySpeciesLoading.set(id,fetch(data.species[id].file).then(r=>{if(!r.ok)throw Error('species reference load');return r.json()}).then(part=>{
+   if(part.version!==6||part.speciesId!==id||part.engineCommit!==data.engineCommit||!part.entries||!part.totalEntries)throw Error('species reference version');
+   Object.assign(data.entries,part.entries);data.loadedSpecies??={};data.loadedSpecies[id]=true;
+   window.PS_BERRY_TOTAL_DATA??={version:1,axis:'berry_plus_convertible_skill',ingredientPool:data.ingredientPool,ingredientMean:data.ingredientMean,entries:{}};
+   Object.assign(window.PS_BERRY_TOTAL_DATA.entries,part.totalEntries);berrySpeciesErrors.delete(id);berryModelError=null;return data;
+  }).catch(error=>{berrySpeciesLoading.delete(id);berrySpeciesErrors.set(id,error);berryModelError=error;throw error}));
+  return berrySpeciesLoading.get(id);
+ });
 }
 function berryRoleEvaluation(item,p,overrideSkillLevel=null){
  const level=berryRoleLevel(item),skillLevel=overrideSkillLevel??berryModelSkillLevel(p);
@@ -25,14 +74,14 @@ function berryRoleEvaluation(item,p,overrideSkillLevel=null){
  const reasons=individualEvaluationReasons(normalized,p).filter(s=>!(level===80&&s==='対応範囲内のレベルを設定してください'));
  if(reasons.length)return pending(reasons.join('／'));
  for(const slot of p.ingredientSlots||[])if(slot.unlock<=level&&!item.ingredients?.[slot.unlock]&&slot.candidates.length!==1)return pending('評価Lvで使う食材構成を設定してください');
- const reference=table.entries[JSON.stringify([speciesKey(p),level,meta.skillSensitive?skillLevel:0])];if(!reference)return pending('この条件の基準は準備中です');
+ const reference=table.entries[JSON.stringify([speciesKey(p),level,meta.skillSensitive?skillLevel:0])];if(!reference)return pending(meta.skillSensitive&&skillLevel!==meta.defaultSkillLevel&&!meta.availableSkillLevels?.includes(skillLevel)?'このスキルLvの基準は準備中です':'種類別の基準を読み込んでいます…');
  const snapshot=calculateIndividualTrial(normalized);if(snapshot.reasons)return pending(snapshot.reasons.join('／'));
  const value=snapshot.values.berry;if(!Number.isFinite(value)||value<0||!Number.isFinite(reference.ideal)||reference.ideal<=0)return pending('日産を確認できませんでした');
  if(value>reference.ideal+1e-9)return pending('理想値を超えたため基準を確認中です');
  const total=reference.count,bins=reference.distributionBounds;
  const lower=100*bins.reduce((n,row)=>n+(row[0]>value+1e-9?row[2]:0),0)/total;
  const upper=100*bins.reduce((n,row)=>n+(row[1]>value+1e-9?row[2]:0),0)/total;
- const output={status:'ready',level,skillLevel,value,ideal:reference.ideal,idealPercent:value/reference.ideal*100,strongerPercent:(lower+upper)/2,strongerLower:lower,strongerUpper:upper,idealRecord:reference.idealRecord,member:snapshot.member};
+ const output={status:'ready',speciesId:speciesKey(p),level,skillLevel,value,ideal:reference.ideal,idealPercent:value/reference.ideal*100,strongerPercent:(lower+upper)/2,strongerLower:lower,strongerUpper:upper,idealRecord:reference.idealRecord,member:snapshot.member};
  if(BERRY_MODEL_CACHE.size>=64)BERRY_MODEL_CACHE.delete(BERRY_MODEL_CACHE.keys().next().value);
  BERRY_MODEL_CACHE.set(key,output);return output;
 }
@@ -52,14 +101,14 @@ function renderBerryDetailsResult(e){
  const fill=windows.length?full.length?`約${berryRoleTime(Math.min(...full.map(w=>w.seconds)))}`:'4時間以内には満杯にならない予想':'未計算';
  const night=sleep?Number.isFinite(sleep.seconds)?`約${berryRoleTime(sleep.seconds)}`:'8時間以内には満杯にならない予想':'未計算';
  const ideal=e.idealRecord;
- return `<p>理想比 <b>${n(e.idealPercent)}%</b>　上回る構成 <b>${berryStrongerText(e)}</b></p><p>評価Lv.${e.level}・スキルLv.${e.skillLevel}でのきのみ／日：${n(e.value)}エナジー<br>理想：${n(e.ideal)}エナジー／日</p><p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><p>理想の性格：${boxEsc(ideal.nature)}<br>サブスキル：${ideal.subskills.filter((_,i)=>SUBSKILL_LEVELS[i]<=e.level).map(boxEsc).join('・')}<br>食材：${ideal.ingredients.filter(Boolean).map(boxEsc).join('／')}</p><p class="psg-box-muted">上回る構成の集計範囲：${berryShareBound(e.strongerLower)}〜${berryShareBound(e.strongerUpper)}%。日産が同じ構成は含めません。</p>`;
+ return `<p><b>きのみ ${roleModelRank(e)}</b></p><p>理想比 <b>${n(e.idealPercent)}%</b>　上回る構成 <b>${berryStrongerText(e)}</b></p><p>評価Lv.${e.level}・スキルLv.${e.skillLevel}でのきのみ／日：${n(e.value)}エナジー<br>理想：${n(e.ideal)}エナジー／日</p><p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><p>理想の性格：${boxEsc(ideal.nature)}<br>サブスキル：${ideal.subskills.filter((_,i)=>SUBSKILL_LEVELS[i]<=e.level).map(boxEsc).join('・')}<br>食材：${ideal.ingredients.filter(Boolean).map(boxEsc).join('／')}</p><p class="psg-box-muted">上回る構成の集計範囲：${berryShareBound(e.strongerLower)}〜${berryShareBound(e.strongerUpper)}%。日産が同じ構成は含めません。</p><div class="psg-berry-total-result">${renderBerryTotalResult(e)}</div>`;
 }
 function renderBerryRole(item,p){
  const e=berryRoleEvaluation(item,p),n=window.PS_NUMBERS.display,level=e.level;
  const select=`<label>評価Lv. <select class="psg-berry-level" aria-label="きのみ評価レベル">${[50,60,70,80].map(l=>`<option value="${l}"${l===level?' selected':''}>${l}${l===80?'（予測）':''}</option>`).join('')}</select></label>`;
  if(e.status!=='ready')return `<div class="psg-berry-role">${select}<p>きのみ評価：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${berryModelError?'<button class="psg-berry-retry" type="button">再読込</button>':''}</div>`;
- const max=window.PS_CATALOG.skills[p.mainSkillId]?.maxLevel||1;
- return `<div class="psg-berry-role">${select}<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p>理想個体の <b>${n(e.idealPercent)}%</b> のきのみエナジー</p><p>この個体を上回る構成 <b>${berryStrongerText(e)}</b></p></div></div><p class="psg-box-muted">${level===80?'Lv.80・予測。':''}食材構成も含む比較モデル。捕獲確率ではありません。</p><details class="psg-berry-details"><summary>詳しい評価</summary><p>基準モデル：基本形から順当に進化・たね未使用、スキルLv.${berryModelSkillLevel(p)}。キャンチケあり・4時間回収・リボンなし。</p><label>比較用スキルLv <select class="psg-berry-skill-level" aria-label="詳細評価のスキルレベル">${Array.from({length:max},(_,i)=>i+1).map(l=>`<option value="${l}"${l===e.skillLevel?' selected':''}>${l}</option>`).join('')}</select></label><div class="psg-berry-detail-result">${renderBerryDetailsResult(e)}</div><p class="psg-box-muted">変更したスキルLvで個体と理想の両方を比較します。簡易評価と登録個体のスキルLvは変更しません。</p><p class="psg-box-muted">性格・サブスキル・食材構成を均等に扱う比較用の割合です。スキルの効果で増えるきのみ収量を含み、スキルが直接生むエナジーは含みません。満杯目安は平均収集数量からの推定です。</p></details></div>`;
+ const max=window.PS_CATALOG.skills[p.mainSkillId]?.maxLevel||1,available=window.PS_BERRY_MODEL_DATA.species[speciesKey(p)]?.availableSkillLevels||Array.from({length:max},(_,i)=>i+1);
+ return `<div class="psg-berry-role">${select}<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>きのみ ${roleModelRank(e)}</b></p><p>理想個体の <b>${n(e.idealPercent)}%</b> のきのみエナジー</p><p>この個体を上回る構成 <b>${berryStrongerText(e)}</b></p></div></div><p class="psg-box-muted">${level===80?'Lv.80・予測。':''}食材構成も含む比較モデル。捕獲確率ではありません。</p><details class="psg-berry-details"><summary>詳しい評価</summary><p>基準モデル：基本形から順当に進化・たね未使用、スキルLv.${berryModelSkillLevel(p)}。キャンチケあり・4時間回収・リボンなし。</p><label>比較用スキルLv <select class="psg-berry-skill-level" aria-label="詳細評価のスキルレベル">${available.map(l=>`<option value="${l}"${l===e.skillLevel?' selected':''}>${l}</option>`).join('')}</select></label><div class="psg-berry-detail-result">${renderBerryDetailsResult(e)}</div><p class="psg-box-muted">変更したスキルLvで個体と理想の両方を比較します。簡易評価と登録個体のスキルLvは変更しません。</p><p class="psg-box-muted">ランクは上回る構成の割合でSS≤3%、S≤10%、A≤25%、B≤50%、残りC。近似範囲が境界をまたぐ場合は両ランクを表示します。性格・サブスキル・食材構成を均等に扱う比較用の割合です。スキルの効果で増えるきのみ収量を含み、スキルが直接生むエナジーは含みません。満杯目安は平均収集数量からの推定です。</p></details></div>`;
 }
 renderIndividualEvaluation=function(item,p,options={}){return p?.specialty==='きのみ'?renderBerryRole(item,p):renderIndividualBeforeBerry(item,p,options)};
 bindIndividualEvaluation=function(host,item,p){
@@ -67,8 +116,12 @@ bindIndividualEvaluation=function(host,item,p){
  const panel=host.querySelector('.psg-berry-role');if(!panel)return;
  const replace=next=>{if(!host.contains(panel))return;panel.outerHTML=renderBerryRole(next,p);bindIndividualEvaluation(host,next,p)};
  const select=host.querySelector('.psg-berry-level');if(select)select.onchange=()=>replace({...item,berryEvaluationLevel:Number(select.value)});
- const skill=host.querySelector('.psg-berry-skill-level');if(skill)skill.onchange=()=>{const result=host.querySelector('.psg-berry-detail-result');if(result)result.innerHTML=renderBerryDetailsResult(berryRoleEvaluation(item,p,Number(skill.value)))};
- const load=()=>{const fingerprint=JSON.stringify(item);loadBerryModelReferences().then(()=>{if(fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(fingerprint===JSON.stringify(item))replace(item)})};
+ const detail=host.querySelector('.psg-berry-details'),skill=host.querySelector('.psg-berry-skill-level');
+ const updateDetails=()=>{if(!host.contains(panel))return;const result=host.querySelector('.psg-berry-detail-result');if(result)result.innerHTML=renderBerryDetailsResult(berryRoleEvaluation(item,p,skill?Number(skill.value):null));const retry=host.querySelector('.psg-berry-total-retry');if(retry)retry.onclick=loadTotal};
+ const loadTotal=()=>loadBerryTotalReferences().then(updateDetails).catch(updateDetails);
+ if(skill)skill.onchange=()=>{updateDetails();if(detail?.open&&!window.PS_BERRY_TOTAL_DATA&&!berryTotalError)loadTotal()};
+ if(detail)detail.ontoggle=()=>{if(detail.open&&['fixed_energy','variable_energy','random_ingredients'].includes(window.PS_CATALOG.skills[p.mainSkillId]?.effectType)){if(!window.PS_BERRY_TOTAL_DATA&&!berryTotalError)loadTotal();else updateDetails()}};
+ const load=()=>{const fingerprint=JSON.stringify(item);loadBerryModelReferences(speciesKey(p)).then(()=>{if(fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(fingerprint===JSON.stringify(item))replace(item)})};
  const retry=host.querySelector('.psg-berry-retry');if(retry)retry.onclick=load;
- if(!window.PS_BERRY_MODEL_DATA&&!berryModelError)load();
+ if(!window.PS_BERRY_MODEL_DATA&&!berryModelError||window.PS_BERRY_MODEL_DATA?.version===6&&window.PS_BERRY_MODEL_DATA.species[speciesKey(p)]&&!window.PS_BERRY_MODEL_DATA.loadedSpecies?.[speciesKey(p)]&&!berrySpeciesErrors.has(speciesKey(p)))load();
 };
