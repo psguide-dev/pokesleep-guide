@@ -120,7 +120,8 @@
 #boxDetail .psg-subskill-badge{width:24px;height:24px;object-fit:contain}
 #boxDetail .psg-subskill-unknown{display:grid;place-items:center;width:24px;height:24px;color:#81908a}
 #boxDetail .psg-box-subskill>strong{text-align:center;overflow-wrap:anywhere;font-size:11px;line-height:1.2}
-#boxDetail .psg-box-subskill.is-locked{opacity:.48}
+#boxDetail .psg-box-subskill.is-locked{color:#68716c}
+#boxDetail .psg-box-subskill.is-locked .psg-subskill-badge{filter:grayscale(1);opacity:.65}
 #boxDetail .psg-editor-note{margin:0;font-weight:400}
 #boxDetail #boxEditor{scroll-margin-top:110px}
 @media(max-width:360px){#boxDetail .detail-head{gap:4px}#boxDetail .detail-head h2{gap:4px}#boxDetail .psg-box-flags{gap:4px}#boxDetail #boxTitle{font-size:14px}#boxDetail #boxHeaderNo{font-size:8px}#boxDetail #boxHeaderEdit{font-size:10px;padding:4px}#boxDetail .psg-box-flags .btn{min-width:27px}}
