@@ -29,7 +29,7 @@ const year=setup('2025-12-31T15:01:00Z');assert.equal(cells(year)[0].dataset.dat
 const sunday=setup('2026-10-11T14:59:00Z');assert.equal(cells(sunday)[0].dataset.date,'2026-10-05');
 const monday=setup('2026-10-11T15:00:00Z');assert.equal(cells(monday)[0].dataset.date,'2026-10-12');
 const leap=setup('2024-02-28T23:00:00Z');assert(cells(leap).some(n=>n.dataset.date==='2024-02-29'));
-const visible=entries(h.homeUpdates);assert.equal(visible.length,3);assert.equal(visible[0].children[0].children[0].textContent,'v621');
+const visible=entries(h.homeUpdates);assert.equal(visible.length,3);assert.equal(visible[0].children[0].children[0].textContent,'v622');
 const history=h.homeUpdates.children.find(n=>n.tagName==='DETAILS');assert(history);assert.equal(history.open,false);assert.equal(entries(history).length,0);
 history.open=true;history.events.toggle();const all=[...visible,...entries(history)];assert.equal(all.length,10);assert.equal(new Set(all.map(n=>n.children[0].children[0].textContent)).size,10);
 assert.deepEqual([...new Set(all.map(n=>n.children[0].children[2].textContent))].sort(),['機能・計算','表示・軽量化'].sort());

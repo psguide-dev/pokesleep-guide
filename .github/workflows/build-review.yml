@@ -99,6 +99,7 @@ jobs:
           node tests/check_individual_evaluation.cjs
           node tests/check_individual_trial.cjs
           node tests/check_individual_lazy.cjs
+          node tests/check_evaluation_page.cjs
           node tests/check_carry_fill.cjs
           node tests/check_berry_role_ui.cjs
           node tests/check_berry_model_interaction.cjs
@@ -121,6 +122,7 @@ jobs:
         run: |
           mkdir -p public
           cp index.html review.html pokemon.html public/
+          cp evaluation.html public/
           cp fields.html public/
           cp recipes.html ingredients.html public/
           cp -R packages public/

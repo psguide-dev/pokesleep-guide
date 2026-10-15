@@ -52,6 +52,7 @@ TEMPLATE_NAMES = (
     'core/13-role-model-helpers.html',
     'core/14-berry-role.html',
     'core/15-skill-role.html',
+    'core/16-evaluation-page.html',
     'core/08-fields.html',
     'fields/02-gallery.html',
     'fields/03-details.html',

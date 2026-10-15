@@ -324,3 +324,7 @@
 #boxDetail .psg-skill-role>details{font-size:12px;margin-top:6px}
 #boxDetail .psg-skill-role>details>summary{cursor:pointer;min-height:32px;line-height:32px;text-align:right;color:#316caa}
 #boxDetail .psg-skill-role>.psg-box-muted{font-size:11px;margin:6px 0}
+
+html.psg-evaluation-page main>.screen:not(#individualEvaluationPage){display:none!important}
+#individualEvaluationPage .detail-head{position:sticky;top:0;z-index:20;background:var(--panel,#fff)}
+#individualEvaluationPage .psg-evaluation-page-link{display:none}

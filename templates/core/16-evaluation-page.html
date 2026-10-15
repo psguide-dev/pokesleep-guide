@@ -1,0 +1,54 @@
+// Separate evaluation document; registered records remain read-only here.
+const evaluationPage=location.pathname.endsWith('/evaluation.html');
+const EVALUATION_RETURN_KEY='psg-evaluation-return-v1';
+function evaluationReturnRead(){try{return JSON.parse(sessionStorage.getItem(EVALUATION_RETURN_KEY)||'null')}catch{return null}}
+function evaluationLink(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return `<a class="btn psg-evaluation-page-link" href="${boxEsc(url.href)}">詳しい評価を見る</a>`}
+function evaluationPageMarkup(html,item){
+ const template=document.createElement('template');template.innerHTML=html;
+ const detail=template.content.querySelector('.psg-berry-details,.psg-skill-eval-details');
+ if(detail){if(evaluationPage)detail.open=true;else{const link=document.createElement('span');link.innerHTML=evaluationLink(item);detail.replaceWith(link)}}
+ return template.innerHTML;
+}
+const evaluationBerryRenderer=renderBerryRole,evaluationSkillRenderer=renderSkillRole,evaluationSimpleRenderer=renderIndividualEvaluation;
+renderBerryRole=(item,p)=>evaluationPageMarkup(evaluationBerryRenderer(item,p),item);
+renderSkillRole=(item,p)=>evaluationPageMarkup(evaluationSkillRenderer(item,p),item);
+renderIndividualEvaluation=function(item,p,options={}){
+ const html=evaluationSimpleRenderer(item,p,options);
+ if(options.compact||p?.specialty==='きのみ'||p?.specialty==='スキル')return html;
+ const template=document.createElement('template');template.innerHTML=html;
+ const button=template.content.querySelector('.psg-evaluation-open');
+ if(button){const link=document.createElement('span');link.innerHTML=evaluationLink(item);button.replaceWith(link);template.content.querySelector('.psg-evaluation-detail')?.remove()}
+ return template.innerHTML;
+};
+document.addEventListener('click',event=>{
+ const link=event.target.closest?.('.psg-evaluation-page-link');if(!link||!state.selected)return;
+ const host=link.closest('#boxEvaluation'),item=state.selected;
+ const saved={id:item.id,y:window.scrollY,url:location.href,search:boxSearch.value,filters:Object.fromEntries(Object.entries(state.boxFilters).map(([key,value])=>[key,[...value]])),berryLevel:host?.querySelector('.psg-berry-level')?.value,skillLevel:host?.querySelector('.psg-skill-eval-level')?.value};
+ try{sessionStorage.setItem(EVALUATION_RETURN_KEY,JSON.stringify(saved))}catch{}
+});
+window.addEventListener('DOMContentLoaded',()=>{
+ const saved=evaluationReturnRead(),params=new URLSearchParams(location.search);
+ if(!evaluationPage){
+  if(params.get('restore')!=='evaluation'||!saved)return;
+  boxSearch.value=saved.search||'';
+  for(const [key,value] of Object.entries(saved.filters||{}))if(state.boxFilters[key]&&Array.isArray(value))state.boxFilters[key]=new Set(value);
+  openBox(saved.id);requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,Math.max(0,saved.y||0))));return;
+ }
+ const section=document.getElementById('individualEvaluationPage'),host=document.getElementById('individualEvaluationContent');
+ window.PS_EVALUATION_PAGE=true;document.documentElement.classList.add('psg-evaluation-page');
+ go('individualEvaluationPage',false);
+ const id=params.get('individual'),registered=state.box.find(item=>item.id===id),p=registered?speciesFor(registered):null;
+ const back=document.getElementById('individualEvaluationBack');back.onclick=()=>{
+  if(history.length>1&&saved?.id===id&&document.referrer===saved.url){history.back();return}
+  const target=new URL('review.html',location.href);target.searchParams.set('screen','box');target.searchParams.set('restore','evaluation');location.assign(target.href);
+ };
+ if(!registered||!p){host.textContent='対象の個体が見つかりません。ボックスへ戻って選び直してください。';return}
+ const item=structuredClone(registered);
+ if(saved?.id===id){if(saved.berryLevel)item.berryEvaluationLevel=Number(saved.berryLevel);if(saved.skillLevel)item.skillEvaluationLevel=Number(saved.skillLevel)}
+ document.getElementById('individualEvaluationTitle').textContent=`${registered.name}の評価`;
+ host.innerHTML=renderIndividualEvaluation(item,p);bindIndividualEvaluation(host,item,p);
+ if(!['きのみ','スキル'].includes(p.specialty)){
+  host.querySelector('.psg-evaluation-page-link')?.remove();
+  requestAnimationFrame(()=>{const details=document.createElement('div');details.innerHTML=renderIndividualEvaluationDetails(item,p);host.append(details)});
+ }
+});

@@ -143,7 +143,7 @@
       "sourceRecordId": "0025_ピカチュウ(ハロウィン・2023の帽子)",
       "no": 25,
       "formId": "halloween_23",
-      "name": "ピカチュウ(ハロウィン・2025の帽子)",
+      "name": "ピカチュウ(ハロウィン・2023の帽子)",
       "type": "でんき",
       "sleepType": "すやすや",
       "specialty": "きのみ",
@@ -276,11 +276,15 @@
       "detailGroupId": "0025_costumes",
       "sleepStyleGroupId": "0025_halloween",
       "boxEligible": true,
-      "appearanceYear": 2025,
-      "hatColor": "紫",
+      "appearanceYear": 2023,
+      "hatColor": "オレンジ",
       "identityCorrection": {
-        "source": "ユーザー確認 2026-10-03",
-        "note": "旧23内部IDは保存済み個体との互換性のため保持。表示・姿の年は2025に訂正。原資料IDは来歴として保持。"
+        "source": "ユーザー訂正 2026-10-14",
+        "note": "年式と帽子色を訂正。保存済み個体・寝顔・画像・評価データの参照IDは維持。2026年イーブイは別の姿として予約し能力データを流用しない。",
+        "supersededCorrection": {
+          "source": "ユーザー確認 2026-10-03",
+          "note": "旧23内部IDは保存済み個体との互換性のため保持。表示・姿の年は2025に訂正。原資料IDは来歴として保持。"
+        }
       }
     },
     {
@@ -423,7 +427,11 @@
       "sleepStyleGroupId": "0025_halloween",
       "boxEligible": true,
       "appearanceYear": 2024,
-      "hatColor": "オレンジ"
+      "hatColor": "パープル",
+      "identityCorrection": {
+        "source": "ユーザー訂正 2026-10-14",
+        "note": "年式と帽子色を訂正。保存済み個体・寝顔・画像・評価データの参照IDは維持。2026年イーブイは別の姿として予約し能力データを流用しない。"
+      }
     },
     {
       "speciesId": "0025_holiday",
@@ -571,7 +579,7 @@
       "sourceRecordId": "0133_イーブイ(ハロウィン)",
       "no": 133,
       "formId": "halloween",
-      "name": "イーブイ(ハロウィン)",
+      "name": "イーブイ(ハロウィン・2025の帽子)",
       "type": "ノーマル",
       "sleepType": "すやすや",
       "specialty": "スキル",
@@ -703,7 +711,13 @@
       "evolutionTransitions": [],
       "detailGroupId": "0133_costumes",
       "sleepStyleGroupId": "0133_halloween",
-      "boxEligible": true
+      "boxEligible": true,
+      "appearanceYear": 2025,
+      "hatColor": "オレンジ",
+      "identityCorrection": {
+        "source": "ユーザー訂正 2026-10-14",
+        "note": "年式と帽子色を訂正。保存済み個体・寝顔・画像・評価データの参照IDは維持。2026年イーブイは別の姿として予約し能力データを流用しない。"
+      }
     },
     {
       "speciesId": "0133_holiday",
@@ -5716,7 +5730,7 @@
         },
         {
           "speciesId": "0025_halloween_23",
-          "label": "ハロウィン25"
+          "label": "ハロウィン23"
         },
         {
           "speciesId": "0025_halloween_24",
@@ -5744,7 +5758,7 @@
         },
         {
           "speciesId": "0133_halloween",
-          "label": "ハロウィン"
+          "label": "ハロウィン25"
         },
         {
           "speciesId": "0133_holiday",

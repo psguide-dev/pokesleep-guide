@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-02",
+  "updatedAt": "2026-10-14",
   "status": "prepared_for_integration",
   "speciesIdFormat": "NNNN_formId",
   "nationalNoType": "integer",
@@ -58,7 +58,7 @@
     },
     {
       "tag": "halloween_23",
-      "labelJa": "ハロウィン・2025の帽子",
+      "labelJa": "ハロウィン・2023の帽子",
       "kind": "costume",
       "year": 2023
     },
@@ -97,13 +97,29 @@
       "tag": "low_key",
       "labelJa": "ローなすがた",
       "kind": "alternate"
+    },
+    {
+      "tag": "halloween_25",
+      "labelJa": "ハロウィン・2025の帽子",
+      "kind": "costume",
+      "year": 2025,
+      "definitionStatus": "reserved"
+    },
+    {
+      "tag": "halloween_26",
+      "labelJa": "ハロウィン・2026の帽子",
+      "kind": "costume",
+      "year": 2026,
+      "definitionStatus": "reserved"
     }
   ],
   "yearRule": {
     "formIdPattern": "costume_YY",
     "examples": [
       "halloween_23",
-      "halloween_24"
+      "halloween_24",
+      "halloween_25",
+      "halloween_26"
     ],
     "storeFullYearInMetadata": true,
     "noteJa": "年違いを識別する必要がある姿だけ年を付ける。年情報は4桁でも保持する。"
@@ -124,5 +140,33 @@
     "収録対象の種族レコードがない予約タグは、登録画面の選択肢に出さない。",
     "未確認の能力・スキル・食材・進化先を通常姿から自動補完しない。",
     "寝顔共有・アメ共有・フレンドレベル共有は別の参照として明示する。"
+  ],
+  "costumeYearMappings": [
+    {
+      "speciesId": "0025_halloween_23",
+      "appearanceYear": 2023,
+      "hatColor": "オレンジ",
+      "status": "registered_identity_metadata_corrected"
+    },
+    {
+      "speciesId": "0025_halloween_24",
+      "appearanceYear": 2024,
+      "hatColor": "パープル",
+      "status": "registered_identity_metadata_corrected"
+    },
+    {
+      "speciesId": "0133_halloween",
+      "appearanceYear": 2025,
+      "hatColor": "オレンジ",
+      "status": "registered_identity_metadata_corrected"
+    },
+    {
+      "reservedSpeciesId": "0133_halloween_26",
+      "appearanceYear": 2026,
+      "hatColor": "パープル",
+      "status": "announced_not_registered",
+      "sourceUrl": "https://www.pokemonsleep.net/news/343433383634343334313633353830393330/",
+      "noteJa": "年式識別を予約。予約タグは登録種・能力・食材・評価基準を作らない。"
+    }
   ]
 }

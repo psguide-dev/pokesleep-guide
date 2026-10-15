@@ -417,7 +417,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v621') == 2
+    assert source.count('Review v622') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'
@@ -486,6 +486,7 @@ def build():
     PREVIEW.write_text(html)
     field_script = f'<script src="data/{field_asset}"></script>'
     (ROOT / 'pokemon.html').write_text(html)
+    (ROOT / 'evaluation.html').write_text(html)
     cooking_script = f'<script src="data/{cooking_asset}"></script>'
     for filename in ('recipes.html', 'ingredients.html'):
         page = html.replace('<script id="psg-catalog">', cooking_script + '<script id="psg-catalog">', 1)
