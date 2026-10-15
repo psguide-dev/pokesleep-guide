@@ -533,114 +533,6 @@
       "sha256": "efbfe6dc129d9e220884ad15ef682e7d896aa1dd3b2efbd91231aa9bb24c125f",
       "originalSha256": null,
       "sourcePath": "new_assets/camp_tent.png"
-    },
-    {
-      "path": "assets/subskills/inventory_l.svg",
-      "sha256": "205246dbca81a5c8b80827a217833f65bffa72338fea501864eda66457949b17",
-      "originalSha256": "6a749d3c389e9da651db7bba78fdd045bc4c55bb883cf996fedd342c822c3ba1",
-      "sourcePath": "assets/subskills/inventory_l.svg"
-    },
-    {
-      "path": "assets/subskills/berry_count_s.svg",
-      "sha256": "4bcf66fa94e03f5042447d6d3423b19a51cb5cf2471408a24614f2e6fbcd1339",
-      "originalSha256": "137a5e58833d59a2ba25377a923e113a55d96d9fa5a70890b48a190e9ce3f303",
-      "sourcePath": "assets/subskills/berry_count_s.svg"
-    },
-    {
-      "path": "assets/subskills/helping_speed_m.svg",
-      "sha256": "0ac8e4ea00c9edd028a4ea5ca5bf9c004d9f7f0b4f92c3f369312671cbb4213a",
-      "originalSha256": "457c8df90534d316ebfeb4042ebd1a5361331c2d4b316bdc0237cc01cfa0656e",
-      "sourcePath": "assets/subskills/helping_speed_m.svg"
-    },
-    {
-      "path": "assets/subskills/helping_bonus.svg",
-      "sha256": "138bed29f371edcc7f209a23a0970aa179ee4586b313126220acc1ef9caf67fd",
-      "originalSha256": "1ae74a0667061ea00509785d2434af36400c1d3da670f2ee5367678d91451aa0",
-      "sourcePath": "assets/subskills/helping_bonus.svg"
-    },
-    {
-      "path": "assets/subskills/research_exp.svg",
-      "sha256": "756bd8936a03b4403c8ab124355f7f7cbbd993df421d73b44e6b735b06e7ffa1",
-      "originalSha256": "4e5c621481ed11976f670b59963308ede2bd4d0852147517ecf85c6d6c952fc5",
-      "sourcePath": "assets/subskills/research_exp.svg"
-    },
-    {
-      "path": "assets/subskills/ingredient_s.svg",
-      "sha256": "df0876eb40fc7f7552ad29d282f90cc2bb40967f74e1817301f5493ab40185e3",
-      "originalSha256": "b4aaa28895429e3f0cd816e1e97f927caf2e56a4aea09e208b67b78621f3ca49",
-      "sourcePath": "assets/subskills/ingredient_s.svg"
-    },
-    {
-      "path": "assets/subskills/sleep_exp.svg",
-      "sha256": "cbb6944613da887705341fcaff28d636203a5045a08cafd2f872ca4985419b93",
-      "originalSha256": "ab602b897e775e5a641c685aea84b88689a22e64f7e77d13c61bfaf0dc05fba6",
-      "sourcePath": "assets/subskills/sleep_exp.svg"
-    },
-    {
-      "path": "assets/subskills/dream_shard.svg",
-      "sha256": "c817772ed5f6c7bea95ab579597a9422740594376413825f0f732fada0c8710e",
-      "originalSha256": "1d8ec53e84348a00ca74eb353e616ab6274aced754dd9b4c11aeafd8ddf5355d",
-      "sourcePath": "assets/subskills/dream_shard.svg"
-    },
-    {
-      "path": "assets/subskills/level_cap.svg",
-      "sha256": "ef30bb80e4219b30c66f45c21c9fda72b1e8d74fb5a29dc104d726a647643890",
-      "originalSha256": "b2cd74f9409881c94c0712adcbdec8e09028dd327d28831eab1faf428af7ecb1",
-      "sourcePath": "assets/subskills/level_cap.svg"
-    },
-    {
-      "path": "assets/subskills/skill_trigger_m.svg",
-      "sha256": "943928311a6b4ef4a65f6bd57257654e29cb6f92618f2dae855434b76623d98a",
-      "originalSha256": "24caaf92ae34ff1869ed43936ba81b62c6e1b75cb8b2b7197bc8d59845b4001a",
-      "sourcePath": "assets/subskills/skill_trigger_m.svg"
-    },
-    {
-      "path": "assets/subskills/skill_trigger_s.svg",
-      "sha256": "dbcfe36ff03969e09d3e629c7c37fb0f4919ff8b83ed18a628b8cfcd4bb37ec0",
-      "originalSha256": "197a2468d6f2871cce2a24bdb1b1db741d8f24cdf8e50e88f5bf4329566af5af",
-      "sourcePath": "assets/subskills/skill_trigger_s.svg"
-    },
-    {
-      "path": "assets/subskills/inventory_s.svg",
-      "sha256": "1027236a20a205b1a6f4d3d9239661743fd00c6258de5759d771f9211d23005b",
-      "originalSha256": "1ef2ab60a27413e9557e8eeea11ea73244c364ed0dc8716eb6d3b5e4cc5d7798",
-      "sourcePath": "assets/subskills/inventory_s.svg"
-    },
-    {
-      "path": "assets/subskills/energy_recovery.svg",
-      "sha256": "709b2437113fed90e3f2b2d9de02995b46144af7ce45135f619f07ea781ad623",
-      "originalSha256": "2cacc92af1fabfd8d6b9734aa7ef3e65add916d7983645299beabd41edc3f4e4",
-      "sourcePath": "assets/subskills/energy_recovery.svg"
-    },
-    {
-      "path": "assets/subskills/skill_level_m.svg",
-      "sha256": "487fb61693614579584b8af6115185bab26e16ae63d519f02b5a131e61aa0d85",
-      "originalSha256": "2b95f411b887f7150fe807306e9731c1341f970e5cb3c0e2fdb1d739317959b5",
-      "sourcePath": "assets/subskills/skill_level_m.svg"
-    },
-    {
-      "path": "assets/subskills/inventory_m.svg",
-      "sha256": "83240ac2e37b8342f1acd4930020a6f78f904c7eb34574eeae88733eab256d1f",
-      "originalSha256": "5ed7c0bb6a0e4101946d8f9ef842ac765ed546a2bd65ec0c65ac998de8399f11",
-      "sourcePath": "assets/subskills/inventory_m.svg"
-    },
-    {
-      "path": "assets/subskills/helping_speed_s.svg",
-      "sha256": "2c145f96bf2ec56a91057b37704dd091e28f767ce94706076cd285714faad18e",
-      "originalSha256": "79b4d72e30c8812bd34ba106917f93c938b63995ba98c11ba4223a120d24b925",
-      "sourcePath": "assets/subskills/helping_speed_s.svg"
-    },
-    {
-      "path": "assets/subskills/skill_level_s.svg",
-      "sha256": "6def771c48246ebcd38c04a721af4a5e1afd951f4413370a1a91abcaafa2dc21",
-      "originalSha256": "0999508c7493b1b8bdc73ae3005655cad47c2f9394006d62866310fc24b30513",
-      "sourcePath": "assets/subskills/skill_level_s.svg"
-    },
-    {
-      "path": "assets/subskills/ingredient_m.svg",
-      "sha256": "72e0be8c38ecce0993a72358105ae106e646984040748619330e99eb9fa71863",
-      "originalSha256": "a10eddcff7a2d9c373f28e91f07122b6b23c6d815ecda8e7d3fe001638bbc3c0",
-      "sourcePath": "assets/subskills/ingredient_m.svg"
     }
   ],
   "rasterCount": 89,
@@ -685,10 +577,6 @@
     {
       "path": "pack-24.zip",
       "sha256": "7926bfb00fc098b24621f0668ed81fb85ca916beff7ee43de288c10f0d4416ac"
-    },
-    {
-      "path": "pack-25.zip",
-      "sha256": "89bf83e926ff610cb1d05e80e7f72abe933d8fd2630633cc3e6f6f5918d04db3"
     }
   ],
   "archiveCleanup": "v353: retired image payloads removed; historical image rows retained for provenance."

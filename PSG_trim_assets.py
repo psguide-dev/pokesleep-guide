@@ -51,7 +51,7 @@ def restore_additional_trim_assets(root):
     folder = root / 'data-import/picasso-trim-v326'
     manifest = json.loads((folder / 'manifest.json').read_text())
     rows = {row['path']: row for row in manifest['images']}
-    assert len(rows) == 107
+    assert len(rows) == 89  # v623: retired subskill SVG pack removed after PNG adoption.
     seen = set()
     for pack in manifest['archives']:
         path = folder / pack['path']
