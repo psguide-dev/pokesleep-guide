@@ -332,3 +332,7 @@ html.psg-evaluation-page main>.screen:not(#individualEvaluationPage){display:non
 .psg-food-daily-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12px;margin:8px 0}
 .psg-food-daily-table th,.psg-food-daily-table td{padding:6px 4px;border-bottom:1px solid #dce4df;text-align:right;overflow-wrap:anywhere}
 .psg-food-daily-table th:first-child{text-align:left}
+.psg-food-diagnostics h3{font-size:15px;margin:18px 0 8px}
+.psg-food-table-scroll{max-width:100%;overflow-x:auto}
+.psg-food-growth{min-width:320px}
+.psg-food-diagnostics + .psg-box-explanation{margin-top:16px}
