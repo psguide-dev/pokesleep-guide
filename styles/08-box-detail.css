@@ -329,3 +329,6 @@
 html.psg-evaluation-page main>.screen:not(#individualEvaluationPage){display:none!important}
 #individualEvaluationPage .detail-head{position:sticky;top:0;z-index:20;background:var(--panel,#fff)}
 #individualEvaluationPage .psg-evaluation-page-link{display:none}
+.psg-food-daily-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12px;margin:8px 0}
+.psg-food-daily-table th,.psg-food-daily-table td{padding:6px 4px;border-bottom:1px solid #dce4df;text-align:right;overflow-wrap:anywhere}
+.psg-food-daily-table th:first-child{text-align:left}

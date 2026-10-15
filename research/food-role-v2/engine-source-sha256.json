@@ -1,0 +1,13 @@
+{
+  "referenceCommit": "70dcda8b7eaf04385a127ef96b9e020061a62a91",
+  "sources": {
+    "templates/01-species-catalog.html": "1d2bdf54c2e5f2a753a47db82863af502e9bbd93fa47e2ac91d02ae4b92692e5",
+    "templates/core/07-corrections.html": "8c9d23465a062c1cbff93414cdb85cad5d926b4f92a3730783526c1d21a9a063",
+    "templates/core/10-individual-evaluation.html": "fa3e0c432906140f316c79f9f0f3c1d6e4956d390b863e59955019dbb1f003bb",
+    "templates/core/12-individual-trial.html": "72c2ab8f862289d36542340ef39441189f7579ad46092f8297a6ef4bf1969efc",
+    "tests/daily_kernel.cjs": "2bc1c0945bf8de2bfff21dfd4cf1cefe0bed8e35798fa56988b51c7fde3a5d3b",
+    "vendor/enigma-swap/daily-supply.mjs": "ad098176b3afeea9050e615be85075c130bec1dc14b176ca9e0986b71588d342",
+    "vendor/enigma-special/special_skill_kernel.mjs": "40c17e1cbfb47d9c11dacced7aef2d0ce93f0e45d0413080d70311e17734fb76",
+    "vendor/enigma-special/effect_tables.json": "79c8985e31910d772dcbd4600f7c8b3539004b805e37d99571b9489775bed00f"
+  }
+}

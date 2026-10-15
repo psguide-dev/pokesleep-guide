@@ -1,0 +1,6 @@
+{
+  "checks": 758,
+  "interactions": 72,
+  "conditions": 54,
+  "method": "VM and DOM surrogate; not real browser"
+}

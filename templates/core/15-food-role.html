@@ -1,0 +1,59 @@
+// Adopted fixed-pattern prototype: three species, normal ingredient collection only.
+const FOOD_ROLE_SPECIES=new Set(['0006_default','0009_default','0094_default']);
+let foodRoleReferences=null,foodRoleLoading=null,foodRoleError=null;
+const FOOD_ROLE_CACHE=new Map();
+function foodRoleSupported(p){return !!p&&FOOD_ROLE_SPECIES.has(speciesKey(p))}
+function foodRoleLevel(item){return [60,70,80].includes(item.foodEvaluationLevel)?item.foodEvaluationLevel:60}
+function loadFoodRoleReferences(){
+ if(foodRoleReferences)return Promise.resolve(foodRoleReferences);
+ if(!foodRoleLoading)foodRoleLoading=fetch('assets/evaluation/food_fixed_pattern_v2.json').then(r=>{if(!r.ok)throw Error('food reference load');return r.json()}).then(data=>{
+  if(data.version!==2||data.axis!=='normalFoodsFixedPattern'||Object.keys(data.entries||{}).length!==54||!data.engineCommit)throw Error('food reference version');
+  foodRoleReferences=data;foodRoleError=null;return data;
+ }).catch(error=>{foodRoleLoading=null;foodRoleError=error;throw error});
+ return foodRoleLoading;
+}
+function foodRoleEvaluation(item,p){
+ const level=foodRoleLevel(item),pending=text=>({status:'pending',text,level});
+ if(!foodRoleSupported(p))return pending('この種類の食材評価は準備中です');
+ const ingredients={...item.ingredients};
+ for(const slot of p.ingredientSlots||[]){
+  if(!ingredients[slot.unlock]&&slot.candidates.length===1)ingredients[slot.unlock]=slot.candidates[0].name;
+  if(!slot.candidates.some(c=>c.name===ingredients[slot.unlock]))return pending(`Lv.${slot.unlock}の食材構成を設定してください`);
+ }
+ if(!foodRoleReferences)return pending(foodRoleError?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
+ const pattern=p.ingredientSlots.map(slot=>String.fromCharCode(65+slot.candidates.findIndex(c=>c.name===ingredients[slot.unlock]))).join('');
+ const ref=foodRoleReferences.entries[JSON.stringify([speciesKey(p),level,pattern])];
+ if(!ref)return pending('この食材構成の基準は準備中です');
+ const normalized={...item,ingredients,level,ribbonHours:0,skillLevel:ref.skillLevel};
+ const reasons=individualEvaluationReasons(normalized,p).filter(reason=>!(level===80&&reason==='対応範囲内のレベルを設定してください'));
+ if(reasons.length)return pending(reasons.join('／'));
+ const key=JSON.stringify([normalized,p,foodRoleReferences.engineCommit]);
+ if(FOOD_ROLE_CACHE.has(key))return FOOD_ROLE_CACHE.get(key);
+ const snapshot=calculateIndividualTrial(normalized);
+ if(snapshot.reasons)return pending(snapshot.reasons.join('／'));
+ const value=snapshot.values.food,ideal=ref.ideal;
+ if(!Number.isFinite(value)||value<0||!Number.isFinite(ideal?.value)||ideal.value<=0)return pending('通常食材の日産を確認できませんでした');
+ if(value>ideal.value+1e-8)return pending('理想値を超えたため基準を確認中です');
+ const result={status:'ready',level,pattern,value,ideal:ideal.value,percent:value/ideal.value*100,foods:Object.fromEntries(snapshot.member.normalFoods),idealFoods:ideal.foods,idealRecord:ideal.record,member:snapshot.member,skillLevel:ref.skillLevel};
+ return cacheRoleEvaluation(FOOD_ROLE_CACHE,key,result);
+}
+function renderFoodRole(item,p){
+ const e=foodRoleEvaluation(item,p),n=window.PS_NUMBERS.display;
+ const select=`<label>評価Lv. <select class="psg-food-eval-level" aria-label="食材評価レベル">${[60,70,80].map(level=>`<option value="${level}"${level===e.level?' selected':''}>${level}${level===80?'（予測）':''}</option>`).join('')}</select></label>`;
+ if(e.status!=='ready')return `<div class="psg-food-role">${select}<p>食材収集力：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${foodRoleError?'<button class="btn psg-food-eval-retry" type="button">再読込</button>':''}</div>`;
+ const foods=Object.keys(e.idealFoods).map(name=>`<tr><th scope="row">${boxEsc(name)}</th><td>${n(e.foods[name]||0)}個</td><td>${n(e.idealFoods[name])}個</td></tr>`).join('');
+ const {fill,night}=roleCarryFillText(e.member);
+ const html=`<div class="psg-food-role">${select}<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>${boxEsc(e.pattern)}の食材収集力（試作）</b></p><p>同構成の理想比 <b>${n(e.percent)}%</b></p></div></div><p>${e.level===80?'Lv.80・予測。':''}通常食材 <b>${n(e.value)}個／日</b>　理想 ${n(e.ideal)}個／日</p><table class="psg-food-daily-table"><thead><tr><th scope="col">食材</th><th scope="col">個体／日</th><th scope="col">同構成の理想／日</th></tr></thead><tbody>${foods}</tbody></table><p class="psg-box-muted">同じ種類・同じ食材構成での比較です。別構成の100%は、同じ収量や強さを示しません。スキルで得る食材は含めません。</p><details class="psg-food-details"><summary>詳しい評価</summary><p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><p>理想の性格：${boxEsc(e.idealRecord.nature)}<br>サブスキル：${e.idealRecord.subskills.filter((_,i)=>SUBSKILL_LEVELS[i]<=e.level).map(boxEsc).join('・')}<br>食材構成：${Object.values(e.idealRecord.ingredients).map(boxEsc).join('／')}</p><p>キャンチケあり・4時間回収・覚醒16時間＋睡眠8時間・開始げんき100・食事3回。リボンなし・スキルLv.${e.skillLevel}固定（進化段階＋1）。好物・フィールド・EX・イベント・外部支援なし。登録個体の設定は変更しません。</p><p class="psg-box-muted">C食材も日産合計と所持数計算へ含みます。通常食材の収集力を比較し、料理相性・エナジー換算・スキル由来の食材・SS〜Cランク・上回る構成割合は今回の評価に含みません。カメックス・リザードン・ゲンガーの3種を対象にした試作です。</p></details></div>`;
+ return evaluationPageMarkup(html,item);
+}
+const renderIndividualBeforeFood=renderIndividualEvaluation,bindIndividualBeforeFood=bindIndividualEvaluation;
+renderIndividualEvaluation=function(item,p,options={}){return foodRoleSupported(p)&&!options.compact?renderFoodRole(item,p):renderIndividualBeforeFood(item,p,options)};
+bindIndividualEvaluation=function(host,item,p){
+ if(!foodRoleSupported(p))return bindIndividualBeforeFood(host,item,p);
+ const panel=host.querySelector('.psg-food-role');if(!panel)return;
+ const replace=next=>{if(!host.contains(panel))return;panel.outerHTML=renderFoodRole(next,p);bindIndividualEvaluation(host,next,p)};
+ const select=host.querySelector('.psg-food-eval-level');if(select)select.onchange=()=>replace({...item,foodEvaluationLevel:Number(select.value)});
+ const load=()=>{const fingerprint=JSON.stringify(item);loadFoodRoleReferences().then(()=>{if(fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(fingerprint===JSON.stringify(item))replace(item)})};
+ const retry=host.querySelector('.psg-food-eval-retry');if(retry)retry.onclick=load;
+ if(!foodRoleReferences&&!foodRoleError)load();
+};

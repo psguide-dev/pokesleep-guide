@@ -5,7 +5,7 @@ function evaluationReturnRead(){try{return JSON.parse(sessionStorage.getItem(EVA
 function evaluationLink(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return `<a class="btn psg-evaluation-page-link" href="${boxEsc(url.href)}">詳しい評価を見る</a>`}
 function evaluationPageMarkup(html,item){
  const template=document.createElement('template');template.innerHTML=html;
- const detail=template.content.querySelector('.psg-berry-details,.psg-skill-eval-details');
+ const detail=template.content.querySelector('.psg-berry-details,.psg-skill-eval-details,.psg-food-details');
  if(detail){if(evaluationPage)detail.open=true;else{const link=document.createElement('span');link.innerHTML=evaluationLink(item);detail.replaceWith(link)}}
  return template.innerHTML;
 }
@@ -23,7 +23,7 @@ renderIndividualEvaluation=function(item,p,options={}){
 document.addEventListener('click',event=>{
  const link=event.target.closest?.('.psg-evaluation-page-link');if(!link||!state.selected)return;
  const host=link.closest('#boxEvaluation'),item=state.selected;
- const saved={id:item.id,y:window.scrollY,url:location.href,search:boxSearch.value,filters:Object.fromEntries(Object.entries(state.boxFilters).map(([key,value])=>[key,[...value]])),berryLevel:host?.querySelector('.psg-berry-level')?.value,skillLevel:host?.querySelector('.psg-skill-eval-level')?.value};
+ const saved={id:item.id,y:window.scrollY,url:location.href,search:boxSearch.value,filters:Object.fromEntries(Object.entries(state.boxFilters).map(([key,value])=>[key,[...value]])),berryLevel:host?.querySelector('.psg-berry-level')?.value,skillLevel:host?.querySelector('.psg-skill-eval-level')?.value,foodLevel:host?.querySelector('.psg-food-eval-level')?.value};
  try{sessionStorage.setItem(EVALUATION_RETURN_KEY,JSON.stringify(saved))}catch{}
 });
 window.addEventListener('DOMContentLoaded',()=>{
@@ -44,10 +44,10 @@ window.addEventListener('DOMContentLoaded',()=>{
  };
  if(!registered||!p){host.textContent='対象の個体が見つかりません。ボックスへ戻って選び直してください。';return}
  const item=structuredClone(registered);
- if(saved?.id===id){if(saved.berryLevel)item.berryEvaluationLevel=Number(saved.berryLevel);if(saved.skillLevel)item.skillEvaluationLevel=Number(saved.skillLevel)}
+ if(saved?.id===id){if(saved.berryLevel)item.berryEvaluationLevel=Number(saved.berryLevel);if(saved.skillLevel)item.skillEvaluationLevel=Number(saved.skillLevel);if(saved.foodLevel)item.foodEvaluationLevel=Number(saved.foodLevel)}
  document.getElementById('individualEvaluationTitle').textContent=`${registered.name}の評価`;
  host.innerHTML=renderIndividualEvaluation(item,p);bindIndividualEvaluation(host,item,p);
- if(!['きのみ','スキル'].includes(p.specialty)){
+ if(!['きのみ','スキル'].includes(p.specialty)&&!foodRoleSupported(p)){
   host.querySelector('.psg-evaluation-page-link')?.remove();
   requestAnimationFrame(()=>{const details=document.createElement('div');details.innerHTML=renderIndividualEvaluationDetails(item,p);host.append(details)});
  }
