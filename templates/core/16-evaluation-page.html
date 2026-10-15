@@ -6,7 +6,17 @@ function evaluationLink(item){const url=new URL('evaluation.html',location.href)
 function evaluationPageMarkup(html,item){
  const template=document.createElement('template');template.innerHTML=html;
  const detail=template.content.querySelector('.psg-berry-details,.psg-skill-eval-details,.psg-food-details');
- if(detail){if(evaluationPage){if(detail.classList.contains('psg-food-details')){detail.querySelector(':scope > summary')?.remove();detail.replaceWith(...detail.childNodes)}else detail.open=true}else{const link=document.createElement('span');link.innerHTML=evaluationLink(item);detail.replaceWith(link)}}
+ if(!detail)return template.innerHTML;
+ if(!evaluationPage){
+  const link=document.createElement('span');
+  link.innerHTML=evaluationLink(item);
+  detail.replaceWith(link);
+ }else if(detail.classList.contains('psg-food-details')){
+  detail.querySelector(':scope > summary')?.remove();
+  detail.replaceWith(...detail.childNodes);
+ }else{
+  detail.open=true;
+ }
  return template.innerHTML;
 }
 const evaluationBerryRenderer=renderBerryRole,evaluationSkillRenderer=renderSkillRole,evaluationSimpleRenderer=renderIndividualEvaluation;

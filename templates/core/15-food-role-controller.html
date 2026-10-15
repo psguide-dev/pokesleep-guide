@@ -1,0 +1,12 @@
+// Food-role integration, level selection and reference-loading lifecycle.
+const renderIndividualBeforeFood=renderIndividualEvaluation,bindIndividualBeforeFood=bindIndividualEvaluation;
+renderIndividualEvaluation=function(item,p,options={}){return foodRoleSupported(p)&&!options.compact?renderFoodRole(item,p):renderIndividualBeforeFood(item,p,options)};
+bindIndividualEvaluation=function(host,item,p){
+ if(!foodRoleSupported(p))return bindIndividualBeforeFood(host,item,p);
+ const panel=host.querySelector('.psg-food-role');if(!panel)return;
+ const replace=next=>{if(!host.contains(panel))return;panel.outerHTML=renderFoodRole(next,p);bindIndividualEvaluation(host,next,p)};
+ const select=host.querySelector('.psg-food-eval-level');if(select)select.onchange=()=>replace({...item,foodEvaluationLevel:Number(select.value)});
+ const load=()=>{const fingerprint=JSON.stringify(item);loadFoodRoleReferences().then(()=>{if(fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(fingerprint===JSON.stringify(item))replace(item)})};
+ const retry=host.querySelector('.psg-food-eval-retry');if(retry)retry.onclick=load;
+ if(!foodRoleReferences&&!foodRoleError)load();
+};

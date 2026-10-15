@@ -3,7 +3,7 @@ const {ctx,catalog}=require('./skill_model_runtime.cjs').createRuntime(root);
 ctx.speciesKey=p=>ctx.window.PS_SPECIES_CATALOG.key(p);
 ctx.renderIndividualEvaluation=()=>'<p>legacy</p>';ctx.bindIndividualEvaluation=()=>{};ctx.evaluationPageMarkup=html=>html;
 vm.runInContext(fs.readFileSync(root+'/templates/core/13-role-model-helpers.html','utf8'),ctx);
-vm.runInContext(fs.readFileSync(root+'/templates/core/15-food-role.html','utf8'),ctx);
+for(const name of ['15-food-role','15-food-role-details','15-food-role-view','15-food-role-controller'])vm.runInContext(fs.readFileSync(root+'/templates/core/'+name+'.html','utf8'),ctx);
 const refs=JSON.parse(fs.readFileSync(root+'/assets/evaluation/food_fixed_pattern_v2.json'));
 ctx.references=refs;vm.runInContext('foodRoleReferences=references',ctx);
 const provenance=JSON.parse(fs.readFileSync(root+'/research/food-role-v2/engine-source-sha256.json'));
