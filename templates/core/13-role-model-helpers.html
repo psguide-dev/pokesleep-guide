@@ -2,7 +2,7 @@
 // Reference loading, species validation and production calculation stay in each role.
 function roleEvaluationLevel(item,field){
  const selected=item[field];
- return [50,60,70,80].includes(selected)?selected:item.level>=70?70:item.level>=60?60:50;
+ return [50,60,70,80].includes(selected)?selected:80;
 }
 function roleModelRank(e){
  const grade=p=>p<=3?'SS':p<=10?'S':p<=25?'A':p<=50?'B':'C';

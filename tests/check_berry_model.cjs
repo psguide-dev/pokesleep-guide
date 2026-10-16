@@ -4,6 +4,9 @@ const {catalog,ctx}=createRuntime(root);
 ctx.speciesKey=p=>p.speciesId||`${String(p.no).padStart(4,'0')}_default`;
 for(const f of ['templates/00-standard-evaluation.html','templates/core/13-individual-simple.html','templates/core/13-role-model-helpers.html','templates/core/14-berry-role.html'])vm.runInContext(fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 const data=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/berry_model_refs_v5.json')));ctx.window.PS_BERRY_MODEL_DATA=data;
+// Initial comparison is Lv80 even for a low-level record; explicit choices win.
+for(const level of [1,50,62,70,80]){const item={level},before=JSON.stringify(item);assert.equal(ctx.berryRoleLevel(item),80);assert.equal(JSON.stringify(item),before)}
+for(const level of [50,60,70,80])assert.equal(ctx.berryRoleLevel({level:1,berryEvaluationLevel:level}),level);
 let checks=0;
 for(const reference of Object.values(data.entries)){
  const p=catalog.pokemon[reference.no],meta=data.species[ctx.speciesKey(p)],ideal=reference.idealRecord;

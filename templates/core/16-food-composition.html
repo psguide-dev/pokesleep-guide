@@ -54,6 +54,7 @@ bindIndividualEvaluation=function(host,item,p){
    const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role')||host;
    panel.insertAdjacentHTML('beforeend',evaluationLink(item));
   }
+  placeEvaluationControls(host);
   return;
  }
  const panel=host.querySelector('.psg-food-composition');if(!panel)return;

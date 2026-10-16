@@ -3,6 +3,18 @@ const evaluationPage=location.pathname.endsWith('/evaluation.html');
 const EVALUATION_RETURN_KEY='psg-evaluation-return-v1';
 function evaluationReturnRead(){try{return JSON.parse(sessionStorage.getItem(EVALUATION_RETURN_KEY)||'null')}catch{return null}}
 function evaluationLink(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return `<a class="btn psg-evaluation-page-link" href="${boxEsc(url.href)}">詳しい評価を見る</a>`}
+// Reuse existing controls so event handlers and the selected level survive placement.
+function placeEvaluationControls(host){
+ const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role');
+ if(!panel)return;
+ const label=panel.querySelector('label'),link=panel.querySelector('.psg-evaluation-page-link');
+ if(!label||!link)return;
+ let controls=panel.querySelector('.psg-evaluation-controls');
+ if(!controls){controls=document.createElement('div');controls.className='psg-evaluation-controls';label.before(controls);controls.append(label)}
+ const previous=link.parentElement;
+ controls.append(link);
+ if(previous!==controls&&previous.tagName==='SPAN'&&!previous.childNodes.length)previous.remove();
+}
 function evaluationPageMarkup(html,item){
  const template=document.createElement('template');template.innerHTML=html;
  const detail=template.content.querySelector('.psg-berry-details,.psg-skill-eval-details,.psg-food-details');
