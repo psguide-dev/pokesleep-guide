@@ -115,16 +115,18 @@
 /* PSG v57 — approved visual refinement pass (based on verified v56 behavior). */
 @media(max-width:620px){
   :root{--psg-header-height:calc(38px + env(safe-area-inset-top))}
-  /* Unified app header + 1-1. Safe-area aware; left/right top labels preserve the center zone. */
+  /* Keep logo, version and common camp control inside the same safe-area header row. */
   body:not(:has(#startPage.active))>.psg-app-header{
     position:sticky!important;top:0!important;z-index:70!important;
     height:calc(38px + env(safe-area-inset-top))!important;
     min-height:calc(38px + env(safe-area-inset-top))!important;
     padding:env(safe-area-inset-top) 12px 0!important;
-    display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto auto!important;
+    grid-template-rows:38px;column-gap:6px!important;
     align-items:center!important;background:#fff!important;
     border-bottom:0!important;backdrop-filter:none!important;
   }
+  .psg-app-header> :is(.psg-app-title,.psg-app-version,.psg-camp-basis){grid-row:1;}
   .psg-app-title{justify-self:start!important;font-size:14px!important;white-space:nowrap!important;}
   .psg-header-logo{height:34px;}
   .psg-app-version{justify-self:end!important;margin:0!important;color:#7d8a85!important;font-size:10px!important;white-space:nowrap!important;}
