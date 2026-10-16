@@ -15,7 +15,7 @@ function evaluateIndividualTrial(specialty,actual,neutral,unlimited,controls={})
 }
 const INDIVIDUAL_SIMPLE_CACHE=new WeakMap();
 function individualTrialKey(item,p){
- return JSON.stringify([item,p,window.PS_EVALUATION_ENGINE_VERSION||'daily-v594',window.PS_STANDARD_REFERENCES?.version||null]);
+ return JSON.stringify([item,p,evaluationGoodCamp(),window.PS_EVALUATION_ENGINE_VERSION||'daily-v594',window.PS_STANDARD_REFERENCES?.version||null]);
 }
 function individualTrialCache(store){
  const catalog=window.PS_CATALOG;let cache=store.get(catalog);
@@ -29,8 +29,10 @@ function individualTrialSnapshot(member){
  const food=member.normalFoods?[...member.normalFoods.values()].reduce((n,q)=>n+q,0):null;
  return {member,values:{berry:Number.isFinite(member.normalBerries)?member.normalBerries*berryEnergyAtLevel(member.berryBase,member.level):null,food,skill:Number.isFinite(member.stats?.skill)&&member.skillName?member.skillTriggers:null}};
 }
-function calculateIndividualTrial(record,unlimitedCarry=false){
- const result=dailyBaseline([record.id],[record],window.PS_CATALOG,4,100,true,3,[],0,{},null,{},null,{unlimitedCarry});
+function evaluationGoodCamp(){return typeof teamGoodCamp==='boolean'?teamGoodCamp:true}
+function evaluationCampLabel(){return `キャンチケ${evaluationGoodCamp()?'あり':'なし'}`}
+function calculateIndividualTrial(record,unlimitedCarry=false,camp=evaluationGoodCamp()){
+ const result=dailyBaseline([record.id],[record],window.PS_CATALOG,4,100,camp,3,[],0,{},null,{},null,{unlimitedCarry});
  return individualTrialSnapshot(result.members.find(m=>m.id===record.id));
 }
 function individualSimpleEvaluation(item,p,member,options={}){
@@ -80,5 +82,5 @@ function renderIndividualEvaluationDetails(item,p,options={}){
  const secondary=evaluation.candidates.map(c=>`<div class="psg-individual-row"><div class="psg-individual-score"><strong>${labels[c.role]}指数 ${index(evaluation.indices[c.role])}・${c.label}</strong><p class="psg-box-muted">${labels[c.role]}／日 ${number(evaluation.actual.values[c.role])}${units[c.role]}　基準 ${number(evaluation.neutral.values[c.role])}${units[c.role]}</p>${c.removed?`<p>${boxEsc(c.removed)}を外した場合との主軸維持率：${number(c.maintained)}%</p>`:'<p class="psg-box-muted">単独で外す副軸補正がないため、両立の判定は未確認。</p>'}</div></div>`).join('');
  const capacity=['berry','food','skill'].map(k=>`<p>${labels[k]}：${number(evaluation.retention[k])}${evaluation.retention[k]==null?'':'%'}</p>`).join('');
  const foods=[...evaluation.actual.member.normalFoods].map(([name,qty])=>`${boxEsc(name)} ${number(qty)}個`).join('・');
- return `<div class="psg-individual-trial">${summary}<p class="psg-box-muted">100＝同条件の無補正個体。100点満点ではありません。</p><details class="psg-evaluation-other"><summary>副軸・両立の確認</summary>${secondary}</details><details class="psg-box-explanation"><summary>所持数による維持率</summary>${capacity}<p class="psg-box-muted">所持数だけを無制限にした同じ個体との比較。スキルストック上限は維持。主軸指数から損失を再び引きません。</p></details><details class="psg-box-explanation"><summary>評価条件・内訳</summary><p>キャンチケあり・4時間回収・覚醒16時間＋睡眠8時間・開始げんき100・食事3回。フィールド・好物・EX・イベント補正と外部のチーム支援なし。同種族・同フォーム・同Lv・同食材構成・同登録スキルLv・同リボン・同進化段階で比較。</p><p>通常おてつだいの食材：${foods}。スキル由来の食材・きのみ・追加おてつだいは各収集軸に二重加点しません。自身の回復が通常収集へ与える影響は日産計算に含みます。チーム支援やスキル効果自体の実用性は別評価です。</p><p class="psg-box-muted">期待値は共通日産エンジンの推定。スキル保証・変動確率の精密再現は未対応。副軸115・主軸100・主軸維持95%は試案の仮境界です。性格による副軸強化や複数補正の単独比較は未接続なら両立未確認。S/A等の等級・厳選確率は出しません。</p></details></div>`;
+ return `<div class="psg-individual-trial">${summary}<p class="psg-box-muted">100＝同条件の無補正個体。100点満点ではありません。</p><details class="psg-evaluation-other"><summary>副軸・両立の確認</summary>${secondary}</details><details class="psg-box-explanation"><summary>所持数による維持率</summary>${capacity}<p class="psg-box-muted">所持数だけを無制限にした同じ個体との比較。スキルストック上限は維持。主軸指数から損失を再び引きません。</p></details><details class="psg-box-explanation"><summary>評価条件・内訳</summary><p>${evaluationCampLabel()}・4時間回収・覚醒16時間＋睡眠8時間・開始げんき100・食事3回。フィールド・好物・EX・イベント補正と外部のチーム支援なし。同種族・同フォーム・同Lv・同食材構成・同登録スキルLv・同リボン・同進化段階で比較。</p><p>通常おてつだいの食材：${foods}。スキル由来の食材・きのみ・追加おてつだいは各収集軸に二重加点しません。自身の回復が通常収集へ与える影響は日産計算に含みます。チーム支援やスキル効果自体の実用性は別評価です。</p><p class="psg-box-muted">期待値は共通日産エンジンの推定。スキル保証・変動確率の精密再現は未対応。副軸115・主軸100・主軸維持95%は試案の仮境界です。性格による副軸強化や複数補正の単独比較は未接続なら両立未確認。S/A等の等級・厳選確率は出しません。</p></details></div>`;
 }

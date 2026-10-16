@@ -193,3 +193,11 @@ function syncLevel({refreshEditor=true}={}){
  if(refreshEditor){fillBoxEditor(item,p);boxEditorDirty=false}else boxEditorDirty=true;
  requestAnimationFrame(resizeBoxSkillBlock);
 }
+
+window.addEventListener('psg-camp-change',()=>{
+ if(!state.selected||state.screen!=='boxDetail')return;
+ const selectors=['.psg-food-eval-level','.psg-berry-level','.psg-skill-eval-level'];
+ const levels=selectors.map(selector=>document.querySelector('#boxEvaluation '+selector)?.value);
+ syncLevel({refreshEditor:false});
+ selectors.forEach((selector,i)=>{const node=document.querySelector('#boxEvaluation '+selector);if(node&&levels[i]&&node.value!==levels[i]){node.value=levels[i];node.onchange?.()}});
+});

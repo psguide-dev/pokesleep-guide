@@ -45,7 +45,7 @@ function renderIndividualEvaluation(item,p,options={}){
  const summary=`<div class="psg-individual-row is-primary" data-role="${role}"><div class="psg-individual-score"><strong>${labels[role]}の簡易評価</strong><p>${score}</p><p class="psg-box-muted">${labels[role]}／日 ${number(evaluation.actual.values[role])}${units[role]}　${reference}</p><p class="psg-box-muted">${status}</p></div></div>`;
  const fill=carryFillSummary(evaluation.actual.member),fillLine=`<p class="psg-box-muted psg-carry-fill" title="空の状態から通常収集の平均数量が容量に達する目安。げんきや実際の抽選で前後します。">${boxEsc(fill.text)}</p>`;
  if(options.compact)return summary+fillLine;
- return `${summary}${fillLine}<p class="psg-box-muted">キャンチケあり・4時間回収。回収頻度によって実際の食材数・スキル発動数は変わります。</p><button type="button" class="btn psg-evaluation-open" aria-expanded="false" aria-controls="boxEvaluationDetails">詳しい評価を見る</button><div id="boxEvaluationDetails" class="psg-evaluation-detail" hidden></div>`;
+ return `${summary}${fillLine}<p class="psg-box-muted">${evaluationCampLabel()}・4時間回収。回収頻度によって実際の食材数・スキル発動数は変わります。</p><button type="button" class="btn psg-evaluation-open" aria-expanded="false" aria-controls="boxEvaluationDetails">詳しい評価を見る</button><div id="boxEvaluationDetails" class="psg-evaluation-detail" hidden></div>`;
 }
 function bindIndividualEvaluation(host,item,p){
  const button=host.querySelector('.psg-evaluation-open'),detail=host.querySelector('.psg-evaluation-detail');if(!button||!detail)return;

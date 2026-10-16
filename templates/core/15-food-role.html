@@ -10,46 +10,49 @@ const FOOD_ROLE_REFERENCE_GROUPS=[
  {path:'food_direct_v3',version:3,count:1032},
  {path:'food_recovery_v4',version:4,count:450}
 ];
-async function loadFoodRoleReferenceGroup(group){
+async function loadFoodRoleReferenceGroup(group,camp=evaluationGoodCamp()){
  const levels=[60,70,80];
- const parts=await Promise.all(levels.map(level=>fetch(`assets/evaluation/${group.path}_${level}.json`).then(r=>{if(!r.ok)throw Error('food reference load');return r.json()})));
- if(parts.some((part,i)=>part.version!==group.version||part.level!==levels[i]||part.axis!=='normalFoodsFixedPattern'||!part.engineCommit||!part.engineFingerprint||part.engineFingerprint!==parts[0].engineFingerprint))throw Error('food reference version');
+ const parts=await Promise.all(levels.map(level=>fetch(`assets/evaluation/${group.path}${camp?'':'_off'}_${level}.json?v=631`).then(r=>{if(!r.ok)throw Error('food reference load');return r.json()})));
+ if(parts.some((part,i)=>part.version!==group.version||part.level!==levels[i]||part.axis!=='normalFoodsFixedPattern'||part.conditions?.camp!==camp||!part.engineCommit||!part.engineFingerprint||part.engineFingerprint!==parts[0].engineFingerprint))throw Error('food reference version');
  const data={...parts[0],entries:Object.assign({},...parts.map(part=>part.entries))};
  if(Object.keys(data.entries).length!==group.count)throw Error('food reference count');
  return data;
 }
+function activeFoodRoleReferences(){return foodRoleReferences?.conditions?.camp===evaluationGoodCamp()?foodRoleReferences:campReferenceStore().values.food||null}
 function loadFoodRoleReferences(){
- if(foodRoleReferences)return Promise.resolve(foodRoleReferences);
- if(!foodRoleLoading)foodRoleLoading=Promise.all(FOOD_ROLE_REFERENCE_GROUPS.map(loadFoodRoleReferenceGroup)).then(groups=>{
+ const camp=evaluationGoodCamp(),store=campReferenceStore(camp),existing=activeFoodRoleReferences();
+ if(existing)return Promise.resolve(existing);
+ if(!store.loads.has('food'))store.loads.set('food',Promise.all(FOOD_ROLE_REFERENCE_GROUPS.map(group=>loadFoodRoleReferenceGroup(group,camp))).then(groups=>{
   if(groups.some(group=>group.engineFingerprint!==groups[0].engineFingerprint))throw Error('food reference engine');
-  foodRoleReferences={...groups[0],version:4,scope:{...groups[0].scope,implemented:FOOD_ROLE_SPECIES.size,recoveryPending:0},species:Object.assign({},...groups.map(group=>group.species)),entries:Object.assign({},...groups.map(group=>group.entries))};
-  foodRoleError=null;return foodRoleReferences;
- }).catch(error=>{foodRoleLoading=null;foodRoleError=error;throw error});
- return foodRoleLoading;
+  const data={...groups[0],version:4,scope:{...groups[0].scope,implemented:FOOD_ROLE_SPECIES.size,recoveryPending:0},species:Object.assign({},...groups.map(group=>group.species)),entries:Object.assign({},...groups.map(group=>group.entries))};
+  store.values.food=data;store.errors.delete('food');
+  if(camp===evaluationGoodCamp()){foodRoleReferences=data;foodRoleError=null}return data;
+ }).catch(error=>{store.loads.delete('food');store.errors.set('food',error);if(camp===evaluationGoodCamp()){foodRoleLoading=null;foodRoleError=error}throw error}));
+ return store.loads.get('food');
 }
 function foodRoleEvaluation(item,p){
- const level=foodRoleLevel(item),pending=text=>({status:'pending',text,level});
+ const references=activeFoodRoleReferences(),level=foodRoleLevel(item),pending=text=>({status:'pending',text,level});
  if(!foodRoleSupported(p))return pending('この種類の食材評価は準備中です');
  const ingredients={...item.ingredients};
  for(const slot of p.ingredientSlots||[]){
   if(!ingredients[slot.unlock]&&slot.candidates.length===1)ingredients[slot.unlock]=slot.candidates[0].name;
   if(!slot.candidates.some(c=>c.name===ingredients[slot.unlock]))return pending(`Lv.${slot.unlock}の食材構成を設定してください`);
  }
- if(!foodRoleReferences)return pending(foodRoleError?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
+ if(!references)return pending(foodRoleError?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
  const pattern=p.ingredientSlots.map(slot=>String.fromCharCode(65+slot.candidates.findIndex(c=>c.name===ingredients[slot.unlock]))).join('');
- const ref=foodRoleReferences.entries[JSON.stringify([speciesKey(p),level,pattern])];
+ const ref=references.entries[JSON.stringify([speciesKey(p),level,pattern])];
  if(!ref)return pending('この食材構成の基準は準備中です');
  const normalized={...item,ingredients,level,ribbonHours:0,skillLevel:ref.skillLevel};
  const reasons=individualEvaluationReasons(normalized,p).filter(reason=>!(level===80&&reason==='対応範囲内のレベルを設定してください'));
  if(reasons.length)return pending(reasons.join('／'));
- const key=JSON.stringify([normalized,p,foodRoleReferences.engineCommit]);
+ const key=JSON.stringify([normalized,p,evaluationGoodCamp(),references.engineFingerprint,references.engineCommit]);
  if(FOOD_ROLE_CACHE.has(key))return FOOD_ROLE_CACHE.get(key);
  const snapshot=calculateIndividualTrial(normalized);
  if(snapshot.reasons)return pending(snapshot.reasons.join('／'));
  const value=snapshot.values.food,ideal=ref.ideal;
  if(!Number.isFinite(value)||value<0||!Number.isFinite(ideal?.value)||ideal.value<=0)return pending('通常食材の日産を確認できませんでした');
  if(value>ideal.value+1e-8)return pending('理想値を超えたため基準を確認中です');
- const result={status:'ready',level,pattern,value,ideal:ideal.value,percent:value/ideal.value*100,foods:Object.fromEntries(snapshot.member.normalFoods),idealFoods:ideal.foods,idealRecord:ideal.record,member:snapshot.member,skillLevel:ref.skillLevel,record:normalized};
+ const result={status:'ready',camp:evaluationGoodCamp(),level,pattern,value,ideal:ideal.value,percent:value/ideal.value*100,foods:Object.fromEntries(snapshot.member.normalFoods),idealFoods:ideal.foods,idealRecord:ideal.record,member:snapshot.member,skillLevel:ref.skillLevel,record:normalized};
  return cacheRoleEvaluation(FOOD_ROLE_CACHE,key,result);
 }
 function foodRoleDiagnostics(item,p,e){

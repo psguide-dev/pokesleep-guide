@@ -1,5 +1,5 @@
 // Account, header and existing team/pot controls share the saved day-setting value.
-// Individual reference evaluations keep their stated fixed camp condition in this stage.
+// Forecasts and reference comparisons use the same saved camp condition.
 function syncCommonCampControls(){
  const label=teamGoodCamp?'あり':'なし';
  document.getElementById('accountGoodCamp').value=String(teamGoodCamp);
@@ -9,9 +9,20 @@ function syncCommonCampControls(){
  basis.setAttribute('aria-label',`共通設定：キャンチケ${label}。アカウント設定を開く`);
 }
 function setGoodCamp(value){
- teamGoodCamp=value===true;
+ const previous=teamGoodCamp;teamGoodCamp=value===true;
  saveDaySettings();
+ if(previous!==teamGoodCamp)window.dispatchEvent(new Event('psg-camp-change'));
 }
 document.getElementById('accountGoodCamp').onchange=event=>setGoodCamp(event.target.value==='true');
 document.getElementById('commonCampBasis').onclick=()=>go('accountPage');
 syncCommonCampControls();
+
+function restoreCommonCamp(){
+ const saved=readDaySettings().goodCamp;if(saved===teamGoodCamp)return;
+ teamGoodCamp=saved;daySettings.goodCamp=saved;syncDayControls();
+ renderTeamDay();renderTeamFood();
+ window.dispatchEvent(new Event('psg-cooking-settings-change'));
+ window.dispatchEvent(new Event('psg-camp-change'));
+}
+window.addEventListener('storage',event=>{if(event.key===DAY_SETTINGS_KEY||event.key===null)restoreCommonCamp()});
+window.addEventListener('pageshow',event=>{if(event.persisted)restoreCommonCamp()});

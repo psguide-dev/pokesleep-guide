@@ -1,5 +1,5 @@
 // Skill-role comparison uses the shared production forecast. Population enumeration is offline.
-window.PS_SKILL_MODEL_DATA=null;
+defineCampReference('PS_SKILL_MODEL_DATA');
 let skillModelLoading=null,skillModelError=null;
 const SKILL_MODEL_CACHE=new Map();
 const renderIndividualBeforeSkillModel=renderIndividualEvaluation;
@@ -8,35 +8,18 @@ function skillRoleLevel(item){return roleEvaluationLevel(item,'skillEvaluationLe
 const skillSpeciesLoading=new Map(),skillSpeciesErrors=new Map();
 function skillShareBound(value){return roleShareBound(value)}
 function skillModelRank(e){return roleModelRank(e)}
-function loadSkillModelReferences(id=null){
- const manifest=()=>{
-  if(window.PS_SKILL_MODEL_DATA)return Promise.resolve(window.PS_SKILL_MODEL_DATA);
-  if(!skillModelLoading)skillModelLoading=fetch('assets/evaluation/skill_manifest_v2.json').then(r=>{if(!r.ok)throw Error('skill reference load');return r.json()}).then(data=>{
-   if(data.version!==2||data.axis!=='skillTriggers'||!data.species||!data.entries||!data.engineCommit)throw Error('skill reference version');
-   window.PS_SKILL_MODEL_DATA=data;skillModelError=null;return data;
-  }).catch(error=>{skillModelLoading=null;skillModelError=error;throw error});
-  return skillModelLoading;
- };
- return manifest().then(data=>{
-  if(!id||!data.species[id]||data.loadedSpecies?.[id])return data;
-  if(!skillSpeciesLoading.has(id))skillSpeciesLoading.set(id,fetch(data.species[id].file).then(r=>{if(!r.ok)throw Error('skill species load');return r.json()}).then(part=>{
-   if(part.version!==2||part.axis!=='skillTriggers'||part.speciesId!==id||part.engineCommit!==data.engineCommit||!part.entries)throw Error('skill species version');
-   Object.assign(data.entries,part.entries);data.loadedSpecies??={};data.loadedSpecies[id]=true;skillSpeciesErrors.delete(id);return data;
-  }).catch(error=>{skillSpeciesLoading.delete(id);skillSpeciesErrors.set(id,error);throw error}));
-  return skillSpeciesLoading.get(id);
- });
-}
+function loadSkillModelReferences(id=null){return loadCampRoleReferences('skill',id)}
 function skillRoleEvaluation(item,p){
  const level=skillRoleLevel(item),pending=text=>({status:'pending',text,level});
- const table=window.PS_SKILL_MODEL_DATA;if(!table)return pending(skillModelError?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
+ const table=window.PS_SKILL_MODEL_DATA;if(!table)return pending((skillModelError||campRoleReferenceError('skill',speciesKey(p)))?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
  const meta=table.species[speciesKey(p)];if(!meta)return pending('この種類の基準は準備中です');
  if(meta.allowedNatures&&!meta.allowedNatures.includes(item.nature))return pending('この姿へ進化する性格を設定してください');
  const normalized={...item,level,ribbonHours:0,skillLevel:meta.defaultSkillLevel};
  const reasons=individualEvaluationReasons(normalized,p).filter(s=>!(level===80&&s==='対応範囲内のレベルを設定してください'));
  if(reasons.length)return pending(reasons.join('／'));
  for(const slot of p.ingredientSlots||[])if(slot.unlock<=level&&!item.ingredients?.[slot.unlock]&&slot.candidates.length!==1)return pending('評価Lvで使う食材構成を設定してください');
- const reference=table.entries[JSON.stringify([speciesKey(p),level])];if(!reference)return pending(skillSpeciesErrors.has(speciesKey(p))?'種類別の基準の読み込みに失敗しました':'種類別の基準を読み込んでいます…');
- const key=JSON.stringify([normalized,p,table.version,table.engineCommit]);if(SKILL_MODEL_CACHE.has(key))return SKILL_MODEL_CACHE.get(key);
+ const reference=table.entries[JSON.stringify([speciesKey(p),level])];if(!reference)return pending(campRoleReferenceError('skill',speciesKey(p))?'種類別の基準の読み込みに失敗しました':'種類別の基準を読み込んでいます…');
+ const key=JSON.stringify([normalized,p,evaluationGoodCamp(),table.version,table.engineFingerprint,table.engineCommit]);if(SKILL_MODEL_CACHE.has(key))return SKILL_MODEL_CACHE.get(key);
  const snapshot=calculateIndividualTrial(normalized);if(snapshot.reasons)return pending(snapshot.reasons.join('／'));
  const value=snapshot.values.skill;
  if(!Number.isFinite(value)||value<0||!Number.isFinite(reference.ideal)||reference.ideal<=0)return pending('発動回数を確認できませんでした');
@@ -48,10 +31,10 @@ function skillRoleEvaluation(item,p){
 function renderSkillRole(item,p){
  const e=skillRoleEvaluation(item,p),n=window.PS_NUMBERS.display;
  const select=`<label>評価Lv. <select class="psg-skill-eval-level" aria-label="スキル評価レベル">${[50,60,70,80].map(l=>`<option value="${l}"${l===e.level?' selected':''}>${l}${l===80?'（予測）':''}</option>`).join('')}</select></label>`;
- if(e.status!=='ready')return `<div class="psg-skill-role">${select}<p>スキル評価：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${skillModelError||skillSpeciesErrors.has(speciesKey(p))?'<button class="psg-skill-eval-retry" type="button">再読込</button>':''}</div>`;
+ if(e.status!=='ready')return `<div class="psg-skill-role">${select}<p>スキル評価：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${campRoleReferenceError('skill',speciesKey(p))?'<button class="psg-skill-eval-retry" type="button">再読込</button>':''}</div>`;
  const {fill,night}=roleCarryFillText(e.member);
  const ideal=e.idealRecord;
- return `<div class="psg-skill-role">${select}<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>スキル適性 ${skillModelRank(e)}</b></p><p>理想個体の <b>${n(e.idealPercent)}%</b> のスキル発動回数</p><p>この個体を上回る構成 <b>${roleStrongerText(e)}</b></p></div></div><p>評価条件での発動予想 <b>約${n(e.value)}回／日</b></p><p class="psg-box-muted">${e.level===80?'Lv.80・予測。':''}同じ種類で食材構成も含む比較。捕獲確率ではありません。</p>${e.modelNote?`<p class="psg-box-muted">${boxEsc(e.modelNote)}</p>`:''}<details class="psg-skill-eval-details"><summary>詳しい評価</summary><p>個体：約${n(e.value)}回／日<br>理想：約${n(e.ideal)}回／日</p><p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><p>理想の性格：${boxEsc(ideal.nature)}<br>サブスキル：${ideal.subskills.filter((_,i)=>SUBSKILL_LEVELS[i]<=e.level).map(boxEsc).join('・')}<br>食材：${ideal.ingredients.filter(Boolean).map(boxEsc).join('／')}</p><p>基準：キャンチケあり・4時間回収・覚醒16時間＋睡眠8時間・開始げんき100・食事3回。リボンなし・スキルLv.${e.skillLevel}固定（進化段階＋1の比較モデル）。登録個体の設定は変更しません。</p><p class="psg-box-muted">所持数による抽選停止と2回までのストックを含む発動回数の推定です。回復による自身のおてつだいへの影響は、単体モデルで計算します。スキル効果の強さやチームへの貢献は別評価です。回復対象の抽選は単体での推定です。追加のおてつだいから発動抽選は増やしません。スキル保証・変動確率、鍋上限などの効果固有の発動制限は精密再現していません。</p><p class="psg-box-muted">性格・有効なサブスキルの組み合わせ・食材構成を均等に扱う比較用の割合です。${e.allowedNatures?'この姿へ進化する性格だけを比較対象にします。':''}同じ回数の構成は含めません。ランクは上回る構成の割合でSS≤3%、S≤10%、A≤25%、B≤50%、残りC。近似範囲が境界をまたぐ場合は両ランクを表示します。集計範囲：${skillShareBound(e.strongerLower)}〜${skillShareBound(e.strongerUpper)}%。満杯目安は平均収集数量からの推定で、回収頻度によって実際の発動回数は変わります。</p></details></div>`;
+ return `<div class="psg-skill-role">${select}<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>スキル適性 ${skillModelRank(e)}</b></p><p>理想個体の <b>${n(e.idealPercent)}%</b> のスキル発動回数</p><p>この個体を上回る構成 <b>${roleStrongerText(e)}</b></p></div></div><p>評価条件での発動予想 <b>約${n(e.value)}回／日</b></p><p class="psg-box-muted">${e.level===80?'Lv.80・予測。':''}同じ種類で食材構成も含む比較。捕獲確率ではありません。</p>${e.modelNote?`<p class="psg-box-muted">${boxEsc(e.modelNote)}</p>`:''}<details class="psg-skill-eval-details"><summary>詳しい評価</summary><p>個体：約${n(e.value)}回／日<br>理想：約${n(e.ideal)}回／日</p><p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><p>理想の性格：${boxEsc(ideal.nature)}<br>サブスキル：${ideal.subskills.filter((_,i)=>SUBSKILL_LEVELS[i]<=e.level).map(boxEsc).join('・')}<br>食材：${ideal.ingredients.filter(Boolean).map(boxEsc).join('／')}</p><p>基準：${evaluationCampLabel()}・4時間回収・覚醒16時間＋睡眠8時間・開始げんき100・食事3回。リボンなし・スキルLv.${e.skillLevel}固定（進化段階＋1の比較モデル）。登録個体の設定は変更しません。</p><p class="psg-box-muted">所持数による抽選停止と2回までのストックを含む発動回数の推定です。回復による自身のおてつだいへの影響は、単体モデルで計算します。スキル効果の強さやチームへの貢献は別評価です。回復対象の抽選は単体での推定です。追加のおてつだいから発動抽選は増やしません。スキル保証・変動確率、鍋上限などの効果固有の発動制限は精密再現していません。</p><p class="psg-box-muted">性格・有効なサブスキルの組み合わせ・食材構成を均等に扱う比較用の割合です。${e.allowedNatures?'この姿へ進化する性格だけを比較対象にします。':''}同じ回数の構成は含めません。ランクは上回る構成の割合でSS≤3%、S≤10%、A≤25%、B≤50%、残りC。近似範囲が境界をまたぐ場合は両ランクを表示します。集計範囲：${skillShareBound(e.strongerLower)}〜${skillShareBound(e.strongerUpper)}%。満杯目安は平均収集数量からの推定で、回収頻度によって実際の発動回数は変わります。</p></details></div>`;
 }
 renderIndividualEvaluation=function(item,p,options={}){return p?.specialty==='スキル'?renderSkillRole(item,p):renderIndividualBeforeSkillModel(item,p,options)};
 bindIndividualEvaluation=function(host,item,p){
@@ -59,7 +42,7 @@ bindIndividualEvaluation=function(host,item,p){
  const panel=host.querySelector('.psg-skill-role');if(!panel)return;
  const replace=next=>{if(!host.contains(panel))return;panel.outerHTML=renderSkillRole(next,p);bindIndividualEvaluation(host,next,p)};
  const select=host.querySelector('.psg-skill-eval-level');if(select)select.onchange=()=>replace({...item,skillEvaluationLevel:Number(select.value)});
- const load=()=>{const fingerprint=JSON.stringify(item);loadSkillModelReferences(speciesKey(p)).then(()=>{if(fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(fingerprint===JSON.stringify(item))replace(item)})};
+ const load=()=>{const camp=evaluationGoodCamp(),fingerprint=JSON.stringify(item);loadSkillModelReferences(speciesKey(p)).then(()=>{if(camp===evaluationGoodCamp()&&fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(camp===evaluationGoodCamp()&&fingerprint===JSON.stringify(item))replace(item)})};
  const retry=host.querySelector('.psg-skill-eval-retry');if(retry)retry.onclick=load;
- if(!window.PS_SKILL_MODEL_DATA&&!skillModelError||window.PS_SKILL_MODEL_DATA?.species[speciesKey(p)]&&!window.PS_SKILL_MODEL_DATA.loadedSpecies?.[speciesKey(p)]&&!skillSpeciesErrors.has(speciesKey(p)))load();
+ if((!window.PS_SKILL_MODEL_DATA||window.PS_SKILL_MODEL_DATA.species[speciesKey(p)]&&!window.PS_SKILL_MODEL_DATA.loadedSpecies?.[speciesKey(p)])&&!campRoleReferenceError('skill',speciesKey(p)))load();
 };

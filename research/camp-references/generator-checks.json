@@ -1,0 +1,9 @@
+{
+  "checked": 36,
+  "species": [
+    "0026_default",
+    "0181_default"
+  ],
+  "exactIdealRecordsAndDistributionBins": true,
+  "method": "Independent original full-layout loop compared with weighted state deduplication at all four levels"
+}

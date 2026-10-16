@@ -38,7 +38,7 @@ console.log(`Food expansion: ${count} ideal references for 83 identities, missin
 // Exercise the actual asynchronous six-part production loader and its failure/retry path.
 (async()=>{
  let invalid=true;const requested=[];
- ctx.fetch=url=>{requested.push(url);const level=Number(url.match(/_(60|70|80)\.json$/)?.[1]),part=structuredClone(parts.find(p=>p.level===level&&p.version===(url.includes('recovery')?4:3)));if(invalid&&level===70)part.version=0;return Promise.resolve({ok:true,json:()=>Promise.resolve(part)})};
+ ctx.fetch=url=>{requested.push(url);const level=Number(url.match(/_(60|70|80)\.json(?:\?.*)?$/)?.[1]),part=structuredClone(parts.find(p=>p.level===level&&p.version===(url.includes('recovery')?4:3)));if(invalid&&level===70)part.version=0;return Promise.resolve({ok:true,json:()=>Promise.resolve(part)})};
  vm.runInContext('foodRoleReferences=null;foodRoleLoading=null;foodRoleError=null',ctx);
  await assert.rejects(ctx.loadFoodRoleReferences());
  invalid=false;const loaded=await ctx.loadFoodRoleReferences();assert.equal(Object.keys(loaded.entries).length,1482);assert.equal(requested.length,12);

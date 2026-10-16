@@ -1,0 +1,6 @@
+{
+  "checked": 1482,
+  "unchangedON": true,
+  "engineFingerprint": "48daabad720bf3ae2a5af64ea1e67ac67f00cf1e0f258da02f39d0d1a30e4041",
+  "note": "ON references keep the same numeric entries. OFF references are separately enumerated; no scaling."
+}

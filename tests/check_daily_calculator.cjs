@@ -109,10 +109,11 @@ assert.equal(standard.result.goodCamp,true);assert.equal(standard.withoutCamp.go
 ctx.fieldProfile={selectedFieldId:'wakakusa',areaBonuses:{wakakusa:80}};
 ctx.teamInitialEnergy=150;ctx.teamGoodCamp=false;ctx.teamMeals=3;
 const changedField=vm.runInContext('boxDailyEstimate(state.box[0])',ctx);
-assert.equal(changedField.member.skillTriggers,standard.member.skillTriggers);
-assert.deepEqual([...changedField.member.foods],[...standard.member.foods]);
-assert.equal(changedField.result.berryEnergy,standard.result.berryEnergy);
-console.log('Box standard conditions: incomplete EX, field bonus and team settings cannot change individual forecasts.');
+assert.equal(changedField.member.skillTriggers,standard.withoutCampMember.skillTriggers);
+assert.deepEqual([...changedField.member.foods],[...standard.withoutCampMember.foods]);
+assert.equal(changedField.result.berryEnergy,standard.withoutCamp.berryEnergy);
+assert.equal(changedField.result.goodCamp,false);assert.equal(changedField.withoutCamp.goodCamp,true);
+console.log('Box standard conditions: shared camp changes the basis; incomplete EX, field bonus, starting energy and meals do not change the fixed individual conditions.');
 
 const directCamp=vm.runInContext('dailyBaseline([state.box[0].id],state.box,window.PS_CATALOG,4,100,true,3)',ctx);
 const directPlain=vm.runInContext('dailyBaseline([state.box[0].id],state.box,window.PS_CATALOG,4,100,false,3)',ctx);
@@ -124,7 +125,9 @@ ctx.window.PS_CATALOG.ingredientVisual=()=>null;
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../templates/00-number-format.html'),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../templates/box/02-daily-forecast.html'),'utf8'),ctx);
 ctx.estimate=standard;vm.runInContext('renderBoxDayFood(estimate)',ctx);
-assert(ctx.foodHost.innerHTML.includes('主表示はいいキャンプあり、（）内はなし'));
+assert(ctx.foodHost.innerHTML.includes('主表示はキャンチケあり、（）内はなし'));
 assert(ctx.foodHost.innerHTML.includes('psg-box-camp-values'));
 assert(vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes('（なし 約'));
 console.log('Box camp comparison: two independently calculated forecasts and compact parenthetical display passed.');
+
+ctx.estimate=changedField;vm.runInContext('renderBoxDayFood(estimate)',ctx);assert(ctx.foodHost.innerHTML.includes('主表示はキャンチケなし、（）内はあり'));assert(vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes('（あり 約'));

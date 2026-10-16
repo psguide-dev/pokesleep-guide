@@ -1,14 +1,16 @@
 // The reference population is prepared offline. Load it only for berry evaluation.
-window.PS_BERRY_MODEL_DATA=null;
+defineCampReference('PS_BERRY_MODEL_DATA');
 let berryModelLoading=null,berryModelError=null;
 const BERRY_MODEL_CACHE=new Map();
-window.PS_BERRY_TOTAL_DATA=null;
+defineCampReference('PS_BERRY_TOTAL_DATA');
 let berryTotalLoading=null,berryTotalError=null;
 function loadBerryTotalReferences(){
+ if(!evaluationGoodCamp())return Promise.resolve(window.PS_BERRY_TOTAL_DATA);
  if(window.PS_BERRY_TOTAL_DATA)return Promise.resolve(window.PS_BERRY_TOTAL_DATA);
+ const store=campReferenceStore();
  if(!berryTotalLoading)berryTotalLoading=fetch('assets/evaluation/berry_total_refs_v1.json').then(r=>{if(!r.ok)throw Error('total reference load');return r.json()}).then(data=>{
   if(data.version!==1||data.axis!=='berry_plus_convertible_skill'||!data.entries||!Number.isFinite(data.ingredientMean))throw Error('total reference version');
-  window.PS_BERRY_TOTAL_DATA=data;berryTotalError=null;return data;
+  store.values.PS_BERRY_TOTAL_DATA=data;berryTotalError=null;return data;
  }).catch(error=>{berryTotalLoading=null;berryTotalError=error;throw error});return berryTotalLoading;
 }
 function berryTotalComparison(e){
@@ -37,39 +39,19 @@ const bindIndividualBeforeBerry=bindIndividualEvaluation;
 function berryRoleLevel(item){return roleEvaluationLevel(item,'berryEvaluationLevel')}
 function berryModelSkillLevel(p){return Math.min(1+speciesEvolutionStage(p),window.PS_CATALOG.skills[p.mainSkillId]?.maxLevel||1)}
 const berrySpeciesLoading=new Map(),berrySpeciesErrors=new Map();
-function loadBerryModelReferences(id=null){
- const fetchManifest=()=>{
-  if(window.PS_BERRY_MODEL_DATA)return Promise.resolve(window.PS_BERRY_MODEL_DATA);
-  if(!berryModelLoading)berryModelLoading=fetch('assets/evaluation/berry_manifest_v6.json').then(r=>{if(!r.ok)throw Error('reference load');return r.json()}).then(data=>{
-   if(![5,6].includes(data.version)||!data.species||!data.entries)throw Error('reference version');
-   window.PS_BERRY_MODEL_DATA=data;berryModelError=null;return data;
-  }).catch(error=>{berryModelLoading=null;berryModelError=error;throw error});
-  return berryModelLoading;
- };
- return fetchManifest().then(data=>{
-  if(data.version===5||!id||!data.species[id])return data;
-  if(data.loadedSpecies?.[id])return data;
-  if(!berrySpeciesLoading.has(id))berrySpeciesLoading.set(id,fetch(data.species[id].file).then(r=>{if(!r.ok)throw Error('species reference load');return r.json()}).then(part=>{
-   if(part.version!==6||part.speciesId!==id||part.engineCommit!==data.engineCommit||!part.entries||!part.totalEntries)throw Error('species reference version');
-   Object.assign(data.entries,part.entries);data.loadedSpecies??={};data.loadedSpecies[id]=true;
-   window.PS_BERRY_TOTAL_DATA??={version:1,axis:'berry_plus_convertible_skill',ingredientPool:data.ingredientPool,ingredientMean:data.ingredientMean,entries:{}};
-   Object.assign(window.PS_BERRY_TOTAL_DATA.entries,part.totalEntries);berrySpeciesErrors.delete(id);berryModelError=null;return data;
-  }).catch(error=>{berrySpeciesLoading.delete(id);berrySpeciesErrors.set(id,error);berryModelError=error;throw error}));
-  return berrySpeciesLoading.get(id);
- });
-}
+function loadBerryModelReferences(id=null){return loadCampRoleReferences('berry',id)}
 function berryRoleEvaluation(item,p,overrideSkillLevel=null){
  const level=berryRoleLevel(item),skillLevel=overrideSkillLevel??berryModelSkillLevel(p);
  const pending=text=>({status:'pending',text,level,skillLevel});
- const table=window.PS_BERRY_MODEL_DATA;if(!table)return pending(berryModelError?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
+ const table=window.PS_BERRY_MODEL_DATA;if(!table)return pending((berryModelError||campRoleReferenceError('berry',speciesKey(p)))?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
  const meta=table.species[speciesKey(p)];if(!meta)return pending('この種類の基準は準備中です');
  if(!Number.isInteger(skillLevel)||skillLevel<1||skillLevel>meta.maxSkillLevel)return pending('対応するスキルLvを選んでください');
  const normalized={...item,level,ribbonHours:0,skillLevel};
- const key=JSON.stringify([normalized,p,table.version,table.engineCommit]);if(BERRY_MODEL_CACHE.has(key))return BERRY_MODEL_CACHE.get(key);
+ const key=JSON.stringify([normalized,p,evaluationGoodCamp(),table.version,table.engineFingerprint,table.engineCommit]);if(BERRY_MODEL_CACHE.has(key))return BERRY_MODEL_CACHE.get(key);
  const reasons=individualEvaluationReasons(normalized,p).filter(s=>!(level===80&&s==='対応範囲内のレベルを設定してください'));
  if(reasons.length)return pending(reasons.join('／'));
  for(const slot of p.ingredientSlots||[])if(slot.unlock<=level&&!item.ingredients?.[slot.unlock]&&slot.candidates.length!==1)return pending('評価Lvで使う食材構成を設定してください');
- const reference=table.entries[JSON.stringify([speciesKey(p),level,meta.skillSensitive?skillLevel:0])];if(!reference)return pending(meta.skillSensitive&&skillLevel!==meta.defaultSkillLevel&&!meta.availableSkillLevels?.includes(skillLevel)?'このスキルLvの基準は準備中です':'種類別の基準を読み込んでいます…');
+ const reference=table.entries[JSON.stringify([speciesKey(p),level,meta.skillSensitive?skillLevel:0])];if(!reference)return pending(campRoleReferenceError('berry',speciesKey(p))?'種類別の基準の読み込みに失敗しました':meta.skillSensitive&&skillLevel!==meta.defaultSkillLevel&&!meta.availableSkillLevels?.includes(skillLevel)?'このスキルLvの基準は準備中です':'種類別の基準を読み込んでいます…');
  const snapshot=calculateIndividualTrial(normalized);if(snapshot.reasons)return pending(snapshot.reasons.join('／'));
  const value=snapshot.values.berry;if(!Number.isFinite(value)||value<0||!Number.isFinite(reference.ideal)||reference.ideal<=0)return pending('日産を確認できませんでした');
  if(value>reference.ideal+1e-9)return pending('理想値を超えたため基準を確認中です');
@@ -89,9 +71,9 @@ function renderBerryDetailsResult(e){
 function renderBerryRole(item,p){
  const e=berryRoleEvaluation(item,p),n=window.PS_NUMBERS.display,level=e.level;
  const select=`<label>評価Lv. <select class="psg-berry-level" aria-label="きのみ評価レベル">${[50,60,70,80].map(l=>`<option value="${l}"${l===level?' selected':''}>${l}${l===80?'（予測）':''}</option>`).join('')}</select></label>`;
- if(e.status!=='ready')return `<div class="psg-berry-role">${select}<p>きのみ評価：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${berryModelError?'<button class="psg-berry-retry" type="button">再読込</button>':''}</div>`;
+ if(e.status!=='ready')return `<div class="psg-berry-role">${select}<p>きのみ評価：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${(berryModelError||campRoleReferenceError('berry',speciesKey(p)))?'<button class="psg-berry-retry" type="button">再読込</button>':''}</div>`;
  const max=window.PS_CATALOG.skills[p.mainSkillId]?.maxLevel||1,available=window.PS_BERRY_MODEL_DATA.species[speciesKey(p)]?.availableSkillLevels||Array.from({length:max},(_,i)=>i+1);
- return `<div class="psg-berry-role">${select}<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>きのみ ${roleModelRank(e)}</b></p><p>理想個体の <b>${n(e.idealPercent)}%</b> のきのみエナジー</p><p>この個体を上回る構成 <b>${berryStrongerText(e)}</b></p></div></div><p class="psg-box-muted">${level===80?'Lv.80・予測。':''}食材構成も含む比較モデル。捕獲確率ではありません。</p><details class="psg-berry-details"><summary>詳しい評価</summary><p>基準モデル：基本形から順当に進化・たね未使用、スキルLv.${berryModelSkillLevel(p)}。キャンチケあり・4時間回収・リボンなし。</p><label>比較用スキルLv <select class="psg-berry-skill-level" aria-label="詳細評価のスキルレベル">${available.map(l=>`<option value="${l}"${l===e.skillLevel?' selected':''}>${l}</option>`).join('')}</select></label><div class="psg-berry-detail-result">${renderBerryDetailsResult(e)}</div><p class="psg-box-muted">変更したスキルLvで個体と理想の両方を比較します。簡易評価と登録個体のスキルLvは変更しません。</p><p class="psg-box-muted">ランクは上回る構成の割合でSS≤3%、S≤10%、A≤25%、B≤50%、残りC。近似範囲が境界をまたぐ場合は両ランクを表示します。性格・サブスキル・食材構成を均等に扱う比較用の割合です。スキルの効果で増えるきのみ収量を含み、スキルが直接生むエナジーは含みません。満杯目安は平均収集数量からの推定です。</p></details></div>`;
+ return `<div class="psg-berry-role">${select}<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>きのみ ${roleModelRank(e)}</b></p><p>理想個体の <b>${n(e.idealPercent)}%</b> のきのみエナジー</p><p>この個体を上回る構成 <b>${berryStrongerText(e)}</b></p></div></div><p class="psg-box-muted">${level===80?'Lv.80・予測。':''}食材構成も含む比較モデル。捕獲確率ではありません。</p><details class="psg-berry-details"><summary>詳しい評価</summary><p>基準モデル：基本形から順当に進化・たね未使用、スキルLv.${berryModelSkillLevel(p)}。${evaluationCampLabel()}・4時間回収・リボンなし。</p><label>比較用スキルLv <select class="psg-berry-skill-level" aria-label="詳細評価のスキルレベル">${available.map(l=>`<option value="${l}"${l===e.skillLevel?' selected':''}>${l}</option>`).join('')}</select></label><div class="psg-berry-detail-result">${renderBerryDetailsResult(e)}</div><p class="psg-box-muted">変更したスキルLvで個体と理想の両方を比較します。簡易評価と登録個体のスキルLvは変更しません。</p><p class="psg-box-muted">ランクは上回る構成の割合でSS≤3%、S≤10%、A≤25%、B≤50%、残りC。近似範囲が境界をまたぐ場合は両ランクを表示します。性格・サブスキル・食材構成を均等に扱う比較用の割合です。スキルの効果で増えるきのみ収量を含み、スキルが直接生むエナジーは含みません。満杯目安は平均収集数量からの推定です。</p></details></div>`;
 }
 renderIndividualEvaluation=function(item,p,options={}){return p?.specialty==='きのみ'?renderBerryRole(item,p):renderIndividualBeforeBerry(item,p,options)};
 bindIndividualEvaluation=function(host,item,p){
@@ -104,7 +86,7 @@ bindIndividualEvaluation=function(host,item,p){
  const loadTotal=()=>loadBerryTotalReferences().then(updateDetails).catch(updateDetails);
  if(skill)skill.onchange=()=>{updateDetails();if(detail?.open&&!window.PS_BERRY_TOTAL_DATA&&!berryTotalError)loadTotal()};
  if(detail)detail.ontoggle=()=>{if(detail.open&&['fixed_energy','variable_energy','random_ingredients'].includes(window.PS_CATALOG.skills[p.mainSkillId]?.effectType)){if(!window.PS_BERRY_TOTAL_DATA&&!berryTotalError)loadTotal();else updateDetails()}};
- const load=()=>{const fingerprint=JSON.stringify(item);loadBerryModelReferences(speciesKey(p)).then(()=>{if(fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(fingerprint===JSON.stringify(item))replace(item)})};
+ const load=()=>{const camp=evaluationGoodCamp(),fingerprint=JSON.stringify(item);loadBerryModelReferences(speciesKey(p)).then(()=>{if(camp===evaluationGoodCamp()&&fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(camp===evaluationGoodCamp()&&fingerprint===JSON.stringify(item))replace(item)})};
  const retry=host.querySelector('.psg-berry-retry');if(retry)retry.onclick=load;
- if(!window.PS_BERRY_MODEL_DATA&&!berryModelError||window.PS_BERRY_MODEL_DATA?.version===6&&window.PS_BERRY_MODEL_DATA.species[speciesKey(p)]&&!window.PS_BERRY_MODEL_DATA.loadedSpecies?.[speciesKey(p)]&&!berrySpeciesErrors.has(speciesKey(p)))load();
+ if((!window.PS_BERRY_MODEL_DATA||window.PS_BERRY_MODEL_DATA.version===6&&window.PS_BERRY_MODEL_DATA.species[speciesKey(p)]&&!window.PS_BERRY_MODEL_DATA.loadedSpecies?.[speciesKey(p)])&&!campRoleReferenceError('berry',speciesKey(p)))load();
 };

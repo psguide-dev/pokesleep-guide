@@ -44,3 +44,37 @@ function cacheRoleEvaluation(cache,key,result){
  cache.set(key,result);
  return result;
 }
+
+// Each camp condition owns its tables, in-flight loads and errors. A late response
+// stays in the condition that requested it, even after the account toggle changes.
+const CAMP_REFERENCE_STORES=new Map();
+function campReferenceStore(camp=evaluationGoodCamp()){
+ if(!CAMP_REFERENCE_STORES.has(camp))CAMP_REFERENCE_STORES.set(camp,{values:{},loads:new Map(),errors:new Map()});
+ return CAMP_REFERENCE_STORES.get(camp);
+}
+function defineCampReference(name){
+ Object.defineProperty(window,name,{configurable:true,get:()=>campReferenceStore().values[name]??null,set:value=>{const store=campReferenceStore();store.values[name]=value;if(value===null){const kind=name==='PS_BERRY_MODEL_DATA'?'berry':name==='PS_SKILL_MODEL_DATA'?'skill':null;if(kind)for(const entries of [store.loads,store.errors])for(const key of [...entries.keys()])if(key===kind||key.startsWith(kind+':'))entries.delete(key)}}});
+}
+async function loadCampRoleReferences(kind,id){
+ const camp=evaluationGoodCamp(),store=campReferenceStore(camp),name=kind==='berry'?'PS_BERRY_MODEL_DATA':'PS_SKILL_MODEL_DATA',version=kind==='berry'?6:2;
+ const load=(key,url,accept)=>{
+  if(!store.loads.has(key))store.loads.set(key,fetch(url).then(r=>{if(!r.ok)throw Error('reference load');return r.json()}).then(accept).then(value=>{store.errors.delete(key);return value}).catch(error=>{store.loads.delete(key);store.errors.set(key,error);throw error}));
+  return store.loads.get(key);
+ };
+ const data=store.values[name]||await load(kind,`assets/evaluation/${kind}_manifest_v${version}${camp?'':'_off'}.json`,data=>{
+  if(!(data.version===version||kind==='berry'&&camp&&data.version===5)||!data.species||!data.entries||!data.engineCommit||(data.conditions?.ticket??true)!==camp||!camp&&!data.engineFingerprint)throw Error('reference condition/version');
+  store.values[name]=data;return data;
+ });
+ if(data.version===5||!id||!data.species[id]||data.loadedSpecies?.[id])return data;
+ return load(kind+':'+id,data.species[id].file,part=>{
+  if(part.version!==version||part.speciesId!==id||part.engineCommit!==data.engineCommit||!part.entries||(part.conditions?.ticket??true)!==camp||!camp&&part.engineFingerprint!==data.engineFingerprint)throw Error('species reference condition/version');
+  if(kind==='berry'&&!part.totalEntries)throw Error('total references missing');
+  Object.assign(data.entries,part.entries);data.loadedSpecies??={};data.loadedSpecies[id]=true;
+  if(kind==='berry'){
+   store.values.PS_BERRY_TOTAL_DATA??={version:1,axis:'berry_plus_convertible_skill',ingredientPool:data.ingredientPool,ingredientMean:data.ingredientMean,entries:{}};
+   Object.assign(store.values.PS_BERRY_TOTAL_DATA.entries,part.totalEntries);
+  }
+  return data;
+ });
+}
+function campRoleReferenceError(kind,id){const errors=campReferenceStore().errors;return errors.get(kind+':'+id)||errors.get(kind)}

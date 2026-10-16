@@ -56,7 +56,13 @@ window.addEventListener('DOMContentLoaded',()=>{
  const item=structuredClone(registered);
  if(saved?.id===id){if(saved.berryLevel)item.berryEvaluationLevel=Number(saved.berryLevel);if(saved.skillLevel)item.skillEvaluationLevel=Number(saved.skillLevel);if(saved.foodLevel)item.foodEvaluationLevel=Number(saved.foodLevel)}
  document.getElementById('individualEvaluationTitle').textContent=`${registered.name}の評価`;
- host.innerHTML=renderIndividualEvaluation(item,p);bindIndividualEvaluation(host,item,p);
+ const refresh=()=>{
+  const current={...item};
+  for(const [selector,field] of [['.psg-food-eval-level','foodEvaluationLevel'],['.psg-berry-level','berryEvaluationLevel'],['.psg-skill-eval-level','skillEvaluationLevel']]){const selected=host.querySelector(selector);if(selected)current[field]=Number(selected.value)}
+  host.innerHTML=renderIndividualEvaluation(current,p);bindIndividualEvaluation(host,current,p);
+ };
+ window.addEventListener('psg-camp-change',refresh);
+ refresh();
  if(!['きのみ','スキル'].includes(p.specialty)&&!foodRoleSupported(p)){
   host.querySelector('.psg-evaluation-page-link')?.remove();
   requestAnimationFrame(()=>{const details=document.createElement('div');details.innerHTML=renderIndividualEvaluationDetails(item,p);host.append(details)});
