@@ -26,10 +26,11 @@ function calculatePotCapacity(base,event=1,skill=0,sunday=false,camp=false){
  if(!potCapacities.includes(base)||!Number.isFinite(event)||event<=0||!Number.isInteger(skill)||skill<0||skill>200)return null;
  const scaled=event*1000;
  if(Math.abs(scaled-Math.round(scaled))>1e-7||!Number.isSafeInteger(base*Math.round(scaled)))return null;
- // Same no-intermediate-rounding policy as all prediction calculations.
- const subtotal=base*event*(sunday?2:1)+skill;
- const result=subtotal*(camp?1.5:1);
- return Number.isFinite(result)?result:null;
+ // Discrete pot slots follow the registered round-half-up order, unlike continuous forecasts.
+ const eventCapacity=Math.floor((base*Math.round(scaled)+500)/1000);
+ const subtotal=eventCapacity*(sunday?2:1)+skill;
+ const result=Math.floor(subtotal*(camp?1.5:1)+0.5);
+ return Number.isSafeInteger(result)?result:null;
 }
 function cookingContext(){return {...cookingSettings,camp:teamGoodCamp,capacity:calculatePotCapacity(cookingSettings.base,cookingSettings.event,cookingSettings.skill,cookingSettings.sunday,teamGoodCamp)}}
 function saveCookingSettings(value){

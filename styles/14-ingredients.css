@@ -27,3 +27,16 @@
 .psg-ingredient-details>details>summary{min-height:28px;align-content:center}
 .psg-ingredient-recipes{display:flex;flex-direction:column;gap:4px}
 .psg-ingredient-recipes button{text-align:left;background:transparent;border:0;color:#35694c;text-decoration:underline;padding:4px 0;font-size:12px}
+
+/* Recipe coverage stays separate from daily supply. */
+.psg-food-environment-basis{margin:12px 0 18px;min-width:0}
+.psg-food-environment-basis h3{font-size:15px;margin:8px 0}
+.psg-food-environment-basis h4{font-size:13px;margin:12px 0 6px}
+.psg-food-environment-basis .note{line-height:1.65}
+.psg-food-environment{min-width:0}
+.psg-food-environment-summary{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-top:7px;border-top:1px solid var(--line)}
+.psg-food-environment-row{display:grid;grid-template-columns:auto minmax(16px,1fr) auto;align-items:center;gap:5px;font-size:11px;min-width:0}
+.psg-food-environment-row meter{width:100%;height:12px;min-width:0}
+.psg-food-environment-row strong{white-space:nowrap}
+.psg-ingredient-details .psg-food-environment-row{grid-template-columns:65px minmax(16px,1fr) 40px;margin:8px 0}
+@media(max-width:390px){.psg-food-environment-summary .psg-food-environment-row{grid-template-columns:1fr auto;gap:2px}.psg-food-environment-summary meter{grid-row:2;grid-column:1/-1}.psg-food-environment-summary strong{grid-row:1;grid-column:2}}

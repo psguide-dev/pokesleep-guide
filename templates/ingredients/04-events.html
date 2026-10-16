@@ -1,3 +1,4 @@
  ingredientSearch.addEventListener('input',renderDailyTiers);ingredientSort.addEventListener('change',renderDailyTiers);dailyLevel.addEventListener('change',renderDailyTiers);
  document.getElementById('ingredientSupplyBasis').addEventListener('click',openSupplyReference);
- renderDailyTiers();
+ window.addEventListener('psg-camp-change',()=>{renderFoodEnvironmentBasis();renderDailyTiers()});
+ renderFoodEnvironmentBasis();renderDailyTiers();

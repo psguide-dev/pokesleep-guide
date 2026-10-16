@@ -1,0 +1,41 @@
+ const foodEnvironmentCache=new Map();
+ function currentFoodEnvironment(){
+  const goodCamp=window.PS.getGoodCamp(),capacities=catalog.cooking.pot['拡張表'].map(row=>row['容量']).filter(n=>Number.isInteger(n)&&n>0);
+  const baseCapacity=capacities.length?Math.max(...capacities):null,capacity=window.PS.calculatePotCapacity(baseCapacity,1,0,false,goodCamp);
+  const key=JSON.stringify([goodCamp,baseCapacity,capacity]);
+  if(!foodEnvironmentCache.has(key))foodEnvironmentCache.set(key,window.PS_FOOD_ENVIRONMENT.build(recipes,Object.keys(catalog.ingredientAssets),{goodCamp,baseCapacity,capacity}));
+  return window.PS_FOOD_ENVIRONMENT_DATA=foodEnvironmentCache.get(key);
+ }
+ function environmentRecipeButton(recipe,text){
+  const button=document.createElement('button');button.type='button';button.dataset.ingredientRecipe=recipe.id;button.textContent=text;button.addEventListener('click',()=>window.PS_OPEN_RECIPE?.(recipe.id));return button;
+ }
+ function renderFoodEnvironmentBasis(){
+  const data=currentFoodEnvironment(),target=document.getElementById('ingredientEnvironmentBasis');if(!target)return;
+  const wasOpen=target.querySelector('details')?.open===true;target.replaceChildren();
+  const heading=document.createElement('h3');heading.textContent='料理環境への適性（試作）';
+  const condition=document.createElement('p');condition.className='note';condition.setAttribute('role','status');condition.textContent=`キャンチケ：${data.condition.goodCamp?'あり':'なし'} ／ 通常最大鍋 ${data.condition.baseCapacity??'未確認'} → ${data.condition.capacity??'未確認'}個。鍋に入る登録料理から、Lv70エナジー順に各カテゴリ上位5品を選びます。`;
+  const basis=document.createElement('details');basis.className='psg-cooking-reference';basis.open=wasOpen;
+  const summary=document.createElement('summary');summary.textContent='選定料理と評価の前提';basis.append(summary);
+  const note=document.createElement('p');note.className='note';note.textContent='使用する料理数／選定した料理数を表示。5品未満は実数を分母にし、0品なら未評価です。0/5品でも他の料理では使えます。収集量・3食の供給・編成の完成可否は含めません。日曜・スキル・イベントの鍋拡張、手持ちの鍋強化段階は加味しません。Lv70未登録・必要数未確認の料理は除外。同点は料理ID順。登録値には参考値・推定を含みます。通常最大鍋は登録マスター（2026/10/01確認）に基づき、鍋容量の端数は四捨五入します。';basis.append(note);
+  for(const category of data.categories){
+   const title=document.createElement('h4');title.textContent=`${category}（${data.top[category].length}品）`;basis.append(title);
+   const links=document.createElement('div');links.className='psg-ingredient-recipes';
+   data.top[category].forEach((recipe,index)=>links.append(environmentRecipeButton(recipe,`${index+1}位 ${recipe.name}・${recipe.energy.max.value.toLocaleString()} エナジー（${recipe.energy.max.status||'未確認'}）・鍋${recipe.ingredients.reduce((sum,i)=>sum+i.qty,0)}個`)));
+   if(!data.top[category].length){const empty=document.createElement('p');empty.className='note';empty.textContent='選定できる料理がないため未評価です。';links.append(empty)}basis.append(links);
+  }
+  target.append(heading,condition,basis);
+ }
+ function ingredientEnvironmentView(name,expanded=false){
+  const data=currentFoodEnvironment(),view=document.createElement('div');view.className='psg-food-environment'+(expanded?'':' psg-food-environment-summary');
+  if(expanded){const heading=document.createElement('h3');heading.textContent='上位料理での使用（1食分）';view.append(heading)}
+  const labels=['カレー','サラダ','デザート'];
+  data.categories.forEach((category,index)=>{
+   const row=data.ingredients[name][category],line=document.createElement('div');line.className='psg-food-environment-row';
+   const label=document.createElement('span');label.textContent=labels[index];const count=document.createElement('strong');count.textContent=row.total?`${row.count}/${row.total}品`:'未評価';
+   line.append(label);
+   if(row.total){const meter=document.createElement('meter');meter.min=0;meter.max=row.total;meter.value=row.count;meter.setAttribute('aria-label',`${category}：上位${row.total}品中${row.count}品で使用`);line.append(meter)}
+   line.append(count);view.append(line);
+   if(expanded&&row.matches.length){const links=document.createElement('div');links.className='psg-ingredient-recipes';for(const recipe of row.matches)links.append(environmentRecipeButton(recipe,`${recipe.rank}位 ${recipe.name} ×${recipe.quantity}`));view.append(links)}
+  });
+  return view;
+ }

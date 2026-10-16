@@ -15,7 +15,7 @@
    const details=document.createElement('details');details.className='psg-cooking-reference psg-supply-tier';details.dataset.ingredient=name;
    const summary=document.createElement('summary');summary.append(icon(name));const title=document.createElement('strong');title.className='psg-ingredient-name';title.textContent=name;
    const base=document.createElement('span');base.className='psg-ingredient-base';base.textContent=`基本 ${Number.isFinite(food.baseEnergy)?food.baseEnergy.toLocaleString():'未確認'} エナジー`;
-   const quantity=document.createElement('span');quantity.className='psg-supply-daily';quantity.textContent=row?`${row.tier}・${supplyNumber(row.daily)}個/日`:'日産 未対応';summary.append(title,base,quantity);details.append(summary);
+   const quantity=document.createElement('span');quantity.className='psg-supply-daily';quantity.textContent=row?`${row.tier}・${supplyNumber(row.daily)}個/日`:'日産 未対応';summary.append(title,base,quantity,ingredientEnvironmentView(name));details.append(summary);
    let populated=false;const populate=()=>{if(!populated){details.append(ingredientDetails(name,row));populated=true}};
    details.addEventListener('toggle',()=>{if(details.open)populate()});
    if(openNames.has(name)){details.open=true;populate()}tiersView.append(details);

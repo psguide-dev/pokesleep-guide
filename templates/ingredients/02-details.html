@@ -1,5 +1,5 @@
  function ingredientDetails(name,row){
-  const body=document.createElement('div');body.className='psg-ingredient-details';
+  const body=document.createElement('div');body.className='psg-ingredient-details';body.append(ingredientEnvironmentView(name,true));
   const food=catalog.ingredientAssets[name],heading=document.createElement('h3');heading.textContent='拾うポケモン（共通条件の上位3系統）';body.append(heading);
   if(row)for(const provider of row.top)body.append(providerText(provider));
   else{const note=document.createElement('p');note.className='note';note.textContent='日産量の担当候補は未対応です。';body.append(note)}

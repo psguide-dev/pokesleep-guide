@@ -119,6 +119,8 @@ TEMPLATE_NAMES = (
     'recipes/03-pot-settings.html',
     'recipes/03-reference-tables.html',
     'recipes/03-daily-supply.html',
+    'ingredients/00-environment-model.html',
+    'ingredients/00-environment.html',
     'ingredients/01-index.html',
     'ingredients/02-details.html',
     'ingredients/03-list-view.html',
