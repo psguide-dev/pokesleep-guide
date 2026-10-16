@@ -274,7 +274,7 @@ nav button:focus-visible{outline:2px solid var(--green);outline-offset:-3px}
 .psg-app-header{gap:6px;padding-inline:8px}
 .psg-app-header .psg-app-title{flex:0 1 96px}
 .psg-app-version{white-space:nowrap;font-size:11px}
-.psg-camp-basis{flex:none;min-height:36px;padding:4px 6px;border:1px solid var(--line);border-radius:8px;background:#f1f7f3;color:var(--text);font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer}
+.psg-camp-basis{display:grid;place-items:center;flex:none;box-sizing:border-box;width:40px;height:36px;min-height:36px;padding:0;cursor:pointer;touch-action:manipulation}
 .psg-camp-basis:focus-visible{outline:2px solid var(--green);outline-offset:2px}
 .psg-camp-settings{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px}
 .psg-camp-settings>.section-title,.psg-camp-settings>p{grid-column:1/-1}

@@ -5,8 +5,9 @@ function syncCommonCampControls(){
  document.getElementById('accountGoodCamp').value=String(teamGoodCamp);
  document.getElementById('accountCampBasis').textContent=`基準：キャンチケ${label}`;
  const basis=document.getElementById('commonCampBasis');
- basis.textContent=`キャンチケ：${label}`;
- basis.setAttribute('aria-label',`共通設定：キャンチケ${label}。アカウント設定を開く`);
+ const action=`キャンチケ：${label}。タップで${teamGoodCamp?'なし':'あり'}に切り替える`;
+ basis.setAttribute('aria-pressed',String(teamGoodCamp));
+ basis.setAttribute('aria-label',action);basis.title=action;
 }
 function setGoodCamp(value){
  const previous=teamGoodCamp;teamGoodCamp=value===true;
@@ -14,7 +15,7 @@ function setGoodCamp(value){
  if(previous!==teamGoodCamp)window.dispatchEvent(new Event('psg-camp-change'));
 }
 document.getElementById('accountGoodCamp').onchange=event=>setGoodCamp(event.target.value==='true');
-document.getElementById('commonCampBasis').onclick=()=>go('accountPage');
+document.getElementById('commonCampBasis').onclick=()=>setGoodCamp(!teamGoodCamp);
 syncCommonCampControls();
 
 function restoreCommonCamp(){
