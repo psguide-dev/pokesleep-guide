@@ -1,0 +1,17 @@
+// Account, header and existing team/pot controls share the saved day-setting value.
+// Individual reference evaluations keep their stated fixed camp condition in this stage.
+function syncCommonCampControls(){
+ const label=teamGoodCamp?'あり':'なし';
+ document.getElementById('accountGoodCamp').value=String(teamGoodCamp);
+ document.getElementById('accountCampBasis').textContent=`基準：キャンチケ${label}`;
+ const basis=document.getElementById('commonCampBasis');
+ basis.textContent=`キャンチケ：${label}`;
+ basis.setAttribute('aria-label',`共通設定：キャンチケ${label}。アカウント設定を開く`);
+}
+function setGoodCamp(value){
+ teamGoodCamp=value===true;
+ saveDaySettings();
+}
+document.getElementById('accountGoodCamp').onchange=event=>setGoodCamp(event.target.value==='true');
+document.getElementById('commonCampBasis').onclick=()=>go('accountPage');
+syncCommonCampControls();

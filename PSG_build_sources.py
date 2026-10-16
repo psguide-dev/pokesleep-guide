@@ -58,6 +58,7 @@ TEMPLATE_NAMES = (
     'core/15-food-role-controller.html',
     'core/16-evaluation-page.html',
     'core/08-fields.html',
+    'core/08-camp-settings.html',
     'fields/02-gallery.html',
     'fields/03-details.html',
     'fields/01-spawn-calculator.html',

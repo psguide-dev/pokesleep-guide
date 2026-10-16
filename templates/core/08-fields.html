@@ -5,7 +5,7 @@ function normalizeDaySettings(value){
  return {collectionHours:[1,2,4,8].includes(Number(input.collectionHours))?Number(input.collectionHours):4,
  initialEnergy:input.initialEnergy!==null&&input.initialEnergy!==''&&Number.isFinite(energy)?Math.max(0,Math.min(150,Math.round(energy))):100,
  exWeeklyEffect:['berry','ingredients','skill'].includes(input.exWeeklyEffect)?input.exWeeklyEffect:'',
- goodCamp:input.goodCamp===true,meals:input.meals===false?0:input.meals===true?3:Number.isInteger(input.meals)&&input.meals>=0&&input.meals<=3?input.meals:3};
+ goodCamp:typeof input.goodCamp==='boolean'?input.goodCamp:true,meals:input.meals===false?0:input.meals===true?3:Number.isInteger(input.meals)&&input.meals>=0&&input.meals<=3?input.meals:3};
 }
 function readDaySettings(){try{return normalizeDaySettings(JSON.parse(localStorage.getItem(DAY_SETTINGS_KEY)||'{}'))}catch{return normalizeDaySettings({})}}
 const daySettings=readDaySettings();
@@ -55,13 +55,14 @@ function syncDayControls(){
  syncExEffectControls();
  const camp=document.getElementById('teamGoodCamp'),campText=`いいキャンプ：${teamGoodCamp?'ON':'OFF'}`;
  camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;
+ syncCommonCampControls();
  document.querySelectorAll('.psg-day-energy-options button').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.energy)===teamInitialEnergy)));
 }
 function saveDaySettings(){
  const next=normalizeDaySettings({collectionHours:document.getElementById('teamCollectionInterval').value,initialEnergy:teamInitialEnergy,goodCamp:teamGoodCamp,meals:teamMeals,exWeeklyEffect:document.getElementById('teamExEffect').value});
  Object.assign(daySettings,next);syncDayControls();
- try{localStorage.setItem(DAY_SETTINGS_KEY,JSON.stringify(next));document.getElementById('teamDaySaveStatus').textContent=''}
- catch{document.getElementById('teamDaySaveStatus').textContent='条件を保存できませんでした。今回の表示には反映しています。'}
+ try{localStorage.setItem(DAY_SETTINGS_KEY,JSON.stringify(next));document.getElementById('teamDaySaveStatus').textContent='';document.getElementById('accountCampSaveStatus').textContent=''}
+ catch{const message='条件を保存できませんでした。今回の表示には反映しています。';document.getElementById('teamDaySaveStatus').textContent=message;document.getElementById('accountCampSaveStatus').textContent=message}
  renderTeamDay();
  renderTeamFood();window.dispatchEvent(new Event('psg-cooking-settings-change'));
 }
