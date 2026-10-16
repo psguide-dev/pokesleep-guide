@@ -39,7 +39,10 @@ function renderFoodComposition(item,p){
 const renderBeforeFoodComposition=renderIndividualEvaluation,bindBeforeFoodComposition=bindIndividualEvaluation;
 renderIndividualEvaluation=function(item,p,options={}){
  const html=renderBeforeFoodComposition(item,p,options);
- return evaluationPage&&!options.compact?html+renderFoodComposition(item,p):html;
+ if(options.compact)return html;
+ if(evaluationPage)return html+renderFoodComposition(item,p);
+ // Composition needs no nature/subskills, so pending individuals still need an entry.
+ return item.id&&p?.ingredientSlots?.length&&!html.includes('psg-evaluation-page-link')?html+evaluationLink(item):html;
 };
 bindIndividualEvaluation=function(host,item,p){
  bindBeforeFoodComposition(host,item,p);
