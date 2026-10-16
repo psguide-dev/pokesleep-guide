@@ -9,8 +9,8 @@ function placeEvaluationControls(host){
  if(!panel)return;
  const label=panel.querySelector('label'),link=panel.querySelector('.psg-evaluation-page-link');
  if(!label||!link)return;
- let controls=panel.querySelector('.psg-evaluation-controls');
- if(!controls){controls=document.createElement('div');controls.className='psg-evaluation-controls';label.before(controls);controls.append(label)}
+ let controls=panel.querySelector('.psg-role-evaluation-controls');
+ if(!controls){controls=document.createElement('div');controls.className='psg-role-evaluation-controls';label.before(controls);controls.append(label)}
  const previous=link.parentElement;
  controls.append(link);
  if(previous!==controls&&previous.tagName==='SPAN'&&!previous.childNodes.length)previous.remove();
