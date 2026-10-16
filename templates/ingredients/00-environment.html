@@ -1,10 +1,5 @@
- const foodEnvironmentCache=new Map();
  function currentFoodEnvironment(){
-  const goodCamp=window.PS.getGoodCamp(),capacities=catalog.cooking.pot['拡張表'].map(row=>row['容量']).filter(n=>Number.isInteger(n)&&n>0);
-  const baseCapacity=capacities.length?Math.max(...capacities):null,capacity=window.PS.calculatePotCapacity(baseCapacity,1,0,false,goodCamp);
-  const key=JSON.stringify([goodCamp,baseCapacity,capacity]);
-  if(!foodEnvironmentCache.has(key))foodEnvironmentCache.set(key,window.PS_FOOD_ENVIRONMENT.build(recipes,Object.keys(catalog.ingredientAssets),{goodCamp,baseCapacity,capacity}));
-  return window.PS_FOOD_ENVIRONMENT_DATA=foodEnvironmentCache.get(key);
+  return window.PS_FOOD_ENVIRONMENT_DATA=window.PS_FOOD_ENVIRONMENT.current(catalog,window.PS.getGoodCamp(),window.PS.calculatePotCapacity);
  }
  function environmentRecipeButton(recipe,text){
   const button=document.createElement('button');button.type='button';button.dataset.ingredientRecipe=recipe.id;button.textContent=text;button.addEventListener('click',()=>window.PS_OPEN_RECIPE?.(recipe.id));return button;

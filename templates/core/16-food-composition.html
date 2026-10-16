@@ -1,0 +1,52 @@
+// Composition is a separate axis: only unlocked ingredient identity and quantity matter.
+function foodCompositionLevel(item,p){
+ if(foodRoleSupported(p))return foodRoleLevel(item);
+ if(p?.specialty==='きのみ')return berryRoleLevel(item);
+ if(p?.specialty==='スキル')return skillRoleLevel(item);
+ return [60,70,80].includes(item.foodCompositionEvaluationLevel)?item.foodCompositionEvaluationLevel:80;
+}
+function foodCompositionEvaluation(item,p,level,environment){
+ const pending=text=>({status:'pending',text,level});
+ if(!Number.isInteger(level)||level<1||level>80)return pending('対応する評価Lvを選んでください。');
+ if(p?.mythicalSettings)return pending('特殊な食材枠の構成評価は準備中です。');
+ const active=p?.ingredientSlots?.filter(slot=>Number.isInteger(slot.unlock)&&slot.unlock<=level).sort((a,b)=>a.unlock-b.unlock);
+ if(!active?.length)return pending('食材枠のデータを確認できませんでした。');
+ const slots=[];
+ for(const slot of active){
+  const candidates=slot.candidates||[],name=item.ingredients?.[slot.unlock]||(candidates.length===1?candidates[0].name:null),index=candidates.findIndex(candidate=>candidate.name===name),selected=candidates[index];
+  if(!selected)return pending(`Lv.${slot.unlock}の食材構成を設定してください。`);
+  if(!Number.isFinite(selected.qty)||selected.qty<=0||!environment.ingredients[name])return pending(`Lv.${slot.unlock}の食材個数・環境データは未確認です。`);
+  slots.push({unlock:slot.unlock,name,qty:selected.qty,letter:String.fromCharCode(65+index)});
+ }
+ const scores=window.PS_FOOD_ENVIRONMENT.composition(environment,slots);
+ if(!scores)return pending('構成内の食材配分を確認できませんでした。');
+ const total=slots.reduce((sum,slot)=>sum+slot.qty,0),grouped=new Map();
+ for(const slot of slots){if(!grouped.has(slot.name))grouped.set(slot.name,{name:slot.name,qty:0,unlocks:[]});const row=grouped.get(slot.name);row.qty+=slot.qty;row.unlocks.push(slot.unlock)}
+ return {status:'ready',level,pattern:slots.map(slot=>slot.letter).join(''),slots,foods:[...grouped.values()].map(row=>({...row,share:row.qty/total*100})),scores,environment};
+}
+function renderFoodComposition(item,p){
+ if(!p)return '';
+ const level=foodCompositionLevel(item,p),environment=window.PS_FOOD_ENVIRONMENT.current(window.PS_CATALOG,evaluationGoodCamp(),calculatePotCapacity),e=foodCompositionEvaluation(item,p,level,environment),n=window.PS_NUMBERS.display;
+ const separateLevel=!foodRoleSupported(p)&&!['きのみ','スキル'].includes(p.specialty);
+ const select=separateLevel?`<label>評価Lv. <select class="psg-composition-level" aria-label="食材構成の評価レベル">${[60,70,80].map(value=>`<option value="${value}"${value===level?' selected':''}>${value}${value===80?'（予測）':''}</option>`).join('')}</select></label>`:'';
+ const heading=`<h3>食材構成の料理適性（試作）</h3>${select}<p class="psg-box-muted">評価Lv.${level}${level===80?'（予測）':''}の解放枠で集計</p>`;
+ if(e.status!=='ready')return `<section class="psg-food-composition">${heading}<p>構成適性：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p></section>`;
+ const labels=['カレー','サラダ','デザート'],categories=environment.categories;
+ const rows=categories.map((category,index)=>{const score=e.scores[category];return `<div class="psg-composition-score"><span>${labels[index]}</span>${score===null?'<span>未評価</span>':`<meter min="0" max="100" value="${score}" aria-label="${labels[index]}の構成適性 ${n(score)}%"></meter><strong>${n(score)}%</strong>`}</div>`}).join('');
+ const foods=e.foods.map(food=>`<tr><th scope="row">${boxEsc(food.name)}<small>Lv.${food.unlocks.join('／')}：計${food.qty}個</small></th><td>${n(food.share)}%</td>${categories.map(category=>{const row=environment.ingredients[food.name][category];return `<td>${row.total?`${row.count}/${row.total}品`:'未評価'}</td>`}).join('')}</tr>`).join('');
+ return `<section class="psg-food-composition">${heading}<p><b>${boxEsc(e.pattern)}</b>　${e.slots.map(slot=>`Lv.${slot.unlock} ${boxEsc(slot.name)}×${slot.qty}`).join(' ／ ')}</p><div class="psg-composition-scores">${rows}</div><p class="psg-box-muted">構成内の食材が上位料理で使われる割合を、食材枠の個数配分で加重した値です。収集量・3食分の供給・料理の完成率・個体の強さは表しません。</p><details class="psg-box-explanation"><summary>食材別の内訳・計算の前提</summary><div class="psg-food-table-scroll"><table class="psg-food-daily-table psg-composition-table"><thead><tr><th scope="col">食材</th><th scope="col">構成内<br>比率</th><th scope="col">カレー</th><th scope="col">サラダ</th><th scope="col">デザート</th></tr></thead><tbody>${foods}</tbody></table></div><p class="psg-box-muted">各解放枠を等確率とし、枠ごとの個数を重みにします。C枠と同じ食材の重複枠も含みます。表示は小数1桁、集計途中は丸めません。性格・サブスキル・所持数・おてつだい時間・食材確率では変わりません。</p><p class="psg-box-muted">${evaluationCampLabel()}・通常最大鍋${environment.condition.baseCapacity??'未確認'} → ${environment.condition.capacity??'未確認'}個に入る、料理Lv.70エナジー上位5品／カテゴリが対象です。対象が5品未満なら実数で集計し、0品なら未評価。0%でも他の料理には用途があります。登録料理には参考値・推定を含みます。日曜・スキル・イベントの鍋拡張と手持ちの鍋強化段階は含めません。</p></details></section>`;
+}
+const renderBeforeFoodComposition=renderIndividualEvaluation,bindBeforeFoodComposition=bindIndividualEvaluation;
+renderIndividualEvaluation=function(item,p,options={}){
+ const html=renderBeforeFoodComposition(item,p,options);
+ return evaluationPage&&!options.compact?html+renderFoodComposition(item,p):html;
+};
+bindIndividualEvaluation=function(host,item,p){
+ bindBeforeFoodComposition(host,item,p);
+ if(!evaluationPage)return;
+ const panel=host.querySelector('.psg-food-composition');if(!panel)return;
+ const open=panel.querySelector('details')?.open===true;
+ panel.outerHTML=renderFoodComposition(item,p);
+ const current=host.querySelector('.psg-food-composition');if(open&&current?.querySelector('details'))current.querySelector('details').open=true;
+ const select=current?.querySelector('.psg-composition-level');if(select)select.onchange=()=>bindIndividualEvaluation(host,{...item,foodCompositionEvaluationLevel:Number(select.value)},p);
+};

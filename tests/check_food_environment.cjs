@@ -1,6 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const catalog=JSON.parse(fs.readFileSync('review.html','utf8').match(/window.PS_CATALOG=(.*);\n/)[1]);
-const model=fs.readFileSync('templates/ingredients/00-environment-model.html','utf8');
+const model=fs.readFileSync('templates/00-food-environment.html','utf8').replace(/<\/?script[^>]*>/g,'');
 const ctx={window:{}};vm.createContext(ctx);vm.runInContext(model,ctx);const {build,composition}=ctx.window.PS_FOOD_ENVIRONMENT;
 const cats=['カレー・シチュー','サラダ','デザート・ドリンク'],names=Object.keys(catalog.ingredientAssets),recipes=Object.values(catalog.recipes),before=JSON.stringify(recipes);
 const fields=fs.readFileSync('templates/core/08-fields.html','utf8'),potCode=fields.slice(fields.indexOf('function calculatePotCapacity('),fields.indexOf('function cookingContext('));
@@ -46,5 +46,5 @@ const walk=el=>[el,...el.children.flatMap(walk)];const links=walk(card).filter(e
 const onData=ui.window.PS_FOOD_ENVIRONMENT_DATA;camp=false;events['psg-camp-change']();assert.equal(ui.ingredientSearch.value,'カカオ');assert.equal(ui.ingredientSort.value,'energy');assert.equal(ui.tiersView.children.length,1);assert.equal(ui.tiersView.children[0].open,true);assert.match(node('ingredientEnvironmentBasis').textContent,/通常最大鍋 81 → 81個/);assert.equal(ui.window.PS_FOOD_ENVIRONMENT_DATA.condition.goodCamp,false);
 camp=true;events['psg-camp-change']();assert.equal(ui.window.PS_FOOD_ENVIRONMENT_DATA,onData,'condition cache never mixes ON/OFF');
 const noRows=build([],names,{capacity:81});// Render missing recipe data with a separate fixture.
-const viewSource=fs.readFileSync('templates/ingredients/00-environment.html','utf8');const emptyUI={...ui,window:{...ui.window,PS_FOOD_ENVIRONMENT:{build:()=>noRows}}};vm.createContext(emptyUI);vm.runInContext(viewSource,emptyUI);const emptyView=vm.runInContext("ingredientEnvironmentView('ワカクサ大豆')",emptyUI);assert.equal(walk(emptyView).filter(e=>e.tagName==='meter').length,0);assert.match(emptyView.textContent,/未評価/);
+const viewSource=fs.readFileSync('templates/ingredients/00-environment.html','utf8');const emptyUI={...ui,window:{...ui.window,PS_FOOD_ENVIRONMENT:{current:()=>noRows}}};vm.createContext(emptyUI);vm.runInContext(viewSource,emptyUI);const emptyView=vm.runInContext("ingredientEnvironmentView('ワカクサ大豆')",emptyUI);assert.equal(walk(emptyView).filter(e=>e.tagName==='meter').length,0);assert.match(emptyView.textContent,/未評価/);
 console.log('Food environment: 19×3×2 canonical coverage, pot round-half-up/boundaries, missing data/null, ties, raw A/B/C weights, immutable recipes, camp cache/UI state and recipe links passed');

@@ -54,11 +54,18 @@ window.addEventListener('DOMContentLoaded',()=>{
  };
  if(!registered||!p){host.textContent='対象の個体が見つかりません。ボックスへ戻って選び直してください。';return}
  const item=structuredClone(registered);
- if(saved?.id===id){if(saved.berryLevel)item.berryEvaluationLevel=Number(saved.berryLevel);if(saved.skillLevel)item.skillEvaluationLevel=Number(saved.skillLevel);if(saved.foodLevel)item.foodEvaluationLevel=Number(saved.foodLevel)}
+ // Remember comparison levels in session state, without writing the registered individual.
+ host.addEventListener('change',event=>{
+  if(!event.target.matches?.('.psg-food-eval-level,.psg-berry-level,.psg-skill-eval-level,.psg-composition-level'))return;
+  const previous=evaluationReturnRead(),savedLevels=previous?.id===id?previous:{id};
+  for(const [selector,key] of [['.psg-food-eval-level','foodLevel'],['.psg-berry-level','berryLevel'],['.psg-skill-eval-level','skillLevel'],['.psg-composition-level','compositionLevel']]){const select=host.querySelector(selector);if(select)savedLevels[key]=select.value}
+  try{sessionStorage.setItem(EVALUATION_RETURN_KEY,JSON.stringify(savedLevels))}catch{}
+ });
+ if(saved?.id===id){if(saved.berryLevel)item.berryEvaluationLevel=Number(saved.berryLevel);if(saved.skillLevel)item.skillEvaluationLevel=Number(saved.skillLevel);if(saved.foodLevel)item.foodEvaluationLevel=Number(saved.foodLevel);if(saved.compositionLevel)item.foodCompositionEvaluationLevel=Number(saved.compositionLevel)}
  document.getElementById('individualEvaluationTitle').textContent=`${registered.name}の評価`;
  const refresh=()=>{
   const current={...item};
-  for(const [selector,field] of [['.psg-food-eval-level','foodEvaluationLevel'],['.psg-berry-level','berryEvaluationLevel'],['.psg-skill-eval-level','skillEvaluationLevel']]){const selected=host.querySelector(selector);if(selected)current[field]=Number(selected.value)}
+  for(const [selector,field] of [['.psg-food-eval-level','foodEvaluationLevel'],['.psg-berry-level','berryEvaluationLevel'],['.psg-skill-eval-level','skillEvaluationLevel'],['.psg-composition-level','foodCompositionEvaluationLevel']]){const selected=host.querySelector(selector);if(selected)current[field]=Number(selected.value)}
   host.innerHTML=renderIndividualEvaluation(current,p);bindIndividualEvaluation(host,current,p);
  };
  window.addEventListener('psg-camp-change',refresh);

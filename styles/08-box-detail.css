@@ -336,3 +336,13 @@ html.psg-evaluation-page main>.screen:not(#individualEvaluationPage){display:non
 .psg-food-table-scroll{max-width:100%;overflow-x:auto}
 .psg-food-growth{min-width:320px}
 .psg-food-diagnostics + .psg-box-explanation{margin-top:16px}
+
+.psg-food-composition{margin-top:20px;padding-top:12px;border-top:1px solid var(--line);font-size:12px}
+.psg-food-composition h3{font-size:15px;margin:0 0 8px}
+.psg-food-composition>p{line-height:1.65;overflow-wrap:anywhere}
+.psg-composition-score{display:grid;grid-template-columns:65px minmax(0,1fr) 60px;gap:8px;align-items:center;margin:8px 0}
+.psg-composition-score meter{width:100%;min-width:0;height:14px}
+.psg-composition-score strong{text-align:right}
+.psg-composition-table th:first-child{width:34%}
+.psg-composition-table small{display:block;font-size:10px;color:#53665a;font-weight:400}
+.psg-composition-table td{white-space:nowrap}

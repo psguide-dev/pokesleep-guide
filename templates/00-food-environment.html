@@ -1,3 +1,4 @@
+<script id="psg-food-environment-model">
  // Recipe coverage is independent of supply, recipe quantity and individual strength.
  window.PS_FOOD_ENVIRONMENT=(()=>{
   const categories=Object.freeze(['カレー・シチュー','サラダ','デザート・ドリンク']);
@@ -21,5 +22,15 @@
    const total=slots.reduce((sum,i)=>sum+i.qty,0);if(!Number.isFinite(total))return null;
    return Object.fromEntries(categories.map(category=>[category,slots.some(i=>environment.ingredients[i.name][category].coverage===null)?null:slots.reduce((sum,i)=>sum+i.qty/total*environment.ingredients[i.name][category].coverage,0)]));
   }
-  return Object.freeze({build,composition});
+  const cache=new WeakMap();
+  function current(catalog,goodCamp,calculatePotCapacity){
+   const capacities=(catalog.cooking?.pot?.['拡張表']||[]).map(row=>row['容量']).filter(n=>Number.isInteger(n)&&n>0);
+   const baseCapacity=capacities.length?Math.max(...capacities):null,capacity=calculatePotCapacity(baseCapacity,1,0,false,goodCamp);
+   const key=JSON.stringify([goodCamp,baseCapacity,capacity]);
+   if(!cache.has(catalog))cache.set(catalog,new Map());const conditions=cache.get(catalog);
+   if(!conditions.has(key))conditions.set(key,build(Object.values(catalog.recipes||{}),Object.keys(catalog.ingredientAssets||{}),{goodCamp,baseCapacity,capacity}));
+   return conditions.get(key);
+  }
+  return Object.freeze({build,composition,current});
  })();
+</script>

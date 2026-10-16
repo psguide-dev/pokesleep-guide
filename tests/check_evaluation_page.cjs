@@ -1,16 +1,16 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const source=fs.readFileSync('templates/core/16-evaluation-page.html','utf8');
 function fixture(url,records,saved){
- const events={},calls=[],elements={};
- const element=id=>elements[id]??={textContent:'',innerHTML:'',classList:{add(){}},querySelector(){return null},append(){}};
+ const events={},calls=[],elements={},memory={saved};
+ const element=id=>elements[id]??={textContent:'',innerHTML:'',classList:{add(){}},querySelector(){return null},append(){},events:{},addEventListener(name,fn){this.events[name]=fn}};
  const state={box:records,boxFilters:{types:new Set(),ingredients:new Set(),specs:new Set(),tags:new Set()}};
- const context={URL,URLSearchParams,structuredClone,Set,location:new URL(url),history:{length:1},sessionStorage:{getItem:()=>JSON.stringify(saved)},state,boxSearch:{value:''},boxEsc:String,
+ const context={URL,URLSearchParams,structuredClone,Set,location:new URL(url),history:{length:1},sessionStorage:{getItem:()=>JSON.stringify(memory.saved),setItem:(key,value)=>{memory.saved=JSON.parse(value)}},state,boxSearch:{value:''},boxEsc:String,
  document:{referrer:'',documentElement:{classList:{add(){}}},getElementById:element,addEventListener:(name,fn)=>events[name]=fn,createElement:()=>({innerHTML:'',content:{querySelector(){return null}}})},
  window:{scrollTo:(x,y)=>calls.push(['scroll',y]),addEventListener:(name,fn)=>events[name]=fn},requestAnimationFrame:fn=>fn(),
  go:id=>calls.push(['go',id]),openBox:id=>calls.push(['open',id]),speciesFor:()=>({specialty:'スキル'}),
  renderBerryRole:()=>'',renderSkillRole:()=>'',renderIndividualEvaluation:item=>{calls.push(['render',structuredClone(item)]);return '<p>評価</p>'},
  bindIndividualEvaluation:(host,item)=>calls.push(['bind',structuredClone(item)]),renderIndividualEvaluationDetails:()=>''};
- vm.createContext(context);vm.runInContext(source,context);events.DOMContentLoaded();return {context,calls,elements};
+ vm.createContext(context);vm.runInContext(source,context);events.DOMContentLoaded();return {context,calls,elements,memory,events};
 }
 const item={id:'record-1',level:60,skillLevel:3,subskills:['スキル確率アップM']},before=JSON.stringify(item);
 const saved={id:item.id,y:432,search:'デンリュウ',filters:{types:['でんき']},skillLevel:'80'};
@@ -26,3 +26,8 @@ const missing=fixture('https://example.test/evaluation.html?individual=missing',
 assert(missing.elements.individualEvaluationContent.textContent.includes('見つかりません'));
 assert(fs.existsSync('evaluation.html'));assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp evaluation.html public/'));
 console.log('Evaluation page: cloned inputs, evaluation level, individual/filter/scroll return and missing-record recovery passed');
+
+const host=page.elements.individualEvaluationContent;host.querySelector=selector=>selector==='.psg-skill-eval-level'?{value:'70'}:null;host.events.change({target:{matches:()=>true}});assert.equal(page.memory.saved.skillLevel,'70');assert.equal(page.memory.saved.search,saved.search);assert.equal(page.memory.saved.y,432);assert.equal(JSON.stringify(item),before);
+const reloaded=fixture('https://example.test/evaluation.html?individual=record-1',[item],page.memory.saved);assert.equal(reloaded.calls.find(x=>x[0]==='render')[1].skillEvaluationLevel,70,'comparison level survives reload without changing registered level');
+page.events['psg-camp-change']();assert.equal(page.calls.filter(x=>x[0]==='render').at(-1)[1].skillEvaluationLevel,70,'camp refresh retains selected comparison level');
+console.log('Evaluation comparison levels: session-only save, reload, return metadata and camp refresh passed');
