@@ -102,6 +102,7 @@ jobs:
           node tests/check_evaluation_page.cjs
           node tests/check_food_role.cjs
           node tests/check_food_expansion.cjs
+          node tests/check_food_recovery.cjs
           node tests/check_carry_fill.cjs
           node tests/check_berry_role_ui.cjs
           node tests/check_berry_model_interaction.cjs
