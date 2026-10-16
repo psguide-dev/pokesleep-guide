@@ -24,10 +24,11 @@ for(const [key,ref] of Object.entries(refs.entries)){
  if(level===60){const locked={...item,subskills:[...item.subskills,'','']};assert.equal(ctx.foodRoleEvaluation(locked,p).status,'ready','inactive empty slots do not invalidate active subskills')}
  count++;
 }
-assert.equal(count,54);assert.equal(ctx.renderIndividualEvaluation({level:20},catalog.pokemon[1]),'<p>legacy</p>','unsupported ingredient species keep their current evaluation');
+assert.equal(count,54);assert.equal(ctx.renderIndividualEvaluation({level:20},catalog.pokemon[69]),'<p>legacy</p>','unsupported ingredient species keep their current evaluation');
 assert.equal(ctx.foodRoleSupported({...catalog.pokemon[9],speciesId:'0009_costume'}),false);
 console.log('Food production integration: 54 ideals, fixed patterns, daily totals, missing inputs, inactive slots, immutable registration and unchanged reference engine passed');
-const p=catalog.pokemon[9],item={id:'food-diagnostics',no:9,speciesId:'0009_default',level:62,skillLevel:7,ribbonHours:1000,nature:'ひかえめ',subskills:['スキル確率アップS','ゆめのかけらボーナス','リサーチEXPボーナス','きのみの数S','おてつだいボーナス'],ingredients:{1:'モーモーミルク',30:'リラックスカカオ',60:'リラックスカカオ'}};
+const p=catalog.pokemon[9],item={foodEvaluationLevel:60,id:'food-diagnostics',no:9,speciesId:'0009_default',level:62,skillLevel:7,ribbonHours:1000,nature:'ひかえめ',subskills:['スキル確率アップS','ゆめのかけらボーナス','リサーチEXPボーナス','きのみの数S','おてつだいボーナス'],ingredients:{1:'モーモーミルク',30:'リラックスカカオ',60:'リラックスカカオ'}};
+assert.equal(ctx.foodRoleLevel({}),80);assert.equal(ctx.foodRoleLevel({foodEvaluationLevel:60}),60);assert.equal(ctx.foodRoleLevel({foodEvaluationLevel:70}),70);
 const original=JSON.stringify(item),e=ctx.foodRoleEvaluation(item,p),d=ctx.foodRoleDiagnostics(item,p,e);
 assert.equal(e.status,'ready');assert.equal(e.record.ribbonHours,0);assert.equal(d.berryOff,null,'locked berry S has no effect at 60');
 assert(d.growth.every(g=>g.status==='ready'));

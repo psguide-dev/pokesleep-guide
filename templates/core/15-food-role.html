@@ -1,13 +1,15 @@
-// Adopted fixed-pattern prototype: three species, normal ingredient collection only.
-const FOOD_ROLE_SPECIES=new Set(['0006_default','0009_default','0094_default']);
+// Fixed-pattern ingredient evaluation: direct collection species; recovery and special skills stay pending.
+const FOOD_ROLE_SPECIES=new Set(["0001_default","0002_default","0003_default","0004_default","0005_default","0006_default","0007_default","0008_default","0009_default","0050_default","0051_default","0074_default","0075_default","0076_default","0083_default","0092_default","0093_default","0094_default","0115_default","0127_default","0225_default","0303_default","0328_default","0329_default","0330_default","0359_default","0403_default","0404_default","0405_default","0453_default","0454_default","0459_default","0460_default","0590_default","0591_default","0736_default","0737_default","0738_default","0742_default","0743_default","0759_default","0760_default","0780_default","0845_default","0906_default","0907_default","0908_default","0912_default","0913_default","0914_default","0710_large","0710_small","0710_medium","0710_jumbo","0711_large","0711_small","0711_medium","0711_jumbo"]);
 let foodRoleReferences=null,foodRoleLoading=null,foodRoleError=null;
 const FOOD_ROLE_CACHE=new Map();
 function foodRoleSupported(p){return !!p&&FOOD_ROLE_SPECIES.has(speciesKey(p))}
-function foodRoleLevel(item){return [60,70,80].includes(item.foodEvaluationLevel)?item.foodEvaluationLevel:60}
+function foodRoleLevel(item){return [60,70,80].includes(item.foodEvaluationLevel)?item.foodEvaluationLevel:80}
 function loadFoodRoleReferences(){
  if(foodRoleReferences)return Promise.resolve(foodRoleReferences);
- if(!foodRoleLoading)foodRoleLoading=fetch('assets/evaluation/food_fixed_pattern_v2.json').then(r=>{if(!r.ok)throw Error('food reference load');return r.json()}).then(data=>{
-  if(data.version!==2||data.axis!=='normalFoodsFixedPattern'||Object.keys(data.entries||{}).length!==54||!data.engineCommit)throw Error('food reference version');
+ if(!foodRoleLoading)foodRoleLoading=Promise.all([60,70,80].map(level=>fetch(`assets/evaluation/food_direct_v3_${level}.json`).then(r=>{if(!r.ok)throw Error('food reference load');return r.json()}))).then(parts=>{
+  if(parts.some((part,i)=>part.version!==3||part.level!==[60,70,80][i]||part.axis!=='normalFoodsFixedPattern'||!part.engineCommit||part.engineFingerprint!==parts[0].engineFingerprint))throw Error('food reference version');
+  const data={...parts[0],entries:Object.assign({},...parts.map(part=>part.entries))};
+  if(Object.keys(data.entries).length!==1032)throw Error('food reference count');
   foodRoleReferences=data;foodRoleError=null;return data;
  }).catch(error=>{foodRoleLoading=null;foodRoleError=error;throw error});
  return foodRoleLoading;

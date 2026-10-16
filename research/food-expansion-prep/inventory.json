@@ -1,0 +1,1324 @@
+{
+  "version": 1,
+  "commit": "bcec343df5860f77500169bfdd201a581cbab922",
+  "engineFingerprint": "9bc8879a7c97ece4c7a1bde9fe4a8a62cb5c1f52dc53b7e1578acc2170cdff04",
+  "sourceFiles": [
+    "templates/01-species-catalog.html",
+    "templates/core/07-corrections.html",
+    "templates/core/10-individual-evaluation.html",
+    "templates/core/12-individual-trial.html",
+    "vendor/enigma-swap/daily-supply.mjs",
+    "vendor/enigma-special/special_skill_kernel.mjs",
+    "vendor/enigma-special/effect_tables.json",
+    "tests/daily_kernel.cjs",
+    "tests/skill_model_runtime.cjs"
+  ],
+  "scope": "registered ingredient specialists; forms remain distinct",
+  "rows": [
+    {
+      "id": "0001_default",
+      "no": 1,
+      "name": "フシギダネ",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0002_default",
+      "no": 2,
+      "name": "フシギソウ",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0003_default",
+      "no": 3,
+      "name": "フシギバナ",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0004_default",
+      "no": 4,
+      "name": "ヒトカゲ",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0005_default",
+      "no": 5,
+      "name": "リザード",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0006_default",
+      "no": 6,
+      "name": "リザードン",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": true,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0007_default",
+      "no": 7,
+      "name": "ゼニガメ",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0008_default",
+      "no": 8,
+      "name": "カメール",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0009_default",
+      "no": 9,
+      "name": "カメックス",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": true,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0050_default",
+      "no": 50,
+      "name": "ディグダ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0051_default",
+      "no": 51,
+      "name": "ダグトリオ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0069_default",
+      "no": 69,
+      "name": "マダツボミ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0070_default",
+      "no": 70,
+      "name": "ウツドン",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0071_default",
+      "no": 71,
+      "name": "ウツボット",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0074_default",
+      "no": 74,
+      "name": "イシツブテ",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0075_default",
+      "no": 75,
+      "name": "ゴローン",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0076_default",
+      "no": 76,
+      "name": "ゴローニャ",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0083_default",
+      "no": 83,
+      "name": "カモネギ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0092_default",
+      "no": 92,
+      "name": "ゴース",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0093_default",
+      "no": 93,
+      "name": "ゴースト",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0094_default",
+      "no": 94,
+      "name": "ゲンガー",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": true,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0113_default",
+      "no": 113,
+      "name": "ラッキー",
+      "effect": "team_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0115_default",
+      "no": 115,
+      "name": "ガルーラ",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0122_default",
+      "no": 122,
+      "name": "バリヤード",
+      "effect": "team_skill_copy",
+      "stage": "special_review",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0127_default",
+      "no": 127,
+      "name": "カイロス",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0132_default",
+      "no": 132,
+      "name": "メタモン",
+      "effect": "team_skill_copy",
+      "stage": "special_review",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0147_default",
+      "no": 147,
+      "name": "ミニリュウ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0148_default",
+      "no": 148,
+      "name": "ハクリュー",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0149_default",
+      "no": 149,
+      "name": "カイリュー",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0194_default",
+      "no": 194,
+      "name": "ウパー",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0195_default",
+      "no": 195,
+      "name": "ヌオー",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0225_default",
+      "no": 225,
+      "name": "デリバード",
+      "effect": "random_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0242_default",
+      "no": 242,
+      "name": "ハピナス",
+      "effect": "team_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0246_default",
+      "no": 246,
+      "name": "ヨーギラス",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0247_default",
+      "no": 247,
+      "name": "サナギラス",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0248_default",
+      "no": 248,
+      "name": "バンギラス",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0303_default",
+      "no": 303,
+      "name": "クチート",
+      "effect": "conditional_ingredient_select",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0304_default",
+      "no": 304,
+      "name": "ココドラ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0305_default",
+      "no": 305,
+      "name": "コドラ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0306_default",
+      "no": 306,
+      "name": "ボスゴドラ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0328_default",
+      "no": 328,
+      "name": "ナックラー",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0329_default",
+      "no": 329,
+      "name": "ビブラーバ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0330_default",
+      "no": 330,
+      "name": "フライゴン",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0359_default",
+      "no": 359,
+      "name": "アブソル",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0403_default",
+      "no": 403,
+      "name": "コリンク",
+      "effect": "cooking_pot_capacity",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0404_default",
+      "no": 404,
+      "name": "ルクシオ",
+      "effect": "cooking_pot_capacity",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0405_default",
+      "no": 405,
+      "name": "レントラー",
+      "effect": "cooking_pot_capacity",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0439_default",
+      "no": 439,
+      "name": "マネネ",
+      "effect": "team_skill_copy",
+      "stage": "special_review",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0440_default",
+      "no": 440,
+      "name": "ピンプク",
+      "effect": "team_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0442_default",
+      "no": 442,
+      "name": "ミカルゲ",
+      "effect": "extra_help",
+      "stage": "special_review",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0453_default",
+      "no": 453,
+      "name": "グレッグル",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 4,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0454_default",
+      "no": 454,
+      "name": "ドクロッグ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 4,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0459_default",
+      "no": 459,
+      "name": "ユキカブリ",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0460_default",
+      "no": 460,
+      "name": "ユキノオー",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0590_default",
+      "no": 590,
+      "name": "タマゲタケ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0591_default",
+      "no": 591,
+      "name": "モロバレル",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0736_default",
+      "no": 736,
+      "name": "アゴジムシ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0737_default",
+      "no": 737,
+      "name": "デンヂムシ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0738_default",
+      "no": 738,
+      "name": "クワガノン",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0742_default",
+      "no": 742,
+      "name": "アブリー",
+      "effect": "select_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0743_default",
+      "no": 743,
+      "name": "アブリボン",
+      "effect": "select_ingredients",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0759_default",
+      "no": 759,
+      "name": "ヌイコグマ",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0760_default",
+      "no": 760,
+      "name": "キテルグマ",
+      "effect": "variable_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0764_default",
+      "no": 764,
+      "name": "キュワワー",
+      "effect": "ally_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0780_default",
+      "no": 780,
+      "name": "ジジーロン",
+      "effect": "cooking_tasty_chance",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0845_default",
+      "no": 845,
+      "name": "ウッウ",
+      "effect": "cooking_tasty_chance",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0906_default",
+      "no": 906,
+      "name": "ニャオハ",
+      "effect": "cooking_pot_capacity",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0907_default",
+      "no": 907,
+      "name": "ニャローテ",
+      "effect": "cooking_pot_capacity",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0908_default",
+      "no": 908,
+      "name": "マスカーニャ",
+      "effect": "cooking_pot_capacity",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0909_default",
+      "no": 909,
+      "name": "ホゲータ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0910_default",
+      "no": 910,
+      "name": "アチゲータ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0911_default",
+      "no": 911,
+      "name": "ラウドボーン",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0912_default",
+      "no": 912,
+      "name": "クワッス",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0913_default",
+      "no": 913,
+      "name": "ウェルカモ",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0914_default",
+      "no": 914,
+      "name": "ウェーニバル",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 3
+    },
+    {
+      "id": "0974_default",
+      "no": 974,
+      "name": "アルクジラ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0975_default",
+      "no": 975,
+      "name": "ハルクジラ",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0980_default",
+      "no": 980,
+      "name": "ドオー",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0710_large",
+      "no": 710,
+      "name": "バケッチャ(おおだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0710_small",
+      "no": 710,
+      "name": "バケッチャ(こだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0710_medium",
+      "no": 710,
+      "name": "バケッチャ(ちゅうだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0710_jumbo",
+      "no": 710,
+      "name": "バケッチャ(ギガだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    },
+    {
+      "id": "0711_large",
+      "no": 711,
+      "name": "パンプジン(おおだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0711_small",
+      "no": 711,
+      "name": "パンプジン(こだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0711_medium",
+      "no": 711,
+      "name": "パンプジン(ちゅうだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0711_jumbo",
+      "no": 711,
+      "name": "パンプジン(ギガだま)",
+      "effect": "fixed_energy",
+      "stage": "direct",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 2
+    },
+    {
+      "id": "0194_paldea",
+      "no": 194,
+      "name": "ウパー(パルデア)",
+      "effect": "self_energy_recovery",
+      "stage": "recovery",
+      "alreadyTrial": false,
+      "patterns": 6,
+      "levels": [
+        60,
+        70,
+        80
+      ],
+      "defaultSkillLevel": 1
+    }
+  ]
+}
