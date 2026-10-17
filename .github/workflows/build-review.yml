@@ -12,6 +12,8 @@ on:
       - 'vendor/enigma-standard/**'
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
+      - 'PSG_food_rank_assets.py'
+      - 'research/food-rank-v2/data/**'
       - 'PSG_build_sources.py'
       - 'PSG_received_art.py'
       - 'data-import/received-v506/**'
@@ -81,6 +83,7 @@ jobs:
           node tests/check_food_composition.cjs
           node tests/check_special_count.cjs
           node tests/check_food_rank.cjs
+          python tests/check_food_rank_assets.py
           node tests/check_daily_audit.cjs
           node tests/check_recipe_team_time.cjs
           node tests/check_recipe_swap_connection.cjs

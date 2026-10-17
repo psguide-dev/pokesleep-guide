@@ -1,65 +1,48 @@
-const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),root=require('node:path').resolve(__dirname,'..');
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path'),root=path.resolve(__dirname,'..');
 const {ctx,catalog}=require('./skill_model_runtime.cjs').createRuntime(root,false);
 ctx.speciesKey=p=>ctx.window.PS_SPECIES_CATALOG.key(p);ctx.renderIndividualEvaluation=()=>'';ctx.bindIndividualEvaluation=()=>{};ctx.evaluationPageMarkup=html=>html;ctx.evaluationPage=false;
 for(const file of ['13-role-model-helpers','15-food-role','15-food-rank','15-food-role-details','15-food-role-view','15-food-role-controller'])vm.runInContext(fs.readFileSync(`${root}/templates/core/${file}.html`,'utf8'),ctx);
-const read=path=>JSON.parse(fs.readFileSync(`${root}/${path}`)),p=catalog.pokemon[405],catalogBefore=JSON.stringify(catalog);
-let requests=[],failRank=false;
-ctx.fetch=async url=>{requests.push(url);if(failRank&&url.includes('food_rank'))return {ok:false};return {ok:true,json:async()=>read(url.split('?')[0])}};
+const read=file=>JSON.parse(fs.readFileSync(`${root}/${file}`)),manifest=read('assets/evaluation/food_rank_v2/manifest.json'),beforeCatalog=JSON.stringify(catalog);
+let requests=[];const fetchLocal=async url=>{requests.push(url);return {ok:true,json:async()=>read(url.split('?')[0])}};ctx.fetch=fetchLocal;
+const resolve=id=>ctx.window.PS_SPECIES({no:Number(id.split('_')[0]),speciesId:id});
+const outputRequests=()=>requests.filter(url=>url.includes('food_rank_v2/output/'));
 (async()=>{
- let checked=0;
+ ctx.teamGoodCamp=true;const luxray=resolve('0405_default');await ctx.loadFoodRankReferences(luxray,80);assert.equal(outputRequests().length,1,'first evaluation loads only its species/level');
+ assert(outputRequests()[0].includes('0405_default_80.json'));assert.equal(requests.filter(url=>url.includes('food_rank_v2/manifest')).length,1);
+ let checked=0,conditions=0;const identities=new Set(),samples=new Map();
  for(const camp of [true,false]){
-  ctx.teamGoodCamp=camp;const data=await ctx.loadFoodRankReferences(p,80),references=ctx.activeFoodRoleReferences();
-  assert.equal(data.conditions.camp,camp);assert.equal(Object.keys(data.entries).length,6);assert.equal(data.count,154700);
-  const before=JSON.stringify(data);
-  for(const [pattern,row] of Object.entries(data.entries)){
-   const ref=references.entries[JSON.stringify(['0405_default',80,pattern])],item={id:'rank-test',no:405,speciesId:'0405_default',level:62,foodEvaluationLevel:80,skillLevel:7,ribbonHours:2000,...structuredClone(ref.ideal.record)},itemBefore=JSON.stringify(item);
-   const e=ctx.foodRoleEvaluation(item,p),rank=ctx.foodRankEvaluation(e,p);assert.equal(e.status,'ready');assert.equal(rank.status,'ready');assert.equal(rank.rank,'SS');assert.equal(rank.strongerCount,0);assert.equal(rank.strongerPercent,0);assert.equal(JSON.stringify(item),itemBefore);
-   assert.equal(row.distribution.reduce((n,[,weight])=>n+weight,0),154700);assert.equal(row.ideal,e.ideal);
-   let previous=100;
-   for(let i=0;i<=20;i++){
-    const value=row.ideal*i/20,r=ctx.foodRankEvaluation({...e,value},p),expected=row.distribution.reduce((n,[v,weight])=>n+(v>value+1e-9?weight:0),0);
-    assert.equal(r.strongerCount,expected);assert.equal(r.strongerPercent,100*expected/154700);assert(r.strongerPercent<=previous);previous=r.strongerPercent;checked++;
+  ctx.teamGoodCamp=camp;
+  for(const meta of manifest.files){
+   const p=resolve(meta.speciesId),data=await ctx.loadFoodRankReferences(p,meta.level),references=ctx.activeFoodRoleReferences(),before=JSON.stringify(data);identities.add(meta.speciesId);
+   for(const row of Object.values(data.entries).filter(row=>row.camp===camp)){
+    const ref=references.entries[JSON.stringify([meta.speciesId,meta.level,row.pattern])],item={id:'all-rank',no:p.no,speciesId:meta.speciesId,level:1,foodEvaluationLevel:meta.level,...structuredClone(ref.ideal.record)},beforeItem=JSON.stringify(item);
+    const e=ctx.foodRoleEvaluation(item,p),r=ctx.foodRankEvaluation(e,p);assert.equal(e.status,'ready');assert.equal(r.status,'ready');assert.equal(r.rank,'SS');assert.equal(r.strongerCount,0);assert.equal(r.count,({60:17000,70:59500,80:154700})[meta.level]);assert.equal(JSON.stringify(item),beforeItem);
+    assert(Math.abs(e.ideal-row.ideal)<1e-9);assert.equal(row.distribution.reduce((sum,[,weight])=>sum+weight,0),row.count);
+    for(const value of [0,row.ideal*.6,row.ideal*.95,...[0,Math.floor(row.distribution.length/2),row.distribution.length-1].map(index=>row.distribution[index][0])]){
+     const ranked=ctx.foodRankEvaluation({...e,value},p),expected=row.distribution.reduce((sum,[v,weight])=>sum+(v>value+1e-9?weight:0),0);assert.equal(ranked.strongerCount,expected);assert.equal(ranked.strongerPercent,100*expected/row.count);checked++;
+    }
+    for(const invalid of [{value:NaN},{value:row.ideal+1},{ideal:e.ideal+1},{camp:!camp},{skillLevel:99}])assert.equal(ctx.foodRankEvaluation({...e,...invalid},p).status,'pending');
+    if(row.pattern==='AAA'){
+     assert.match(ctx.renderFoodRole(item,p),/SS（試作）/);ctx.evaluationPage=true;const html=ctx.renderFoodRole(item,p);assert(html.includes(row.count.toLocaleString('ja-JP')+'構成'));if(meta.stage==='recovery')assert.match(html,/自身の回復が通常食材収集へ与える影響/);ctx.evaluationPage=false;
+    }
+    samples.set(JSON.stringify([meta.speciesId,meta.level,camp]),{p,e,item});conditions++;
    }
-   for(const [value] of row.distribution){const r=ctx.foodRankEvaluation({...e,value},p);assert.equal(r.strongerCount,row.distribution.reduce((n,[v,weight])=>n+(v>value+1e-9?weight:0),0),'equal yield is not stronger');checked++}
-   assert.equal(ctx.foodRankEvaluation({...e,value:row.ideal+1},p).status,'pending');assert.equal(ctx.foodRankEvaluation({...e,value:NaN},p).status,'pending');assert.equal(ctx.foodRankEvaluation({...e,camp:!camp},p).status,'pending');assert.equal(ctx.foodRankEvaluation({...e,skillLevel:7},p).status,'pending');assert.equal(ctx.foodRankEvaluation({...e,ideal:e.ideal+1},p).status,'pending');
-   const html=ctx.renderFoodRole(item,p);assert.match(html,/SS（試作）/);assert.match(html,/上回る構成 0%/);assert(!html.includes('ランク準備中'));
-   ctx.evaluationPage=true;const detail=ctx.renderFoodRole(item,p);assert.match(detail,/154,700構成/);assert.match(detail,/捕獲・厳選成功/);ctx.evaluationPage=false;
+   assert.equal(JSON.stringify(data),before);
   }
-  assert.equal(JSON.stringify(data),before,'ranking does not mutate reference data');
-  const invalid=[];
-  for(const change of [d=>d.conditions.camp=!camp,d=>d.engineFingerprint='stale',d=>d.count=1,d=>d.entries.AAA.distribution[0][1]++,d=>d.entries.AAA.distribution.reverse(),d=>d.entries.AAA.ideal++,d=>delete d.entries.ABC,d=>d.entries.AAA.distribution[0][0]=-1,d=>d.conditions.ribbonHours=1000]){const copy=structuredClone(data);change(copy);invalid.push(copy)}
-  for(const bad of invalid)assert.throws(()=>ctx.validateFoodRankData(bad,camp,references,p,80));
  }
- const recovery=catalog.pokemon[71];
- for(const camp of [true,false]){
-  ctx.teamGoodCamp=camp;const data=await ctx.loadFoodRankReferences(recovery,80),references=ctx.activeFoodRoleReferences(),before=JSON.stringify(data);
-  assert.equal(data.evaluatedSignatures,19551);assert.equal(data.speciesId,'0071_default');
-  assert.throws(()=>ctx.validateFoodRankData(data,camp,references,p,80),'another species must not reuse the recovery distribution');
-  for(const [pattern,row] of Object.entries(data.entries)){
-   const ref=references.entries[JSON.stringify(['0071_default',80,pattern])],item={id:'recovery-rank-test',no:71,speciesId:'0071_default',level:62,foodEvaluationLevel:80,...structuredClone(ref.ideal.record)},before=JSON.stringify(item);
-   const e=ctx.foodRoleEvaluation(item,recovery),rank=ctx.foodRankEvaluation(e,recovery);
-   assert.equal(e.status,'ready');assert.equal(rank.status,'ready');assert.equal(rank.rank,'SS');assert.equal(rank.strongerCount,0);assert.equal(JSON.stringify(item),before);
-   assert.equal(row.distribution.reduce((sum,[,weight])=>sum+weight,0),154700);assert(Math.abs(e.ideal-row.ideal)<1e-9);
-   let remaining=row.count,next=0;
-   for(const [value] of row.distribution){
-    while(next<row.distribution.length&&row.distribution[next][0]<=value+1e-9)remaining-=row.distribution[next++][1];
-    assert.equal(ctx.foodRankEvaluation({...e,value},recovery).strongerCount,remaining,'equal/tolerance yields excluded with original weights');checked++;
-   }
-   ctx.evaluationPage=true;assert.match(ctx.renderFoodRole(item,recovery),/自身の回復が通常食材収集へ与える影響/);ctx.evaluationPage=false;
-  }
-  assert.equal(JSON.stringify(data),before);await assert.rejects(ctx.loadFoodRankReferences(recovery,70));
- }
- ctx.teamGoodCamp=true;
- const recoveryItem={id:'rate-rank',no:71,level:62,foodEvaluationLevel:80,nature:'がんばりや',subskills:['食材確率アップM','食材確率アップS','おてつだいスピードM','おてつだいスピードS','リサーチEXPボーナス'],ingredients:Object.fromEntries(recovery.ingredientSlots.map(slot=>[slot.unlock,slot.candidates[0].name]))};
- const first=ctx.foodRoleEvaluation(recoveryItem,recovery),boosted=ctx.foodRoleEvaluation({...recoveryItem,subskills:[...recoveryItem.subskills.slice(0,4),'スキル確率アップM']},recovery);
- assert(boosted.value>first.value,'recovery-linked skill probability must survive grouping');assert(ctx.foodRankEvaluation(boosted,recovery).strongerCount<=ctx.foodRankEvaluation(first,recovery).strongerCount);
- await assert.rejects(ctx.loadFoodRankReferences(catalog.pokemon[122],80));
- assert.equal(JSON.stringify(catalog),catalogBefore);ctx.teamGoodCamp=true;const requestsBefore=requests.length;await ctx.loadFoodRankReferences(p,80);assert.equal(requests.length,requestsBefore,'camp switch back uses its own cached data');assert.equal(requests.filter(url=>url.includes('food_rank')).length,4);
- const refs=ctx.activeFoodRoleReferences(),ref=refs.entries[JSON.stringify(['0405_default',80,'ABC'])],e={status:'ready',level:80,pattern:'ABC',value:92.8,ideal:ref.ideal.value,skillLevel:3,camp:true};
- assert.equal(ctx.foodRankEvaluation(e,p).rank,'A','rounded screenshot example is a fixture, not the registered individual');
- const aaa={...e,pattern:'AAA',ideal:refs.entries[JSON.stringify(['0405_default',80,'AAA'])].ideal.value};assert.equal(ctx.foodRankEvaluation({...aaa,value:aaa.ideal*.6},p).rank,'B');assert.equal(ctx.foodRankEvaluation({...e,value:e.ideal*.6},p).rank,'A','ideal percent alone does not determine rank');
- assert.equal(ctx.foodRankEvaluation({...e,level:70},p).status,'pending');assert.equal(ctx.foodRankEvaluation(e,catalog.pokemon[9]).status,'pending');assert.equal(ctx.foodRankEvaluation(e,catalog.pokemon[122]).status,'pending');
- // Failed fetch is visible and retryable; the ideal/food model remains available.
- const store=ctx.campReferenceStore();delete store.values[ctx.foodRankKey(p,80)];store.loads.delete(ctx.foodRankKey(p,80));failRank=true;await assert.rejects(ctx.loadFoodRankReferences(p,80));assert.match(ctx.foodRankEvaluation(e,p).text,/読み込みに失敗/);assert(ctx.activeFoodRoleReferences());failRank=false;await ctx.loadFoodRankReferences(p,80);assert.equal(ctx.foodRankEvaluation(e,p).rank,'A');
- console.log(`Food rank: ${checked} exact weighted/rank checks, 24 pattern/camp distributions across Luxray and Victreebel, current ON/OFF ideals, equal yields, incomplete references, lazy cache/retry, scope limits and immutable inputs passed`);
+ assert.equal(identities.size,83);assert.equal(conditions,2964);assert.equal(outputRequests().length,249,'each species/level file is reused across both camp conditions');assert.equal(JSON.stringify(catalog),beforeCatalog);
+ ctx.teamGoodCamp=true;const sample=samples.get(JSON.stringify(['0405_default',80,true])),{p,e}=sample;
+ assert.equal(ctx.foodRankEvaluation({...e,pattern:'ABC',ideal:ctx.activeFoodRoleReferences().entries[JSON.stringify(['0405_default',80,'ABC'])].ideal.value,value:92.8},p).rank,'A');
+ for(const level of [1,50,90])assert.equal(ctx.foodRankSupported(p,level),false);for(const no of [122,132,439,442,151,491])assert.equal(ctx.foodRankSupported(catalog.pokemon[no],80),false);
+ await assert.rejects(ctx.loadFoodRankReferences(catalog.pokemon[122],80));assert.equal(ctx.foodRankEvaluation({...e,level:50},p).status,'pending');
+ for(const change of [d=>d.files[0].file='../wrong.json',d=>d.files[0].speciesId='0122_default',d=>d.files.push(d.files[0]),d=>d.conditions.collectionHours=1]){const bad=structuredClone(manifest);change(bad);assert.throws(()=>ctx.validateFoodRankManifest(bad))}
+ const valid=await ctx.loadFoodRankReferences(p,80),references=ctx.activeFoodRoleReferences();
+ for(const change of [d=>d.speciesId='0071_default',d=>d.count=1,d=>d.level=60,d=>delete d.entries[Object.keys(d.entries)[0]],d=>d.entries[Object.keys(d.entries)[0]].distribution[0][1]++,d=>d.entries[Object.keys(d.entries)[0]].distribution.reverse()]){const bad=structuredClone(valid);change(bad);assert.throws(()=>ctx.validateFoodRankData(bad,true,references,p,80,manifest))}
+ // One delayed file request serves simultaneous ON/OFF loads without crossing condition state.
+ const key=ctx.foodRankKey(p,80);for(const camp of [true,false]){const store=ctx.campReferenceStore(camp);delete store.values[key];store.loads.delete(key)}ctx.foodRankFileCache().files.delete(key);
+ let release,calls=0;ctx.fetch=url=>{if(!url.includes('food_rank_v2/output/'))return fetchLocal(url);calls++;return new Promise(resolve=>{release=()=>resolve({ok:true,json:async()=>structuredClone(valid)})})};
+ ctx.teamGoodCamp=true;const on=ctx.loadFoodRankReferences(p,80);ctx.teamGoodCamp=false;const off=ctx.loadFoodRankReferences(p,80);await new Promise(setImmediate);assert.equal(calls,1);release();await Promise.all([on,off]);assert.equal(ctx.foodRankEvaluation(e,p).status,'pending','ON result cannot be used in OFF view');ctx.teamGoodCamp=true;assert.equal(ctx.foodRankEvaluation(e,p).rank,'SS');
+ // A failed file request stays pending and can be retried; existing food references survive.
+ const store=ctx.campReferenceStore(true);delete store.values[key];store.loads.delete(key);ctx.foodRankFileCache().files.delete(key);ctx.fetch=async()=>({ok:false});await assert.rejects(ctx.loadFoodRankReferences(p,80));assert.match(ctx.foodRankEvaluation(e,p).text,/読み込みに失敗/);assert(ctx.activeFoodRoleReferences());ctx.fetch=fetchLocal;await ctx.loadFoodRankReferences(p,80);assert.equal(ctx.foodRankEvaluation(e,p).rank,'SS');
+ console.log(`Food rank: ${identities.size} identities, ${conditions} conditions, ${checked} weighted/binary checks, 249 lazy files reused across camps, forms/recovery, schema/missing/ideal guards, delayed responses, retry and immutable inputs passed`);
 })().catch(error=>{console.error(error);process.exitCode=1});
