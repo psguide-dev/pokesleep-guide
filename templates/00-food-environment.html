@@ -22,6 +22,19 @@
    const total=slots.reduce((sum,i)=>sum+i.qty,0);if(!Number.isFinite(total))return null;
    return Object.fromEntries(categories.map(category=>[category,slots.some(i=>environment.ingredients[i.name][category].coverage===null)?null:slots.reduce((sum,i)=>sum+i.qty/total*environment.ingredients[i.name][category].coverage,0)]));
   }
+  function matchRecipes(environment,slots){
+   if(!environment?.top||!Array.isArray(environment.categories)||!Array.isArray(slots)||!slots.length||slots.some(s=>!s||typeof s.name!=='string'||!environment.ingredients?.[s.name]||!Number.isFinite(s.qty)||s.qty<=0))return null;
+   const names=new Set(slots.map(s=>s.name));
+   return Object.fromEntries(environment.categories.map(category=>{
+    const top=environment.top[category]||[];
+    const recipes=top.flatMap((recipe,index)=>{
+     const matched=recipe.ingredients.filter(food=>names.has(food.name));if(!matched.length)return [];
+     const material=food=>({name:food.name,recipeQuantity:food.qty});
+     return [{id:recipe.id,name:recipe.name,rank:index+1,energy:recipe.energy.max.value,energyStatus:recipe.energy.max.status||'未確認',matched:matched.map(material),other:recipe.ingredients.filter(food=>!names.has(food.name)).map(material),totalIngredientKinds:new Set(recipe.ingredients.map(food=>food.name)).size}];
+    });
+    return [category,{status:top.length?'ready':'pending',targetCount:top.length,recipes}];
+   }));
+  }
   const cache=new WeakMap();
   function current(catalog,goodCamp,calculatePotCapacity){
    const capacities=(catalog.cooking?.pot?.['拡張表']||[]).map(row=>row['容量']).filter(n=>Number.isInteger(n)&&n>0);
@@ -31,6 +44,6 @@
    if(!conditions.has(key))conditions.set(key,build(Object.values(catalog.recipes||{}),Object.keys(catalog.ingredientAssets||{}),{goodCamp,baseCapacity,capacity}));
    return conditions.get(key);
   }
-  return Object.freeze({build,composition,current});
+  return Object.freeze({build,composition,matchRecipes,current});
  })();
 </script>

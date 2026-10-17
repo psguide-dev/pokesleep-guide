@@ -17,6 +17,17 @@ for(const p of species){
   for(const goodCamp of [false,true]){camp=goodCamp;const env=environment(),e=ctx.foodCompositionEvaluation(item,p,80,env);assert.equal(e.status,'ready',p.name+JSON.stringify(ingredients));
    const total=active.reduce((sum,slot)=>sum+slot.candidates.find(c=>c.name===ingredients[slot.unlock]).qty,0);
    for(const category of env.categories){const expected=active.reduce((sum,slot)=>{const candidate=slot.candidates.find(c=>c.name===ingredients[slot.unlock]);return sum+candidate.qty/total*env.ingredients[candidate.name][category].coverage},0);assert.equal(e.scores[category],expected)}
+   const matchBefore=JSON.stringify([env,e.slots]),fit=ctx.window.PS_FOOD_ENVIRONMENT.matchRecipes(env,e.slots);
+   for(const category of env.categories){
+    const expected=env.top[category].filter(recipe=>recipe.ingredients.some(food=>e.slots.some(slot=>slot.name===food.name)));
+    assert.deepEqual(plain(fit[category].recipes.map(recipe=>recipe.id)),plain(expected.map(recipe=>recipe.id)));
+    for(const recipe of fit[category].recipes){
+     assert.equal(recipe.rank,env.top[category].findIndex(row=>row.id===recipe.id)+1);
+     const original=env.top[category][recipe.rank-1];assert.equal(recipe.energy,original.energy.max.value);
+     assert.deepEqual(plain([...recipe.matched,...recipe.other].sort((a,b)=>a.name.localeCompare(b.name))),plain(original.ingredients.map(food=>({name:food.name,recipeQuantity:food.qty})).sort((a,b)=>a.name.localeCompare(b.name))));
+    }
+   }
+   assert.equal(JSON.stringify([env,e.slots]),matchBefore,'recipe matching is read only');
    assert(Math.abs(e.foods.reduce((sum,row)=>sum+row.share,0)-100)<1e-10);count++;
   }
   assert.equal(JSON.stringify(item),before);distinct.add(p.name);
@@ -47,3 +58,22 @@ camp=false;const off=ctx.renderIndividualEvaluation(item,p);assert.notEqual(off,
 // Model code is present exactly once in every generated document; cooking is still lazy.
 for(const name of ['review','pokemon','evaluation','ingredients','recipes','fields']){const doc=read(name+'.html');assert.equal((doc.match(/id="psg-food-environment-model"/g)||[]).length,1);if(name==='evaluation')assert(!doc.includes('<script src="packages/cooking-view-'))}
 console.log(`Food composition: ${count} condition/pattern checks across ${distinct.size} identities; A/AB/ABC, duplicate food weights, missing data, zero/null, read-only inputs, level/camp UI, separate role axis and single shared model passed`);
+
+const expectedFits=JSON.parse(read('tests/fixtures/recipe-fit-preview-v1.json'));
+let previewCount=0;
+for(const goodCamp of [false,true]){
+ camp=goodCamp;const env=environment();
+ for(const [name,expected] of Object.entries(expectedFits[String(env.condition.capacity)])){
+  const [speciesName,pattern]=name.split(' '),p=species.find(p=>p.name===speciesName);assert(p,speciesName);
+  const ingredients=Object.fromEntries(p.ingredientSlots.map((slot,index)=>[slot.unlock,slot.candidates[pattern.charCodeAt(index)-65].name]));
+  const evaluation=ctx.foodCompositionEvaluation({ingredients},p,80,env);
+  assert.deepEqual(plain(ctx.window.PS_FOOD_ENVIRONMENT.matchRecipes(env,evaluation.slots)),expected,name+' '+goodCamp);previewCount++;
+ }
+}
+const match=ctx.window.PS_FOOD_ENVIRONMENT.matchRecipes;
+assert.equal(match(env,[]),null);assert.equal(match(env,[{name:'unknown',qty:1}]),null);assert.equal(match(env,[{name:'あまいミツ',qty:0}]),null);
+const missing=match(empty,[{name:'あまいミツ',qty:1}]);assert(Object.values(missing).every(row=>row.status==='pending'&&row.recipes.length===0));
+const noUse=match(env,[{name:'おいしいシッポ',qty:1}]);assert(Object.values(noUse).every(row=>row.status==='ready'&&row.recipes.length===0));
+assert.deepEqual(plain(match(env,[{name:'あまいミツ',qty:1},{name:'あまいミツ',qty:4}])),plain(match(env,[{name:'あまいミツ',qty:1}])));
+const rendered=ctx.renderCompositionRecipes(env,e80.slots);assert.match(rendered,/1食分の材料を見る/);assert.match(rendered,/料理Lv.70/);assert.match(rendered,/この構成で拾える材料/);assert.match(rendered,/data-composition-disclosure/);
+console.log(`Recipe fit: ${count} conditions, ${previewCount} preview parity examples; category ranks, energy, materials, no duplicates, missing versus no matches passed`);

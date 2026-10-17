@@ -1,0 +1,1539 @@
+{
+  "81": {
+    "レントラー ABC": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "greengrass_curry_bun",
+            "name": "ワカクサカレーパン",
+            "rank": 3,
+            "energy": 39183,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 15
+              }
+            ],
+            "other": [
+              {
+                "name": "あったかジンジャー",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "げきからハーブ",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 8
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "dream_eater_butter_curry",
+            "name": "ぜったいねむりバターカレー",
+            "rank": 5,
+            "energy": 32255,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 15
+              }
+            ],
+            "other": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 12
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 10
+              },
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 18
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "petal_blizzard_mimosa_salad",
+            "name": "はなふぶきミモザサラダ",
+            "rank": 1,
+            "energy": 42533,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 17
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 15
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 12
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "greengrass_salad",
+            "name": "ワカクササラダ",
+            "rank": 3,
+            "energy": 40786,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 22
+              },
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 14
+              }
+            ],
+            "other": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 9
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 17
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "cross_chop_salad",
+            "name": "クロスチョップドサラダ",
+            "rank": 4,
+            "energy": 31342,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 10
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 15
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 11
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "slowpoke_tail_pepper_salad",
+            "name": "ヤドンテールのペッパーサラダ",
+            "rank": 5,
+            "energy": 29245,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 15
+              }
+            ],
+            "other": [
+              {
+                "name": "おいしいシッポ",
+                "recipeQuantity": 10
+              },
+              {
+                "name": "げきからハーブ",
+                "recipeQuantity": 10
+              }
+            ],
+            "totalIngredientKinds": 3
+          }
+        ]
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "grass_mixer_smoothie",
+            "name": "グラスミキサースムージー",
+            "rank": 3,
+            "energy": 29231,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 16
+              }
+            ],
+            "other": [
+              {
+                "name": "つやつやアボカド",
+                "recipeQuantity": 18
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 14
+              }
+            ],
+            "totalIngredientKinds": 3
+          },
+          {
+            "id": "mold_breaker_corn_tiramisu",
+            "name": "かたやぶりコーンティラミス",
+            "rank": 5,
+            "energy": 25507,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 14
+              }
+            ],
+            "other": [
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 14
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 12
+              }
+            ],
+            "totalIngredientKinds": 3
+          }
+        ]
+      }
+    },
+    "カメックス ABB": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "dream_eater_butter_curry",
+            "name": "ぜったいねむりバターカレー",
+            "rank": 5,
+            "energy": 32255,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 12
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 10
+              }
+            ],
+            "other": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 18
+              },
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 15
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": []
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "flower_gift_macarons",
+            "name": "フラワーギフトマカロン",
+            "rank": 1,
+            "energy": 49525,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 10
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 17
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "teatime_corn_scones",
+            "name": "おちゃかいコーンスコーン",
+            "rank": 2,
+            "energy": 39111,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 9
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんリンゴ",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "あったかジンジャー",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 18
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "grass_mixer_smoothie",
+            "name": "グラスミキサースムージー",
+            "rank": 3,
+            "energy": 29231,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 14
+              }
+            ],
+            "other": [
+              {
+                "name": "つやつやアボカド",
+                "recipeQuantity": 18
+              },
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 16
+              }
+            ],
+            "totalIngredientKinds": 3
+          },
+          {
+            "id": "jigglypuff_flan",
+            "name": "プリンのプリンアラモード",
+            "rank": 4,
+            "energy": 27186,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 10
+              }
+            ],
+            "other": [
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 15
+              },
+              {
+                "name": "とくせんリンゴ",
+                "recipeQuantity": 10
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "mold_breaker_corn_tiramisu",
+            "name": "かたやぶりコーンティラミス",
+            "rank": 5,
+            "energy": 25507,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 12
+              }
+            ],
+            "other": [
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 14
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 14
+              }
+            ],
+            "totalIngredientKinds": 3
+          }
+        ]
+      }
+    },
+    "ゴローニャ ABC": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "role_play_pumpkaboo_stew",
+            "name": "なりきりバケッチャシチュー",
+            "rank": 1,
+            "energy": 55923,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 18
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 25
+              }
+            ],
+            "other": [
+              {
+                "name": "ずっしりカボチャ",
+                "recipeQuantity": 10
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 16
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "greengrass_curry_bun",
+            "name": "ワカクサカレーパン",
+            "rank": 3,
+            "energy": 39183,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 8
+              }
+            ],
+            "other": [
+              {
+                "name": "あったかジンジャー",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "げきからハーブ",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 15
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "ninja_curry",
+            "name": "ニンジャカレー",
+            "rank": 4,
+            "energy": 33813,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 24
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 5
+              }
+            ],
+            "other": [
+              {
+                "name": "マメミート",
+                "recipeQuantity": 9
+              },
+              {
+                "name": "ふといながねぎ",
+                "recipeQuantity": 12
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "dream_eater_butter_curry",
+            "name": "ぜったいねむりバターカレー",
+            "rank": 5,
+            "energy": 32255,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 18
+              }
+            ],
+            "other": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 12
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 10
+              },
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 15
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "petal_blizzard_mimosa_salad",
+            "name": "はなふぶきミモザサラダ",
+            "rank": 1,
+            "energy": 42533,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 15
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 17
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 12
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "ninja_salad",
+            "name": "ニンジャサラダ",
+            "rank": 2,
+            "energy": 41739,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 19
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 12
+              }
+            ],
+            "other": [
+              {
+                "name": "ふといながねぎ",
+                "recipeQuantity": 15
+              },
+              {
+                "name": "あったかジンジャー",
+                "recipeQuantity": 11
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "greengrass_salad",
+            "name": "ワカクササラダ",
+            "rank": 3,
+            "energy": 40786,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 9
+              }
+            ],
+            "other": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 22
+              },
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 14
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 17
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": []
+      }
+    },
+    "ウツボット AAA": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "dream_eater_butter_curry",
+            "name": "ぜったいねむりバターカレー",
+            "rank": 5,
+            "energy": 32255,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 15
+              }
+            ],
+            "other": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 12
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 10
+              },
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 18
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "greengrass_salad",
+            "name": "ワカクササラダ",
+            "rank": 3,
+            "energy": 40786,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 14
+              }
+            ],
+            "other": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 9
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 22
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 17
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "cross_chop_salad",
+            "name": "クロスチョップドサラダ",
+            "rank": 4,
+            "energy": 31342,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 10
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 15
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 11
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "grass_mixer_smoothie",
+            "name": "グラスミキサースムージー",
+            "rank": 3,
+            "energy": 29231,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 16
+              }
+            ],
+            "other": [
+              {
+                "name": "つやつやアボカド",
+                "recipeQuantity": 18
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 14
+              }
+            ],
+            "totalIngredientKinds": 3
+          }
+        ]
+      }
+    }
+  },
+  "122": {
+    "レントラー ABC": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "verdant_avocado_gratin",
+            "name": "しんりょくアボカドグラタン",
+            "rank": 2,
+            "energy": 88791,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 32
+              }
+            ],
+            "other": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 41
+              },
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "つやつやアボカド",
+                "recipeQuantity": 22
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "hidden_power_stew",
+            "name": "めざめるパワーシチュー",
+            "rank": 4,
+            "energy": 68238,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 16
+              }
+            ],
+            "other": [
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 23
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "defiant_coffee_salad",
+            "name": "まけんきコーヒーサラダ",
+            "rank": 3,
+            "energy": 72380,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 22
+              }
+            ],
+            "other": [
+              {
+                "name": "マメミート",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 22
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "apple_acid_yogurt_salad",
+            "name": "りんごさんヨーグルトサラダ",
+            "rank": 4,
+            "energy": 69068,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 23
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 35
+              },
+              {
+                "name": "とくせんリンゴ",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 18
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "petal_blizzard_mimosa_salad",
+            "name": "はなふぶきミモザサラダ",
+            "rank": 5,
+            "energy": 42533,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 17
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 15
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 12
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "honey_gathering_chocolate_waffles",
+            "name": "みつあつめチョコワッフル",
+            "rank": 1,
+            "energy": 91233,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 28
+              }
+            ],
+            "other": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 21
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 38
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 28
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "spooky_face_pancakes",
+            "name": "ドキドキこわいかおパンケーキ",
+            "rank": 2,
+            "energy": 87187,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 29
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 24
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 32
+              },
+              {
+                "name": "ずっしりカボチャ",
+                "recipeQuantity": 18
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "clodsire_eclairs",
+            "name": "ドオーのエクレア",
+            "rank": 3,
+            "energy": 74768,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 24
+              }
+            ],
+            "other": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 30
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 26
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 22
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "zippy_zap_spiced_cola",
+            "name": "スパークスパイスコーラ",
+            "rank": 4,
+            "energy": 62628,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 12
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんリンゴ",
+                "recipeQuantity": 35
+              },
+              {
+                "name": "あったかジンジャー",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "ふといながねぎ",
+                "recipeQuantity": 20
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      }
+    },
+    "カメックス ABB": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "verdant_avocado_gratin",
+            "name": "しんりょくアボカドグラタン",
+            "rank": 2,
+            "energy": 88791,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 41
+              }
+            ],
+            "other": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 32
+              },
+              {
+                "name": "つやつやアボカド",
+                "recipeQuantity": 22
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "apple_acid_yogurt_salad",
+            "name": "りんごさんヨーグルトサラダ",
+            "rank": 4,
+            "energy": 69068,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 18
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 35
+              },
+              {
+                "name": "とくせんリンゴ",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 23
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "honey_gathering_chocolate_waffles",
+            "name": "みつあつめチョコワッフル",
+            "rank": 1,
+            "energy": 91233,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 21
+              }
+            ],
+            "other": [
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 38
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 28
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "clodsire_eclairs",
+            "name": "ドオーのエクレア",
+            "rank": 3,
+            "energy": 74768,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 30
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 26
+              }
+            ],
+            "other": [
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 24
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 22
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "flower_gift_macarons",
+            "name": "フラワーギフトマカロン",
+            "rank": 5,
+            "energy": 49525,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "リラックスカカオ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 10
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 17
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      }
+    },
+    "ゴローニャ ABC": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "bouncing_curry_udon",
+            "name": "とびはねるカレーうどん",
+            "rank": 1,
+            "energy": 91430,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 31
+              }
+            ],
+            "other": [
+              {
+                "name": "マメミート",
+                "recipeQuantity": 20
+              },
+              {
+                "name": "げきからハーブ",
+                "recipeQuantity": 22
+              },
+              {
+                "name": "あったかジンジャー",
+                "recipeQuantity": 39
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "verdant_avocado_gratin",
+            "name": "しんりょくアボカドグラタン",
+            "rank": 2,
+            "energy": 88791,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 20
+              }
+            ],
+            "other": [
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 41
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 32
+              },
+              {
+                "name": "つやつやアボカド",
+                "recipeQuantity": 22
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "hidden_power_stew",
+            "name": "めざめるパワーシチュー",
+            "rank": 4,
+            "energy": 68238,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 23
+              }
+            ],
+            "other": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 16
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "role_play_pumpkaboo_stew",
+            "name": "なりきりバケッチャシチュー",
+            "rank": 5,
+            "energy": 55923,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 18
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 25
+              }
+            ],
+            "other": [
+              {
+                "name": "ずっしりカボチャ",
+                "recipeQuantity": 10
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 16
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "boiling_hot_salad",
+            "name": "ごろごろねっとうサラダ",
+            "rank": 1,
+            "energy": 90774,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 30
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 27
+              }
+            ],
+            "other": [
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 18
+              },
+              {
+                "name": "ずっしりカボチャ",
+                "recipeQuantity": 20
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "stomping_guacamole_chips",
+            "name": "じならしワカモレチップス",
+            "rank": 2,
+            "energy": 90080,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 22
+              }
+            ],
+            "other": [
+              {
+                "name": "げきからハーブ",
+                "recipeQuantity": 30
+              },
+              {
+                "name": "ワカクサコーン",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "つやつやアボカド",
+                "recipeQuantity": 28
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "defiant_coffee_salad",
+            "name": "まけんきコーヒーサラダ",
+            "rank": 3,
+            "energy": 72380,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 22
+              }
+            ],
+            "other": [
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 22
+              }
+            ],
+            "totalIngredientKinds": 4
+          },
+          {
+            "id": "petal_blizzard_mimosa_salad",
+            "name": "はなふぶきミモザサラダ",
+            "rank": 5,
+            "energy": 42533,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "ほっこりポテト",
+                "recipeQuantity": 15
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 25
+              },
+              {
+                "name": "ピュアなオイル",
+                "recipeQuantity": 17
+              },
+              {
+                "name": "マメミート",
+                "recipeQuantity": 12
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": []
+      }
+    },
+    "ウツボット AAA": {
+      "カレー・シチュー": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "hidden_power_stew",
+            "name": "めざめるパワーシチュー",
+            "rank": 4,
+            "energy": 68238,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 25
+              }
+            ],
+            "other": [
+              {
+                "name": "ワカクサ大豆",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "あじわいキノコ",
+                "recipeQuantity": 23
+              },
+              {
+                "name": "めざましコーヒー",
+                "recipeQuantity": 16
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "サラダ": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "apple_acid_yogurt_salad",
+            "name": "りんごさんヨーグルトサラダ",
+            "rank": 4,
+            "energy": 69068,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 23
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 35
+              },
+              {
+                "name": "とくせんリンゴ",
+                "recipeQuantity": 28
+              },
+              {
+                "name": "モーモーミルク",
+                "recipeQuantity": 18
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      },
+      "デザート・ドリンク": {
+        "status": "ready",
+        "targetCount": 5,
+        "recipes": [
+          {
+            "id": "spooky_face_pancakes",
+            "name": "ドキドキこわいかおパンケーキ",
+            "rank": 2,
+            "energy": 87187,
+            "energyStatus": "推定",
+            "matched": [
+              {
+                "name": "あんみんトマト",
+                "recipeQuantity": 29
+              }
+            ],
+            "other": [
+              {
+                "name": "とくせんエッグ",
+                "recipeQuantity": 24
+              },
+              {
+                "name": "あまいミツ",
+                "recipeQuantity": 32
+              },
+              {
+                "name": "ずっしりカボチャ",
+                "recipeQuantity": 18
+              }
+            ],
+            "totalIngredientKinds": 4
+          }
+        ]
+      }
+    }
+  }
+}

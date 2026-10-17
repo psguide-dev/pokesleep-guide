@@ -355,3 +355,16 @@ html.psg-evaluation-page main>.screen:not(#individualEvaluationPage){display:non
 .psg-composition-table th:first-child{width:34%}
 .psg-composition-table small{display:block;font-size:10px;color:#53665a;font-weight:400}
 .psg-composition-table td{white-space:nowrap}
+
+.psg-recipe-fit-category{margin:18px 0;min-width:0}
+.psg-recipe-fit-category h4{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;margin:0 0 8px;font-size:14px}
+.psg-recipe-fit-category h4 small{font-size:11px;font-weight:400;color:#53665a}
+.psg-recipe-fit-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;overflow-wrap:anywhere}
+.psg-recipe-fit-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;color:#53665a;font-size:11px}
+.psg-recipe-fit-meta strong{color:#172c21;font-size:15px}
+.psg-recipe-fit-card h5{font-size:15px;line-height:1.5;margin:7px 0}
+.psg-recipe-fit-card p{line-height:1.6;margin:6px 0}
+.psg-recipe-fit-matches{display:flex;flex-wrap:wrap;gap:5px}
+.psg-recipe-fit-matches span{padding:3px 8px;border:1px solid #5c9472;border-radius:20px;background:#edf7ee;color:#234a32;font-weight:700}
+.psg-recipe-fit-card summary,.psg-recipe-fit-more>summary{cursor:pointer;padding:7px 0;font-weight:700}
+.psg-recipe-fit-more>summary{color:#315f46}
