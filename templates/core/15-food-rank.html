@@ -1,13 +1,19 @@
-// Trial distribution: Luxray Lv80, fixed food pattern, exact original population weights.
-function foodRankSupported(p,level){return !!p&&speciesKey(p)==='0405_default'&&level===80}
-function validateFoodRankData(data,camp,references){
+// Fixed-pattern trial populations; each species and camp condition has a separate cache.
+const FOOD_RANK_TRIALS=Object.freeze({
+ '0405_default':Object.freeze({file:'food_rank_luxray_v1',signatures:4420,recovery:false}),
+ '0071_default':Object.freeze({file:'food_rank_victreebel_v1',signatures:19551,recovery:true})
+});
+function foodRankSupported(p,level){return !!p&&Object.hasOwn(FOOD_RANK_TRIALS,speciesKey(p))&&level===80}
+function foodRankKey(p,level){return `food-rank:${speciesKey(p)}:${level}`}
+function validateFoodRankData(data,camp,references,p,level){
+ const config=p&&FOOD_RANK_TRIALS[speciesKey(p)];
  const fail=()=>{throw Error('food rank reference mismatch')};
- if(data?.version!==1||data.axis!=='normalFoodsFixedPatternRank'||data.speciesId!=='0405_default'||data.level!==80||data.count!==154700||data.evaluatedSignatures!==4420||data.tolerance!==1e-9||data.engineFingerprint!==references.engineFingerprint)fail();
+ if(!config||level!==80||data?.version!==1||data.axis!=='normalFoodsFixedPatternRank'||data.speciesId!==speciesKey(p)||data.level!==level||data.count!==154700||data.evaluatedSignatures!==config.signatures||data.tolerance!==1e-9||data.engineFingerprint!==references.engineFingerprint)fail();
  for(const [key,value] of Object.entries({camp,collectionHours:4,awakeHours:16,sleepHours:8,startEnergy:100,meals:3,ribbonHours:0}))if(data.conditions?.[key]!==value)fail();
  const patterns=['AAA','AAB','AAC','ABA','ABB','ABC'];
  if(!data.entries||Object.keys(data.entries).length!==patterns.length)fail();
  for(const pattern of patterns){
-  const row=data.entries[pattern],reference=references.entries[JSON.stringify(['0405_default',80,pattern])];
+  const row=data.entries[pattern],reference=references.entries[JSON.stringify([speciesKey(p),level,pattern])];
   if(!row||row.pattern!==pattern||row.count!==data.count||!Number.isFinite(row.ideal)||row.ideal<=0||!reference||Math.abs(row.ideal-reference.ideal.value)>1e-9||reference.fullConfigurations!==data.count||reference.evaluated!==data.evaluatedSignatures||!Array.isArray(row.distribution)||!row.distribution.length)fail();
   let total=0,previous=-Infinity;
   for(const point of row.distribution){
@@ -18,25 +24,26 @@ function validateFoodRankData(data,camp,references){
  }
  return data;
 }
-function loadFoodRankReferences(){
- const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key='food-rank-luxray-80';
- if(store.values.foodRankLuxray)return Promise.resolve(store.values.foodRankLuxray);
- if(!store.loads.has(key))store.loads.set(key,loadFoodRoleReferences().then(references=>fetch(`assets/evaluation/food_rank_luxray_v1${camp?'':'_off'}_80.json?v=640`).then(response=>{if(!response.ok)throw Error('food rank load');return response.json()}).then(data=>validateFoodRankData(data,camp,references))).then(data=>{store.values.foodRankLuxray=data;store.errors.delete(key);return data}).catch(error=>{store.loads.delete(key);store.errors.set(key,error);throw error}));
+function loadFoodRankReferences(p,level){
+ if(!foodRankSupported(p,level))return Promise.reject(Error('unsupported food rank'));
+ const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key=foodRankKey(p,level),config=FOOD_RANK_TRIALS[speciesKey(p)];
+ if(store.values[key])return Promise.resolve(store.values[key]);
+ if(!store.loads.has(key))store.loads.set(key,loadFoodRoleReferences().then(references=>fetch(`assets/evaluation/${config.file}${camp?'':'_off'}_${level}.json?v=641`).then(response=>{if(!response.ok)throw Error('food rank load');return response.json()}).then(data=>validateFoodRankData(data,camp,references,p,level))).then(data=>{store.values[key]=data;store.errors.delete(key);return data}).catch(error=>{store.loads.delete(key);store.errors.set(key,error);throw error}));
  return store.loads.get(key);
 }
 function foodRankEvaluation(e,p){
  const pending=text=>({status:'pending',text});
- if(!foodRankSupported(p,e.level))return pending('ランク対応はレントラーLv.80（予測）です。他の種類・Lvは準備中です。');
+ if(!foodRankSupported(p,e.level))return pending('ランク対応はレントラー・ウツボットのLv.80（予測）です。他の種類・Lvは準備中です。');
  if(e.status!=='ready')return pending('食材収集力の計算条件を確認してください。');
- const camp=evaluationGoodCamp(),store=campReferenceStore(camp),data=store.values.foodRankLuxray;
- if(!data)return pending(store.errors.has('food-rank-luxray-80')?'ランク基準の読み込みに失敗しました。':'ランク基準を読み込んでいます…');
- const row=data.entries[e.pattern],references=activeFoodRoleReferences();
- if(e.camp!==camp||data.conditions.camp!==camp||data.engineFingerprint!==references?.engineFingerprint||!row||e.skillLevel!==3||!Number.isFinite(e.value)||e.value<0||Math.abs(e.ideal-row.ideal)>1e-9||e.value>row.ideal+1e-8)return pending('同じ条件のランク基準を確認できませんでした。');
+ const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key=foodRankKey(p,e.level),data=store.values[key];
+ if(!data)return pending(store.errors.has(key)?'ランク基準の読み込みに失敗しました。':'ランク基準を読み込んでいます…');
+ const row=data.entries[e.pattern],references=activeFoodRoleReferences(),reference=references?.entries[JSON.stringify([speciesKey(p),e.level,e.pattern])];
+ if(e.camp!==camp||data.conditions.camp!==camp||data.engineFingerprint!==references?.engineFingerprint||!row||e.skillLevel!==reference?.skillLevel||!Number.isFinite(e.value)||e.value<0||Math.abs(e.ideal-row.ideal)>1e-9||e.value>row.ideal+1e-8)return pending('同じ条件のランク基準を確認できませんでした。');
  const strongerCount=row.distribution.reduce((sum,[value,weight])=>sum+(value>e.value+data.tolerance?weight:0),0),strongerPercent=100*strongerCount/row.count;
  return {status:'ready',rank:roleModelRank({strongerLower:strongerPercent,strongerUpper:strongerPercent}),strongerCount,strongerPercent,strongerLower:strongerPercent,strongerUpper:strongerPercent,count:row.count};
 }
 function renderFoodRank(e,p){
  const rank=foodRankEvaluation(e,p);
  if(rank.status!=='ready')return `<p class="psg-box-muted">${boxEsc(rank.text)}</p>`;
- return `<p><b>食材 ${rank.rank}（試作）</b>　この個体を上回る構成 ${roleStrongerText(rank)}</p><p class="psg-box-muted">同じ種類・Lv・食材構成・キャンチケで比較。性格25通りと、重複なしのサブスキル5種類の組み合わせ、計154,700構成を比較します。同値は上回る構成に含めません。捕獲・厳選成功の確率ではありません。ランク境界はSS≤3%、S≤10%、A≤25%、B≤50%、残りCの試作です。</p>`;
+ return `<p><b>食材 ${rank.rank}（試作）</b>　この個体を上回る構成 ${roleStrongerText(rank)}</p><p class="psg-box-muted">同じ種類・Lv・食材構成・キャンチケで比較。性格25通りと、重複なしのサブスキル5種類の組み合わせ、計${rank.count.toLocaleString('ja-JP')}構成を比較します。${FOOD_RANK_TRIALS[speciesKey(p)].recovery?'自身の回復が通常食材収集へ与える影響を単体条件で含みます。実際のチームからの回復・チーム貢献は含めません。':''}同値は上回る構成に含めません。捕獲・厳選成功の確率ではありません。ランク境界はSS≤3%、S≤10%、A≤25%、B≤50%、残りCの試作です。</p>`;
 }
