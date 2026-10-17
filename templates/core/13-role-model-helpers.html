@@ -9,11 +9,11 @@ function roleEvaluationOverview(){return typeof evaluationPage!=='undefined'&&!e
 function renderRoleEvaluationSummary(kind,e){
  const n=window.PS_NUMBERS.display,food=kind==='food',berry=kind==='berry';
  const label=food?'食材':berry?'きのみ':'スキル';
- const rank=food?'ランク準備中':berry?roleModelRank(e):skillModelRank(e);
+ const rank=food?(e.rankEvaluation?.status==='ready'?`${e.rankEvaluation.rank}（試作）`:'ランク準備中'):berry?roleModelRank(e):skillModelRank(e);
  const ratio=food?e.percent:e.idealPercent,unit=food?'個':berry?'エナジー':'回';
  const daily=food?'通常食材／日':berry?'きのみ／日':'スキル発動／日';
  const context=food?`食材構成 ${boxEsc(e.pattern)}・同じ種類・同構成で比較`:'同じ種類で食材構成も含む比較';
- return `<div class="psg-role-result"><div class="psg-role-rank"><span>${label}</span><strong${food?' class="is-pending"':rank.includes('境界')?' class="is-boundary"':''}>${rank}</strong></div><div class="psg-role-metrics"><p><span>${food?'同構成の理想比':'理想比'}</span><strong>${n(ratio)}<small>%</small></strong></p><p><span>${daily}</span><strong>${n(e.value)}<small>${unit}</small></strong></p></div></div><p class="psg-role-context">${context}</p>`;
+ return `<div class="psg-role-result"><div class="psg-role-rank"><span>${label}</span><strong${food&&e.rankEvaluation?.status!=='ready'?' class="is-pending"':rank.includes('境界')?' class="is-boundary"':''}>${rank}</strong></div><div class="psg-role-metrics"><p><span>${food?'同構成の理想比':'理想比'}</span><strong>${n(ratio)}<small>%</small></strong></p><p><span>${daily}</span><strong>${n(e.value)}<small>${unit}</small></strong></p></div></div><p class="psg-role-context">${context}</p>`;
 }
 function roleModelRank(e){
  const grade=p=>p<=3?'SS':p<=10?'S':p<=25?'A':p<=50?'B':'C';

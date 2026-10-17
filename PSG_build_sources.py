@@ -54,6 +54,7 @@ TEMPLATE_NAMES = (
     'core/14-berry-role.html',
     'core/15-skill-role.html',
     'core/15-food-role.html',
+    'core/15-food-rank.html',
     'core/15-food-role-details.html',
     'core/15-food-role-view.html',
     'core/15-food-role-controller.html',

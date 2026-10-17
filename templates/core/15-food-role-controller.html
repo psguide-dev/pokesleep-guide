@@ -7,6 +7,13 @@ bindIndividualEvaluation=function(host,item,p){
  const replace=next=>{if(!host.contains(panel))return;panel.outerHTML=renderFoodRole(next,p);bindIndividualEvaluation(host,next,p)};
  const select=host.querySelector('.psg-food-eval-level');if(select)select.onchange=()=>replace({...item,foodEvaluationLevel:Number(select.value)});
  const load=()=>{const camp=evaluationGoodCamp(),fingerprint=JSON.stringify(item);loadFoodRoleReferences().then(()=>{if(camp===evaluationGoodCamp()&&fingerprint===JSON.stringify(item))replace(item)}).catch(()=>{if(camp===evaluationGoodCamp()&&fingerprint===JSON.stringify(item))replace(item)})};
+ if(typeof foodRankSupported==='function'&&foodRankSupported(p,foodRoleLevel(item))){
+  const store=campReferenceStore(),key='food-rank-luxray-80';
+  const loadRank=()=>{const camp=evaluationGoodCamp();loadFoodRankReferences().then(()=>{if(camp===evaluationGoodCamp())replace(item)}).catch(()=>{if(camp===evaluationGoodCamp())replace(item)})};
+  if(store.errors.has(key)){
+   let retry=panel.querySelector('.psg-food-rank-retry');if(!retry){retry=document.createElement('button');retry.type='button';retry.className='btn psg-food-rank-retry';retry.textContent='ランク基準を再読込';panel.append(retry)}retry.onclick=loadRank;
+  }else if(!store.values.foodRankLuxray)loadRank();
+ }
  const retry=host.querySelector('.psg-food-eval-retry');if(retry)retry.onclick=load;
  if(!activeFoodRoleReferences()&&!campReferenceStore().errors.has('food'))load();
 };
