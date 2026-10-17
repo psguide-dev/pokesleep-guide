@@ -1,0 +1,63 @@
+// Four ingredient specialists: native trigger count only, with all skill effects excluded.
+const SPECIAL_COUNT_SPECIES=new Set(['0122_default','0132_default','0439_default','0442_default']);
+const SPECIAL_COUNT_CATALOGS=new WeakMap(),SPECIAL_COUNT_CACHE=new WeakMap();
+function specialCountSupported(p){return !!p&&p.specialty==='食材'&&SPECIAL_COUNT_SPECIES.has(speciesKey(p))}
+function specialCountCatalog(catalog){
+ if(SPECIAL_COUNT_CATALOGS.has(catalog))return SPECIAL_COUNT_CATALOGS.get(catalog);
+ const skills={...catalog.skills};
+ for(const p of Object.values(catalog.pokemon||{})){
+  if(!specialCountSupported(p))continue;
+  const skill=skills[p.mainSkillId];if(!skill)continue;
+  // A private diagnostic ID also bypasses the special reward/recovery kernel.
+  // The production catalog, team effects and shared daily engine remain unchanged.
+  skills[p.mainSkillId]={...skill,id:`count_only_${skill.id}`,effectType:'activation_count_only',levels:Object.fromEntries(Object.keys(skill.levels||{}).map(level=>[level,{}]))};
+ }
+ const isolated={...catalog,skills};SPECIAL_COUNT_CATALOGS.set(catalog,isolated);return isolated;
+}
+function specialCountEvaluation(item,p,level=foodRoleLevel(item)){
+ const pending=text=>({status:'pending',text,level,effectValue:null});
+ if(!specialCountSupported(p)||Number(item.no)!==Number(p.no)||item.speciesId&&item.speciesId!==speciesKey(p))return pending('この種類の発動回数評価は対象外です。');
+ if(![50,60,70,80].includes(level))return pending('対応する評価Lvを選んでください。');
+ const record={...item,level,ribbonHours:0,ingredients:{...item.ingredients}};
+ const reasons=individualEvaluationReasons(record,p).filter(reason=>!(level===80&&reason==='対応範囲内のレベルを設定してください'));
+ for(const slot of p.ingredientSlots||[]){
+  if(slot.unlock>level)continue;
+  if(!record.ingredients[slot.unlock]&&slot.candidates?.length===1)record.ingredients[slot.unlock]=slot.candidates[0].name;
+  const food=slot.candidates?.find(candidate=>candidate.name===record.ingredients[slot.unlock]);
+  if(!food||!Number.isFinite(food.qty)||food.qty<=0)reasons.push(`Lv.${slot.unlock}の食材構成を設定してください`);
+ }
+ if(reasons.length)return pending(reasons.join('／'));
+ const catalog=window.PS_CATALOG,skill=catalog.skills?.[p.mainSkillId];
+ if(!skill||!Number.isFinite(p.skillRate))return pending('スキルのデータを確認できませんでした。');
+ const camp=evaluationGoodCamp(),key=JSON.stringify([record,p,camp]);
+ let cache=SPECIAL_COUNT_CACHE.get(catalog);if(!cache){cache=new Map();SPECIAL_COUNT_CACHE.set(catalog,cache)}
+ if(cache.has(key))return cache.get(key);
+ // Confirmed normal forms only: resolve by national number in the diagnostic catalog.
+ delete record.speciesId;
+ const result=dailyBaseline([record.id],[record],specialCountCatalog(catalog),4,100,camp,3,[],0,{},null,{},null,{trackCarryFill:true});
+ const member=result.members.find(member=>member.id===record.id);
+ if(!member||member.missing||!Number.isFinite(member.stats?.skill)||!Number.isFinite(member.skillTriggers)||member.skillTriggers<0)return pending('発動回数の計算条件を確認できませんでした。');
+ const evaluation={status:'ready',level,camp,value:member.skillTriggers,stockLimit:member.stockLimit,member,effectValue:null,metric:'native_skill_triggers_per_day_effects_excluded'};
+ return cacheRoleEvaluation(cache,key,evaluation);
+}
+function renderSpecialCount(item,p){
+ const e=specialCountEvaluation(item,p),n=window.PS_NUMBERS.display;
+ const select=`<label>評価Lv. <select class="psg-food-eval-level" aria-label="食材評価レベル">${[60,70,80].map(level=>`<option value="${level}"${level===e.level?' selected':''}>${level}${level===80?'（予測）':''}</option>`).join('')}</select></label>`;
+ const count=e.status==='ready'?`<p>スキル発動予想 <strong>約${n(e.value)}回／日</strong></p>`:`<p>スキル発動予想：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>`;
+ const summary=`${select}<p><b>食材収集力の評価は準備中</b></p>${count}<p class="psg-box-muted">スキル効果・チーム貢献は未評価</p><p class="psg-box-muted">${evaluationCampLabel()}・評価Lv.${e.level}${e.level===80?'（予測）':''}・4時間回収・リボンなし</p>`;
+ if(roleEvaluationOverview())return `<div class="psg-special-count">${summary}</div>`;
+ return `<div class="psg-special-count">${summary}<details class="psg-box-explanation"><summary>発動回数の条件・対象範囲</summary><p>バリヤード・メタモン・マネネ・ミカルゲの発動回数だけを試算します。性格・有効サブスキル・解放済み食材枠の個数による所持数の圧迫を含み、ストック上限は1回です。</p><p>覚醒16時間＋睡眠8時間・開始げんき100・食事3回。好物・フィールド・EX・イベント・外部支援なし。登録個体のレベル・リボンは変更しません。</p><p class="psg-box-muted">コピー先の効果・追加おてつだいによる収穫・回復連動を除いた発動回数です。スキル保証・変動確率・コピー先固有の発動制限は精密再現していません。効果量・理想比・上回る構成割合・ランクは未評価です。食材収集力や4種の強さの順位を表しません。</p></details></div>`;
+}
+const renderBeforeSpecialCount=renderIndividualEvaluation,bindBeforeSpecialCount=bindIndividualEvaluation;
+renderIndividualEvaluation=function(item,p,options={}){return specialCountSupported(p)&&!options.compact?renderSpecialCount(item,p):renderBeforeSpecialCount(item,p,options)};
+bindIndividualEvaluation=function(host,item,p){
+ if(!specialCountSupported(p))return bindBeforeSpecialCount(host,item,p);
+ const panel=host.querySelector('.psg-special-count');if(!panel)return;
+ const select=panel.querySelector('.psg-food-eval-level');
+ if(select)select.onchange=()=>{
+  const next={...item,foodEvaluationLevel:Number(select.value)},open=panel.querySelector('details')?.open===true;
+  panel.outerHTML=renderSpecialCount(next,p);
+  const current=host.querySelector('.psg-special-count');if(open&&current?.querySelector('details'))current.querySelector('details').open=true;
+  bindIndividualEvaluation(host,next,p);
+ };
+};

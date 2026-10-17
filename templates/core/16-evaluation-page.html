@@ -18,7 +18,7 @@ function placeEvaluationControls(host,item,p){
   // Older fallback renderers can still supply an inline entry; the heading owns it now.
   for(const entry of host.querySelectorAll('.psg-evaluation-page-link')){const parent=entry.parentElement;entry.remove();if(parent.tagName==='SPAN'&&!parent.childNodes.length)parent.remove()}
  }
- const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role');
+ const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role,.psg-special-count');
  const label=panel?.querySelector('label');if(!label)return;
  let controls=panel.querySelector('.psg-role-evaluation-controls');
  if(!controls){controls=document.createElement('div');controls.className='psg-role-evaluation-controls';label.before(controls);controls.append(label)}
@@ -48,7 +48,7 @@ renderBerryRole=(item,p)=>evaluationPageMarkup(evaluationBerryRenderer(item,p),i
 renderSkillRole=(item,p)=>evaluationPageMarkup(evaluationSkillRenderer(item,p),item);
 renderIndividualEvaluation=function(item,p,options={}){
  const html=evaluationSimpleRenderer(item,p,options);
- if(options.compact||p?.specialty==='きのみ'||p?.specialty==='スキル'||typeof foodRoleSupported==='function'&&foodRoleSupported(p))return html;
+ if(options.compact||typeof specialCountSupported==='function'&&specialCountSupported(p)||p?.specialty==='きのみ'||p?.specialty==='スキル'||typeof foodRoleSupported==='function'&&foodRoleSupported(p))return html;
  const template=document.createElement('template');template.innerHTML=html;
  const button=template.content.querySelector('.psg-evaluation-open');
  if(button){const link=document.createElement('span');link.innerHTML=evaluationLink(item);button.replaceWith(link);template.content.querySelector('.psg-evaluation-detail')?.remove()}
@@ -94,7 +94,7 @@ window.addEventListener('DOMContentLoaded',()=>{
  };
  window.addEventListener('psg-camp-change',refresh);
  refresh();
- if(!['きのみ','スキル'].includes(p.specialty)&&!foodRoleSupported(p)){
+ if(!['きのみ','スキル'].includes(p.specialty)&&!foodRoleSupported(p)&&!(typeof specialCountSupported==='function'&&specialCountSupported(p))){
   host.querySelector('.psg-evaluation-page-link')?.remove();
   requestAnimationFrame(()=>{const details=document.createElement('div');details.innerHTML=renderIndividualEvaluationDetails(item,p);host.append(details)});
  }

@@ -1,6 +1,6 @@
 // Composition is a separate axis: only unlocked ingredient identity and quantity matter.
 function foodCompositionLevel(item,p){
- if(foodRoleSupported(p))return foodRoleLevel(item);
+ if(foodRoleSupported(p)||typeof specialCountSupported==='function'&&specialCountSupported(p))return foodRoleLevel(item);
  if(p?.specialty==='きのみ')return berryRoleLevel(item);
  if(p?.specialty==='スキル')return skillRoleLevel(item);
  return [60,70,80].includes(item.foodCompositionEvaluationLevel)?item.foodCompositionEvaluationLevel:80;
@@ -36,7 +36,7 @@ function renderCompositionRecipes(environment,slots){
 function renderFoodComposition(item,p){
  if(!p)return '';
  const level=foodCompositionLevel(item,p),environment=window.PS_FOOD_ENVIRONMENT.current(window.PS_CATALOG,evaluationGoodCamp(),calculatePotCapacity),e=foodCompositionEvaluation(item,p,level,environment),n=window.PS_NUMBERS.display;
- const separateLevel=!foodRoleSupported(p)&&!['きのみ','スキル'].includes(p.specialty);
+ const separateLevel=!foodRoleSupported(p)&&!(typeof specialCountSupported==='function'&&specialCountSupported(p))&&!['きのみ','スキル'].includes(p.specialty);
  const select=separateLevel?`<label>評価Lv. <select class="psg-composition-level" aria-label="食材構成の評価レベル">${[60,70,80].map(value=>`<option value="${value}"${value===level?' selected':''}>${value}${value===80?'（予測）':''}</option>`).join('')}</select></label>`:'';
  const heading=`<h3>食材構成の料理適性（試作）</h3>${select}<p class="psg-box-muted">評価Lv.${level}${level===80?'（予測）':''}の解放枠で集計</p>`;
  if(e.status!=='ready')return `<section class="psg-food-composition">${heading}<p>構成適性：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p></section>`;

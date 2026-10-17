@@ -1,0 +1,42 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),root=require('node:path').resolve(__dirname,'..');
+const {ctx,catalog}=require('./skill_model_runtime.cjs').createRuntime(root,false);
+ctx.speciesKey=p=>ctx.window.PS_SPECIES_CATALOG.key(p);ctx.teamGoodCamp=true;
+ctx.renderIndividualEvaluation=()=>'<p>previous</p>';ctx.bindIndividualEvaluation=()=>{};
+for(const file of ['13-role-model-helpers','15-food-role','15-special-count'])vm.runInContext(fs.readFileSync(`${root}/templates/core/${file}.html`,'utf8'),ctx);
+const originalCatalog=JSON.stringify(catalog),skills=['スキル確率アップM','おてつだいスピードM','最大所持数アップL','スキル確率アップS','おてつだいスピードS'];
+const fixture=JSON.parse(fs.readFileSync(`${root}/tests/fixtures/special-count-v1.json`));
+let count=0;
+const ordinary=(record,source=catalog)=>ctx.dailyBaseline([record.id],[record],source,4,100,ctx.teamGoodCamp,3,[],0,{},null,{},null,{trackCarryFill:true});
+for(const [no,level,camp,ingredients,expected] of fixture.rows){
+ ctx.teamGoodCamp=camp;const p=catalog.pokemon[no],item={id:'special-count',no,speciesId:ctx.speciesKey(p),level:62,nature:'きまぐれ',subskills:skills,ingredients,foodEvaluationLevel:level,skillLevel:1,ribbonHours:2000};
+ const before=JSON.stringify(item),e=ctx.specialCountEvaluation(item,p,level);
+ assert.equal(e.status,'ready',p.name);assert.equal(e.stockLimit,1);assert.equal(e.effectValue,null);
+ assert(Math.abs(e.value-expected)<1e-10,`${p.name} ${level} ${camp}: ${e.value} vs ${expected}`);
+ assert.equal(e.member.skillExtraHelps,0);assert.equal(e.member.randomIngredients,0);assert(!e.member.specialResult);assert(!e.member.energyLinked);
+ assert.equal(ctx.specialCountEvaluation({...item,skillLevel:7,ribbonHours:0},p,level).value,e.value);
+ const normalized={...item,level,ribbonHours:0},baseline=ordinary(normalized).members[0];
+ assert(Math.abs(e.value-baseline.skillTriggers)<1e-10,'same native count as current four-species ordinary model');
+ const {speciesId,...frequencyRecord}=normalized;
+ const frequent=ctx.dailyBaseline([frequencyRecord.id],[frequencyRecord],ctx.specialCountCatalog(catalog),1,100,camp,3).members[0];assert(frequent.skillTriggers>=e.value-1e-10);
+ assert.equal(JSON.stringify(item),before);assert.equal(ctx.specialCountEvaluation(item,p,level),e,'identical requests use bounded cache');count++;
+}
+assert.equal(count,160);assert.equal(JSON.stringify(catalog),originalCatalog,'production definitions remain intact');
+ctx.teamGoodCamp=true;const p=catalog.pokemon[442],item={id:'count-display',no:442,speciesId:'0442_default',level:62,nature:'きまぐれ',subskills:skills,ingredients:Object.fromEntries(p.ingredientSlots.map(slot=>[slot.unlock,slot.candidates[0].name])),skillLevel:7,ribbonHours:2000};
+const normalBefore=ordinary(item),isolated=ctx.specialCountEvaluation(item,p);
+const normalAfter=ordinary(item);assert.equal(normalBefore.members[0].skillTriggers,normalAfter.members[0].skillTriggers);assert(normalAfter.members[0].skillExtraHelps>0,'team extra-help effect still works');assert(normalAfter.members[0].foods.get('あじわいキノコ')>normalAfter.members[0].normalFoods.get('あじわいキノコ'));
+assert.equal(isolated.level,80);assert(isolated.value>0);
+for(const bad of [{...item,nature:''},{...item,subskills:[]},{...item,subskills:[skills[0],skills[0],...skills.slice(2)]},{...item,ingredients:{}},{...item,speciesId:'0442_unknown'}])assert.equal(ctx.specialCountEvaluation(bad,p).status,'pending');
+assert.equal(ctx.specialCountEvaluation(item,p,90).status,'pending');assert.equal(ctx.specialCountEvaluation({...item,no:151},catalog.pokemon[151]).status,'pending');
+const missingRate={...catalog,pokemon:{...catalog.pokemon,442:{...p,skillRate:null}}};ctx.window.PS_CATALOG=missingRate;assert.equal(ctx.specialCountEvaluation(item,missingRate.pokemon[442]).status,'pending');ctx.window.PS_CATALOG=catalog;
+const no=parseInt('0132',10),ditto=catalog.pokemon[no],at50={...item,no,speciesId:'0132_default',ingredients:{1:ditto.ingredientSlots[0].candidates[0].name,30:ditto.ingredientSlots[1].candidates[0].name}};
+assert.equal(ctx.specialCountEvaluation(at50,ditto,50).status,'ready','locked ingredients need not be filled');assert.equal(ctx.specialCountEvaluation(at50,ditto,60).status,'pending');
+const zeroCatalog={...catalog,pokemon:{...catalog.pokemon,442:{...p,skillRate:0}}};ctx.window.PS_CATALOG=zeroCatalog;const zero=ctx.specialCountEvaluation(item,zeroCatalog.pokemon[442]);assert.equal(zero.status,'ready');assert.equal(zero.value,0);ctx.window.PS_CATALOG=catalog;
+const html=ctx.renderIndividualEvaluation(item,p);assert.match(html,/約2.8回／日/);assert.match(html,/スキル効果・チーム貢献は未評価/);assert.match(html,/80（予測）/);assert.match(html,/ストック上限は1回/);assert(!html.includes('理想比 <'));assert(!html.includes('100%'));assert(!html.includes('準備中</b>')||html.includes('食材収集力'));
+assert.equal(ctx.renderIndividualEvaluation(item,catalog.pokemon[9]),'<p>previous</p>','other species rendering is unchanged');
+ctx.roleEvaluationOverview=()=>true;assert(!ctx.renderSpecialCount(item,p).includes('<details'));
+// Composition shares the same food evaluation level, without a second selector.
+ctx.foodRoleSupported=()=>false;ctx.renderIndividualEvaluation=()=>'';ctx.bindIndividualEvaluation=()=>{};ctx.evaluationPage=true;
+vm.runInContext(fs.readFileSync(`${root}/templates/00-food-environment.html`,'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
+ctx.calculatePotCapacity=base=>base;vm.runInContext(fs.readFileSync(`${root}/templates/core/16-food-composition.html`,'utf8'),ctx);
+assert.equal(ctx.foodCompositionLevel({...item,foodEvaluationLevel:70},p),70);assert(!ctx.renderFoodComposition(item,p).includes('psg-composition-level'));
+console.log(`Special count: ${count} returned-reference conditions, 4 species, stock1, effects null/excluded, ordinary team effects intact, level/camp, missing vs zero, shared composition level and immutable inputs passed`);

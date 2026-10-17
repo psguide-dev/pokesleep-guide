@@ -79,6 +79,7 @@ jobs:
           node tests/check_cooking_packages.cjs
           node tests/check_food_environment.cjs
           node tests/check_food_composition.cjs
+          node tests/check_special_count.cjs
           node tests/check_daily_audit.cjs
           node tests/check_recipe_team_time.cjs
           node tests/check_recipe_swap_connection.cjs
