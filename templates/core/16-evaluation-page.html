@@ -2,22 +2,32 @@
 const evaluationPage=location.pathname.endsWith('/evaluation.html');
 const EVALUATION_RETURN_KEY='psg-evaluation-return-v1';
 function evaluationReturnRead(){try{return JSON.parse(sessionStorage.getItem(EVALUATION_RETURN_KEY)||'null')}catch{return null}}
-function evaluationLink(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return `<a class="btn psg-evaluation-page-link" href="${boxEsc(url.href)}">詳しく見る</a>`}
-// Reuse existing controls so event handlers and the selected level survive placement.
-function placeEvaluationControls(host){
- const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role');
+function evaluationUrl(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return url.href}
+function evaluationLink(item){return `<a class="btn psg-evaluation-page-link" href="${boxEsc(evaluationUrl(item))}">詳しく見る</a>`}
+// The heading owns its entry across pending/ready states and role-panel replacement.
+function placeEvaluationControls(host,item,p){
  const heading=host.closest('.psg-box-evaluation-section')?.querySelector('.psg-evaluation-heading');
- const link=host.querySelector('.psg-evaluation-page-link');
- if(heading){heading.querySelectorAll('.psg-evaluation-page-link').forEach(node=>node.remove());if(link){const previous=link.parentElement;heading.append(link);if(previous.tagName==='SPAN'&&!previous.childNodes.length)previous.remove()}}
- if(!panel)return;
- const label=panel.querySelector('label');if(!label)return;
+ if(heading){
+  let link=heading.querySelector('.psg-evaluation-page-link');
+  const eligible=item.id&&p?.ingredientSlots?.length;
+  if(!eligible)link?.remove();
+  else{
+   if(!link){heading.insertAdjacentHTML('beforeend',evaluationLink(item));link=heading.querySelector('.psg-evaluation-page-link')}
+   const href=evaluationUrl(item);if(link.getAttribute('href')!==href)link.setAttribute('href',href);
+  }
+  // Older fallback renderers can still supply an inline entry; the heading owns it now.
+  for(const entry of host.querySelectorAll('.psg-evaluation-page-link')){const parent=entry.parentElement;entry.remove();if(parent.tagName==='SPAN'&&!parent.childNodes.length)parent.remove()}
+ }
+ const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role');
+ const label=panel?.querySelector('label');if(!label)return;
  let controls=panel.querySelector('.psg-role-evaluation-controls');
  if(!controls){controls=document.createElement('div');controls.className='psg-role-evaluation-controls';label.before(controls);controls.append(label)}
  let condition=controls.querySelector('.psg-role-camp');
  if(!condition){condition=document.createElement('span');condition.className='psg-role-camp';controls.append(condition)}
- condition.textContent=evaluationCampLabel();
+ const text=evaluationCampLabel();if(condition.textContent!==text)condition.textContent=text;
 }
 function evaluationPageMarkup(html,item){
+ if(!/class="psg-(berry-details|skill-eval-details|food-details)"/.test(html))return html;
  const template=document.createElement('template');template.innerHTML=html;
  const detail=template.content.querySelector('.psg-berry-details,.psg-skill-eval-details,.psg-food-details');
  if(!detail)return template.innerHTML;
@@ -38,7 +48,7 @@ renderBerryRole=(item,p)=>evaluationPageMarkup(evaluationBerryRenderer(item,p),i
 renderSkillRole=(item,p)=>evaluationPageMarkup(evaluationSkillRenderer(item,p),item);
 renderIndividualEvaluation=function(item,p,options={}){
  const html=evaluationSimpleRenderer(item,p,options);
- if(options.compact||p?.specialty==='きのみ'||p?.specialty==='スキル')return html;
+ if(options.compact||p?.specialty==='きのみ'||p?.specialty==='スキル'||typeof foodRoleSupported==='function'&&foodRoleSupported(p))return html;
  const template=document.createElement('template');template.innerHTML=html;
  const button=template.content.querySelector('.psg-evaluation-open');
  if(button){const link=document.createElement('span');link.innerHTML=evaluationLink(item);button.replaceWith(link);template.content.querySelector('.psg-evaluation-detail')?.remove()}
@@ -58,7 +68,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   for(const [key,value] of Object.entries(saved.filters||{}))if(state.boxFilters[key]&&Array.isArray(value))state.boxFilters[key]=new Set(value);
   openBox(saved.id);requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,Math.max(0,saved.y||0))));return;
  }
- const section=document.getElementById('individualEvaluationPage'),host=document.getElementById('individualEvaluationContent');
+ const host=document.getElementById('individualEvaluationContent');
  window.PS_EVALUATION_PAGE=true;document.documentElement.classList.add('psg-evaluation-page');
  go('individualEvaluationPage',false);
  const id=params.get('individual'),registered=state.box.find(item=>item.id===id),p=registered?speciesFor(registered):null;

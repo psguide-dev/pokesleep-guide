@@ -39,22 +39,13 @@ function renderFoodComposition(item,p){
 const renderBeforeFoodComposition=renderIndividualEvaluation,bindBeforeFoodComposition=bindIndividualEvaluation;
 renderIndividualEvaluation=function(item,p,options={}){
  const html=renderBeforeFoodComposition(item,p,options);
- if(options.compact)return html;
- if(evaluationPage)return html+renderFoodComposition(item,p);
- // Composition needs no nature/subskills, so pending individuals still need an entry.
- if(!item.id||!p?.ingredientSlots?.length||html.includes('psg-evaluation-page-link'))return html;
- // Keep the pending entry inside the role panel replaced by async reference loading.
- const entry=evaluationLink(item);
- return /<\/div>\s*$/.test(html)?html.replace(/<\/div>\s*$/,entry+'</div>'):html+entry;
+ if(options.compact||!evaluationPage)return html;
+ return html+renderFoodComposition(item,p);
 };
 bindIndividualEvaluation=function(host,item,p){
  bindBeforeFoodComposition(host,item,p);
  if(!evaluationPage){
-  if(item.id&&p?.ingredientSlots?.length&&!host.querySelector('.psg-evaluation-page-link')){
-   const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role')||host;
-   panel.insertAdjacentHTML('beforeend',evaluationLink(item));
-  }
-  placeEvaluationControls(host);
+  placeEvaluationControls(host,item,p);
   return;
  }
  const panel=host.querySelector('.psg-food-composition');if(!panel)return;

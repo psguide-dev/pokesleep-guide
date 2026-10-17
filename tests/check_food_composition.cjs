@@ -35,12 +35,12 @@ assert(Object.values(ctx.foodCompositionEvaluation({ingredients:{1:'おいしい
 ctx.foodRoleSupported=species=>species===p; // Exercise integration with a supported food specialist, without daily-model work.
 const html=ctx.renderIndividualEvaluation(item,p);assert.match(html,/食材構成の料理適性/);assert.match(html,/Lv.80（予測）/);assert.match(html,/ABC/);assert.match(html,/収集力/);assert.match(html,/3食分の供給/);assert(!html.includes('SS〜C'));
 const before=JSON.stringify(item);const at60=ctx.renderIndividualEvaluation({...item,foodEvaluationLevel:60},p);assert.match(at60,/評価Lv.60の解放枠/);assert.equal(JSON.stringify(item),before);
-assert.equal(ctx.renderIndividualEvaluation(item,p,{compact:true}),'<div class="psg-food-role"><p>収集力</p></div>');ctx.evaluationPage=false;const pendingEntry=ctx.renderIndividualEvaluation(item,p);assert(pendingEntry.includes('psg-evaluation-page-link'));assert(pendingEntry.endsWith('</a></div>'),'pending entry stays inside the asynchronously replaced role panel');assert.equal((pendingEntry.match(/psg-evaluation-page-link/g)||[]).length,1);assert(!pendingEntry.includes('食材構成の料理適性'));ctx.evaluationPage=false;
-let entryMarkup='',entryInsertions=0;
-const rolePanel={insertAdjacentHTML:(position,html)=>{assert.equal(position,'beforeend');entryMarkup+=html;entryInsertions++}},host={querySelector:selector=>selector==='.psg-evaluation-page-link'?(entryMarkup.includes('psg-evaluation-page-link')?{}:null):rolePanel};
-ctx.bindIndividualEvaluation(host,item,p);ctx.bindIndividualEvaluation(host,item,p);assert.equal(entryInsertions,1,'pending entry binds once');
-entryMarkup='<a class="psg-evaluation-page-link">詳しい評価を見る</a>';ctx.bindIndividualEvaluation(host,item,p);assert.equal(entryInsertions,1,'loaded role with its own entry never gains a duplicate');
-entryMarkup='';ctx.bindIndividualEvaluation(host,item,p);assert.equal(entryInsertions,2,'a new pending comparison level regains its entry inside the replaceable role panel');
+assert.equal(ctx.renderIndividualEvaluation(item,p,{compact:true}),'<div class="psg-food-role"><p>収集力</p></div>');
+ctx.evaluationPage=false;
+assert.equal(ctx.renderIndividualEvaluation(item,p),'<div class="psg-food-role"><p>収集力</p></div>','box rendering leaves heading entry ownership to the page controller');
+let controlCalls=0;
+const host={};ctx.placeEvaluationControls=(givenHost,givenItem,givenSpecies)=>{assert.equal(givenHost,host);assert.equal(givenItem,item);assert.equal(givenSpecies,p);controlCalls++};
+ctx.bindIndividualEvaluation(host,item,p);ctx.bindIndividualEvaluation(host,item,p);assert.equal(controlCalls,2,'binding always synchronizes the persistent heading for pending and ready panels');
 ctx.evaluationPage=true;
 assert.equal(ctx.foodCompositionLevel({berryEvaluationLevel:70},{specialty:'きのみ'}),70);assert.equal(ctx.foodCompositionLevel({skillEvaluationLevel:60},{specialty:'スキル'}),60);assert.equal(ctx.foodCompositionLevel({},p),80);
 camp=false;const off=ctx.renderIndividualEvaluation(item,p);assert.notEqual(off,html);assert.match(off,/通常最大鍋81 → 81個/);camp=true;assert.equal(ctx.renderIndividualEvaluation(item,p),html);

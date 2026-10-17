@@ -3,10 +3,9 @@ function renderFoodRole(item,p){
  const e=foodRoleEvaluation(item,p),n=window.PS_NUMBERS.display;
  const select=`<label>評価Lv. <select class="psg-food-eval-level" aria-label="食材評価レベル">${[60,70,80].map(level=>`<option value="${level}"${level===e.level?' selected':''}>${level}${level===80?'（予測）':''}</option>`).join('')}</select></label>`;
  if(e.status!=='ready')return `<div class="psg-food-role">${select}<p>食材収集力：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${foodRoleError?'<button class="btn psg-food-eval-retry" type="button">再読込</button>':''}</div>`;
+ if(roleEvaluationOverview())return `<div class="psg-food-role">${select}${renderRoleEvaluationSummary('food',e)}</div>`;
  const foods=Object.keys(e.idealFoods).map(name=>`<tr><th scope="row">${boxEsc(name)}</th><td>${n(e.foods[name]||0)}個</td><td>${n(e.idealFoods[name])}個</td></tr>`).join('');
- const detailed=typeof evaluationPage!=='undefined'&&evaluationPage;
- if(!detailed)return evaluationPageMarkup(`<div class="psg-food-role">${select}${renderRoleEvaluationSummary('food',e)}<details class="psg-food-details"><summary>詳しい評価</summary><table class="psg-food-daily-table"><thead><tr><th>食材</th><th>個体／日</th><th>同構成の理想／日</th></tr></thead><tbody>${foods}</tbody></table></details></div>`,item);
- const diagnostics=detailed?renderFoodRoleDetails(item,p,e):'';
+ const diagnostics=renderFoodRoleDetails(item,p,e);
  const recovery=FOOD_ROLE_RECOVERY_SPECIES.has(speciesKey(p));
  const recoverySummary=recovery?'・自身の回復込み（単体）':'';
  const recoveryDetails=recovery?'<p class="psg-box-muted">自身への回復が、その後の通常食材収集を増やす効果を含みます。単体での比較であり、実際の5体編成での回復対象抽選・他個体への貢献・外部からの回復は評価しません。スキル由来の増加分を日産へ二重加算しません。</p>':'';

@@ -31,3 +31,7 @@ assert.equal(ctx.berryStrongerText({strongerLower:0,strongerUpper:.001,strongerP
 assert.notEqual(ctx.berryShareBound(.000001),'0.00');assert.equal(ctx.berryShareBound(0),'0');checks+=2;
 fs.writeFileSync(path.join(root,'berry_model_checks.json'),JSON.stringify({checksPassed:checks,referenceGroups:Object.keys(data.entries).length,dodrio80Default:{value:basic.value,ideal:basic.ideal,idealPercent:basic.idealPercent,lower:basic.strongerLower,upper:basic.strongerUpper},dodrio80Skill6:{value:higher.value,ideal:higher.ideal,idealPercent:higher.idealPercent,lower:higher.strongerLower,upper:higher.strongerUpper}},null,2));
 console.log(JSON.stringify({checksPassed:checks,referenceGroups:Object.keys(data.entries).length}));
+
+ctx.evaluationPage=false;const renderDetails=ctx.renderBerryDetailsResult;ctx.renderBerryDetailsResult=()=>{throw Error('Box overview must not render detailed results')};
+const overviewHtml=ctx.renderBerryRole(sample,p);assert(overviewHtml.includes('psg-role-result'));assert(overviewHtml.includes('理想比'));assert(!overviewHtml.includes('<details'));assert(!overviewHtml.includes('比較用スキルLv'));ctx.renderBerryDetailsResult=renderDetails;
+console.log('Berry overview: no discarded detail calculations or markup');

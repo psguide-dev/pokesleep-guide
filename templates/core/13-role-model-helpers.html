@@ -4,6 +4,7 @@ function roleEvaluationLevel(item,field){
  const selected=item[field];
  return [50,60,70,80].includes(selected)?selected:80;
 }
+function roleEvaluationOverview(){return typeof evaluationPage!=='undefined'&&!evaluationPage}
 // Compact box result. Composition suitability remains a separate axis on the detail page.
 function renderRoleEvaluationSummary(kind,e){
  const n=window.PS_NUMBERS.display,food=kind==='food',berry=kind==='berry';

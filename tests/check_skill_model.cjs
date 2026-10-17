@@ -50,3 +50,8 @@ assert(withRecovery>withoutRecovery);checks++;
 ctx.window.PS_BERRY_MODEL_DATA=JSON.parse(fs.readFileSync(path.join(root,'assets/evaluation/berry_model_refs_v5.json')));
 assert(ctx.renderIndividualEvaluation({...base,no:26},catalog.pokemon[26]).includes('きのみ'));assert(!ctx.renderIndividualEvaluation({...base,no:26},catalog.pokemon[26]).includes('スキル評価レベル'));checks+=2;
 fs.writeFileSync(path.join(root,'skill_model_checks.json'),JSON.stringify({checksPassed:checks,groups:Object.keys(data.entries).length,capacityCase:{plainValue,berryValue,carryValue,dedennePlain,dedenneCarry}},null,2));console.log(JSON.stringify({checksPassed:checks,groups:Object.keys(data.entries).length,capacityCase:{plainValue,berryValue,carryValue,dedennePlain,dedenneCarry}}));
+
+ctx.evaluationPage=false;const carryText=ctx.roleCarryFillText;ctx.roleCarryFillText=()=>{throw Error('Box overview must not format detail-only carry diagnostics')};
+const overviewRef=Object.values(data.entries).find(r=>r.no===181&&r.level===80),overviewSpecies=catalog.pokemon[181],overviewItem={id:'overview',no:181,speciesId:'0181_default',level:62,skillEvaluationLevel:80,...overviewRef.idealRecord,ingredients:Object.fromEntries([1,30,60].map((l,i)=>[l,overviewRef.idealRecord.ingredients[i]]))};
+const overviewHtml=ctx.renderSkillRole(overviewItem,overviewSpecies);assert(overviewHtml.includes('psg-role-result'));assert(overviewHtml.includes('スキル発動／日'));assert(!overviewHtml.includes('<details'));ctx.roleCarryFillText=carryText;
+console.log('Skill overview: no discarded carry diagnostics or markup');

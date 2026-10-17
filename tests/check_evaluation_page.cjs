@@ -31,3 +31,13 @@ const host=page.elements.individualEvaluationContent;host.querySelector=selector
 const reloaded=fixture('https://example.test/evaluation.html?individual=record-1',[item],page.memory.saved);assert.equal(reloaded.calls.find(x=>x[0]==='render')[1].skillEvaluationLevel,70,'comparison level survives reload without changing registered level');
 page.events['psg-camp-change']();assert.equal(page.calls.filter(x=>x[0]==='render').at(-1)[1].skillEvaluationLevel,70,'camp refresh retains selected comparison level');
 console.log('Evaluation comparison levels: session-only save, reload, return metadata and camp refresh passed');
+
+// Rebinding and switching records must reuse the heading link, without duplicate entries.
+const overview=fixture('https://example.test/review.html?screen=box',[],null);
+const heading={entry:null,inserts:0,querySelector(){return this.entry},insertAdjacentHTML(position,html){this.inserts++;const attributes={href:html.match(/href="([^"]+)"/)[1]};this.entry={getAttribute:key=>attributes[key],setAttribute:(key,value)=>{attributes[key]=value},remove:()=>{this.entry=null}}}};
+const overviewHost={closest:()=>({querySelector:()=>heading}),querySelector:()=>null,querySelectorAll:()=>[]},species={ingredientSlots:[{unlock:1}]};
+overview.context.placeEvaluationControls(overviewHost,{id:'first'},species);const firstLink=heading.entry;
+overview.context.placeEvaluationControls(overviewHost,{id:'first'},species);assert.equal(heading.inserts,1);assert.equal(heading.entry,firstLink);
+overview.context.placeEvaluationControls(overviewHost,{id:'second'},species);assert.equal(heading.entry,firstLink,'record switching updates the existing entry');assert.equal(firstLink.getAttribute('href'),'https://example.test/evaluation.html?individual=second');
+overview.context.placeEvaluationControls(overviewHost,{},species);assert.equal(heading.entry,null,'an ineligible record clears the old destination');
+console.log('Evaluation heading entry: repeated binding, record switching and stale-link removal passed');
