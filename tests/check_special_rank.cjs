@@ -24,7 +24,7 @@ const outputRequests=()=>requests.filter(url=>url.includes('/output/'));
     }
     for(const invalid of [{value:NaN},{value:null},{value:row.ideal+1},{camp:!camp},{speciesId:'0132_unknown'},{stockLimit:2},{effectValue:0},{metric:'normalFoodsFixedPattern'}])assert.equal(ctx.specialRankEvaluation({...e,...invalid},p).status,'pending');
     assert.equal(ctx.specialCountEvaluation({...item,skillLevel:1,ribbonHours:0},p).value,e.value,'effects-free count is skill-level invariant');
-    const html=ctx.renderSpecialCount(item,p);assert.match(html,/発動回数/);assert.match(html,/SS（試作）/);assert.match(html,/同構成の理想比/);assert.match(html,/食材収集力・スキル効果・チーム貢献は未評価/);assert(!html.includes('食材 SS'));assert(!html.includes('<details'));
+    const html=ctx.renderSpecialCount(item,p);assert.match(html,/発動回数/);assert.match(html,/>SS<\/strong>/);assert.match(html,/psg-role-trial/);assert.match(html,/同構成の理想比/);assert.match(html,/食材収集力・スキル効果・チーム貢献は未評価/);assert(!html.includes('食材 SS'));assert(!html.includes('<details'));
     ctx.evaluationPage=true;assert(ctx.renderSpecialCount(item,p).includes(row.count.toLocaleString('ja-JP')+'構成'));assert.match(ctx.renderSpecialCount(item,p),/ストック上限は1回/);ctx.evaluationPage=false;
     samples.set(JSON.stringify([meta.speciesId,meta.level,camp]),{item,p,e});conditions++;
    }

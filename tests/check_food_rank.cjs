@@ -23,7 +23,7 @@ const outputRequests=()=>requests.filter(url=>url.includes('food_rank_v2/output/
     }
     for(const invalid of [{value:NaN},{value:row.ideal+1},{ideal:e.ideal+1},{camp:!camp},{skillLevel:99}])assert.equal(ctx.foodRankEvaluation({...e,...invalid},p).status,'pending');
     if(row.pattern==='AAA'){
-     assert.match(ctx.renderFoodRole(item,p),/SS（試作）/);ctx.evaluationPage=true;const html=ctx.renderFoodRole(item,p);assert(html.includes(row.count.toLocaleString('ja-JP')+'構成'));if(meta.stage==='recovery')assert.match(html,/自身の回復が通常食材収集へ与える影響/);ctx.evaluationPage=false;
+     assert.match(ctx.renderFoodRole(item,p),/>SS<\/strong>/);ctx.evaluationPage=true;const html=ctx.renderFoodRole(item,p);assert(html.includes(row.count.toLocaleString('ja-JP')+'構成'));if(meta.stage==='recovery')assert.match(html,/自身の回復が通常食材収集へ与える影響/);ctx.evaluationPage=false;
     }
     samples.set(JSON.stringify([meta.speciesId,meta.level,camp]),{p,e,item});conditions++;
    }

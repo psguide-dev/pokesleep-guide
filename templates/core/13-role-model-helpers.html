@@ -6,19 +6,23 @@ function roleEvaluationLevel(item,field){
 }
 function roleEvaluationOverview(){return typeof evaluationPage!=='undefined'&&!evaluationPage}
 // Show the matching ideal directly below each daily value, without deriving it from a rounded ratio.
-function renderRoleDailyValue(value,ideal,unit){
+function renderRoleDailyValue(value,ideal,unit,showUnit=true){
  const n=window.PS_NUMBERS.display;
- return `<span class="psg-role-daily-value"><strong>${n(value)}<small>${unit}</small></strong>${Number.isFinite(ideal)?`<small class="psg-role-ideal" aria-label="理想個体 ${n(ideal)}${unit}／日">（${n(ideal)}${unit}）</small>`:''}</span>`;
+ return `<span class="psg-role-daily-value"><strong>${n(value)}${showUnit?`<small>${unit}</small>`:''}</strong>${Number.isFinite(ideal)?`<small class="psg-role-ideal" aria-label="理想個体 ${n(ideal)}${unit}／日">（${n(ideal)}${showUnit?unit:''}）</small>`:''}</span>`;
 }
-// Compact box result. Composition suitability remains a separate axis on the detail page.
+// A separate small tag can be removed when the trial period ends, without changing ranks.
+function renderRoleTrialLabel(){return '<small class="psg-role-trial">試作</small>'}
+function renderRoleResultCard({label,rank,ratio,ratioLabel,daily,value,ideal,unit,trial=false,pending=false,rankLabel='ランク'}){
+ const n=window.PS_NUMBERS.display;
+ return `<div class="psg-role-result"><div class="psg-role-pattern">${boxEsc(label)}</div><div class="psg-role-rank"><span>${boxEsc(rankLabel)}</span><strong${pending?' class="is-pending"':rank.includes('境界')?' class="is-boundary"':''}>${boxEsc(rank)}</strong>${trial?renderRoleTrialLabel():''}</div><div class="psg-role-metrics"><p><span>${ratioLabel}</span><strong>${n(ratio)}<small>%</small></strong></p><p><span>${daily}</span>${renderRoleDailyValue(value,ideal,unit,unit!=='エナジー')}</p></div></div>`;
+}
+// Compact box result. Composition suitability and comparison conditions stay on the detail page.
 function renderRoleEvaluationSummary(kind,e){
- const n=window.PS_NUMBERS.display,food=kind==='food',berry=kind==='berry';
- const label=food?`食材構成 ${boxEsc(e.pattern)}`:berry?'きのみ':'スキル';
- const rank=food?(e.rankEvaluation?.status==='ready'?`${e.rankEvaluation.rank}（試作）`:'ランク準備中'):berry?roleModelRank(e):skillModelRank(e);
- const ratio=food?e.percent:e.idealPercent,unit=food?'個':berry?'エナジー':'回';
- const daily=food?'通常食材／日':berry?'きのみ／日':'スキル発動／日';
- const context=food?'同じ種類・同構成で比較':'同じ種類で食材構成も含む比較';
- return `<div class="psg-role-result"><div class="psg-role-rank"><span>${label}</span><strong${food&&e.rankEvaluation?.status!=='ready'?' class="is-pending"':rank.includes('境界')?' class="is-boundary"':''}>${rank}</strong></div><div class="psg-role-metrics"><p><span>${food?'同構成の理想比':'理想比'}</span><strong>${n(ratio)}<small>%</small></strong></p><p><span>${daily}</span>${renderRoleDailyValue(e.value,e.ideal,unit)}</p></div></div><p class="psg-role-context">${context}</p>`;
+ const food=kind==='food',berry=kind==='berry';
+ const label=food?`食材構成 ${e.pattern}`:berry?'きのみ':'スキル';
+ const pending=food&&e.rankEvaluation?.status!=='ready';
+ const rank=food?(pending?'ランク準備中':e.rankEvaluation.rank):berry?roleModelRank(e):skillModelRank(e);
+ return renderRoleResultCard({label,rank,pending,trial:food&&!pending,ratio:food?e.percent:e.idealPercent,ratioLabel:food?'同構成の理想比':'理想比',daily:food?'通常食材／日':berry?'きのみエナジー／日':'スキル発動／日',value:e.value,ideal:e.ideal,unit:food?'個':berry?'エナジー':'回'});
 }
 function roleModelRank(e){
  const grade=p=>p<=3?'SS':p<=10?'S':p<=25?'A':p<=50?'B':'C';
