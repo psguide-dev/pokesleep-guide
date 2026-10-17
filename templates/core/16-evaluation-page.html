@@ -2,18 +2,20 @@
 const evaluationPage=location.pathname.endsWith('/evaluation.html');
 const EVALUATION_RETURN_KEY='psg-evaluation-return-v1';
 function evaluationReturnRead(){try{return JSON.parse(sessionStorage.getItem(EVALUATION_RETURN_KEY)||'null')}catch{return null}}
-function evaluationLink(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return `<a class="btn psg-evaluation-page-link" href="${boxEsc(url.href)}">詳しい評価を見る</a>`}
+function evaluationLink(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return `<a class="btn psg-evaluation-page-link" href="${boxEsc(url.href)}">詳しく見る</a>`}
 // Reuse existing controls so event handlers and the selected level survive placement.
 function placeEvaluationControls(host){
  const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role');
+ const heading=host.closest('.psg-box-evaluation-section')?.querySelector('.psg-evaluation-heading');
+ const link=host.querySelector('.psg-evaluation-page-link');
+ if(heading){heading.querySelectorAll('.psg-evaluation-page-link').forEach(node=>node.remove());if(link){const previous=link.parentElement;heading.append(link);if(previous.tagName==='SPAN'&&!previous.childNodes.length)previous.remove()}}
  if(!panel)return;
- const label=panel.querySelector('label'),link=panel.querySelector('.psg-evaluation-page-link');
- if(!label||!link)return;
+ const label=panel.querySelector('label');if(!label)return;
  let controls=panel.querySelector('.psg-role-evaluation-controls');
  if(!controls){controls=document.createElement('div');controls.className='psg-role-evaluation-controls';label.before(controls);controls.append(label)}
- const previous=link.parentElement;
- controls.append(link);
- if(previous!==controls&&previous.tagName==='SPAN'&&!previous.childNodes.length)previous.remove();
+ let condition=controls.querySelector('.psg-role-camp');
+ if(!condition){condition=document.createElement('span');condition.className='psg-role-camp';controls.append(condition)}
+ condition.textContent=evaluationCampLabel();
 }
 function evaluationPageMarkup(html,item){
  const template=document.createElement('template');template.innerHTML=html;
@@ -44,7 +46,7 @@ renderIndividualEvaluation=function(item,p,options={}){
 };
 document.addEventListener('click',event=>{
  const link=event.target.closest?.('.psg-evaluation-page-link');if(!link||!state.selected)return;
- const host=link.closest('#boxEvaluation'),item=state.selected;
+ const host=link.closest('.psg-box-evaluation-section')?.querySelector('#boxEvaluation')||link.closest('#boxEvaluation'),item=state.selected;
  const saved={id:item.id,y:window.scrollY,url:location.href,search:boxSearch.value,filters:Object.fromEntries(Object.entries(state.boxFilters).map(([key,value])=>[key,[...value]])),berryLevel:host?.querySelector('.psg-berry-level')?.value,skillLevel:host?.querySelector('.psg-skill-eval-level')?.value,foodLevel:host?.querySelector('.psg-food-eval-level')?.value};
  try{sessionStorage.setItem(EVALUATION_RETURN_KEY,JSON.stringify(saved))}catch{}
 });

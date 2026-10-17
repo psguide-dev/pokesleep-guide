@@ -5,6 +5,7 @@ function renderFoodRole(item,p){
  if(e.status!=='ready')return `<div class="psg-food-role">${select}<p>食材収集力：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${foodRoleError?'<button class="btn psg-food-eval-retry" type="button">再読込</button>':''}</div>`;
  const foods=Object.keys(e.idealFoods).map(name=>`<tr><th scope="row">${boxEsc(name)}</th><td>${n(e.foods[name]||0)}個</td><td>${n(e.idealFoods[name])}個</td></tr>`).join('');
  const detailed=typeof evaluationPage!=='undefined'&&evaluationPage;
+ if(!detailed)return evaluationPageMarkup(`<div class="psg-food-role">${select}${renderRoleEvaluationSummary('food',e)}<details class="psg-food-details"><summary>詳しい評価</summary><table class="psg-food-daily-table"><thead><tr><th>食材</th><th>個体／日</th><th>同構成の理想／日</th></tr></thead><tbody>${foods}</tbody></table></details></div>`,item);
  const diagnostics=detailed?renderFoodRoleDetails(item,p,e):'';
  const recovery=FOOD_ROLE_RECOVERY_SPECIES.has(speciesKey(p));
  const recoverySummary=recovery?'・自身の回復込み（単体）':'';
