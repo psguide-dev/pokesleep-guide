@@ -376,3 +376,7 @@ html.psg-evaluation-page main>.screen:not(#individualEvaluationPage){display:non
 .psg-recipe-fit-matches span{padding:3px 8px;border:1px solid #5c9472;border-radius:20px;background:#edf7ee;color:#234a32;font-weight:700}
 .psg-recipe-fit-card summary,.psg-recipe-fit-more>summary{cursor:pointer;padding:7px 0;font-weight:700}
 .psg-recipe-fit-more>summary{color:#315f46}
+
+/* Special ingredient slots need a separate status row. */
+#boxDetail .psg-box-food-section .psg-v106-ingredient.has-unlock-state{height:auto;min-height:calc(var(--box-unit-height) + 18px);grid-template-rows:18px 20px auto;align-content:center}
+#boxDetail .has-unlock-state .psg-box-food-unlock-state{grid-column:1 / -1;grid-row:3;text-align:center;font-size:10px;line-height:1.3;overflow-wrap:anywhere}

@@ -1,9 +1,10 @@
 // Box input normalization and storage; assembled inside the core controller.
 function normalizeMythicalState(raw,p){
- if(!p?.mythicalSettings||!raw||typeof raw!=='object'||Array.isArray(raw))return null;
+ if(!p?.mythicalSettings)return null;
+ if(!raw||typeof raw!=='object'||Array.isArray(raw))raw={};
  const tri=value=>value===true?true:value===false?false:null;
  const effects=p.mythicalSettings.mainSkill.selectableEffects||[];
- return {ingredientUnlocked:Object.fromEntries([1,30,60].map(n=>[n,tri(raw.ingredientUnlocked?.[n])])),
+ return {ingredientUnlocked:Object.fromEntries([1,30,60].map(n=>[n,n===1?true:tri(raw.ingredientUnlocked?.[n])])),
   subskillUnlocked:Array.from({length:5},(_,i)=>tri(raw.subskillUnlocked?.[i])),
   selectedEffect:effects.includes(raw.selectedEffect)?raw.selectedEffect:'',
   learnedEffects:[...new Set((Array.isArray(raw.learnedEffects)?raw.learnedEffects:[]).filter(x=>effects.includes(x)))]};
@@ -20,7 +21,7 @@ function normalizeBox(raw){
     specialty:speciesFor(x)?.specialty||'未確認',
     ingredients:x.ingredients&&typeof x.ingredients==='object'?x.ingredients:{},
     subskills:Array.isArray(x.subskills)?x.subskills.slice(0,5).map(s=>String(s||'').slice(0,80)):[],
-    nature:String(x.nature||'').slice(0,40),mint:x.mint===true,
+    nature:speciesFor(x)?.mythicalSettings?.initialNature||String(x.nature||'').slice(0,40),mint:speciesFor(x)?.mythicalSettings?false:x.mint===true,
     ...(normalizeMythicalState(x.mythicalState,speciesFor(x))?{mythicalState:normalizeMythicalState(x.mythicalState,speciesFor(x))}:{}),
     skillLevel:Number.isInteger(x.skillLevel)?Math.max(1,Math.min(window.PS_CATALOG?.skills?.[speciesFor(x)?.mainSkillId]?.maxLevel||7,x.skillLevel)):1,
     role:String(x.role||defaultIndividualRole(speciesFor(x))).slice(0,40),favorite:x.favorite===true,training:x.training===true,ribbonHours:[0,200,500,1000,2000].includes(x.ribbonHours)?x.ribbonHours:0}));

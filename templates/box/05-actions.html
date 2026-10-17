@@ -35,7 +35,7 @@ document.getElementById('boxEditForm').onsubmit=e=>{
  for(const [unlock,name] of Object.entries(ingredients))if(!target.ingredientSlots?.find(s=>s.unlock===Number(unlock))?.candidates?.some(c=>c.name===name)){document.getElementById('boxEditMessage').textContent='進化先の食材候補と一致しません。食材を確認してください。';return}
  const skillLevel=Math.max(1,Math.min(window.PS_CATALOG?.skills?.[target.mainSkillId]?.maxLevel||7,Number(data.get('skillLevel'))||1));
  const ribbonHours=Number(data.get('ribbonHours'));
- const changed={...item,no:Number(target.no),speciesId:speciesKey(target),name:target.name,specialty:target.specialty,ribbonHours:[0,200,500,1000,2000].includes(ribbonHours)?ribbonHours:0,ingredients,subskills:SUBSKILL_LEVELS.map((_,i)=>String(data.get(`subskill-${i}`)||'').trim().slice(0,80)),nature:String(data.get('nature')||'').trim().slice(0,40),mint:data.get('mint')==='on',skillLevel,role:String(data.get('role')||'').trim().slice(0,40)};
+ const changed={...item,no:Number(target.no),speciesId:speciesKey(target),name:target.name,specialty:target.specialty,ribbonHours:[0,200,500,1000,2000].includes(ribbonHours)?ribbonHours:0,ingredients,subskills:SUBSKILL_LEVELS.map((_,i)=>String(data.get(`subskill-${i}`)||'').trim().slice(0,80)),nature:target.mythicalSettings?.initialNature||String(data.get('nature')||'').trim().slice(0,40),mint:!target.mythicalSettings&&data.get('mint')==='on',skillLevel,role:String(data.get('role')||'').trim().slice(0,40)};
  delete changed.evolutionCount;
  if(target.mythicalSettings){
   const tri=value=>value==='yes'?true:value==='no'?false:null;

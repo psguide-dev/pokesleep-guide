@@ -24,7 +24,12 @@ function fillBoxEditor(item,p){
  updateRibbonPreview();form.elements.ribbonHours.onchange=updateRibbonPreview;
  document.getElementById('boxMintIcon').innerHTML=window.PS_UI_ART.icon('items','まっしろミント');
  fillBoxNatureEditor(item,form);
- form.elements.mint.checked=!!item.mint;
+ const fixedNature=p?.mythicalSettings?.initialNature;
+ for(const el of [document.getElementById('boxNatureUp'),document.getElementById('boxNatureDown'),form.elements.nature,form.elements.mint])el.disabled=!!fixedNature;
+ document.querySelector('.psg-editor-nature-axes').hidden=!!fixedNature;
+ document.getElementById('boxNeutralNatureLabel').hidden=!!fixedNature;
+ if(fixedNature)document.getElementById('boxNatureInferred').textContent='性格：'+fixedNature+'（固定）';
+ form.elements.mint.checked=!fixedNature&&!!item.mint;
  fillBoxSkillLevel(form,p,item.skillLevel||1);
  form.elements.role.querySelector('[data-legacy]')?.remove();
  if(item.role&&!['きのみ','食材','スキル'].includes(item.role)){const option=document.createElement('option');option.value=item.role;option.textContent=item.role+'（旧設定）';option.dataset.legacy='true';form.elements.role.append(option);}
@@ -40,7 +45,7 @@ function fillBoxMythicalEditor(item,p){
  const host=document.getElementById('boxEditMythical');host.hidden=!p?.mythicalSettings;host.replaceChildren();
  if(!p?.mythicalSettings)return;
  const current=normalizeMythicalState(item.mythicalState,p),settings=p.mythicalSettings,effects=settings.mainSkill.selectableEffects||[];
- for(const unlock of [1,30,60]){
+ for(const unlock of [30,60]){
   const label=document.querySelector(`#boxEditIngredients select[name="ingredient-${unlock}"]`).closest('label');
   label.insertAdjacentHTML('beforeend',mythicalUnlockSelect(`ingredient-unlocked-${unlock}`,current?.ingredientUnlocked[unlock]));
  }

@@ -137,9 +137,9 @@ function syncLevel({refreshEditor=true}={}){
   const image=name&&window.PS_CATALOG.ingredientVisual(name)?.image;
   const iconSource=image||window.PS_INGREDIENT_FALLBACK_ICON?.(name);
   const icon=iconSource?`<img src="${iconSource}" alt="${boxEsc(name)}">`:'';
-  const flag=item.mythicalState?.ingredientUnlocked?.[unlock],locked=item.level<unlock||p?.mythicalSettings&&flag!==true;
+  const flag=unlock===1?true:item.mythicalState?.ingredientUnlocked?.[unlock],locked=item.level<unlock||p?.mythicalSettings&&flag!==true;
   const stateLabel=p?.mythicalSettings?(flag===true?(item.level<unlock?'解放済み・Lv未到達':'解放済み'):flag===false?'未解放':'解放未確認'):item.level<unlock?'Lv未到達':'';
-  return `<div data-slot="${ingredientLetter}" class="psg-v106-ingredient ${locked?'is-locked':''}" aria-label="Lv.${unlock} ${boxEsc(name||'食材未確認')}${choice?' '+choice.qty+'個':''} ${stateLabel}"><span class="psg-v106-ingredient-image">${icon||'<span class="psg-v106-unknown">◌</span>'}</span><b class="psg-v106-unlock">${unlock===1?'初期':'Lv.'+unlock}</b><strong>${choice?'×'+choice.qty:'—'}</strong>${p?.mythicalSettings?`<small>${stateLabel}</small>`:''}</div>`;
+  return `<div data-slot="${ingredientLetter}" class="psg-v106-ingredient ${p?.mythicalSettings?'has-unlock-state ':''}${locked?'is-locked':''}" aria-label="Lv.${unlock} ${boxEsc(name||'食材未確認')}${choice?' '+choice.qty+'個':''} ${stateLabel}"><span class="psg-v106-ingredient-image">${icon||'<span class="psg-v106-unknown">◌</span>'}</span><b class="psg-v106-unlock">${unlock===1?'初期':'Lv.'+unlock}</b><strong>${choice?'×'+choice.qty:'—'}</strong>${p?.mythicalSettings?`<small class="psg-box-food-unlock-state">${stateLabel}</small>`:''}</div>`;
  });
  document.getElementById('boxIngredientRows').innerHTML=ingredientRows.join('');
  const daily=boxDailyEstimate(item);renderBoxDayFood(daily);
@@ -147,7 +147,7 @@ function syncLevel({refreshEditor=true}={}){
   const name=item.subskills?.[index]||'',badge=window.PS_IMAGE_FILES.subskills?.[name];
   const flag=item.mythicalState?.subskillUnlocked?.[index],locked=unlock>MAX_POKEMON_LEVEL||item.level<unlock||p?.mythicalSettings&&flag!==true;
   const stateLabel=p?.mythicalSettings?(flag===true?(item.level<unlock?'解放済み・Lv未到達':'解放済み'):flag===false?'未解放':'解放未確認'):locked?'Lv未到達':'';
-  return `<div class="psg-box-subskill ${locked?'is-locked':''}" aria-label="Lv.${unlock} ${boxEsc(name||'未確認')} ${stateLabel}"><div class="psg-subskill-top"><b>Lv.${unlock}</b>${badge?`<img class="psg-subskill-badge" src="${badge}" alt="">`:'<span class="psg-subskill-unknown" aria-hidden="true">◌</span>'}</div><strong>${boxEsc(name||'未確認')}</strong>${p?.mythicalSettings?`<small>${stateLabel}</small>`:''}</div>`;
+  return `<div class="psg-box-subskill ${locked?'is-locked':''}" aria-label="Lv.${unlock} ${boxEsc(name||'未確認')} ${stateLabel}"><div class="psg-subskill-top"><b>Lv.${unlock}</b>${badge?`<img class="psg-subskill-badge" src="${badge}" alt="">`:'<span class="psg-subskill-unknown" aria-hidden="true">◌</span>'}</div><strong>${boxEsc(name||'未確認')}</strong>${p?.mythicalSettings?`<small class="psg-box-food-unlock-state">${stateLabel}</small>`:''}</div>`;
  }).join('')+'<div id="boxNature" class="psg-box-nature-tile" aria-label="性格と補正"></div>';
  const skill=window.PS_CATALOG?.skills?.[p?.mainSkillId];
  const skillLv=Math.min(Math.max(1,item.skillLevel||1),skill?.maxLevel||7);
