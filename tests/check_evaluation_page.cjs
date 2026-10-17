@@ -36,7 +36,7 @@ console.log('Evaluation comparison levels: session-only save, reload, return met
 const overview=fixture('https://example.test/review.html?screen=box',[],null);
 let controls=null,insertCount=0;
 const label={before(node){controls=node},parentElement:null};
-const makeControl=()=>({className:'',entry:null,children:[],append(child){this.children.push(child);child.parentElement=this},querySelector(selector){return selector==='.psg-evaluation-page-link'?this.entry:null},insertAdjacentHTML(position,html){insertCount++;const attributes={href:html.match(/href="([^"]+)"/)[1]};this.entry={parentElement:this,getAttribute:key=>attributes[key],setAttribute:(key,value)=>{attributes[key]=value},remove:()=>{this.entry=null}}}});
+const makeControl=()=>({className:'',entry:null,children:[],append(child){this.children.push(child);child.parentElement=this},prepend(child){this.children.unshift(child);child.parentElement=this},querySelector(selector){return selector==='.psg-evaluation-page-link'?this.entry:selector==='.psg-evaluation-type'?this.children.find(child=>child.className==='psg-evaluation-type')||null:null},insertAdjacentHTML(position,html){insertCount++;const attributes={href:html.match(/href="([^"]+)"/)[1]};this.entry={parentElement:this,getAttribute:key=>attributes[key],setAttribute:(key,value)=>{attributes[key]=value},remove:()=>{this.entry=null}}}});
 overview.context.document.createElement=makeControl;
 const panel={querySelector(selector){return selector==='label'?label:selector==='.psg-role-evaluation-controls'?controls:null}};
 const overviewHost={querySelector(selector){return selector.includes('.psg-food-role')?panel:null},querySelectorAll(){return controls?.entry?[controls.entry]:[]},prepend(node){controls=node}},species={ingredientSlots:[{unlock:1}]};
@@ -49,3 +49,11 @@ controls=null;overview.context.placeEvaluationControls(overviewHost,{id:'second'
 overview.context.placeEvaluationControls(overviewHost,{},species);assert.equal(controls.entry,null);
 const boxTemplate=fs.readFileSync('templates/10-box-detail.html','utf8');assert(!boxTemplate.includes('<span>個体の評価</span>'));assert(!source.includes('psg-role-camp'));
 console.log('Evaluation row: level replaces heading inside the live panel, repeated binding/replacement, destination updates and no camp caption passed');
+
+assert.equal(controls.children.filter(child=>child.className==='psg-evaluation-type').length,1,'rebinding keeps one type heading');
+assert.equal(overview.context.evaluationTypeLabel({}, {specialty:'スキル'}),'スキル型');
+assert.equal(overview.context.evaluationTypeLabel({}, {specialty:'きのみ'}),'きのみ型');
+const foodSpecies={specialty:'食材',ingredientSlots:[{unlock:1,candidates:[{name:'A'}]},{unlock:30,candidates:[{name:'A'},{name:'B'}]},{unlock:60,candidates:[{name:'A'},{name:'B'},{name:'C'}]}]};
+assert.equal(overview.context.evaluationTypeLabel({ingredients:{30:'B',60:'C'}},foodSpecies),'食材ABC型');
+assert.equal(overview.context.evaluationTypeLabel({ingredients:{30:'unknown'}},foodSpecies),'食材A??型','unknown slots stay explicit');
+console.log('Type heading: skill/berry labels, actual food pattern, implicit single candidate and unknown slot guards passed');

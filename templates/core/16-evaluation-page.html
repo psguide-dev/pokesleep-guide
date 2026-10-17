@@ -4,6 +4,16 @@ const EVALUATION_RETURN_KEY='psg-evaluation-return-v1';
 function evaluationReturnRead(){try{return JSON.parse(sessionStorage.getItem(EVALUATION_RETURN_KEY)||'null')}catch{return null}}
 function evaluationUrl(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return url.href}
 function evaluationLink(item){return `<a class="btn psg-evaluation-page-link" href="${boxEsc(evaluationUrl(item))}">詳しく見る</a>`}
+function evaluationTypeLabel(item,p){
+ if(p?.specialty!=='食材')return p?.specialty?`${p.specialty}型`:'評価';
+ const level=[60,70,80].includes(item.foodEvaluationLevel)?item.foodEvaluationLevel:80;
+ const pattern=(p.ingredientSlots||[]).filter(slot=>slot.unlock<=level).map(slot=>{
+  const selected=item.ingredients?.[slot.unlock];let index=slot.candidates.findIndex(food=>food.name===selected);
+  if(index<0&&slot.candidates.length===1)index=0;
+  return index<0?'?':String.fromCharCode(65+index);
+ }).join('');
+ return `食材${pattern||'?'}型`;
+}
 // The level control owns the top row; keep it inside the replaceable role panel.
 // This preserves binding, camp refresh and saved levels while removing the old heading.
 function placeEvaluationControls(host,item,p){
@@ -14,6 +24,9 @@ function placeEvaluationControls(host,item,p){
   controls=document.createElement('div');controls.className='psg-role-evaluation-controls psg-evaluation-heading';
   if(label){label.before(controls);controls.append(label)}else host.prepend(controls);
  }
+ let title=controls.querySelector('.psg-evaluation-type');
+ if(!title){title=document.createElement('span');title.className='psg-evaluation-type';controls.prepend(title)}
+ title.textContent=evaluationTypeLabel(item,p);
  const eligible=!evaluationPage&&item.id&&p?.ingredientSlots?.length;
  let link=controls.querySelector('.psg-evaluation-page-link');
  if(!eligible)link?.remove();
