@@ -17,14 +17,16 @@ function normalizeBox(raw){
     if(!x||typeof x.id!=='string'||! /^[a-zA-Z0-9-]{1,100}$/.test(x.id)||seen.has(x.id)||!known.has(Number(x.no))||!Number.isInteger(x.level)||x.level<1||x.level>100)return false;
     seen.add(x.id);return true;
   })
-   .map(x=>({id:x.id,no:Number(x.no),...(x.speciesId?{speciesId:String(x.speciesId).slice(0,80)}:{}),level:Math.min(70,x.level),name:speciesFor(x)?.name||`${window.PS_FORMS?.dexEntries.find(p=>p.no===Number(x.no))?.name||'ポケモン'}（姿未確認）`,
-    specialty:speciesFor(x)?.specialty||'未確認',
+   .map(x=>{
+    const species=speciesFor(x),mythicalState=normalizeMythicalState(x.mythicalState,species);
+    return {id:x.id,no:Number(x.no),...(x.speciesId?{speciesId:String(x.speciesId).slice(0,80)}:{}),level:Math.min(70,x.level),name:species?.name||`${window.PS_FORMS?.dexEntries.find(p=>p.no===Number(x.no))?.name||'ポケモン'}（姿未確認）`,
+    specialty:species?.specialty||'未確認',
     ingredients:x.ingredients&&typeof x.ingredients==='object'?x.ingredients:{},
     subskills:Array.isArray(x.subskills)?x.subskills.slice(0,5).map(s=>String(s||'').slice(0,80)):[],
-    nature:speciesFor(x)?.mythicalSettings?.initialNature||String(x.nature||'').slice(0,40),mint:speciesFor(x)?.mythicalSettings?false:x.mint===true,
-    ...(normalizeMythicalState(x.mythicalState,speciesFor(x))?{mythicalState:normalizeMythicalState(x.mythicalState,speciesFor(x))}:{}),
-    skillLevel:Number.isInteger(x.skillLevel)?Math.max(1,Math.min(window.PS_CATALOG?.skills?.[speciesFor(x)?.mainSkillId]?.maxLevel||7,x.skillLevel)):1,
-    role:String(x.role||defaultIndividualRole(speciesFor(x))).slice(0,40),favorite:x.favorite===true,training:x.training===true,ribbonHours:[0,200,500,1000,2000].includes(x.ribbonHours)?x.ribbonHours:0}));
+    nature:species?.mythicalSettings?.initialNature||String(x.nature||'').slice(0,40),mint:species?.mythicalSettings?false:x.mint===true,
+    ...(mythicalState?{mythicalState}:{}),
+    skillLevel:Number.isInteger(x.skillLevel)?Math.max(1,Math.min(window.PS_CATALOG?.skills?.[species?.mainSkillId]?.maxLevel||7,x.skillLevel)):1,
+    role:String(x.role||defaultIndividualRole(species)).slice(0,40),favorite:x.favorite===true,training:x.training===true,ribbonHours:[0,200,500,1000,2000].includes(x.ribbonHours)?x.ribbonHours:0};});
 }
 function readBox(){
  try{return normalizeBox(JSON.parse(localStorage.getItem(BOX_STORAGE_KEY)||'[]'))}
