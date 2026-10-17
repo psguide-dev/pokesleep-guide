@@ -14,7 +14,7 @@ function specialCountCatalog(catalog){
  }
  const isolated={...catalog,skills};SPECIAL_COUNT_CATALOGS.set(catalog,isolated);return isolated;
 }
-function specialCountEvaluation(item,p,level=foodRoleLevel(item)){
+function specialCountEvaluation(item,p,level=foodRoleLevel(item),camp=evaluationGoodCamp()){
  const pending=text=>({status:'pending',text,level,effectValue:null});
  if(!specialCountSupported(p)||Number(item.no)!==Number(p.no)||item.speciesId&&item.speciesId!==speciesKey(p))return pending('この種類の発動回数評価は対象外です。');
  if(![50,60,70,80].includes(level))return pending('対応する評価Lvを選んでください。');
@@ -29,7 +29,7 @@ function specialCountEvaluation(item,p,level=foodRoleLevel(item)){
  if(reasons.length)return pending(reasons.join('／'));
  const catalog=window.PS_CATALOG,skill=catalog.skills?.[p.mainSkillId];
  if(!skill||!Number.isFinite(p.skillRate))return pending('スキルのデータを確認できませんでした。');
- const camp=evaluationGoodCamp(),key=JSON.stringify([record,p,camp]);
+ const key=JSON.stringify([record,p,camp]);
  let cache=SPECIAL_COUNT_CACHE.get(catalog);if(!cache){cache=new Map();SPECIAL_COUNT_CACHE.set(catalog,cache)}
  if(cache.has(key))return cache.get(key);
  // Confirmed normal forms only: resolve by national number in the diagnostic catalog.
@@ -37,27 +37,36 @@ function specialCountEvaluation(item,p,level=foodRoleLevel(item)){
  const result=dailyBaseline([record.id],[record],specialCountCatalog(catalog),4,100,camp,3,[],0,{},null,{},null,{trackCarryFill:true});
  const member=result.members.find(member=>member.id===record.id);
  if(!member||member.missing||!Number.isFinite(member.stats?.skill)||!Number.isFinite(member.skillTriggers)||member.skillTriggers<0)return pending('発動回数の計算条件を確認できませんでした。');
- const evaluation={status:'ready',level,camp,value:member.skillTriggers,stockLimit:member.stockLimit,member,effectValue:null,metric:'native_skill_triggers_per_day_effects_excluded'};
+ const pattern=(p.ingredientSlots||[]).filter(slot=>slot.unlock<=level).map(slot=>String.fromCharCode(65+slot.candidates.findIndex(food=>food.name===record.ingredients[slot.unlock]))).join('');
+ const evaluation={status:'ready',speciesId:speciesKey(p),pattern,level,camp,value:member.skillTriggers,stockLimit:member.stockLimit,member,effectValue:null,metric:'native_skill_triggers_per_day_effects_excluded'};
  return cacheRoleEvaluation(cache,key,evaluation);
 }
 function renderSpecialCount(item,p){
  const e=specialCountEvaluation(item,p),n=window.PS_NUMBERS.display;
+ const rank=typeof specialRankEvaluation==='function'?specialRankEvaluation(e,p):{status:'pending',text:'ランク基準を準備しています。'};
  const select=`<label>評価Lv. <select class="psg-food-eval-level" aria-label="食材評価レベル">${[60,70,80].map(level=>`<option value="${level}"${level===e.level?' selected':''}>${level}${level===80?'（予測）':''}</option>`).join('')}</select></label>`;
- const count=e.status==='ready'?`<p>スキル発動予想 <strong>約${n(e.value)}回／日</strong></p>`:`<p>スキル発動予想：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>`;
- const summary=`${select}<p><b>食材収集力の評価は準備中</b></p>${count}<p class="psg-box-muted">スキル効果・チーム貢献は未評価</p><p class="psg-box-muted">${evaluationCampLabel()}・評価Lv.${e.level}${e.level===80?'（予測）':''}・4時間回収・リボンなし</p>`;
+ const result=rank.status==='ready'?`<div class="psg-role-result"><div class="psg-role-rank"><span>発動回数</span><strong>${rank.rank}（試作）</strong></div><div class="psg-role-metrics"><p><span>同構成の理想比</span><strong>${n(rank.idealPercent)}<small>%</small></strong></p><p><span>スキル発動／日</span><strong>${n(e.value)}<small>回</small></strong></p></div></div><p class="psg-role-context">食材構成 ${boxEsc(e.pattern)}・同じ種類・同構成で比較</p><p class="psg-box-muted">この個体を上回る構成 ${roleStrongerText(rank)}（比較用の割合）</p>`:`<p><b>発動回数ランク：準備中</b></p>${e.status==='ready'?`<p>スキル発動予想 <strong>約${n(e.value)}回／日</strong></p>`:`<p>スキル発動予想：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>`}<p class="psg-box-muted">${boxEsc(rank.text)}</p>`;
+ const summary=`${select}${result}<p class="psg-box-muted">食材収集力・スキル効果・チーム貢献は未評価</p><p class="psg-box-muted">${evaluationCampLabel()}・評価Lv.${e.level}${e.level===80?'（予測）':''}・4時間回収・リボンなし</p>`;
  if(roleEvaluationOverview())return `<div class="psg-special-count">${summary}</div>`;
- return `<div class="psg-special-count">${summary}<details class="psg-box-explanation"><summary>発動回数の条件・対象範囲</summary><p>バリヤード・メタモン・マネネ・ミカルゲの発動回数だけを試算します。性格・有効サブスキル・解放済み食材枠の個数による所持数の圧迫を含み、ストック上限は1回です。</p><p>覚醒16時間＋睡眠8時間・開始げんき100・食事3回。好物・フィールド・EX・イベント・外部支援なし。登録個体のレベル・リボンは変更しません。</p><p class="psg-box-muted">コピー先の効果・追加おてつだいによる収穫・回復連動を除いた発動回数です。スキル保証・変動確率・コピー先固有の発動制限は精密再現していません。効果量・理想比・上回る構成割合・ランクは未評価です。食材収集力や4種の強さの順位を表しません。</p></details></div>`;
+ return `<div class="psg-special-count">${summary}${rank.status==='ready'?`<p>同構成の理想発動回数 <strong>約${n(rank.ideal)}回／日</strong></p><p class="psg-box-muted">性格25通りと、重複なしの有効サブスキル${({60:3,70:4,80:5})[e.level]}種類の組み合わせ、計${rank.count.toLocaleString('ja-JP')}構成を比較。同値は上回る構成に含めません。捕獲・厳選成功の確率ではありません。</p>`:''}<details class="psg-box-explanation"><summary>発動回数の条件・対象範囲</summary><p>バリヤード・メタモン・マネネ・ミカルゲの発動回数だけを試算します。性格・有効サブスキル・解放済み食材枠の個数による所持数の圧迫を含み、ストック上限は1回です。</p><p>同じ種類・Lv・食材構成・キャンチケ条件内で比較します。覚醒16時間＋睡眠8時間・開始げんき100・食事3回。好物・フィールド・EX・イベント・外部支援なし。登録個体のレベル・リボンは変更しません。</p><p class="psg-box-muted">コピー先の効果・追加おてつだいによる収穫・回復連動を除いた発動回数です。スキル保証・変動確率・コピー先固有の発動制限は精密再現していません。食材収集力や4種の強さの順位を表しません。</p><p class="psg-box-muted">ランク境界は上回る構成がSS≤3%、S≤10%、A≤25%、B≤50%、残りCの試作です。</p></details></div>`;
 }
 const renderBeforeSpecialCount=renderIndividualEvaluation,bindBeforeSpecialCount=bindIndividualEvaluation;
 renderIndividualEvaluation=function(item,p,options={}){return specialCountSupported(p)&&!options.compact?renderSpecialCount(item,p):renderBeforeSpecialCount(item,p,options)};
 bindIndividualEvaluation=function(host,item,p){
  if(!specialCountSupported(p))return bindBeforeSpecialCount(host,item,p);
  const panel=host.querySelector('.psg-special-count');if(!panel)return;
- const select=panel.querySelector('.psg-food-eval-level');
- if(select)select.onchange=()=>{
-  const next={...item,foodEvaluationLevel:Number(select.value)},open=panel.querySelector('details')?.open===true;
+ const replace=next=>{
+  if(!host.contains(panel))return;
+  const open=panel.querySelector('details')?.open===true;
   panel.outerHTML=renderSpecialCount(next,p);
   const current=host.querySelector('.psg-special-count');if(open&&current?.querySelector('details'))current.querySelector('details').open=true;
   bindIndividualEvaluation(host,next,p);
  };
+ const select=panel.querySelector('.psg-food-eval-level');if(select)select.onchange=()=>replace({...item,foodEvaluationLevel:Number(select.value)});
+ if(typeof specialRankSupported!=='function'||!specialRankSupported(p,foodRoleLevel(item)))return;
+ const cache=specialRankCache(),key=specialRankKey(p,foodRoleLevel(item));
+ const load=()=>{const camp=evaluationGoodCamp();loadSpecialRankReferences(p,foodRoleLevel(item)).then(()=>{if(camp===evaluationGoodCamp())replace(item)}).catch(()=>{if(camp===evaluationGoodCamp())replace(item)})};
+ if(cache.errors.has(key)){
+  const retry=document.createElement('button');retry.type='button';retry.className='btn psg-special-rank-retry';retry.textContent='ランク基準を再読込';retry.onclick=load;panel.append(retry);
+ }else if(!cache.values.has(key))load();
 };

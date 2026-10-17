@@ -13,6 +13,8 @@ on:
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
       - 'PSG_food_rank_assets.py'
+      - 'PSG_special_rank_assets.py'
+      - 'research/special4-rank/data/**'
       - 'research/food-rank-v2/data/**'
       - 'PSG_build_sources.py'
       - 'PSG_received_art.py'
@@ -82,6 +84,8 @@ jobs:
           node tests/check_food_environment.cjs
           node tests/check_food_composition.cjs
           node tests/check_special_count.cjs
+          node tests/check_special_rank.cjs
+          python tests/check_special_rank_assets.py
           node tests/check_food_rank.cjs
           python tests/check_food_rank_assets.py
           node tests/check_daily_audit.cjs

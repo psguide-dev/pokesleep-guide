@@ -7,6 +7,7 @@ from pathlib import Path
 from PSG_build_sources import TEMPLATE_NAMES, STYLE_NAMES
 from PSG_camp_reference_assets import restore_camp_reference_assets
 from PSG_food_rank_assets import restore_food_rank_assets
+from PSG_special_rank_assets import restore_special_rank_assets
 from PSG_image_assets import image_path, face_sheet_script
 from PSG_retired_images import purge_retired_images, clean_retired_references
 from PSG_trim_assets import restore_trim_assets, restore_additional_trim_assets
@@ -388,6 +389,7 @@ def validate_pokemon_field_payloads(catalog, payloads):
 def build():
     restore_camp_reference_assets(ROOT)
     restore_food_rank_assets(ROOT)
+    restore_special_rank_assets(ROOT)
     purge_retired_images(ROOT)
     restore_trim_assets(ROOT)  # Verify received pack hashes before applying artwork.
     restore_additional_trim_assets(ROOT)
@@ -421,7 +423,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v642') == 2
+    assert source.count('Review v643') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'

@@ -1,0 +1,76 @@
+// Weighted native-trigger rank evaluator supplied by Enigma. Effects remain excluded.
+(function(root){
+ 'use strict';
+ const DEFAULT_LIMITS=Object.freeze([3,10,25,50]),cache=new WeakMap();
+ function compile(reference){
+  if(!reference||!Number.isFinite(reference.ideal)||reference.ideal<=0||!Array.isArray(reference.distribution)||!reference.distribution.length||!Number.isInteger(reference.count)||reference.count<=0)return null;
+  if(cache.has(reference))return cache.get(reference);
+  let sum=0,previous=-Infinity;const values=[],prefix=[];
+  for(const row of reference.distribution){if(!Array.isArray(row)||!Number.isFinite(row[0])||row[0]<0||row[0]<=previous||!Number.isInteger(row[1])||row[1]<=0)return null;previous=row[0];sum+=row[1];values.push(row[0]);prefix.push(sum);}
+  if(sum!==reference.count||Math.abs(previous-reference.ideal)>1e-8)return null;
+  const result={values,prefix};cache.set(reference,result);return result;
+ }
+ function evaluateRank(reference,value,limits=DEFAULT_LIMITS){
+  const pending={status:'pending'};
+  if(!Number.isFinite(value)||value<0||!Array.isArray(limits)||limits.length!==4||limits.some((n,i)=>!Number.isFinite(n)||n<0||n>100||(i&&n<=limits[i-1])))return pending;
+  const compiled=compile(reference);if(!compiled||value>reference.ideal+1e-8)return pending;
+  const {values,prefix}=compiled;let lo=0,hi=values.length;
+  while(lo<hi){const mid=(lo+hi)>>>1;if(values[mid]<=value+1e-9)lo=mid+1;else hi=mid;}
+  const strongerCount=reference.count-(lo?prefix[lo-1]:0),strongerPercent=100*strongerCount/reference.count;
+  const index=limits.findIndex(n=>strongerPercent<=n),rank=['SS','S','A','B','C'][index<0?4:index];
+  return {status:'ready',rank,strongerCount,strongerPercent,idealPercent:100*value/reference.ideal};
+ }
+ const api=Object.freeze({evaluateRank,DEFAULT_LIMITS});
+ if(typeof module==='object'&&module.exports)module.exports=api;else root.PS_SPECIAL4_SKILL_RANK=api;
+})(typeof window==='undefined'?globalThis:window);
+const SPECIAL_RANK_CACHES=new WeakMap();
+function specialRankSupported(p,level){return specialCountSupported(p)&&[60,70,80].includes(level)}
+function specialRankKey(p,level){return `${speciesKey(p)}:${level}`}
+function specialRankCache(){const catalog=window.PS_CATALOG;if(!SPECIAL_RANK_CACHES.has(catalog))SPECIAL_RANK_CACHES.set(catalog,{manifest:null,files:new Map(),values:new Map(),errors:new Map()});return SPECIAL_RANK_CACHES.get(catalog)}
+function specialRankPatterns(p){return p.ingredientSlots.reduce((codes,slot)=>codes.flatMap(code=>slot.candidates.map((_,index)=>code+String.fromCharCode(65+index))),[''])}
+function validateSpecialRankManifest(data){
+ const fail=()=>{throw Error('special rank manifest mismatch')};
+ if(data?.version!==1||data.axis!=='nativeSkillTriggersFixedPatternEffectsExcluded'||data.sourceCommit!=='020204900e4d273867f83dbdf0b7f1035674b7b3'||JSON.stringify(data.limits)!=='[3,10,25,50]'||JSON.stringify(data.predictedLevels)!=='[80]'||!Array.isArray(data.files)||data.files.length!==12)fail();
+ for(const [key,value] of Object.entries({collectionHours:4,startEnergy:100,meals:3,awakeHours:16,sleepHours:8,ribbonHours:0,effectsExcluded:true,stockLimit:1}))if(data.conditions?.[key]!==value)fail();
+ if(JSON.stringify(data.conditions.camp)!=='[false,true]')fail();
+ const seen=new Set();for(const row of data.files){const key=`${row.speciesId}:${row.level}`;if(!SPECIAL_COUNT_SPECIES.has(row.speciesId)||![60,70,80].includes(row.level)||seen.has(key)||row.file!==`output/${row.speciesId}_${row.level}.json`||row.entries!==12||!Number.isInteger(row.bytes)||row.bytes<=0||!/^[a-f0-9]{64}$/.test(row.sha256))fail();seen.add(key)}
+ return data;
+}
+function validateSpecialRankData(data,p,level,manifest){
+ const fail=()=>{throw Error('special rank data mismatch')},id=speciesKey(p),count=({60:17000,70:59500,80:154700})[level];
+ const meta=manifest.files.find(row=>row.speciesId===id&&row.level===level),patterns=specialRankPatterns(p);
+ if(!meta||!specialRankSupported(p,level)||data?.version!==1||data.axis!==manifest.axis||data.sourceCommit!==manifest.sourceCommit||data.speciesId!==id||data.level!==level||data.prediction!==(level===80)||data.count!==count||data.stockLimit!==1||data.effectValue!==null||!data.entries||Object.keys(data.entries).length!==meta.entries||patterns.length*2!==meta.entries)fail();
+ for(const camp of [false,true])for(const pattern of patterns){
+  const row=data.entries[JSON.stringify([id,level,camp,pattern])];
+  if(!row||row.speciesId!==id||row.level!==level||row.camp!==camp||row.pattern!==pattern||row.count!==count||!Number.isInteger(row.evaluatedSignatures)||row.evaluatedSignatures<=0||row.evaluatedSignatures>count||window.PS_SPECIAL4_SKILL_RANK.evaluateRank(row,row.ideal).status!=='ready')fail();
+  const item={...row.idealRecord,id:'special-rank-validation',no:p.no,speciesId:id,level,skillLevel:1};
+  const e=specialCountEvaluation(item,p,level,camp);
+  if(e.status!=='ready'||e.pattern!==pattern||e.stockLimit!==1||e.effectValue!==null||Math.abs(e.value-row.ideal)>1e-9)fail();
+ }
+ return data;
+}
+function loadSpecialRankReferences(p,level){
+ if(!specialRankSupported(p,level))return Promise.reject(Error('unsupported special rank'));
+ const cache=specialRankCache(),key=specialRankKey(p,level);
+ if(cache.values.has(key))return Promise.resolve(cache.values.get(key));
+ if(!cache.files.has(key)){
+  if(!cache.manifest)cache.manifest=fetch('assets/evaluation/special4_rank/manifest.json?v=643').then(r=>{if(!r.ok)throw Error('special rank manifest load');return r.json()}).then(validateSpecialRankManifest).catch(error=>{cache.manifest=null;throw error});
+  cache.files.set(key,cache.manifest.then(async manifest=>{
+   const meta=manifest.files.find(row=>row.speciesId===speciesKey(p)&&row.level===level);if(!meta)throw Error('special rank file missing');
+   const response=await fetch(`assets/evaluation/special4_rank/${meta.file}?v=643`);if(!response.ok)throw Error('special rank load');
+   const data=validateSpecialRankData(await response.json(),p,level,manifest);cache.values.set(key,data);cache.errors.delete(key);return data;
+  }).catch(error=>{cache.files.delete(key);cache.errors.set(key,error);throw error}));
+ }
+ return cache.files.get(key);
+}
+function specialRankEvaluation(e,p){
+ const pending=text=>({status:'pending',text});
+ if(!specialRankSupported(p,e.level)||e.status!=='ready')return pending('発動回数の計算条件を確認してください。');
+ const cache=specialRankCache(),key=specialRankKey(p,e.level),data=cache.values.get(key);
+ if(!data)return pending(cache.errors.has(key)?'ランク基準の読み込みに失敗しました。':'ランク基準を読み込んでいます…');
+ if(e.camp!==evaluationGoodCamp()||e.speciesId!==speciesKey(p)||e.stockLimit!==1||e.effectValue!==null||e.metric!=='native_skill_triggers_per_day_effects_excluded')return pending('同じ条件のランク基準を確認できませんでした。');
+ const reference=data.entries[JSON.stringify([speciesKey(p),e.level,e.camp,e.pattern])];
+ const rank=window.PS_SPECIAL4_SKILL_RANK.evaluateRank(reference,e.value);
+ if(rank.status!=='ready')return pending('同じ条件のランク基準を確認できませんでした。');
+ return {...rank,ideal:reference.ideal,count:reference.count,strongerLower:rank.strongerPercent,strongerUpper:rank.strongerPercent};
+}

@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "fileCount": 13,
+  "sourceCommit": "020204900e4d273867f83dbdf0b7f1035674b7b3",
+  "sourceInputs": {
+    "master/berries/belue/data.json": "e8775d782e3eaa089e2b783b9d062cc66f1c71c22e7fa482dc19738b43353c98",
+    "master/berries/bluk/data.json": "3d66d137c685e9074603026b34b63640cdb6268fbd3c55bc7abfce566af7d639",
+    "master/berries/cheri/data.json": "afe3dc1d8de3a563e5a5113417a76108740424b46b991e4ca5312a0bdb6dcdc5",
+    "master/berries/chesto/data.json": "e48dee303605b77a68d0ccc8a94b78aad1dab69e88018e72a40855049b064cdd",
+    "master/berries/durin/data.json": "4a730e3be08a635d6172185e4f89ec9e74f5cc791d1d7338d61c08b84665c408",
+    "master/berries/figy/data.json": "cbf3352eded0b78969e2d4bf058509c0698742824aeab986c70e806d285623ea",
+    "master/berries/grepa/data.json": "4947eb0b49b23e15ce4d4a67227210977a7440ca85abc1b6b885ff994b04dc1b",
+    "master/berries/leppa/data.json": "fdf5244a82993345a204ef7af65458d46d44efbabb84375d1b3b272d26fc12bd",
+    "master/berries/lum/data.json": "241add0ac5a46578ce013d737fa7a6707be9803b8a879e7ffcabd231bff29e08",
+    "master/berries/mago/data.json": "2095f8789405f07b3a4db59ca52ed967a58fa406507302a9c293916592e83bf0",
+    "master/berries/oran/data.json": "a3bb8d2ed8658759e43c7c58f30b2760d426827ddc02868e875ceb590aec3e9c",
+    "master/berries/pamtre/data.json": "8246d9a5471d18fae21cc9afad6764a5b39b5fd59327bb4cd001f77629a83042",
+    "master/berries/pecha/data.json": "383ca90b0f3decaae1a6ee69e20afa16ec65a5423d90f8bad480e180423ae185",
+    "master/berries/persim/data.json": "bcf3b467f51e7e116763221ee2dc81c4d357cb1b01a87ab1626c3ae9ed1ce9ee",
+    "master/berries/rawst/data.json": "63c2d57d796c0ed286b8141ac65dd0fbefb42595c472e4fac9b05b474d1efcb8",
+    "master/berries/sitrus/data.json": "0e8ad24e1a5a98397a2607330d6fd5761ac8dd86e14b5b4ab06cbe10f748ed9f",
+    "master/berries/wiki/data.json": "352aea24c07e176d821800acfcbae4a4029fca204c50b8e8cc7a637e3785642e",
+    "master/berries/yache/data.json": "be6b9fe0bd6cc0a6b651690e343e348e311266c8423c84bc61becfffc92a043a",
+    "master/skills/ingredient_magnet_s/data.json": "77abc9c47defd8dd49d50ee7cef217ff67912a805da99a5ded0ff185965e569a",
+    "master/skills/energy_charge_s_fixed/data.json": "76c10a3ef435e0093b5da585ef6cbb92edc5f9e3de724478827c6cce613d453d",
+    "master/skills/energy_charge_s_self/data.json": "7872a5552248f893e4732a5baa74470906288e62aa45f63debb78a03f231b6f0",
+    "master/skills/energy_charge_s_variable/data.json": "a8bf9b922ec5fbdc7f0c64b405509e6b3c993e920a523372218113b6c42b4544",
+    "master/skills/energy_for_everyone_s/data.json": "4a1670d4b74f5d6695d39ac1dcac5f1d0a84382c1f5c5e6550da463d1e6e93f5",
+    "master/skills/energy_charge_m/data.json": "04ff7368769af5aa664aeaccd6b54f9cabee6dd4d572ce06323732ac622690b3",
+    "master/skills/present_ingredient_magnet_s/data.json": "01409f0f66df66f38c1a5d9deb3c6fd7cd4f98a68d074f541bf475bba50cdcca",
+    "master/skills/hyper_cutter_ingredient_select_s/data.json": "dcee2fa88eaeb0eea62dda5c809871087a199cfb3575563f90b78b68064ae21e",
+    "master/skills/cooking_power_up_s/data.json": "45c9b33fabca81b70b39ceaf419022b9f5c1e984f57994ffecc08d1217567d98",
+    "master/skills/ingredient_draw_s/data.json": "79a62f67eca925fa95563a80b182ecaf4e8fe5dd816eb8c8eff1509dba1e7d40",
+    "master/skills/energy_cheer_s/data.json": "7a55951096e3afce1a26ce9493837fb961ce9a6674c623cb14bc52e8d96a2709",
+    "master/skills/cooking_chance_s/data.json": "64347ef536883ea219204d2d2853e6503f1daca5311f786a9ab3127cd3e5f617",
+    "templates/core/07-corrections.html": "8c9d23465a062c1cbff93414cdb85cad5d926b4f92a3730783526c1d21a9a063",
+    "templates/day/01-calculation-helpers.html": "32e3dc2961d811dea8226a82ea3b6291757896ff85cc5f31e54cb1e77b141a90",
+    "templates/day/02-member-context.html": "da78c8e53c51ead52f13fe29f967f732431967c55c5c98e794d524f961a679f8",
+    "templates/day/03-skill-effects.html": "95a3badfd08309bcac00ef1490954ce81f3ba2a4b26c427f776bd49e0f52897e",
+    "templates/day/04-special-skills.html": "4db2668cc316f5f39198c8266b80663ec4d02495af00b56e416542dc7f64274f",
+    "templates/day/05-energy-feedback.html": "cc380c7f9991ed4c4e80596e8c678c5bf3eb974d560418f513a877fd6d7b773e",
+    "templates/21-day-calculator.html": "b14cdf32ce6de46940ab09c84eaba7767df41cd7494742f4aeb35bc169316bb7",
+    "master/pokemon/0122/data.json": "af8763f4425c5317984c72f9108b801f1ff7b1bd452474c2a69abd2c91942ca8",
+    "master/pokemon/0132/data.json": "3981d6bff8b5ce591e1857c92ba808e64f83ca3d312ae580d1c1edd36ba5d553",
+    "master/pokemon/0439/data.json": "1ab634e4ab38097af428df4cb2c35bec031f75a5bd8e85a0d71d8bfde0cea924",
+    "master/pokemon/0442/data.json": "c705865cefaf3b3925b20145d2fea566759c7a657a39583f72b261291e3e8fdd",
+    "master/skills/mimic_skill_copy/data.json": "fe66946ded9605e456d790afe1d504d3d7c27a72d51a80edad937096bfa71d63",
+    "master/skills/transform_skill_copy/data.json": "4116487113218b5351991ebe866ffec061a055a92bd21eb40082bb09283449b3",
+    "master/skills/extra_helpful_s/data.json": "57b3fa610aaf85a3c558fc70a73bdbab660c4c07f70995e238b12a3a033bb4b4"
+  },
+  "bundles": [
+    {
+      "name": "special4-rank-001.zip",
+      "sha256": "eaf0d7e071b175588573de12b540a8ddb95d92785d9046ec5d7a318433dbf516",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/manifest.json",
+          "sha256": "f864f95f9d8bc87d046f20a23477c9b9fadd2ab4bb06fdfe8ddf840aaa6a67fc",
+          "bytes": 2901
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-002.zip",
+      "sha256": "c52e2df5a1c93048e54318efb45eeb5e40cc798bbe61650a96eea2b6061f4f90",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0122_default_60.json",
+          "sha256": "80f75d8798eb405ee6990b6f98406fc52a344f54181c5e659bbdcde14a30a6dc",
+          "bytes": 236051
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-003.zip",
+      "sha256": "b47b092d09503567cded46bb48329d0f2cd60b8435ae0ad965e3d863e3a11958",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0122_default_70.json",
+          "sha256": "1f51ead8ffbbf3ef7b727ac6d12b80a17f64c76e4fe74bf1d5d5b06af961baed",
+          "bytes": 511636
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-004.zip",
+      "sha256": "591087aee9fc9811eaeff5235863753d1a63a147cea3e0fa60c14f144911516b",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0122_default_80.json",
+          "sha256": "aa2fa0c3e92bdfb9cc7ecb2f7da5754f8a118104b4030e0c7ee3bac7b25b4a74",
+          "bytes": 866195
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-005.zip",
+      "sha256": "85c20242a3b5b1828a45fa2de2fe2bb5d1e3dcf6f8454d899f0eaa121e98c341",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0132_default_60.json",
+          "sha256": "82dc19e576f28b19e71f174fb69737f9adff986ae907c8797b74ce65200d5721",
+          "bytes": 281760
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-006.zip",
+      "sha256": "8b3b679fe2ad3f3c5ca58287d62564c3b11dc8d0a50cbd320ffe3e709ef8ecf6",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0132_default_70.json",
+          "sha256": "ca3dfb05fe86f627614c63e283a289b7598db176b4c1a9ec251d30efa99aedfc",
+          "bytes": 494566
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-007.zip",
+      "sha256": "1413be32f9af4bc20ecf90584e54e0ddae12d21892bf4447df01ac2b7b8624fd",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0132_default_80.json",
+          "sha256": "2e94bd01251d1e401e1213d342ba7728972072964ccb4725d7d2f709ef0a42bc",
+          "bytes": 801424
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-008.zip",
+      "sha256": "827746971da2e7c8215bda3e76aa5d57de56ffc3eabedebf7050ea2c2ff5431b",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0439_default_60.json",
+          "sha256": "16ffb71e5e38bf87b9d1d1bb9ae9e358c94b9229cc35cbc8bbb97bd2553a8483",
+          "bytes": 188515
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-009.zip",
+      "sha256": "5eac79acbe64c6fec7de18bb6cfaa9fb2a51bc6ffde7f37491fb55eb089038ce",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0439_default_70.json",
+          "sha256": "b3479d8f0c4761aaa9be4034f70541ffd4b5d9bd4ff9939dfe96ab907b4aac99",
+          "bytes": 440066
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-010.zip",
+      "sha256": "94a01dff13c467b9e6448ed9ea92d0ceca912120d6b835c90b37f52f64ee0f1c",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0439_default_80.json",
+          "sha256": "9c6404ee3ec9c74acc21d03ac2e4163e3293719ffb005a9be45a6522f22ebd68",
+          "bytes": 740745
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-011.zip",
+      "sha256": "2352aa5fbb6b22cb05ba068ccae38839bdd1241f20ff7ec838514dfaaa3e90a0",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0442_default_60.json",
+          "sha256": "b1ee38fd8ff7f0165952440f607cfdf2d09d2698e435083d094c08c3d8573660",
+          "bytes": 128527
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-012.zip",
+      "sha256": "94c0de89454a24779c25b55e3feffe63efe75245b87e5ee77a53466f6a7597a2",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0442_default_70.json",
+          "sha256": "84549e60843ad6f1cf95da71314f4c4d944f7f41beb4ebc225fa94feb2a24c79",
+          "bytes": 261389
+        }
+      ]
+    },
+    {
+      "name": "special4-rank-013.zip",
+      "sha256": "26133a4193eae320f6a702ef8a4f4f8739a11e5dad825776b57d13fedffaeb81",
+      "files": [
+        {
+          "path": "assets/evaluation/special4_rank/output/0442_default_80.json",
+          "sha256": "722ef7779f53fe182474353609840e5f38ffdb873beadfc8b75fb9587eb66420",
+          "bytes": 450054
+        }
+      ]
+    }
+  ]
+}

@@ -58,6 +58,7 @@ TEMPLATE_NAMES = (
     'core/15-food-role-details.html',
     'core/15-food-role-view.html',
     'core/15-food-role-controller.html',
+    'core/15-special-rank.html',
     'core/15-special-count.html',
     'core/16-evaluation-page.html',
     'core/16-food-composition.html',
