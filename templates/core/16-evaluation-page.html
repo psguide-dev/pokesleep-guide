@@ -4,27 +4,27 @@ const EVALUATION_RETURN_KEY='psg-evaluation-return-v1';
 function evaluationReturnRead(){try{return JSON.parse(sessionStorage.getItem(EVALUATION_RETURN_KEY)||'null')}catch{return null}}
 function evaluationUrl(item){const url=new URL('evaluation.html',location.href);url.searchParams.set('individual',item.id);return url.href}
 function evaluationLink(item){return `<a class="btn psg-evaluation-page-link" href="${boxEsc(evaluationUrl(item))}">詳しく見る</a>`}
-// The heading owns its entry across pending/ready states and role-panel replacement.
+// The level control owns the top row; keep it inside the replaceable role panel.
+// This preserves binding, camp refresh and saved levels while removing the old heading.
 function placeEvaluationControls(host,item,p){
- const heading=host.closest('.psg-box-evaluation-section')?.querySelector('.psg-evaluation-heading');
- if(heading){
-  let link=heading.querySelector('.psg-evaluation-page-link');
-  const eligible=item.id&&p?.ingredientSlots?.length;
-  if(!eligible)link?.remove();
-  else{
-   if(!link){heading.insertAdjacentHTML('beforeend',evaluationLink(item));link=heading.querySelector('.psg-evaluation-page-link')}
-   const href=evaluationUrl(item);if(link.getAttribute('href')!==href)link.setAttribute('href',href);
-  }
-  // Older fallback renderers can still supply an inline entry; the heading owns it now.
-  for(const entry of host.querySelectorAll('.psg-evaluation-page-link')){const parent=entry.parentElement;entry.remove();if(parent.tagName==='SPAN'&&!parent.childNodes.length)parent.remove()}
- }
  const panel=host.querySelector('.psg-food-role,.psg-berry-role,.psg-skill-role,.psg-special-count');
- const label=panel?.querySelector('label');if(!label)return;
- let controls=panel.querySelector('.psg-role-evaluation-controls');
- if(!controls){controls=document.createElement('div');controls.className='psg-role-evaluation-controls';label.before(controls);controls.append(label)}
- let condition=controls.querySelector('.psg-role-camp');
- if(!condition){condition=document.createElement('span');condition.className='psg-role-camp';controls.append(condition)}
- const text=evaluationCampLabel();if(condition.textContent!==text)condition.textContent=text;
+ const label=panel?.querySelector('label');
+ let controls=(panel||host).querySelector('.psg-role-evaluation-controls');
+ if(!controls){
+  controls=document.createElement('div');controls.className='psg-role-evaluation-controls psg-evaluation-heading';
+  if(label){label.before(controls);controls.append(label)}else host.prepend(controls);
+ }
+ const eligible=!evaluationPage&&item.id&&p?.ingredientSlots?.length;
+ let link=controls.querySelector('.psg-evaluation-page-link');
+ if(!eligible)link?.remove();
+ else{
+  if(!link){controls.insertAdjacentHTML('beforeend',evaluationLink(item));link=controls.querySelector('.psg-evaluation-page-link')}
+  const href=evaluationUrl(item);if(link.getAttribute('href')!==href)link.setAttribute('href',href);
+ }
+ for(const entry of host.querySelectorAll('.psg-evaluation-page-link')){
+  if(entry===link)continue;
+  const parent=entry.parentElement;entry.remove();if(parent.tagName==='SPAN'&&!parent.childNodes.length)parent.remove();
+ }
 }
 function evaluationPageMarkup(html,item){
  if(!/class="psg-(berry-details|skill-eval-details|food-details)"/.test(html))return html;

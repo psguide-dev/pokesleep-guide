@@ -32,12 +32,20 @@ const reloaded=fixture('https://example.test/evaluation.html?individual=record-1
 page.events['psg-camp-change']();assert.equal(page.calls.filter(x=>x[0]==='render').at(-1)[1].skillEvaluationLevel,70,'camp refresh retains selected comparison level');
 console.log('Evaluation comparison levels: session-only save, reload, return metadata and camp refresh passed');
 
-// Rebinding and switching records must reuse the heading link, without duplicate entries.
+// The level row lives inside the role panel, so asynchronous replacement never detaches controls.
 const overview=fixture('https://example.test/review.html?screen=box',[],null);
-const heading={entry:null,inserts:0,querySelector(){return this.entry},insertAdjacentHTML(position,html){this.inserts++;const attributes={href:html.match(/href="([^"]+)"/)[1]};this.entry={getAttribute:key=>attributes[key],setAttribute:(key,value)=>{attributes[key]=value},remove:()=>{this.entry=null}}}};
-const overviewHost={closest:()=>({querySelector:()=>heading}),querySelector:()=>null,querySelectorAll:()=>[]},species={ingredientSlots:[{unlock:1}]};
-overview.context.placeEvaluationControls(overviewHost,{id:'first'},species);const firstLink=heading.entry;
-overview.context.placeEvaluationControls(overviewHost,{id:'first'},species);assert.equal(heading.inserts,1);assert.equal(heading.entry,firstLink);
-overview.context.placeEvaluationControls(overviewHost,{id:'second'},species);assert.equal(heading.entry,firstLink,'record switching updates the existing entry');assert.equal(firstLink.getAttribute('href'),'https://example.test/evaluation.html?individual=second');
-overview.context.placeEvaluationControls(overviewHost,{},species);assert.equal(heading.entry,null,'an ineligible record clears the old destination');
-console.log('Evaluation heading entry: repeated binding, record switching and stale-link removal passed');
+let controls=null,insertCount=0;
+const label={before(node){controls=node},parentElement:null};
+const makeControl=()=>({className:'',entry:null,children:[],append(child){this.children.push(child);child.parentElement=this},querySelector(selector){return selector==='.psg-evaluation-page-link'?this.entry:null},insertAdjacentHTML(position,html){insertCount++;const attributes={href:html.match(/href="([^"]+)"/)[1]};this.entry={parentElement:this,getAttribute:key=>attributes[key],setAttribute:(key,value)=>{attributes[key]=value},remove:()=>{this.entry=null}}}});
+overview.context.document.createElement=makeControl;
+const panel={querySelector(selector){return selector==='label'?label:selector==='.psg-role-evaluation-controls'?controls:null}};
+const overviewHost={querySelector(selector){return selector.includes('.psg-food-role')?panel:null},querySelectorAll(){return controls?.entry?[controls.entry]:[]},prepend(node){controls=node}},species={ingredientSlots:[{unlock:1}]};
+overview.context.placeEvaluationControls(overviewHost,{id:'first'},species);const firstLink=controls.entry;
+assert(controls.children.includes(label));assert.equal(label.parentElement,controls);assert.equal(controls.className,'psg-role-evaluation-controls psg-evaluation-heading');
+overview.context.placeEvaluationControls(overviewHost,{id:'first'},species);assert.equal(insertCount,1);assert.equal(controls.entry,firstLink);
+overview.context.placeEvaluationControls(overviewHost,{id:'second'},species);assert.equal(controls.entry,firstLink);assert.equal(firstLink.getAttribute('href'),'https://example.test/evaluation.html?individual=second');
+// A replaced role panel gets one fresh row and reuses the normal host-level selection/binding path.
+controls=null;overview.context.placeEvaluationControls(overviewHost,{id:'second'},species);assert.equal(insertCount,2);assert(controls.children.includes(label));
+overview.context.placeEvaluationControls(overviewHost,{},species);assert.equal(controls.entry,null);
+const boxTemplate=fs.readFileSync('templates/10-box-detail.html','utf8');assert(!boxTemplate.includes('<span>個体の評価</span>'));assert(!source.includes('psg-role-camp'));
+console.log('Evaluation row: level replaces heading inside the live panel, repeated binding/replacement, destination updates and no camp caption passed');
