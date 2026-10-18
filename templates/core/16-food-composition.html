@@ -37,8 +37,8 @@ function renderFoodComposition(item,p){
  if(!p)return '';
  const level=foodCompositionLevel(item,p),environment=window.PS_FOOD_ENVIRONMENT.current(window.PS_CATALOG,evaluationGoodCamp(),calculatePotCapacity),e=foodCompositionEvaluation(item,p,level,environment),n=window.PS_NUMBERS.display;
  const separateLevel=!foodRoleSupported(p)&&!(typeof specialCountSupported==='function'&&specialCountSupported(p))&&!['きのみ','スキル'].includes(p.specialty);
- const select=separateLevel?`<label>評価Lv. <select class="psg-composition-level" aria-label="食材構成の評価レベル">${[60,70,80].map(value=>`<option value="${value}"${value===level?' selected':''}>${value}${value===80?'（予測）':''}</option>`).join('')}</select></label>`:'';
- const heading=`<h3>食材構成の料理適性（試作）</h3><p class="psg-box-muted">この食材構成に合う料理を表示します。鍋に入る料理から、料理Lv70のエナジー順に各カテゴリー上位5品を対象にしています。必要量を集められるか、1日3食作れるかの判定は含みません。</p>${select}<p class="psg-box-muted">評価Lv.${level}${level===80?'（予測）':''}の解放枠で集計</p>`;
+ const select=separateLevel?`<label>評価Lv. <select class="psg-composition-level" aria-label="食材構成の評価レベル">${[60,70,80].map(value=>`<option value="${value}"${value===level?' selected':''}>${value}</option>`).join('')}</select></label>`:'';
+ const heading=`<h3>食材構成の料理適性（試作）</h3><p class="psg-box-muted">この食材構成に合う料理を表示します。鍋に入る料理から、料理Lv70のエナジー順に各カテゴリー上位5品を対象にしています。必要量を集められるか、1日3食作れるかの判定は含みません。</p>${select}<p class="psg-box-muted">評価Lv.${level}の解放枠で集計</p>`;
  if(e.status!=='ready')return `<section class="psg-food-composition">${heading}<p>構成適性：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p></section>`;
  const labels=['カレー','サラダ','デザート'],categories=environment.categories;
  const rows=categories.map((category,index)=>{const score=e.scores[category];return `<div class="psg-composition-score"><span>${labels[index]}</span>${score===null?'<span>未評価</span>':`<meter min="0" max="100" value="${score}" aria-label="${labels[index]}の構成適性 ${n(score)}%"></meter><strong>${n(score)}%</strong>`}</div>`}).join('');

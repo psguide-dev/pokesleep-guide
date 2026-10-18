@@ -70,11 +70,11 @@ function renderBerryDetailsResult(e){
 }
 function renderBerryRole(item,p){
  const e=berryRoleEvaluation(item,p),n=window.PS_NUMBERS.display,level=e.level;
- const select=`<label>評価Lv. <select class="psg-berry-level" aria-label="きのみ評価レベル">${[50,60,70,80].map(l=>`<option value="${l}"${l===level?' selected':''}>${l}${l===80?'（予測）':''}</option>`).join('')}</select></label>`;
+ const select=`<label>評価Lv. <select class="psg-berry-level" aria-label="きのみ評価レベル">${[50,60,70,80].map(l=>`<option value="${l}"${l===level?' selected':''}>${l}</option>`).join('')}</select></label>`;
  if(e.status!=='ready')return `<div class="psg-berry-role">${select}<p>きのみ評価：未判定</p><p class="psg-box-muted">${boxEsc(e.text)}</p>${(berryModelError||campRoleReferenceError('berry',speciesKey(p)))?'<button class="psg-berry-retry" type="button">再読込</button>':''}</div>`;
  if(roleEvaluationOverview())return `<div class="psg-berry-role">${select}${renderRoleEvaluationSummary('berry',e)}</div>`;
  const max=window.PS_CATALOG.skills[p.mainSkillId]?.maxLevel||1,available=window.PS_BERRY_MODEL_DATA.species[speciesKey(p)]?.availableSkillLevels||Array.from({length:max},(_,i)=>i+1);
- const summary=`<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>きのみ ${roleModelRank(e)}</b></p><p>理想個体の <b>${n(e.idealPercent)}%</b> のきのみエナジー</p><p>この個体を上回る構成 <b>${berryStrongerText(e)}</b></p></div></div><p class="psg-box-muted">${level===80?'Lv.80・予測。':''}食材構成も含む比較モデル。捕獲確率ではありません。</p>`;
+ const summary=`<div class="psg-individual-row is-primary"><div class="psg-individual-score"><p><b>きのみ ${roleModelRank(e)}</b></p><p>理想個体の <b>${n(e.idealPercent)}%</b> のきのみエナジー</p><p>この個体を上回る構成 <b>${berryStrongerText(e)}</b></p></div></div><p class="psg-box-muted">食材構成も含む比較モデル。捕獲確率ではありません。</p>`;
  return `<div class="psg-berry-role">${select}${summary}<details class="psg-berry-details"><summary>詳しい評価</summary><p>基準モデル：基本形から順当に進化・たね未使用、スキルLv.${berryModelSkillLevel(p)}。${evaluationCampLabel()}・4時間回収・リボンなし。</p><label>比較用スキルLv <select class="psg-berry-skill-level" aria-label="詳細評価のスキルレベル">${available.map(l=>`<option value="${l}"${l===e.skillLevel?' selected':''}>${l}</option>`).join('')}</select></label><div class="psg-berry-detail-result">${renderBerryDetailsResult(e)}</div><p class="psg-box-muted">変更したスキルLvで個体と理想の両方を比較します。簡易評価と登録個体のスキルLvは変更しません。</p><p class="psg-box-muted">ランクは上回る構成の割合でSS≤3%、S≤10%、A≤25%、B≤50%、残りC。近似範囲が境界をまたぐ場合は両ランクを表示します。性格・サブスキル・食材構成を均等に扱う比較用の割合です。スキルの効果で増えるきのみ収量を含み、スキルが直接生むエナジーは含みません。満杯目安は平均収集数量からの推定です。</p></details></div>`;
 }
 renderIndividualEvaluation=function(item,p,options={}){return p?.specialty==='きのみ'?renderBerryRole(item,p):renderIndividualBeforeBerry(item,p,options)};

@@ -63,7 +63,7 @@ function loadFoodRankReferences(p,level){
 }
 function foodRankEvaluation(e,p){
  const pending=text=>({status:'pending',text});
- if(!foodRankSupported(p,e.level))return pending('食材ランクは通常対応83種のLv.60・70・80（予測）が対象です。');
+ if(!foodRankSupported(p,e.level))return pending('食材ランクは通常対応83種のLv.60・70・80が対象です。');
  if(e.status!=='ready')return pending('食材収集力の計算条件を確認してください。');
  const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key=foodRankKey(p,e.level),loaded=store.values[key];
  if(!loaded)return pending(store.errors.has(key)?'基準を読み込めませんでした。':'ランク基準を読み込んでいます…');

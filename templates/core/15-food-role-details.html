@@ -11,7 +11,7 @@ function renderFoodRoleIdeal(e,idealSnapshot){
 }
 function renderFoodRoleGrowth(growth,names){
  const n=window.PS_NUMBERS.display;
- return `<div class="psg-food-table-scroll"><table class="psg-food-daily-table psg-food-growth"><thead><tr><th scope="col">評価Lv.</th><th scope="col">合計／日<br>理想比</th>${names.map(name=>`<th scope="col">${boxEsc(name)}／日</th>`).join('')}</tr></thead><tbody>${growth.map(g=>g.status==='ready'?`<tr><th scope="row">${g.level}${g.level===80?'（予測）':''}</th><td>${n(g.value)}個<br>${n(g.percent)}%</td>${names.map(name=>`<td>${n(g.foods[name]||0)}個</td>`).join('')}</tr>`:`<tr><th scope="row">${g.level}${g.level===80?'（予測）':''}</th><td colspan="${names.length+1}">未判定：${boxEsc(g.text)}</td></tr>`).join('')}</tbody></table></div><p class="psg-box-muted">各レベルの同構成の理想を100%として比較します。日産が増えても、理想比が下がる場合があります。未設定のサブスキルは補完しません。</p>`;
+ return `<div class="psg-food-table-scroll"><table class="psg-food-daily-table psg-food-growth"><thead><tr><th scope="col">評価Lv.</th><th scope="col">合計／日<br>理想比</th>${names.map(name=>`<th scope="col">${boxEsc(name)}／日</th>`).join('')}</tr></thead><tbody>${growth.map(g=>g.status==='ready'?`<tr><th scope="row">${g.level}</th><td>${n(g.value)}個<br>${n(g.percent)}%</td>${names.map(name=>`<td>${n(g.foods[name]||0)}個</td>`).join('')}</tr>`:`<tr><th scope="row">${g.level}</th><td colspan="${names.length+1}">未判定：${boxEsc(g.text)}</td></tr>`).join('')}</tbody></table></div><p class="psg-box-muted">各レベルの同構成の理想を100%として比較します。日産が増えても、理想比が下がる場合があります。未設定のサブスキルは補完しません。</p>`;
 }
 function renderFoodRoleBerry(e,berryOff,names){
  const n=window.PS_NUMBERS.display;
@@ -27,5 +27,5 @@ function renderFoodRoleBerry(e,berryOff,names){
 function renderFoodRoleDetails(item,p,e){
  const d=foodRoleDiagnostics(item,p,e),{fill,night}=roleCarryFillText(e.member);
  const names=Object.keys(e.idealFoods);
- return `<section class="psg-food-diagnostics"><h3>理想個体との比較 · Lv.${e.level}${e.level===80?'（予測）':''}</h3>${renderFoodRoleIdeal(e,d.ideal)}<p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><h3>レベル別の食材収集力</h3>${renderFoodRoleGrowth(d.growth,names)}<h3>きのみの数Sの影響</h3>${renderFoodRoleBerry(e,d.berryOff,names)}<p class="psg-box-muted">きのみの数Sだけを無効にした同じ個体の比較です。別のサブスキルには置き換えません。所持数の影響は日産に含まれており、ここから再び差し引きません。各比較の差は、理想との差を分解した足し算にはなりません。</p></section>`;
+ return `<section class="psg-food-diagnostics"><h3>理想個体との比較 · Lv.${e.level}</h3>${renderFoodRoleIdeal(e,d.ideal)}<p>満杯目安　日中：${fill}<br>睡眠中：${night}</p><h3>レベル別の食材収集力</h3>${renderFoodRoleGrowth(d.growth,names)}<h3>きのみの数Sの影響</h3>${renderFoodRoleBerry(e,d.berryOff,names)}<p class="psg-box-muted">きのみの数Sだけを無効にした同じ個体の比較です。別のサブスキルには置き換えません。所持数の影響は日産に含まれており、ここから再び差し引きません。各比較の差は、理想との差を分解した足し算にはなりません。</p></section>`;
 }

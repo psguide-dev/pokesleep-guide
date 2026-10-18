@@ -44,7 +44,7 @@ for(const qty of [null,0,NaN])assert.equal(ctx.foodCompositionEvaluation(item,{.
 const empty=ctx.window.PS_FOOD_ENVIRONMENT.build([],Object.keys(catalog.ingredientAssets),{capacity:81}),emptyResult=ctx.foodCompositionEvaluation(item,p,80,empty);assert(Object.values(emptyResult.scores).every(v=>v===null));
 assert(Object.values(ctx.foodCompositionEvaluation({ingredients:{1:'おいしいシッポ'}},{ingredientSlots:[{unlock:1,candidates:[{name:'おいしいシッポ',qty:1}]}]},80,env).scores).every(v=>v===0),'known non-use is zero, not null');
 ctx.foodRoleSupported=species=>species===p; // Exercise integration with a supported food specialist, without daily-model work.
-const html=ctx.renderIndividualEvaluation(item,p);assert.match(html,/食材構成の料理適性/);assert.match(html,/Lv.80（予測）/);assert.match(html,/ABC/);assert.match(html,/収集力/);assert.match(html,/3食分の供給/);assert(!html.includes('SS〜C'));
+const html=ctx.renderIndividualEvaluation(item,p);assert.match(html,/食材構成の料理適性/);assert.match(html,/Lv.80/);assert.match(html,/ABC/);assert.match(html,/収集力/);assert.match(html,/3食分の供給/);assert(!html.includes('SS〜C'));
 const before=JSON.stringify(item);const at60=ctx.renderIndividualEvaluation({...item,foodEvaluationLevel:60},p);assert.match(at60,/評価Lv.60の解放枠/);assert.equal(JSON.stringify(item),before);
 assert.equal(ctx.renderIndividualEvaluation(item,p,{compact:true}),'<div class="psg-food-role"><p>収集力</p></div>');
 ctx.evaluationPage=false;

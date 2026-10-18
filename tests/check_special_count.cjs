@@ -31,7 +31,7 @@ const missingRate={...catalog,pokemon:{...catalog.pokemon,442:{...p,skillRate:nu
 const no=parseInt('0132',10),ditto=catalog.pokemon[no],at50={...item,no,speciesId:'0132_default',ingredients:{1:ditto.ingredientSlots[0].candidates[0].name,30:ditto.ingredientSlots[1].candidates[0].name}};
 assert.equal(ctx.specialCountEvaluation(at50,ditto,50).status,'ready','locked ingredients need not be filled');assert.equal(ctx.specialCountEvaluation(at50,ditto,60).status,'pending');
 const zeroCatalog={...catalog,pokemon:{...catalog.pokemon,442:{...p,skillRate:0}}};ctx.window.PS_CATALOG=zeroCatalog;const zero=ctx.specialCountEvaluation(item,zeroCatalog.pokemon[442]);assert.equal(zero.status,'ready');assert.equal(zero.value,0);ctx.window.PS_CATALOG=catalog;
-const html=ctx.renderIndividualEvaluation(item,p);assert.match(html,/約2.8回／日/);assert.match(html,/スキル効果・チーム貢献は未評価/);assert.match(html,/80（予測）/);assert.match(html,/ストック上限は1回/);assert(!html.includes('理想比 <'));assert(!html.includes('100%'));assert(!html.includes('準備中</b>')||html.includes('食材収集力'));
+const html=ctx.renderIndividualEvaluation(item,p);assert.match(html,/約2.8回／日/);assert.match(html,/スキル効果・チーム貢献は未評価/);assert.match(html,/<option value="80"[^>]*>80<\/option>/);assert.match(html,/ストック上限は1回/);assert(!html.includes('理想比 <'));assert(!html.includes('100%'));assert(!html.includes('準備中</b>')||html.includes('食材収集力'));
 assert.equal(ctx.renderIndividualEvaluation(item,catalog.pokemon[9]),'<p>previous</p>','other species rendering is unchanged');
 ctx.roleEvaluationOverview=()=>true;assert(!ctx.renderSpecialCount(item,p).includes('<details'));
 // Composition shares the same food evaluation level, without a second selector.
