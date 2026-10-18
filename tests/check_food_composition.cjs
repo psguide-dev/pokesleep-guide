@@ -75,5 +75,5 @@ assert.equal(match(env,[]),null);assert.equal(match(env,[{name:'unknown',qty:1}]
 const missing=match(empty,[{name:'あまいミツ',qty:1}]);assert(Object.values(missing).every(row=>row.status==='pending'&&row.recipes.length===0));
 const noUse=match(env,[{name:'おいしいシッポ',qty:1}]);assert(Object.values(noUse).every(row=>row.status==='ready'&&row.recipes.length===0));
 assert.deepEqual(plain(match(env,[{name:'あまいミツ',qty:1},{name:'あまいミツ',qty:4}])),plain(match(env,[{name:'あまいミツ',qty:1}])));
-const rendered=ctx.renderCompositionRecipes(env,e80.slots);assert.match(rendered,/1食分の材料を見る/);assert.match(rendered,/料理Lv.70/);assert.match(rendered,/この構成で拾える材料/);assert.match(rendered,/data-composition-disclosure/);
+const rendered=ctx.renderCompositionRecipes(env,e80.slots);assert.match(rendered,/必要な食材を見る/);assert.match(rendered,/料理エナジー（Lv70）/);assert.match(rendered,/この構成で拾える材料/);assert.match(rendered,/data-composition-disclosure/);
 console.log(`Recipe fit: ${count} conditions, ${previewCount} preview parity examples; category ranks, energy, materials, no duplicates, missing versus no matches passed`);

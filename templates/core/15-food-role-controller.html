@@ -11,7 +11,7 @@ bindIndividualEvaluation=function(host,item,p){
   const store=campReferenceStore(),level=foodRoleLevel(item),key=foodRankKey(p,level);
   const loadRank=()=>{const camp=evaluationGoodCamp();loadFoodRankReferences(p,level).then(()=>{if(camp===evaluationGoodCamp())replace(item)}).catch(()=>{if(camp===evaluationGoodCamp())replace(item)})};
   if(store.errors.has(key)){
-   let retry=panel.querySelector('.psg-food-rank-retry');if(!retry){retry=document.createElement('button');retry.type='button';retry.className='btn psg-food-rank-retry';retry.textContent='ランク基準を再読込';panel.append(retry)}retry.onclick=loadRank;
+   let retry=panel.querySelector('.psg-food-rank-retry');if(!retry){retry=document.createElement('button');retry.type='button';retry.className='btn psg-food-rank-retry';retry.textContent='再読み込み';panel.append(retry)}retry.onclick=loadRank;
   }else if(!store.values[key])loadRank();
  }
  const retry=host.querySelector('.psg-food-eval-retry');if(retry)retry.onclick=load;

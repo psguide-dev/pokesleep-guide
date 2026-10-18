@@ -67,7 +67,7 @@ function specialRankEvaluation(e,p){
  const pending=text=>({status:'pending',text});
  if(!specialRankSupported(p,e.level)||e.status!=='ready')return pending('発動回数の計算条件を確認してください。');
  const cache=specialRankCache(),key=specialRankKey(p,e.level),data=cache.values.get(key);
- if(!data)return pending(cache.errors.has(key)?'ランク基準の読み込みに失敗しました。':'ランク基準を読み込んでいます…');
+ if(!data)return pending(cache.errors.has(key)?'基準を読み込めませんでした。':'ランク基準を読み込んでいます…');
  if(e.camp!==evaluationGoodCamp()||e.speciesId!==speciesKey(p)||e.stockLimit!==1||e.effectValue!==null||e.metric!=='native_skill_triggers_per_day_effects_excluded')return pending('同じ条件のランク基準を確認できませんでした。');
  const reference=data.entries[JSON.stringify([speciesKey(p),e.level,e.camp,e.pattern])];
  const rank=window.PS_SPECIAL4_SKILL_RANK.evaluateRank(reference,e.value);

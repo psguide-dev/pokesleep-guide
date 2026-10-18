@@ -66,7 +66,7 @@ function foodRankEvaluation(e,p){
  if(!foodRankSupported(p,e.level))return pending('食材ランクは通常対応83種のLv.60・70・80（予測）が対象です。');
  if(e.status!=='ready')return pending('食材収集力の計算条件を確認してください。');
  const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key=foodRankKey(p,e.level),loaded=store.values[key];
- if(!loaded)return pending(store.errors.has(key)?'ランク基準の読み込みに失敗しました。':'ランク基準を読み込んでいます…');
+ if(!loaded)return pending(store.errors.has(key)?'基準を読み込めませんでした。':'ランク基準を読み込んでいます…');
  const {data,manifest}=loaded,id=speciesKey(p),row=data.entries[JSON.stringify([id,e.level,camp,e.pattern])],references=activeFoodRoleReferences(),reference=references?.entries[JSON.stringify([id,e.level,e.pattern])];
  if(e.camp!==camp||manifest.engineFingerprint!==references?.engineFingerprint||!row||e.skillLevel!==reference?.skillLevel||!Number.isFinite(e.value)||e.value<0||Math.abs(e.ideal-row.ideal)>1e-9||e.value>row.ideal+1e-8)return pending('同じ条件のランク基準を確認できませんでした。');
  const compiled=compileFoodRankDistribution(row);if(!compiled)return pending('ランク分布を確認できませんでした。');
@@ -78,5 +78,5 @@ function foodRankEvaluation(e,p){
 function renderFoodRank(e,p){
  const rank=foodRankEvaluation(e,p);if(rank.status!=='ready')return `<p class="psg-box-muted">${boxEsc(rank.text)}</p>`;
  const active=({60:3,70:4,80:5})[e.level];
- return `<p><b>食材 ${rank.rank}（試作）</b>　この個体を上回る構成 ${roleStrongerText(rank)}</p><p class="psg-box-muted">同じ種類・姿・Lv・食材構成・キャンチケで比較。性格25通りと、重複なしの有効サブスキル${active}種類の組み合わせ、計${rank.count.toLocaleString('ja-JP')}構成を比較します。${FOOD_ROLE_RECOVERY_SPECIES.has(speciesKey(p))?'自身の回復が通常食材収集へ与える影響を単体条件で含みます。実際のチームからの回復・チーム貢献は含めません。':''}同値は上回る構成に含めません。捕獲・厳選成功の確率ではありません。ランク境界はSS≤3%、S≤10%、A≤25%、B≤50%、残りCの試作です。</p>`;
+ return `<p><b>食材 ${rank.rank}（試作）</b>　この個体を上回る構成 ${roleStrongerText(rank)}</p><p class="psg-box-muted">性格・サブスキルの組み合わせを比べた、食材を集める力の評価です。この個体より多く集められる組み合わせが少ないほど、高いランクになります。同じ種類・姿・Lv・食材構成・キャンチケで比較。性格25通りと、重複なしの有効サブスキル${active}種類の組み合わせ、計${rank.count.toLocaleString('ja-JP')}構成を比較します。${FOOD_ROLE_RECOVERY_SPECIES.has(speciesKey(p))?'自身の回復が通常食材収集へ与える影響を単体条件で含みます。実際のチームからの回復・チーム貢献は含めません。':''}同値は上回る構成に含めません。捕獲・厳選成功の確率ではありません。ランク境界はSS≤3%、S≤10%、A≤25%、B≤50%、残りCの試作です。</p>`;
 }

@@ -38,7 +38,7 @@ function foodRoleEvaluation(item,p){
   if(!ingredients[slot.unlock]&&slot.candidates.length===1)ingredients[slot.unlock]=slot.candidates[0].name;
   if(!slot.candidates.some(c=>c.name===ingredients[slot.unlock]))return pending(`Lv.${slot.unlock}の食材構成を設定してください`);
  }
- if(!references)return pending(foodRoleError?'基準の読み込みに失敗しました':'基準を読み込んでいます…');
+ if(!references)return pending(foodRoleError?'基準を読み込めませんでした。':'基準を読み込んでいます…');
  const pattern=p.ingredientSlots.map(slot=>String.fromCharCode(65+slot.candidates.findIndex(c=>c.name===ingredients[slot.unlock]))).join('');
  const ref=references.entries[JSON.stringify([speciesKey(p),level,pattern])];
  if(!ref)return pending('この食材構成の基準は準備中です');
