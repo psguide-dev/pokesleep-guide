@@ -126,9 +126,9 @@ ctx.window.PS_CATALOG.ingredientVisual=()=>null;
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../templates/00-number-format.html'),'utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../templates/box/02-daily-forecast.html'),'utf8'),ctx);
 ctx.estimate=standard;vm.runInContext('renderBoxDayFood(estimate)',ctx);
-assert(ctx.foodHost.innerHTML.includes('キャンチケあり。'));assert(!ctx.foodHost.innerHTML.includes('（）'));assert(!ctx.foodHost.innerHTML.includes('<small>（'));
-assert(ctx.foodHost.innerHTML.includes('psg-box-camp-values'));
+assert(ctx.foodHost.innerHTML.includes('キャンチケあり約'));assert(!ctx.foodHost.innerHTML.includes('（）'));assert(!ctx.foodHost.innerHTML.includes('<small>（'));
+assert(ctx.foodHost.innerHTML.includes('psg-box-camp-values'));assert(!ctx.foodHost.innerHTML.includes('<details'));
 assert(!vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes('（'));assert(vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes(ctx.window.PS_NUMBERS.display(standard.member.skillTriggers)));
 console.log('Box camp selection: fixed conditions match the daily kernel; only selected camp food and skill values are displayed.');
 
-ctx.estimate=changedField;vm.runInContext('renderBoxDayFood(estimate)',ctx);assert(ctx.foodHost.innerHTML.includes('キャンチケなし。'));assert(!ctx.foodHost.innerHTML.includes('<small>（'));assert(!vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes('（'));assert(vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes(ctx.window.PS_NUMBERS.display(changedField.member.skillTriggers)));
+ctx.estimate=changedField;vm.runInContext('renderBoxDayFood(estimate)',ctx);assert(ctx.foodHost.innerHTML.includes('キャンチケなし約'));assert(!ctx.foodHost.innerHTML.includes('<small>（'));assert(!vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes('（'));assert(vm.runInContext('boxDailySkillForecast(estimate)',ctx).includes(ctx.window.PS_NUMBERS.display(changedField.member.skillTriggers)));

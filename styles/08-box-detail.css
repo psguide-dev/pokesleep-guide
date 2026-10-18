@@ -150,7 +150,7 @@
 
 #boxDetail .psg-box-day-food{display:contents}
 #boxDetail .psg-box-day-food-line{grid-column:2;grid-row:1;display:grid;grid-template-rows:18px minmax(0,1fr);align-items:center;gap:0;padding:0 0 0 5px;font-size:12px;min-width:0;box-sizing:border-box;background:#fff;border:0;border-radius:0}
-#boxDetail .psg-box-day-food-line>small{display:flex;align-items:center;justify-content:center;height:18px;padding-right:18px;font-size:12px;font-weight:800;color:#111}
+#boxDetail .psg-box-day-food-line>small{display:flex;align-items:center;justify-content:center;height:18px;font-size:12px;font-weight:800;color:#111}
 #boxDetail .psg-box-day-food-item{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;font-size:clamp(10px,2.8vw,13px);line-height:1.15}
 #boxDetail .psg-box-day-food-item img{width:24px;height:24px;object-fit:contain}
 #boxDetail .psg-box-camp-values{display:flex;flex-direction:column;align-items:center;line-height:1.15}
@@ -169,13 +169,6 @@
 #boxDetail .psg-v106-ingredient[data-slot="C"]{background:#fff0e5;border-color:#a4734d}
 #boxDetail .psg-box-day-food-amounts{display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:2px;box-sizing:border-box;min-width:0;height:100%;min-height:0;padding:0;border:0;border-radius:0;background:transparent;color:#111}
 #boxDetail .psg-box-day-food-amounts.psg-box-pending{margin:0;font-size:10px}
-#boxDetail .psg-box-day-conditions{grid-column:1 / -1;grid-row:2;margin:0;color:#111;min-width:0}
-#boxDetail .psg-box-day-conditions>summary{position:absolute;top:0;right:0;display:flex;justify-content:center;align-items:center;width:24px;min-height:28px;color:#111;list-style:none;font-size:12px}
-#boxDetail .psg-box-day-conditions>summary::-webkit-details-marker{display:none}
-#boxDetail .psg-box-day-conditions .psg-conditions-open,#boxDetail .psg-box-day-conditions[open] .psg-conditions-closed{display:none}
-#boxDetail .psg-box-day-conditions[open] .psg-conditions-open{display:inline}
-#boxDetail .psg-box-day-conditions[open]{padding-top:5px}
-#boxDetail .psg-box-day-conditions:not([open]){height:0}
 
 /* Skill identity and effect take the left three quarters; forecast gets one quarter. */
 #boxDetail .psg-box-skill-section{box-sizing:border-box;min-height:calc(2 * var(--box-unit-height));padding:4px 6px}
@@ -194,10 +187,10 @@
 
 #boxDetail #boxSubskillRows{grid-template-rows:repeat(2,var(--box-unit-height));gap:3px}
 #boxDetail .psg-box-subskill,#boxDetail .psg-box-nature-tile{box-sizing:border-box;height:var(--box-unit-height);min-height:0;justify-content:center;gap:1px;padding:1px;border-radius:9px;background:#fff}
-#boxDetail .psg-subskill-top{display:grid;grid-template-columns:1fr;justify-items:center;flex:none;width:100%;height:clamp(22px,calc(var(--box-unit-height) - 14px),24px);gap:0;font-size:9px;line-height:1.1}
+#boxDetail .psg-subskill-top{display:grid;grid-template-columns:1fr;justify-items:center;position:relative;flex:none;width:100%;height:clamp(22px,calc(var(--box-unit-height) - 14px),24px);gap:0;font-size:9px;line-height:1.1}
 #boxDetail .psg-box-subskill{position:relative}
-#boxDetail .psg-subskill-top>b{position:absolute;top:2px;left:2px}
-#boxDetail .psg-box-subskill>.psg-box-food-unlock-state{position:absolute;top:12px;left:1px;max-width:28px;font-size:6.5px;line-height:1.05;text-align:left}
+#boxDetail .psg-subskill-top>b{position:absolute;bottom:0;left:2px}
+#boxDetail .psg-box-subskill>.psg-box-food-unlock-state{position:absolute;top:0;left:1px;max-width:28px;font-size:6.5px;line-height:1.05;text-align:left}
 #boxDetail .psg-subskill-top .psg-subskill-badge,#boxDetail .psg-subskill-top .psg-subskill-unknown{width:clamp(22px,calc(var(--box-unit-height) - 14px),24px);height:clamp(22px,calc(var(--box-unit-height) - 14px),24px)}
 #boxDetail .psg-box-subskill>strong{font-size:clamp(8px,2.3vw,10px);line-height:1.05;max-width:100%;white-space:nowrap}
 #boxDetail .psg-box-subskill>small{font-size:7px;line-height:1}
@@ -230,11 +223,6 @@
 #boxDetail .psg-ideal-slot.is-locked .psg-subskill-badge{filter:grayscale(1);opacity:.4}
 #boxDetail .psg-growth-target{min-width:0}
 #boxDetail .psg-growth-target.is-unavailable .psg-milestone{background:#ddd;color:#666}
-#boxDetail .psg-growth-comparison{margin:3px 0 0;font-size:11px}
-#boxDetail .psg-growth-comparison>summary{color:#111;text-align:center;padding:4px;cursor:pointer}
-#boxDetail .psg-growth-comparison .psg-individual-row{grid-template-columns:1fr;gap:4px}
-#boxDetail .psg-growth-comparison .psg-evaluation-other{margin:4px 0}
-#boxDetail .psg-growth-comparison .psg-subskill-badge{width:20px;height:20px}
 
 /* Evaluation grows with its explicit summary/detail content. */
 #boxDetail .psg-box-evaluation-section{position:relative;height:auto;min-height:0;box-sizing:border-box;padding:6px 8px;display:grid;grid-template-rows:auto auto;gap:3px}
