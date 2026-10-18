@@ -118,6 +118,8 @@ main:has(#boxDetail.active){background:var(--box-page-bg,#eaf7ed);min-height:cal
 #boxDetail .psg-box-header-menu{justify-self:end}
 #boxDetail #boxHeaderEdit{width:80px;box-sizing:border-box;background:#fff;border-radius:10px}
 #boxDetail .psg-box-hero{border-bottom:1px solid #dce0e3}
+/* The full-width sticky backing owns the mobile separator; avoid a second line. */
+@media(max-width:620px) and (orientation:portrait){#boxDetail>.psg-box-hero{border-bottom:0}}
 
 /* Small anchored correction hint, matching the Dex EXP supplement. */
 #boxStatPopover{position:fixed;inset:0 auto auto 0;box-sizing:border-box;width:min(290px,calc(100vw - 24px));max-height:min(240px,calc(100dvh - 24px));margin:0;padding:10px 12px;border:1px solid #dfe8e4;border-radius:12px;background:#fff;color:#111;box-shadow:0 2px 6px #0002;overflow:auto;font-size:14px;font-weight:650;line-height:1.5}

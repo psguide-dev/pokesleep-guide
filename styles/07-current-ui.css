@@ -99,7 +99,7 @@
   body:has(#boxDetail.active)>.psg-app-header{position:fixed!important;inset:0 0 auto!important;width:100%}
   /* The fixed app header is out of flow: reserve its height before detail content. */
   body:has(#boxDetail.active)>main{padding-top:var(--psg-header-height)}
-  #boxDetail>.psg-box-hero::before{border-bottom:1px solid #dce0e3}
+  #boxDetail>.psg-box-hero::before{box-sizing:border-box;border-bottom:1px solid #dce0e3}
   /* Opaque backing also covers the header gap and rounded card corners. */
   #dexDetail>.psg-dex-sticky{isolation:isolate}
   #dexDetail>.psg-dex-sticky::before{content:"";position:absolute;inset:-12px -10px 0;background:var(--pane-bg,#f1f7ff);z-index:-1;pointer-events:none}

@@ -102,7 +102,7 @@ function syncLevel({refreshEditor=true}={}){
  const item=state.selected;if(!item)return;
  const p=selectedSpecies();
  const calc=individualCorrections(item,p);
- lv.textContent='Lv.'+item.level;lvRange.value=item.level;
+ lv.textContent='Lv.'+item.level;syncBoxLevelSlider(item.level);
  boxTitle.textContent=item.name;
  document.getElementById('boxHeaderNo').textContent=`No.${String(item.no).padStart(3,'0')}`;
  syncBoxFlags(item);

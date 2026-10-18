@@ -1,7 +1,15 @@
 /* Neutral text for actions and inputs; semantic content keeps its own colors. */
 button,select,input,textarea,a[href],a[href]:visited{color:#111!important}
 button,select,input,textarea{-webkit-text-fill-color:#111}
-input[type="range"],input[type="checkbox"],input[type="radio"]{accent-color:#111!important}
+input[type="range"]{accent-color:#3888d8!important}
+input[type="checkbox"],input[type="radio"]{accent-color:#111!important}
+/* Explicit tracks and thumbs keep the level handle visible in Safari and Firefox. */
+#boxDetail #lvRange{appearance:none;-webkit-appearance:none;background:transparent;border:0;padding:0;cursor:pointer}
+#boxDetail #lvRange::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(to right,#3888d8 0 var(--level-progress,0%),#e4e4e4 var(--level-progress,0%) 100%)}
+#boxDetail #lvRange::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:24px;height:24px;margin-top:-10px;box-sizing:border-box;border:2px solid #111;border-radius:50%;background:#fff;box-shadow:none}
+#boxDetail #lvRange::-moz-range-track{height:4px;border-radius:4px;background:#e4e4e4}
+#boxDetail #lvRange::-moz-range-progress{height:4px;border-radius:4px;background:#3888d8}
+#boxDetail #lvRange::-moz-range-thumb{width:24px;height:24px;box-sizing:border-box;border:2px solid #111;border-radius:50%;background:#fff;box-shadow:none}
 select{border:1px solid #aaa!important;border-radius:6px!important;background-color:#fff!important}
 
 /* Every level dropdown shares the same value-only editable box. */
