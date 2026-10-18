@@ -38,7 +38,7 @@
 #boxDetail .psg-box-level label{font-weight:900}
 #boxDetail #boxLevelInput{text-align:center;border:1px solid #dfe8e4;border-radius:8px;}
 #boxDetail .psg-box-section h3{color:#111}
-#boxDetail .psg-box-section{background:#f3f7ff}
+#boxDetail .psg-box-section{background:#fff}
 #boxDetail .psg-box-skill-art img{width:36px;height:36px;object-fit:contain;vertical-align:middle}
 #boxDetail .psg-box-lead{font-weight:950;}
 #boxDetail .psg-box-skill-art{width:42px;height:42px;object-fit:contain;vertical-align:middle;margin-right:8px}
@@ -72,14 +72,16 @@
  #boxDetail .psg-box-stat{min-height:45px}
  #boxDetail .psg-box-stat small{font-size:8px}
  #boxDetail .psg-box-stat strong{font-size:12px}}
-#boxDetail .psg-box-food-heading{display:block}
-#boxDetail #boxIngredientRows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
-#boxDetail .psg-v106-ingredient{display:grid;grid-template-columns:28px auto;grid-template-rows:minmax(0,1fr) minmax(0,1fr);justify-content:center;align-items:center;column-gap:3px;row-gap:0;min-width:0;min-height:36px;padding:3px 2px;border-radius:10px;background:#fff;color:#111}
+/* One 2.5-unit row: three pickup slots, then the daily totals. */
+#boxDetail .psg-box-section.psg-box-food-section{box-sizing:border-box;position:relative;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);align-items:stretch;gap:0;min-height:calc(2.5 * var(--box-unit-height));padding:8px 6px}
+#boxDetail .psg-box-food-heading{display:block;min-width:0;padding-right:6px;border-right:1px solid #dce0e3}
+#boxDetail #boxIngredientRows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;height:100%}
+#boxDetail .psg-v106-ingredient{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:18px minmax(30px,1fr);justify-content:center;align-items:center;column-gap:1px;row-gap:0;min-width:0;min-height:36px;padding:3px 2px;border-radius:10px;background:#fff;color:#111}
 #boxDetail .psg-v106-ingredient.is-locked{opacity:.48}
-#boxDetail .psg-v106-unlock{text-align:center;font-size:11px;line-height:1.2;white-space:nowrap}
-#boxDetail .psg-v106-ingredient-image{grid-column:1;grid-row:1 / 3;display:grid;place-items:center;width:28px;height:28px}
-#boxDetail .psg-v106-ingredient-image img{width:28px;height:28px;object-fit:contain}
-#boxDetail .psg-v106-ingredient strong{grid-column:2;grid-row:2;text-align:center;font-size:13px;line-height:1.1;white-space:nowrap}
+#boxDetail .psg-v106-unlock{grid-column:1 / -1;grid-row:1;text-align:center;font-size:11px;line-height:1.2;white-space:nowrap}
+#boxDetail .psg-v106-ingredient-image{grid-column:1;grid-row:2;display:grid;place-items:center;justify-self:center;width:24px;height:28px}
+#boxDetail .psg-v106-ingredient-image img{width:24px;height:28px;object-fit:contain}
+#boxDetail .psg-v106-ingredient strong{grid-column:2;grid-row:2;text-align:center;font-size:12px;line-height:1.1;white-space:nowrap}
 #boxDetail .psg-v106-unknown{font-size:18px;color:#81908a}
 #boxDetail .psg-box-level{display:grid;grid-template-columns:var(--box-portrait-column) minmax(0,1fr);gap:3px;align-items:center;padding:2px 0;margin-top:3px}
 #boxDetail .psg-box-level-controls{grid-column:1;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:3px;margin:0;min-width:0}
@@ -146,11 +148,11 @@
 #boxEvaluation>p{font-size:13px}
 #boxDetail #boxGrowth .psg-box-muted{font-size:12px}
 
-#boxDetail .psg-box-day-food{position:relative;margin-top:6px}
-#boxDetail .psg-box-day-food-line{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:7px;padding-right:30px;font-size:12px;box-sizing:border-box;height:var(--box-unit-height);background:#fff;border:1px solid #fff;border-radius:10px}
-#boxDetail .psg-box-day-food-line>small{display:flex;align-items:center;justify-content:center;height:calc(var(--box-unit-height) - 2px);font-size:13px;font-weight:800;color:#111}
-#boxDetail .psg-box-day-food-item{display:inline-flex;align-items:center;gap:3px}
-#boxDetail .psg-box-day-food-item img{width:22px;height:22px;object-fit:contain}
+#boxDetail .psg-box-day-food{display:contents}
+#boxDetail .psg-box-day-food-line{grid-column:2;grid-row:1;display:grid;grid-template-rows:18px minmax(0,1fr);align-items:center;gap:0;padding:0 0 0 5px;font-size:12px;min-width:0;box-sizing:border-box;background:#fff;border:0;border-radius:0}
+#boxDetail .psg-box-day-food-line>small{display:flex;align-items:center;justify-content:center;height:18px;padding-right:18px;font-size:12px;font-weight:800;color:#111}
+#boxDetail .psg-box-day-food-item{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:1px;text-align:center;font-size:clamp(10px,2.8vw,13px);line-height:1.15}
+#boxDetail .psg-box-day-food-item img{width:24px;height:24px;object-fit:contain}
 #boxDetail .psg-box-camp-values{display:flex;flex-direction:column;align-items:center;line-height:1.15}
 #boxDetail .psg-box-camp-values small{font-size:9px;color:#666;font-weight:500}
 #boxDetail .psg-box-explanation p{font-size:12px;overflow-wrap:anywhere}
@@ -161,19 +163,20 @@
 
 .psg-evaluation-role{margin:8px 0}.psg-individual-row.is-primary{background:#fff;border:1px solid #d9e5df;border-radius:12px;padding:12px}.psg-evaluation-other{margin:12px 0}
 
-/* Food rows share the same height and ingredient-area width. */
-#boxDetail .psg-box-food-section .psg-v106-ingredient{position:relative;box-sizing:border-box;height:var(--box-unit-height);min-height:0;border:2px solid #fff;padding:1px}
-#boxDetail .psg-v106-ingredient[data-slot="A"]{background:#eaf3fd;border-color:#537ca5}
-#boxDetail .psg-v106-ingredient[data-slot="B"]{background:#f1ecfb;border-color:#8467ad}
-#boxDetail .psg-v106-ingredient[data-slot="C"]{background:#fff0e5;border-color:#a4734d}
-#boxDetail .psg-box-day-food-amounts{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:3px 8px;box-sizing:border-box;min-width:0;height:calc(var(--box-unit-height) - 2px);min-height:0;padding:2px;border:0;border-radius:0;background:transparent;color:#111}
+/* Pickup slots use ABC fills; daily totals share the same row. */
+#boxDetail .psg-box-food-section .psg-v106-ingredient{position:relative;box-sizing:border-box;height:100%;min-height:72px;border:0;padding:2px;border-radius:6px}
+#boxDetail .psg-v106-ingredient[data-slot="A"]{background:#eaf3fd}
+#boxDetail .psg-v106-ingredient[data-slot="B"]{background:#f1ecfb}
+#boxDetail .psg-v106-ingredient[data-slot="C"]{background:#fff0e5}
+#boxDetail .psg-box-day-food-amounts{display:flex;align-items:center;justify-content:center;flex-wrap:nowrap;gap:2px;box-sizing:border-box;min-width:0;height:100%;min-height:0;padding:0;border:0;border-radius:0;background:transparent;color:#111}
 #boxDetail .psg-box-day-food-amounts.psg-box-pending{margin:0;font-size:10px}
-#boxDetail .psg-box-day-conditions{margin:0;color:#111}
-#boxDetail .psg-box-day-conditions>summary{position:absolute;top:0;right:0;display:flex;justify-content:center;align-items:center;width:30px;min-height:var(--box-unit-height);color:#111;list-style:none;font-size:12px}
+#boxDetail .psg-box-day-conditions{grid-column:1 / -1;grid-row:2;margin:0;color:#111;min-width:0}
+#boxDetail .psg-box-day-conditions>summary{position:absolute;top:0;right:0;display:flex;justify-content:center;align-items:center;width:24px;min-height:28px;color:#111;list-style:none;font-size:12px}
 #boxDetail .psg-box-day-conditions>summary::-webkit-details-marker{display:none}
 #boxDetail .psg-box-day-conditions .psg-conditions-open,#boxDetail .psg-box-day-conditions[open] .psg-conditions-closed{display:none}
 #boxDetail .psg-box-day-conditions[open] .psg-conditions-open{display:inline}
 #boxDetail .psg-box-day-conditions[open]{padding-top:5px}
+#boxDetail .psg-box-day-conditions:not([open]){height:0}
 
 /* Skill identity and effect take the left three quarters; forecast gets one quarter. */
 #boxDetail .psg-box-skill-section{box-sizing:border-box;min-height:calc(2 * var(--box-unit-height));padding:4px 6px}
@@ -382,5 +385,5 @@ html.psg-evaluation-page main>.screen:not(#individualEvaluationPage){display:non
 .psg-recipe-fit-more>summary{color:#315f46}
 
 /* Special ingredient slots need a separate status row. */
-#boxDetail .psg-box-food-section .psg-v106-ingredient.has-unlock-state{height:auto;min-height:calc(var(--box-unit-height) + 18px);grid-template-rows:18px 20px auto;align-content:center}
+#boxDetail .psg-box-food-section .psg-v106-ingredient.has-unlock-state{height:100%;min-height:72px;grid-template-rows:18px minmax(28px,1fr) auto;align-content:center}
 #boxDetail .has-unlock-state .psg-box-food-unlock-state{grid-column:1 / -1;grid-row:3;text-align:center;font-size:10px;line-height:1.3;overflow-wrap:anywhere}

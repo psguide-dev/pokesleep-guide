@@ -12,7 +12,7 @@ function renderBoxDayFood(estimate){
  const amounts=[...member.foods].map(([name,qty])=>{
   const src=window.PS_CATALOG.ingredientVisual(name)?.image||window.PS_INGREDIENT_FALLBACK_ICON?.(name);
   const main=window.PS_NUMBERS.display(qty),plain=withoutCampMember&&!withoutCampMember.missing?window.PS_NUMBERS.display(withoutCampMember.foods.get(name)||0):'未確認';
-  return `<span class="psg-box-day-food-item" title="${boxEsc(name)}" aria-label="${boxEsc(name)} キャンチケ${camp?'あり':'なし'}約${main}個、${camp?'なし':'あり'}約${plain}個">${src?`<img src="${src}" alt="">`:boxEsc(name)}<span class="psg-box-camp-values"><b>約${main}</b><small>（${plain}）</small></span></span>`;
+  return `<span class="psg-box-day-food-item" title="${boxEsc(name)}" aria-label="${boxEsc(name)} キャンチケ${camp?'あり':'なし'}約${main}個、${camp?'なし':'あり'}約${plain}個">${src?`<img src="${src}" alt="">`:boxEsc(name)}<span class="psg-box-camp-values"><b>${main}</b><small>（${plain}）</small></span></span>`;
  }).join('');
  host.innerHTML=`<div class="psg-box-day-food-line"><small>１日予想</small><div class="psg-box-day-food-amounts">${amounts}</div></div><details class="psg-box-explanation psg-box-day-conditions"><summary aria-label="1日予想の計算条件" title="1日予想の計算条件"><span class="psg-conditions-closed">▼</span><span class="psg-conditions-open">▲</span></summary><p>${conditions}</p></details>`;
 }
