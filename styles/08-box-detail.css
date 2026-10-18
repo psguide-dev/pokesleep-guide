@@ -316,7 +316,7 @@
 #boxDetail .psg-skill-eval-level{min-height:36px;padding:4px 8px;border:1px solid #cbdad3;border-radius:8px;background:#fff}
 #boxDetail .psg-skill-role>.psg-box-muted{font-size:11px;margin:6px 0}
 
-/* Keep comparison controls together across all three specialties. */
+/* Keep comparison controls inline; the white result surface carries the emphasis. */
 .psg-role-evaluation-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:6px;margin:4px 0 8px}
 .psg-role-evaluation-controls>label,:is(.psg-food-role,.psg-berry-role,.psg-skill-role)>label{display:inline-flex;align-items:center;justify-content:flex-start;gap:6px;font-size:13px;font-weight:700;white-space:nowrap}
 .psg-role-evaluation-controls select{width:auto;min-width:0;min-height:36px;padding:4px 6px;border:1px solid #cbdad3;border-radius:8px;background:#fff}
