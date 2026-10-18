@@ -170,4 +170,5 @@ STYLE_NAMES = (
     '19-nightcap.css',
     '20-image-import.css',
     '22-reference-lists.css',
+    '23-controls.css',
 )
