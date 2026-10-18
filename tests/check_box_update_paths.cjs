@@ -30,3 +30,11 @@ vm.runInContext("go('box')",ctx);assert.equal(calls.box,1,'dirty list rebuilt on
 ctx.state.screen='boxDetail';fail=true;ctx.lvRange.value=61;ctx.lvRange.onchange();
 assert.equal(ctx.state.selected.level,60);assert.equal(ctx.lvRange.value,60);assert.equal(ctx.lvRange.style['--level-progress'],`${59/69*100}%`);assert.equal(calls.alerts,1,'failed save restores displayed level');
 console.log('Box updates: flags skip forecasts, drag previews only, release saves once, hidden screens defer refresh, navigation flushes dirty views, storage failure preserves level.');
+// Only a successful save closes the individual settings.
+ctx.speciesKey=p=>String(p.no);ctx.state.selected.no=1;ctx.selectedSpecies=()=>({no:1,ingredientSlots:[]});ctx.boxEvolutionChoices=()=>[];ctx.inferBoxNature=()=>({});ctx.SUBSKILL_LEVELS=[10,25,50,70,80];ctx.FormData=class{get(){return null}};
+nodes.set('boxAppearanceLabel',{hidden:true});
+vm.runInContext(read('box/05-actions.html').split("document.getElementById('boxEditForm').onsubmit")[1].replace(/^=/,"document.getElementById('boxEditForm').onsubmit="),ctx);
+const editor=nodes.get('boxEditor');editor.open=true;editor.hidden=false;
+nodes.get('boxEditForm').onsubmit({preventDefault(){},currentTarget:{}});assert.equal(editor.open,true);assert.equal(editor.hidden,false,'failed save keeps settings visible');
+fail=false;nodes.get('boxEditForm').onsubmit({preventDefault(){},currentTarget:{}});assert.equal(editor.open,false);assert.equal(editor.hidden,true,'successful save closes settings');
+console.log('Individual settings close only after successful storage.');

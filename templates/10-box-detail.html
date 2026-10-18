@@ -3,7 +3,7 @@
     <span id="boxStatPopoverTitle" class="psg-stat-popover-title">能力の補正</span>
     <div id="boxStatPopoverBody"></div>
   </div>
- <div class="detail-head"><button class="btn" data-back><svg class="psg-detail-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 4 8 12 16 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>戻る</span></button><h2><small id="boxHeaderNo"></small><span id="boxTitle">個体詳細</span></h2><details id="boxHeaderMenu" class="psg-box-header-menu"><summary class="btn" id="boxHeaderEdit">サブメニュー</summary><div class="psg-box-header-menu-items"><button class="btn" type="button" id="boxEditShortcut">個体値設定</button><button class="btn" type="button" id="boxRemoveBtn">削除</button></div></details></div>
+ <div class="detail-head"><button class="btn" data-back><svg class="psg-detail-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 4 8 12 16 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>戻る</span></button><h2><small id="boxHeaderNo"></small><span id="boxTitle">個体詳細</span></h2><details id="boxHeaderMenu" class="psg-box-header-menu"><summary class="btn" id="boxHeaderEdit">サブメニュー</summary><div class="psg-box-header-menu-items"><button class="btn" type="button" id="boxEditShortcut">個体値設定</button><button class="btn" type="button" id="boxEvolve">進化</button><button class="btn" type="button" id="boxDevolve">退化</button><div id="boxEvolutionOptions" hidden></div><button class="btn" type="button" id="boxRemoveBtn">削除</button></div></details></div>
  <div class="psg-box-hero card">
   <div class="psg-box-identity"><div class="psg-v106-media"><div id="boxArtwork" class="psg-box-artwork" aria-label="ポケモンの画像"></div></div>
    <div class="psg-detail-facts"><div id="boxTraits" class="psg-detail-traits">
@@ -21,10 +21,9 @@
  <section class="psg-box-section card" aria-label="サブスキル"><div id="boxSubskillRows"></div></section>
  <section class="psg-box-section psg-box-skill-section card" aria-label="メインスキル"><div id="boxMainSkill"></div></section>
  <section class="psg-box-section psg-box-evaluation-section card" aria-label="個体の評価"><div id="boxEvaluation"></div></section>
- <section class="psg-box-section card"><h3>育成・進化</h3><div id="boxGrowth"></div></section>
- <details class="psg-box-editor card" id="boxEditor"><summary>⚙️ 個体を編集</summary>
-   <form id="boxEditForm"><label id="boxAppearanceLabel" hidden><span id="boxAppearanceTitle">衣装・サイズ</span><select name="appearance" id="boxEditAppearance"></select></label><label id="boxEvolutionLabel">進化（現在の姿）<select name="evolution" id="boxEditEvolution"></select></label><p class="psg-box-muted psg-editor-note">個体情報を引き継ぎます。衣装・サイズはゲーム内の現在の姿に合わせてください。進化先を選ぶとスキルLvを上限に設定します。その後、手動で調整できます。</p>
-    <p class="psg-box-muted">最大所持数の進化補正は現在の進化段階から自動で反映します。スキルLvはゲーム内の現在値を登録してください。</p>
+ <section class="psg-box-section card"><div class="psg-box-growth-heading"><h3>育成・進化</h3><span id="boxEvolutionConditions"></span></div><div id="boxGrowth"></div></section>
+ <details class="psg-box-editor card" id="boxEditor" hidden><summary hidden>個体値設定</summary>
+   <form id="boxEditForm"><label id="boxAppearanceLabel" hidden><span id="boxAppearanceTitle">衣装・サイズ</span><select name="appearance" id="boxEditAppearance"></select></label><label id="boxEvolutionLabel">進化（現在の姿）<select name="evolution" id="boxEditEvolution"></select></label>
     <div class="psg-editor-ribbon"><label>おやすみリボン<select name="ribbonHours"><option value="0">なし</option><option value="200">200時間</option><option value="500">500時間</option><option value="1000">1000時間</option><option value="2000">2000時間</option></select></label><span id="boxRibbonPreview" class="psg-ribbon-preview" aria-label="選択したリボン"></span></div>
     <div id="boxEditIngredients"></div>
     <div id="boxEditSubskills"></div>

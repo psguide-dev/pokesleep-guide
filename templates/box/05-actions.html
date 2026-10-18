@@ -8,6 +8,7 @@ function updateLevel(level){
  if(level===state.selected.level){lv.textContent='Lv.'+level;syncBoxLevelSlider(level);return}
  lv.textContent='Lv.'+level;syncBoxLevelSlider(level);
  const changed={...state.selected,level};
+ if(state.boxEvolutionPreview){state.selected=changed;syncLevel();return}
  if(commitBox(state.box.map(x=>x.id===changed.id?changed:x))){state.selected=changed;syncLevel({refreshEditor:document.getElementById('boxEditor').open})}
  else{lv.textContent='Lv.'+state.selected.level;syncBoxLevelSlider(state.selected.level)}
 }
@@ -18,14 +19,14 @@ lvRange.onchange=()=>updateLevel(+lvRange.value);
 lvRange.onpointerup=()=>updateLevel(+lvRange.value);
 lvRange.onpointercancel=()=>updateLevel(+lvRange.value);
 lvRange.onblur=()=>updateLevel(+lvRange.value);
-function showBoxEditor(){document.getElementById('boxHeaderMenu').open=false;const details=document.getElementById('boxEditor');details.open=true;details.scrollIntoView({behavior:'smooth',block:'start'})}
+function showBoxEditor(){if(state.boxEvolutionPreview){resetBoxEvolutionPreview();syncLevel()}document.getElementById('boxHeaderMenu').open=false;const details=document.getElementById('boxEditor');details.hidden=false;details.open=true;details.scrollIntoView({behavior:'smooth',block:'start'})}
  document.getElementById('boxEditShortcut').onclick=showBoxEditor;
  for(const [id,field] of [['boxFavorite','favorite'],['boxTraining','training']])document.getElementById(id).onclick=()=>{
-  if(!state.selected)return;const changed={...state.selected,[field]:!state.selected[field]};
+  if(!state.selected)return;if(state.boxEvolutionPreview){resetBoxEvolutionPreview();syncLevel()}const changed={...state.selected,[field]:!state.selected[field]};
   if(commitBox(state.box.map(x=>x.id===changed.id?changed:x),{recalculate:false})){state.selected=changed;syncBoxFlags()}
  };
 document.getElementById('boxEditForm').onsubmit=e=>{
- e.preventDefault();const item=state.selected;if(!item)return;
+ e.preventDefault();if(state.boxEvolutionPreview){resetBoxEvolutionPreview();syncLevel();return}const item=state.selected;if(!item)return;
  const form=e.currentTarget;
  const natureInput=inferBoxNature(document.getElementById('boxNatureUp').value,document.getElementById('boxNatureDown').value);
  if(natureInput.error){document.getElementById('boxEditMessage').textContent=natureInput.error;return;}
@@ -51,5 +52,5 @@ document.getElementById('boxEditForm').onsubmit=e=>{
  }
  const filled=changed.subskills.filter(Boolean);
  if(new Set(filled).size!==filled.length){document.getElementById('boxEditMessage').textContent='同じサブスキルを重複して設定できません';return}
- if(commitBox(state.box.map(x=>x.id===changed.id?changed:x))){state.selected=changed;syncLevel();document.getElementById('boxEditMessage').textContent='保存しました'}
+ if(commitBox(state.box.map(x=>x.id===changed.id?changed:x))){state.selected=changed;syncLevel();document.getElementById('boxEditMessage').textContent='保存しました';document.getElementById('boxEditor').open=false;document.getElementById('boxEditor').hidden=true}
 };

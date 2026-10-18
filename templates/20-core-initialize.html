@@ -22,6 +22,7 @@ boxConfirmAdd.onclick=()=>{
 };
 let lastRemoval=null;
 boxRemoveBtn.onclick=()=>{
+ if(state.boxEvolutionPreview)resetBoxEvolutionPreview();
  const selected=state.selected;if(!selected||!confirm(`${selected.name} Lv.${selected.level}をBoxから削除しますか？`))return;
  const index=state.box.findIndex(x=>x.id===selected.id);if(index<0)return;
  if(commitBox(state.box.filter(x=>x.id!==selected.id))){lastRemoval={selected,index};state.selected=null;boxUndoPanel.hidden=false;go('box',false)}

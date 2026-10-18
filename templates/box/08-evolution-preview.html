@@ -1,0 +1,42 @@
+// Evolution controls change only the displayed individual; registered Box data stays intact.
+function boxEvolutionTargets(p){
+ if(!p)return [];
+ const regular=p.detailPreviewOnly?[]:(Array.isArray(p.evolution)?p.evolution:[p.evolution]).filter(e=>e?.toNo).map(edge=>({edge,target:speciesFor({no:Number(edge.toNo)})}));
+ const forms=(p.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(edge=>({edge:{...edge,level:edge.conditionsSource?.レベル??edge.conditionsSource?.最低レベル,candy:edge.conditionsSource?.アメ個数,item:edge.conditionsSource?.道具,extra:edge.allowedNatures?.length?'性格で分岐':''},target:window.PS_FORMS.resolve(edge.targetSpeciesId)}));
+ return [...regular,...forms].filter(({target})=>target&&target.boxEligible!==false);
+}
+function boxEvolutionCondition({edge,target}){
+ const parts=[edge.level?'Lv.'+edge.level:'',edge.candy!=null?'アメ'+edge.candy+'個':'',...(Array.isArray(edge.conditions)?edge.conditions:[edge.item,edge.extra])].filter(Boolean);
+ return target.name+' '+[...new Set(parts)].join('・');
+}
+function resetBoxEvolutionPreview(refresh=false){
+ const preview=state.boxEvolutionPreview;if(!preview)return;
+ state.selected=state.box.find(x=>x.id===preview.original.id)||preview.original;delete state.boxEvolutionPreview;
+ if(refresh)syncLevel();
+}
+function previewBoxEvolution(target){
+ const item=state.selected,p=selectedSpecies();if(!item||!boxEvolutionTargets(p).some(x=>speciesKey(x.target)===speciesKey(target)))return;
+ const snapshot=JSON.parse(JSON.stringify(item));
+ const preview=state.boxEvolutionPreview||(state.boxEvolutionPreview={original:snapshot,steps:[]});preview.steps.push(snapshot);
+ state.selected={...snapshot,no:Number(target.no),speciesId:speciesKey(target),name:target.name,specialty:target.specialty,skillLevel:Math.min(window.PS_CATALOG.skills?.[target.mainSkillId]?.maxLevel||7,(item.skillLevel||1)+1)};
+ document.getElementById('boxEditor').open=false;document.getElementById('boxEditor').hidden=true;
+ document.getElementById('boxHeaderMenu').open=false;syncLevel();
+}
+function undoBoxEvolution(){
+ const preview=state.boxEvolutionPreview;if(!preview?.steps.length)return;
+ state.selected=preview.steps.pop();if(!preview.steps.length)delete state.boxEvolutionPreview;
+ document.getElementById('boxHeaderMenu').open=false;syncLevel();
+}
+function syncBoxEvolutionControls(p){
+ const targets=boxEvolutionTargets(p),options=document.getElementById('boxEvolutionOptions');options.replaceChildren();options.hidden=true;
+ document.getElementById('boxEvolve').disabled=!targets.length;
+ document.getElementById('boxDevolve').disabled=!state.boxEvolutionPreview?.steps.length;
+ document.getElementById('boxEvolutionConditions').textContent=targets.map(boxEvolutionCondition).join(' / ');
+}
+document.getElementById('boxEvolve').onclick=()=>{
+ const targets=boxEvolutionTargets(selectedSpecies());if(targets.length===1){previewBoxEvolution(targets[0].target);return}
+ const options=document.getElementById('boxEvolutionOptions');options.replaceChildren();
+ for(const {target} of targets){const button=document.createElement('button');button.type='button';button.className='btn';button.textContent=target.name;button.onclick=()=>previewBoxEvolution(target);options.append(button)}
+ options.hidden=!targets.length;
+};
+document.getElementById('boxDevolve').onclick=undoBoxEvolution;

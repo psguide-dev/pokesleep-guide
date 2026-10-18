@@ -1,6 +1,6 @@
 function boxDailyEstimate(item){
  // Compare the individual under fixed conditions, independent of team/field settings.
- const result=dailyBaseline([item.id],state.box,window.PS_CATALOG,4,100,teamGoodCamp,3);
+ const result=dailyBaseline([item.id],state.box.map(x=>x.id===item.id?item:x),window.PS_CATALOG,4,100,teamGoodCamp,3);
  return {camp:teamGoodCamp,result,member:result.members.find(m=>m.id===item.id)};
 }
 function renderBoxDayFood(estimate){

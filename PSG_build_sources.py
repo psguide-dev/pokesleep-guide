@@ -88,6 +88,7 @@ TEMPLATE_NAMES = (
     '19-box-detail-controller.html',
     'box/02-daily-forecast.html',
     'box/06-growth.html',
+    'box/08-evolution-preview.html',
     'box/03-view.html',
     'box/04-editor.html',
     'box/05-actions.html',

@@ -29,5 +29,6 @@ assert(tree.includes('Lv.23'));assert(tree.includes('アメ×80'));assert(tree.i
 console.log('Toxel uses the shared three-image branching tree, correct form navigation/current highlight and condition popovers.');
 const toxtricityForms=JSON.parse(fs.readFileSync('master/forms/data.json','utf8')).species.filter(p=>['0849_amped','0849_low_key'].includes(p.speciesId));
 assert.equal(toxtricityForms.length,2);assert(toxtricityForms.every(p=>p.evolutionFromSpeciesId==='0848_default'&&p.evolution.可能===false));
-assert(fs.readFileSync('templates/box/03-view.html','utf8').includes('進化元：'));
+vm.runInContext(fs.readFileSync('templates/box/08-evolution-preview.html','utf8'),ctx);
+assert.equal(ctx.boxEvolutionTargets(amped).length,0);assert.equal(ctx.boxEvolutionTargets(low).length,0);assert.equal(ctx.boxEvolutionTargets(toxel).length,2);
 console.log('Both Toxtricity records explicitly retain Toxel as their origin without inventing a further evolution.');
