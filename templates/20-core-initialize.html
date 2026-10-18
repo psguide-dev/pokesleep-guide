@@ -15,7 +15,8 @@ boxCancelAdd.onclick=closeBoxAdd;
 boxConfirmAdd.onclick=()=>{
  const p=boxCatalog().find(x=>speciesKey(x)===boxSpecies.value);if(!p)return;
  const id=globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
- if(commitBox([...state.box,{id,no:Number(p.no),speciesId:speciesKey(p),name:p.name,specialty:p.specialty,role:defaultIndividualRole(p),level:1}])){
+ const individual=normalizeBox([{id,no:Number(p.no),speciesId:speciesKey(p),name:p.name,specialty:p.specialty,role:defaultIndividualRole(p),level:1}])[0];
+ if(commitBox([...state.box,individual])){
   boxUndoPanel.hidden=true;closeBoxAdd();boxSearch.value='';renderBox();
  }
 };
