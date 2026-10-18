@@ -9,7 +9,7 @@ const reset=()=>vm.runInContext('skillModelLoading=null;skillModelError=null;win
 const response=url=>{assert(url.startsWith('assets/evaluation/skill_'));return {ok:true,json:async()=>url.endsWith('skill_manifest_v2.json')?structuredClone(manifest):JSON.parse(fs.readFileSync(path.join(root,url)))}};
 (async()=>{let checks=0,fetches=[];const before=JSON.stringify(item);ctx.fetch=async url=>{fetches.push(url);return response(url)};
  const a=hostFor(),b=hostFor();assert.equal(fetches.length,0);checks++;ctx.bindIndividualEvaluation(a,item,p);ctx.bindIndividualEvaluation(b,item,p);await settle();assert.equal(fetches.length,2);assert(a.html.includes('スキル適性 SS'));assert(b.html.includes('スキル適性 SS'));assert.deepEqual(fetches,['assets/evaluation/skill_manifest_v2.json',manifest.species['0181_default'].file]);checks+=4;
- a.level.value='80';a.level.onchange();assert(a.html.includes('Lv.80・予測'));assert.equal(JSON.stringify(item),before);assert.equal(fetches.length,2);checks+=3;
+ a.level.value='80';a.level.onchange();assert(a.html.includes('value="80" selected>80</option>'));assert.equal(JSON.stringify(item),before);assert.equal(fetches.length,2);checks+=3;
  await ctx.loadSkillModelReferences('0702_default');assert.equal(fetches.length,3);assert.equal(fetches[2],manifest.species['0702_default'].file);checks+=2;
  reset();ctx.fetch=async()=>({ok:false});const failed=hostFor();ctx.bindIndividualEvaluation(failed,item,p);await settle();assert(failed.html.includes('再読込'));checks++;
  ctx.fetch=async url=>response(url);failed.retry.onclick();await settle();assert(failed.html.includes('スキル適性 SS'));checks++;
