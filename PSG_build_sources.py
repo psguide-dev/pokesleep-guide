@@ -62,6 +62,7 @@ TEMPLATE_NAMES = (
     'core/15-special-count.html',
     'core/16-evaluation-page.html',
     'core/16-food-composition.html',
+    'core/17-final-evolution-evaluation.html',
     'core/08-fields.html',
     'core/08-camp-settings.html',
     'fields/02-gallery.html',

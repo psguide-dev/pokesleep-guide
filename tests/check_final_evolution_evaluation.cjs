@@ -1,0 +1,36 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const {createRuntime}=require('./skill_model_runtime.cjs'),root=path.resolve(__dirname,'..'),{catalog,ctx}=createRuntime(root);
+ctx.speciesKey=ctx.window.PS_SPECIES_CATALOG.key;
+const nodes=new Map();ctx.document={getElementById:id=>{if(!nodes.has(id))nodes.set(id,{});return nodes.get(id)}};
+ctx.state={box:[]};ctx.sessionStorage={getItem:()=>null,setItem(){}};
+const read=f=>fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,'');
+vm.runInContext(read('templates/box/08-evolution-preview.html'),ctx);
+let rendered,bound;
+ctx.renderIndividualEvaluation=(item,p,options)=>{rendered={item,p,options};return '<div>result</div>'};
+ctx.bindIndividualEvaluation=(host,item,p)=>{bound={item,p}};
+vm.runInContext(read('templates/core/17-final-evolution-evaluation.html'),ctx);
+const base={id:'mareep',no:179,name:'メリープ',level:50,skillLevel:1,nature:'がんばりや',ingredients:Object.fromEntries(catalog.pokemon[179].ingredientSlots.map(slot=>[slot.unlock,slot.candidates[0].name])),subskills:['スキル確率アップM','おてつだいスピードM','最大所持数アップL'],skillEvaluationLevel:50};
+const before=JSON.stringify(base),p=catalog.pokemon[179],context=ctx.finalEvaluationContext(base,p);
+assert.equal(context.p.no,181);assert.equal(context.item.skillLevel,3);assert.equal(context.item.skillEvaluationLevel,50);
+assert.equal(JSON.stringify(context.item.ingredients),JSON.stringify(base.ingredients));assert.equal(JSON.stringify(context.item.subskills),JSON.stringify(base.subskills));
+const projected=ctx.calculateIndividualTrial(context.item),manual=ctx.calculateIndividualTrial({...base,no:181,speciesId:'0181_default',name:'デンリュウ',skillLevel:3});
+assert.deepEqual(projected.values,manual.values,'evaluation runs the final species with the retained individual');
+assert.equal(projected.member.stats.carry,ctx.individualCorrections(context.item,catalog.pokemon[181]).carry);
+ctx.renderIndividualEvaluation(base,p,{member:{wrongSpecies:true}});assert.equal(rendered.p.no,181);assert.equal(rendered.item.no,181);assert.equal(rendered.options.member,undefined,'current forecast cannot leak into final evaluation');
+const refreshed=ctx.finalEvaluationContext({...context.item,skillEvaluationLevel:70},context.p);
+assert.equal(refreshed.item.skillEvaluationLevel,70);assert.equal(refreshed.item.skillLevel,3,'async replacement must not add evolution bonuses twice');assert.equal(refreshed.source.p.no,179);
+const evolved={...base,no:181,name:'デンリュウ',skillLevel:3};
+assert.equal(ctx.finalEvaluationContext(evolved,catalog.pokemon[181]).item.no,181);
+const eevee={...base,id:'eevee',no:133},branches=ctx.finalEvaluationContext(eevee,catalog.pokemon[133]);assert.equal(branches.choices.length,8);
+const select={value:'0197_default'},host={innerHTML:'',querySelector:()=>({querySelector:()=>select})};
+ctx.bindIndividualEvaluation(host,eevee,catalog.pokemon[133]);select.onchange();assert.equal(rendered.p.no,197);assert.equal(bound.p.no,197);
+assert.equal(ctx.finalEvaluationContext(eevee,catalog.pokemon[133]).p.no,197,'branch choice survives refresh');
+const regional=ctx.window.PS_FORMS.resolve('0037_alola'),alola=ctx.finalEvaluationContext({...base,id:'alola',no:37,speciesId:'0037_alola'},regional);
+assert.equal(ctx.speciesKey(alola.p),'0038_alola','regional evolution never becomes the normal form');
+for(const species of ctx.window.PS_SPECIES_CATALOG.box()){
+ const c=ctx.finalEvaluationContext({...base,no:species.no,speciesId:ctx.speciesKey(species)},species);
+ if(c.ready)assert.equal(ctx.boxEvolutionTargets(c.p).length,0,`${species.name}: evaluation must reach the final stage`);
+}
+const cycle={no:9999,evolution:{toNo:9999}};const originalFor=ctx.speciesFor;ctx.speciesFor=()=>cycle;assert.equal(ctx.finalEvaluationContext(base,cycle).ready,false);ctx.speciesFor=originalFor;
+assert.equal(JSON.stringify(base),before,'registered record is unchanged');
+console.log('Final evolution evaluation: projected yield/carry, original data, no reused current forecast, async levels, all species, eight branches, regional forms and cycles passed.');
