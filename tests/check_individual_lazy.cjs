@@ -14,7 +14,10 @@ assert.equal(calls.length,before+1,'reuse the actual forecast; only the neutral 
 assert(simpleHTML.includes('満杯目安：'),'carry-fill summary reuses the actual member without another simulation');
 assert(calls.every(args=>!args[13]?.unlimitedCarry),'unlimited carry stays on the explicit detail path');
 assert(simpleHTML.includes('無補正比'));assert(simpleHTML.includes('基準準備中'));assert(simpleHTML.includes('詳しい評価を見る'));assert(!simpleHTML.includes('主軸を削る副軸'));
-const initial=calls.length;ctx.renderBoxGrowth(item,p,[30]);assert.equal(calls.length,initial,'closed growth comparisons do not calculate evaluation');
+ctx.document={getElementById:()=>({})};ctx.speciesFor=x=>catalog.pokemon[x.no];
+vm.runInContext(fs.readFileSync('templates/box/08-evolution-preview.html','utf8'),ctx);
+const initial=calls.length;const growthHTML=ctx.renderBoxGrowth(item,p,[30]);assert.equal(calls.length,initial,'growth costs and evolution conditions do not calculate evaluation');assert(growthHTML.includes('has-evolution'));assert(growthHTML.includes('フシギソウ'));
+
 function makeHost(){
  const button={attrs:{'aria-expanded':'false'},getAttribute(k){return this.attrs[k]},setAttribute(k,v){this.attrs[k]=v}},detail={hidden:true,setAttribute(){},removeAttribute(){}};
  const host={attached:true,querySelector:s=>s==='.psg-evaluation-open'?button:detail,contains:()=>host.attached};return {host,button,detail};

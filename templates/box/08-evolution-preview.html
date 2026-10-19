@@ -5,9 +5,12 @@ function boxEvolutionTargets(p){
  const forms=(p.evolutionTransitions||[]).filter(e=>e.transitionEnabled).map(edge=>({edge:{...edge,level:edge.conditionsSource?.レベル??edge.conditionsSource?.最低レベル,candy:edge.conditionsSource?.アメ個数,item:edge.conditionsSource?.道具,extra:edge.allowedNatures?.length?'性格で分岐':''},target:window.PS_FORMS.resolve(edge.targetSpeciesId)}));
  return [...regular,...forms].filter(({target})=>target&&target.boxEligible!==false);
 }
+function boxEvolutionConditionParts(edge){
+ const extra=(Array.isArray(edge.conditions)?edge.conditions:[edge.item,edge.extra]).filter(Boolean).flatMap(value=>String(value).split(/[＋+・]/)).map(value=>value.trim()).filter(value=>value&&!(edge.level&&/Lv[.．]?\s*\d+/i.test(value))&&!(edge.candy!=null&&/アメ/.test(value)));
+ return [...new Set([edge.level?'Lv.'+edge.level:'',edge.candy!=null?'アメ'+edge.candy+'個':'',...extra].filter(Boolean))];
+}
 function boxEvolutionCondition({edge,target}){
- const parts=[edge.level?'Lv.'+edge.level:'',edge.candy!=null?'アメ'+edge.candy+'個':'',...(Array.isArray(edge.conditions)?edge.conditions:[edge.item,edge.extra])].filter(Boolean);
- return target.name+' '+[...new Set(parts)].join('・');
+ return target.name+' '+boxEvolutionConditionParts(edge).join('・');
 }
 function resetBoxEvolutionPreview(refresh=false){
  const preview=state.boxEvolutionPreview;if(!preview)return;
@@ -31,7 +34,6 @@ function syncBoxEvolutionControls(p){
  const targets=boxEvolutionTargets(p),options=document.getElementById('boxEvolutionOptions');options.replaceChildren();options.hidden=true;
  document.getElementById('boxEvolve').disabled=!targets.length;
  document.getElementById('boxDevolve').disabled=!state.boxEvolutionPreview?.steps.length;
- document.getElementById('boxEvolutionConditions').textContent=targets.map(boxEvolutionCondition).join(' / ');
 }
 document.getElementById('boxEvolve').onclick=()=>{
  const targets=boxEvolutionTargets(selectedSpecies());if(targets.length===1){previewBoxEvolution(targets[0].target);return}

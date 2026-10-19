@@ -26,7 +26,8 @@ function boxGrowthEstimate(item,p,target){
  return {status:'estimate',candy,shards,requiredExp,conflicts};
 }
 function renderBoxGrowth(item,p,milestones){
- if(!milestones.length)return '<p class="psg-box-muted">現在のレベル上限まで、次の解放はありません。</p>';
+ const evolutionTargets=boxEvolutionTargets(p);
+ if(!milestones.length&&!evolutionTargets.length)return '<p class="psg-box-muted">現在のレベル上限まで、次の解放はありません。</p>';
  const rows=milestones.map(target=>{
   const labels=[];
   if(p?.ingredientSlots?.some(s=>s.unlock===target))labels.push(p?.mythicalSettings?'食材枠の有効Lv':'食材解放');
@@ -38,5 +39,6 @@ function renderBoxGrowth(item,p,milestones){
   const shards=ready?`約${result.shards.toLocaleString()}`:'計算保留';
   return `<div class="psg-growth-target${unavailable?' is-unavailable':''}"><div class="psg-milestone"${ready?'':` title="${boxEsc(result.reason)}"`}><b>Lv.${target} ${labels.join('・')}${unavailable?'（未実装）':''}</b><div><span>アメ</span><strong>${candy}</strong></div><div><span>ゆめのかけら</span><strong>${shards}</strong></div></div></div>`;
  }).join('');
- return `<div class="psg-growth-milestones">${rows}</div>`+(p?.mythicalSettings?'<p class="psg-box-muted">Lv到達だけでは枠を解放しません。解放状態は個体を編集して記録してください。</p>':'');
+ const evolution=evolutionTargets.length?`<div class="psg-milestone psg-evolution-milestone">${evolutionTargets.map(({edge,target})=>`<div class="psg-evolution-target"><b>${boxEsc(target.name)}</b>${boxEvolutionConditionParts(edge).map(part=>`<span>${boxEsc(part)}</span>`).join('')}</div>`).join('')}</div>`:'';
+ return `<div class="psg-growth-milestones${evolutionTargets.length?' has-evolution':''}">${evolution}${rows}</div>`+(p?.mythicalSettings?'<p class="psg-box-muted">Lv到達だけでは枠を解放しません。解放状態は個体を編集して記録してください。</p>':'');
 }
