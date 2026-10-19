@@ -24,3 +24,11 @@ select:is([class*="level"],[id*="Level"],[id*="level"],[name*="Level"],[name*="l
 }
 #boxDetail .psg-role-evaluation-controls>label{justify-content:flex-start;gap:5px;padding:0;font-size:14px}
 :is(.psg-food-role,.psg-berry-role,.psg-skill-role,.psg-special-count,.psg-food-composition)>label{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:700;white-space:nowrap}
+
+/* Species, evaluation level and details share one 36px overview row. */
+#boxDetail .psg-role-evaluation-controls:has(.psg-final-evaluation-target){grid-template-columns:minmax(0,1fr) max-content max-content;align-items:center;gap:4px;height:36px;min-height:36px;margin:0 0 6px}
+.psg-final-evaluation-target{min-width:0}
+#boxDetail .psg-role-evaluation-controls>.psg-final-evaluation-target{grid-column:1;height:36px}
+.psg-final-evaluation-select,#boxDetail .psg-role-evaluation-controls .psg-final-evaluation-select{width:100%;max-width:100%;min-width:0;height:36px;box-sizing:border-box;font:inherit;font-size:13px;font-weight:700;appearance:none;-webkit-appearance:none;padding:3px 18px 3px 5px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 9 6'%3E%3Cpath d='m1 1 3.5 3.5L8 1' fill='none' stroke='%23111' stroke-width='1.5'/%3E%3C/svg%3E");background-position:right 5px center;background-repeat:no-repeat;text-overflow:ellipsis}
+#boxDetail .psg-role-evaluation-controls:has(.psg-final-evaluation-target)>label{height:36px;min-height:36px;gap:3px;font-size:12px}
+#boxDetail .psg-role-evaluation-controls:has(.psg-final-evaluation-target) .psg-evaluation-page-link{height:36px;min-height:36px;padding:0;font-size:12px}

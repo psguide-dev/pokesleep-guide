@@ -25,6 +25,20 @@ function boxGrowthEstimate(item,p,target){
  const conflicts=data.sourceTableConflicts.filter(x=>String(x.exp_type)===type&&x.target_level>from&&x.target_level<=target);
  return {status:'estimate',candy,shards,requiredExp,conflicts};
 }
+const boxEvolutionCardChoices=new Map();
+function renderBoxEvolutionCard(p,targets){
+ const selected=boxEvolutionCardChoices.get(speciesKey(p)),choice=targets.find(x=>speciesKey(x.target)===selected)||targets[0];
+ if(!choice)return '';
+ const {target,edge}=choice,key=speciesKey(target);
+ const face=window.PS_IMAGE_FILES?.pokemonFacesBySpecies?.[key]||(target.speciesId?target.faceImage:window.PS_IMAGE_FILES?.pokemonFaces?.[target.no])||target.faceImage;
+ const art=window.PS_DEV_ASSETS?.image?.(face,'pokemon',target.speciesId||target.no,'face',target.name)||'';
+ const name=targets.length>1?`<select class="psg-evolution-target-select" aria-label="進化先">${targets.map(x=>`<option value="${boxEsc(speciesKey(x.target))}"${speciesKey(x.target)===key?' selected':''}>${boxEsc(x.target.name)}</option>`).join('')}</select>`:`<b>${boxEsc(target.name)}</b>`;
+ return `<div class="psg-milestone psg-evolution-milestone"><div class="psg-evolution-target">${name}<span class="psg-evolution-face">${art}</span>${boxEvolutionConditionParts(edge).map(part=>`<span>${boxEsc(part)}</span>`).join('')}</div></div>`;
+}
+function bindBoxGrowthEvolution(p){
+ const host=document.getElementById('boxGrowth'),select=host?.querySelector?.('.psg-evolution-target-select');if(!select)return;
+ select.onchange=()=>{const targets=boxEvolutionTargets(p);if(!targets.some(x=>speciesKey(x.target)===select.value))return;boxEvolutionCardChoices.set(speciesKey(p),select.value);host.querySelector('.psg-evolution-milestone').outerHTML=renderBoxEvolutionCard(p,targets);bindBoxGrowthEvolution(p)};
+}
 function renderBoxGrowth(item,p,milestones){
  const evolutionTargets=boxEvolutionTargets(p);
  if(!milestones.length&&!evolutionTargets.length)return '<p class="psg-box-muted">現在のレベル上限まで、次の解放はありません。</p>';
@@ -37,8 +51,8 @@ function renderBoxGrowth(item,p,milestones){
   const ready=result.status==='estimate';
   const candy=ready?`約${result.candy.toLocaleString()}個`:'計算保留';
   const shards=ready?`約${result.shards.toLocaleString()}`:'計算保留';
-  return `<div class="psg-growth-target${unavailable?' is-unavailable':''}"><div class="psg-milestone"${ready?'':` title="${boxEsc(result.reason)}"`}><b>Lv.${target} ${labels.join('・')}${unavailable?'（未実装）':''}</b><div><span>アメ</span><strong>${candy}</strong></div><div><span>ゆめのかけら</span><strong>${shards}</strong></div></div></div>`;
+  return `<div class="psg-growth-target${unavailable?' is-unavailable':''}"><div class="psg-milestone"${ready?'':` title="${boxEsc(result.reason)}"`}><b><span class="psg-growth-level">Lv.${target}</span><span class="psg-growth-unlock">${labels.join('・')}${unavailable?'（未実装）':''}</span></b><div><span>アメ</span><strong>${candy}</strong></div><div><span>ゆめのかけら</span><strong>${shards}</strong></div></div></div>`;
  }).join('');
- const evolution=evolutionTargets.length?`<div class="psg-milestone psg-evolution-milestone">${evolutionTargets.map(({edge,target})=>`<div class="psg-evolution-target"><b>${boxEsc(target.name)}</b>${boxEvolutionConditionParts(edge).map(part=>`<span>${boxEsc(part)}</span>`).join('')}</div>`).join('')}</div>`:'';
+ const evolution=evolutionTargets.length?renderBoxEvolutionCard(p,evolutionTargets):'';
  return `<div class="psg-growth-milestones${evolutionTargets.length?' has-evolution':''}">${evolution}${rows}</div>`+(p?.mythicalSettings?'<p class="psg-box-muted">Lv到達だけでは枠を解放しません。解放状態は個体を編集して記録してください。</p>':'');
 }

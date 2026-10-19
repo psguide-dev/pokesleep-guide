@@ -2,7 +2,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const {createRuntime}=require('./skill_model_runtime.cjs'),root=path.resolve(__dirname,'..'),{catalog,ctx}=createRuntime(root);
 ctx.speciesKey=ctx.window.PS_SPECIES_CATALOG.key;
 const nodes=new Map();ctx.document={getElementById:id=>{if(!nodes.has(id))nodes.set(id,{});return nodes.get(id)}};
-ctx.state={box:[]};ctx.sessionStorage={getItem:()=>null,setItem(){}};
+ctx.evaluationPage=false;ctx.state={box:[]};ctx.sessionStorage={getItem:()=>null,setItem(){}};
 const read=f=>fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,'');
 vm.runInContext(read('templates/box/08-evolution-preview.html'),ctx);
 let rendered,bound;
@@ -21,8 +21,8 @@ const refreshed=ctx.finalEvaluationContext({...context.item,skillEvaluationLevel
 assert.equal(refreshed.item.skillEvaluationLevel,70);assert.equal(refreshed.item.skillLevel,3,'async replacement must not add evolution bonuses twice');assert.equal(refreshed.source.p.no,179);
 const evolved={...base,no:181,name:'デンリュウ',skillLevel:3};
 assert.equal(ctx.finalEvaluationContext(evolved,catalog.pokemon[181]).item.no,181);
-const eevee={...base,id:'eevee',no:133},branches=ctx.finalEvaluationContext(eevee,catalog.pokemon[133]);assert.equal(branches.choices.length,8);
-const select={value:'0197_default'},host={innerHTML:'',querySelector:()=>({querySelector:()=>select})};
+const eevee={...base,id:'eevee',no:133},branches=ctx.finalEvaluationContext(eevee,catalog.pokemon[133]);assert.equal(branches.choices.length,9);assert(branches.choices.some(c=>c.p.no===133));
+const select={value:'0197_default'},targetNode={querySelector:()=>select},host={innerHTML:'',querySelector:s=>s==='.psg-final-evaluation-target'?targetNode:null};
 ctx.bindIndividualEvaluation(host,eevee,catalog.pokemon[133]);select.onchange();assert.equal(rendered.p.no,197);assert.equal(bound.p.no,197);
 assert.equal(ctx.finalEvaluationContext(eevee,catalog.pokemon[133]).p.no,197,'branch choice survives refresh');
 const regional=ctx.window.PS_FORMS.resolve('0037_alola'),alola=ctx.finalEvaluationContext({...base,id:'alola',no:37,speciesId:'0037_alola'},regional);
@@ -32,5 +32,8 @@ for(const species of ctx.window.PS_SPECIES_CATALOG.box()){
  if(c.ready)assert.equal(ctx.boxEvolutionTargets(c.p).length,0,`${species.name}: evaluation must reach the final stage`);
 }
 const cycle={no:9999,evolution:{toNo:9999}};const originalFor=ctx.speciesFor;ctx.speciesFor=()=>cycle;assert.equal(ctx.finalEvaluationContext(base,cycle).ready,false);ctx.speciesFor=originalFor;
+vm.runInContext("finalEvaluationTargets.set('mareep','0180_default')",ctx);const middle=ctx.finalEvaluationContext(base,p);assert.equal(middle.p.no,180);assert.equal(middle.item.skillLevel,2);
+vm.runInContext("finalEvaluationTargets.set('mareep','0179_default')",ctx);const current=ctx.finalEvaluationContext(base,p);assert.equal(current.p.no,179);assert.equal(current.item.skillLevel,1);assert.deepEqual(Array.from(context.choices,c=>c.p.no),[179,180,181]);
 assert.equal(JSON.stringify(base),before,'registered record is unchanged');
+const turtwig=ctx.finalEvaluationContext({...base,id:'turtwig',no:387},catalog.pokemon[387]);assert.equal(turtwig.p.no,389);assert.deepEqual(Array.from(turtwig.choices,c=>c.p.no),[387,388,389]);assert(!ctx.renderFinalEvaluationTarget(turtwig).includes('最終進化'));
 console.log('Final evolution evaluation: projected yield/carry, original data, no reused current forecast, async levels, all species, eight branches, regional forms and cycles passed.');

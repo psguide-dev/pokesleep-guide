@@ -1,4 +1,4 @@
-// Evaluate a copy at its final evolution. Box records and current daily forecasts stay unchanged.
+// Evaluate a copy at the selected stage, defaulting to its final evolution. Box records and current daily forecasts stay unchanged.
 const FINAL_EVALUATION_TARGET_KEY='psg-final-evaluation-target-v1';
 const finalEvaluationTargets=new Map();
 try{for(const [id,target] of Object.entries(JSON.parse(sessionStorage.getItem(FINAL_EVALUATION_TARGET_KEY)||'{}')))finalEvaluationTargets.set(id,target)}catch{}
@@ -17,18 +17,25 @@ function finalEvolutionChoices(p,item,seen=new Set()){
  const choices=targets.filter(({edge})=>!edge.allowedNatures?.length||edge.allowedNatures.includes(item.nature)).flatMap(({target})=>finalEvolutionChoices(target,item,visited).map(choice=>({...choice,steps:choice.steps+1})));
  return [...new Map(choices.map(choice=>[speciesKey(choice.p),choice])).values()];
 }
+function evaluationEvolutionChoices(p,item,seen=new Set()){
+ if(!p||seen.has(speciesKey(p)))return [];
+ const visited=new Set([...seen,speciesKey(p)]);
+ const descendants=boxEvolutionTargets(p).filter(({edge})=>!edge.allowedNatures?.length||edge.allowedNatures.includes(item.nature)).flatMap(({target})=>evaluationEvolutionChoices(target,item,visited).map(choice=>({...choice,steps:choice.steps+1})));
+ return [...new Map([{p,steps:0},...descendants].map(choice=>[speciesKey(choice.p),choice])).values()];
+}
 function finalEvaluationContext(item,p){
- const source=finalEvaluationSource(item,p),choices=finalEvolutionChoices(source.p,source.item);
- const selected=finalEvaluationTargets.get(source.item.id),choice=choices.find(c=>speciesKey(c.p)===selected)||choices[0];
+ const source=finalEvaluationSource(item,p),finals=finalEvolutionChoices(source.p,source.item),choices=finals.length?evaluationEvolutionChoices(source.p,source.item):[];
+ const selected=finalEvaluationTargets.get(source.item.id),choice=choices.find(c=>speciesKey(c.p)===selected)||finals[0];
  if(!choice)return {...source,choices,source,ready:false};
  const target=choice.p;
  return {source,choices,p:target,ready:true,item:{...source.item,no:Number(target.no),speciesId:speciesKey(target),name:target.name,specialty:target.specialty,skillLevel:Math.min(window.PS_CATALOG.skills?.[target.mainSkillId]?.maxLevel||7,(source.item.skillLevel||1)+choice.steps),finalEvaluationSource:source.item}};
 }
 function renderFinalEvaluationTarget(context){
- if(!context.ready)return '<div class="psg-final-evaluation-target"><p>最終進化先を確認できないため評価できません。</p></div>';
+ if(!context.ready)return '<div class="psg-final-evaluation-target"><p>評価する姿を確認できません。</p></div>';
  const {choices,p}=context;
- return `<div class="psg-final-evaluation-target">${choices.length>1?`<label>評価する最終進化先 <select class="psg-final-evaluation-select" aria-label="評価する最終進化先">${choices.map(choice=>`<option value="${boxEsc(speciesKey(choice.p))}"${speciesKey(choice.p)===speciesKey(p)?' selected':''}>${boxEsc(choice.p.name)}</option>`).join('')}</select></label>`:`<p class="psg-box-muted">最終進化：${boxEsc(p.name)}で評価</p>`}</div>`;
+ return `<div class="psg-final-evaluation-target"><select class="psg-final-evaluation-select" aria-label="評価するポケモン">${choices.map(choice=>`<option value="${boxEsc(speciesKey(choice.p))}"${speciesKey(choice.p)===speciesKey(p)?' selected':''}>${boxEsc(choice.p.name)}</option>`).join('')}</select></div>`;
 }
+
 const renderBeforeFinalEvolution=renderIndividualEvaluation,bindBeforeFinalEvolution=bindIndividualEvaluation;
 renderIndividualEvaluation=function(item,p,options={}){
  const context=finalEvaluationContext(item,p),heading=renderFinalEvaluationTarget(context);
@@ -41,12 +48,23 @@ bindIndividualEvaluation=function(host,item,p){
  bindBeforeFinalEvolution(host,context.item,context.p);
  let target=host.querySelector('.psg-final-evaluation-target');
  if(!target){host.insertAdjacentHTML('afterbegin',renderFinalEvaluationTarget(context));target=host.querySelector('.psg-final-evaluation-target')}
+ if(!evaluationPage){
+  const controls=host.querySelector('.psg-role-evaluation-controls');
+  if(controls){
+   const title=controls.querySelector('.psg-evaluation-type');
+   if(title)title.replaceWith(target);else if(target?.parentElement!==controls)controls.prepend(target);
+   const label=controls.querySelector('label');
+   if(label?.firstChild?.nodeType===3)label.firstChild.textContent='評価 Lv.';
+  }
+ }
  const select=target?.querySelector('.psg-final-evaluation-select');if(!select)return;
  select.onchange=()=>{
   if(!context.choices.some(choice=>speciesKey(choice.p)===select.value))return;
   finalEvaluationTargets.set(context.source.item.id,select.value);
   try{sessionStorage.setItem(FINAL_EVALUATION_TARGET_KEY,JSON.stringify(Object.fromEntries(finalEvaluationTargets)))}catch{}
-  host.innerHTML=renderIndividualEvaluation(context.source.item,context.source.p);
-  bindIndividualEvaluation(host,context.source.item,context.source.p);
+  const source={...context.source.item};
+  for(const [selector,field] of [['.psg-food-eval-level','foodEvaluationLevel'],['.psg-berry-level','berryEvaluationLevel'],['.psg-skill-eval-level','skillEvaluationLevel'],['.psg-composition-level','foodCompositionEvaluationLevel']]){const level=host.querySelector(selector);if(level?.value&&Number.isFinite(Number(level.value)))source[field]=Number(level.value)}
+  host.innerHTML=renderIndividualEvaluation(source,context.source.p);
+  bindIndividualEvaluation(host,source,context.source.p);
  };
 };
