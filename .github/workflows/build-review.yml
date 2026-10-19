@@ -114,6 +114,7 @@ jobs:
           node tests/check_individual_trial.cjs
           node tests/check_individual_lazy.cjs
           node tests/check_evaluation_page.cjs
+          node tests/check_final_evolution_evaluation.cjs
           node tests/check_food_role.cjs
           node tests/check_food_expansion.cjs
           node tests/check_food_recovery.cjs
