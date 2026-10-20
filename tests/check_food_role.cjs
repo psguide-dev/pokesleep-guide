@@ -50,3 +50,5 @@ console.log('Food diagnostics: matched ideal, growth quantities/ratios, missing 
 ctx.evaluationPage=false;ctx.renderFoodRoleDetails=()=>{throw Error('Box overview must not calculate detailed comparisons')};ctx.evaluationPageMarkup=()=>{throw Error('Box overview must not parse discarded details')};
 const overviewHtml=ctx.renderFoodRole(item,p);assert(overviewHtml.includes('ランク準備中'));assert(overviewHtml.includes('同構成の理想比'));assert(!overviewHtml.includes('<table'));assert(!overviewHtml.includes('<details'));
 console.log('Food overview: no discarded detail calculations, tables or HTML parsing');
+
+for(const pattern of ['AAA','AAB','ABC'])assert(ctx.renderRoleEvaluationSummary('food',{pattern,rankEvaluation:{status:'ready',rank:'A'},percent:100,value:10,ideal:10}).includes(`>食材${pattern}型</div>`),'overview retains the evaluated food pattern');

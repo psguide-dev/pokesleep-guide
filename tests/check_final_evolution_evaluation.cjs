@@ -36,4 +36,12 @@ vm.runInContext("finalEvaluationTargets.set('mareep','0180_default')",ctx);const
 vm.runInContext("finalEvaluationTargets.set('mareep','0179_default')",ctx);const current=ctx.finalEvaluationContext(base,p);assert.equal(current.p.no,179);assert.equal(current.item.skillLevel,1);assert.deepEqual(Array.from(context.choices,c=>c.p.no),[179,180,181]);
 assert.equal(JSON.stringify(base),before,'registered record is unchanged');
 const turtwig=ctx.finalEvaluationContext({...base,id:'turtwig',no:387},catalog.pokemon[387]);assert.equal(turtwig.p.no,389);assert.deepEqual(Array.from(turtwig.choices,c=>c.p.no),[387,388,389]);assert(!ctx.renderFinalEvaluationTarget(turtwig).includes('最終進化'));
+ctx.evaluationPage=true;
+ctx.bindIndividualEvaluation(host,base,p);
+assert.equal(nodes.get('individualEvaluationTitle').textContent,'メリープの評価');
+select.value='0181_default';select.onchange();
+assert.equal(nodes.get('individualEvaluationTitle').textContent,'デンリュウの評価','detail title follows target changes');
+ctx.bindIndividualEvaluation(host,{...rendered.item,skillEvaluationLevel:80},rendered.p);
+assert.equal(nodes.get('individualEvaluationTitle').textContent,'デンリュウの評価','async level refresh retains evaluated title');
+assert.equal(JSON.stringify(base),before,'title and target changes do not modify the registered record');
 console.log('Final evolution evaluation: projected yield/carry, original data, no reused current forecast, async levels, all species, eight branches, regional forms and cycles passed.');

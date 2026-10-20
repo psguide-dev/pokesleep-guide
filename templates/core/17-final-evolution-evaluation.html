@@ -46,6 +46,10 @@ renderIndividualEvaluation=function(item,p,options={}){
 bindIndividualEvaluation=function(host,item,p){
  const context=finalEvaluationContext(item,p);if(!context.ready)return;
  bindBeforeFinalEvolution(host,context.item,context.p);
+ if(evaluationPage){
+  const title=document.getElementById('individualEvaluationTitle');
+  if(title)title.textContent=`${context.p.name}の評価`;
+ }
  let target=host.querySelector('.psg-final-evaluation-target');
  if(!target){host.insertAdjacentHTML('afterbegin',renderFinalEvaluationTarget(context));target=host.querySelector('.psg-final-evaluation-target')}
  if(!evaluationPage){
