@@ -25,9 +25,9 @@ function boxGrowthEstimate(item,p,target){
  const conflicts=data.sourceTableConflicts.filter(x=>String(x.exp_type)===type&&x.target_level>from&&x.target_level<=target);
  return {status:'estimate',candy,shards,requiredExp,conflicts};
 }
-const boxEvolutionCardChoices=new Map();
-function renderBoxEvolutionCard(p,targets){
- const selected=boxEvolutionCardChoices.get(speciesKey(p)),choice=targets.find(x=>speciesKey(x.target)===selected)||targets[0];
+function renderBoxEvolutionCard(p,targets,item=state.selected){
+ const selected=finalEvaluationContext(item,p).p;
+ const choice=targets.find(x=>evaluationEvolutionChoices(x.target,item).some(c=>speciesKey(c.p)===speciesKey(selected)))||targets[0];
  if(!choice)return '';
  const {target,edge}=choice,key=speciesKey(target);
  const face=window.PS_IMAGE_FILES?.pokemonFacesBySpecies?.[key]||(target.speciesId?target.faceImage:window.PS_IMAGE_FILES?.pokemonFaces?.[target.no])||target.faceImage;
@@ -37,7 +37,7 @@ function renderBoxEvolutionCard(p,targets){
 }
 function bindBoxGrowthEvolution(p){
  const host=document.getElementById('boxGrowth'),select=host?.querySelector?.('.psg-evolution-target-select');if(!select)return;
- select.onchange=()=>{const targets=boxEvolutionTargets(p);if(!targets.some(x=>speciesKey(x.target)===select.value))return;boxEvolutionCardChoices.set(speciesKey(p),select.value);host.querySelector('.psg-evolution-milestone').outerHTML=renderBoxEvolutionCard(p,targets);bindBoxGrowthEvolution(p)};
+ select.onchange=()=>{const targets=boxEvolutionTargets(p);if(!targets.some(x=>speciesKey(x.target)===select.value))return;changeFinalEvaluationTarget(document.getElementById('boxEvaluation'),state.selected,p,select.value)};
 }
 function renderBoxGrowth(item,p,milestones){
  const evolutionTargets=boxEvolutionTargets(p);
@@ -53,6 +53,12 @@ function renderBoxGrowth(item,p,milestones){
   const shards=ready?`約${result.shards.toLocaleString()}`:'計算保留';
   return `<div class="psg-growth-target${unavailable?' is-unavailable':''}"><div class="psg-milestone"${ready?'':` title="${boxEsc(result.reason)}"`}><b><span class="psg-growth-level">Lv.${target}</span><span class="psg-growth-unlock">${labels.join('・')}${unavailable?'（未実装）':''}</span></b><div><span>アメ</span><strong>${candy}</strong></div><div><span>ゆめのかけら</span><strong>${shards}</strong></div></div></div>`;
  }).join('');
- const evolution=evolutionTargets.length?renderBoxEvolutionCard(p,evolutionTargets):'';
+ const evolution=evolutionTargets.length?renderBoxEvolutionCard(p,evolutionTargets,item):'';
  return `<div class="psg-growth-milestones${evolutionTargets.length?' has-evolution':''}">${evolution}${rows}</div>`+(p?.mythicalSettings?'<p class="psg-box-muted">Lv到達だけでは枠を解放しません。解放状態は個体を編集して記録してください。</p>':'');
+}
+
+function refreshBoxGrowthEvolution(item,p){
+ const host=document.getElementById('boxGrowth'),card=host?.querySelector?.('.psg-evolution-milestone');
+ if(!card)return;
+ card.outerHTML=renderBoxEvolutionCard(p,boxEvolutionTargets(p),item);bindBoxGrowthEvolution(p);
 }

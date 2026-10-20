@@ -16,6 +16,9 @@ assert(calls.every(args=>!args[13]?.unlimitedCarry),'unlimited carry stays on th
 assert(simpleHTML.includes('無補正比'));assert(simpleHTML.includes('基準準備中'));assert(simpleHTML.includes('詳しい評価を見る'));assert(!simpleHTML.includes('主軸を削る副軸'));
 ctx.document={getElementById:()=>({})};ctx.speciesFor=x=>catalog.pokemon[x.no];
 vm.runInContext(fs.readFileSync('templates/box/08-evolution-preview.html','utf8'),ctx);
+const savedRender=ctx.renderIndividualEvaluation,savedBind=ctx.bindIndividualEvaluation;
+vm.runInContext(fs.readFileSync('templates/core/17-final-evolution-evaluation.html','utf8'),ctx);
+ctx.renderIndividualEvaluation=savedRender;ctx.bindIndividualEvaluation=savedBind;
 const initial=calls.length;const growthHTML=ctx.renderBoxGrowth(item,p,[30]);assert.equal(calls.length,initial,'growth costs and evolution conditions do not calculate evaluation');assert(growthHTML.includes('has-evolution'));assert(growthHTML.includes('フシギソウ'));
 
 function makeHost(){

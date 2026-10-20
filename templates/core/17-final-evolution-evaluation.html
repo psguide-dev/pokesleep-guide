@@ -33,7 +33,7 @@ function finalEvaluationContext(item,p){
 function renderFinalEvaluationTarget(context){
  if(!context.ready)return '<div class="psg-final-evaluation-target"><p>評価する姿を確認できません。</p></div>';
  const {choices,p}=context;
- return `<div class="psg-final-evaluation-target"><select class="psg-final-evaluation-select" aria-label="評価するポケモン">${choices.map(choice=>`<option value="${boxEsc(speciesKey(choice.p))}"${speciesKey(choice.p)===speciesKey(p)?' selected':''}>${boxEsc(choice.p.name)}</option>`).join('')}</select></div>`;
+ return `<div class="psg-final-evaluation-target"><select class="psg-final-evaluation-select" title="${boxEsc(p.name)}" aria-label="評価するポケモン">${choices.map(choice=>`<option value="${boxEsc(speciesKey(choice.p))}"${speciesKey(choice.p)===speciesKey(p)?' selected':''}>${boxEsc(choice.p.name)}</option>`).join('')}</select></div>`;
 }
 
 const renderBeforeFinalEvolution=renderIndividualEvaluation,bindBeforeFinalEvolution=bindIndividualEvaluation;
@@ -62,13 +62,16 @@ bindIndividualEvaluation=function(host,item,p){
   }
  }
  const select=target?.querySelector('.psg-final-evaluation-select');if(!select)return;
- select.onchange=()=>{
-  if(!context.choices.some(choice=>speciesKey(choice.p)===select.value))return;
-  finalEvaluationTargets.set(context.source.item.id,select.value);
-  try{sessionStorage.setItem(FINAL_EVALUATION_TARGET_KEY,JSON.stringify(Object.fromEntries(finalEvaluationTargets)))}catch{}
-  const source={...context.source.item};
-  for(const [selector,field] of [['.psg-food-eval-level','foodEvaluationLevel'],['.psg-berry-level','berryEvaluationLevel'],['.psg-skill-eval-level','skillEvaluationLevel'],['.psg-composition-level','foodCompositionEvaluationLevel']]){const level=host.querySelector(selector);if(level?.value&&Number.isFinite(Number(level.value)))source[field]=Number(level.value)}
-  host.innerHTML=renderIndividualEvaluation(source,context.source.p);
-  bindIndividualEvaluation(host,source,context.source.p);
- };
+ select.onchange=()=>changeFinalEvaluationTarget(host,item,p,select.value);
 };
+function changeFinalEvaluationTarget(host,item,p,key){
+ const context=finalEvaluationContext(item,p);
+ if(!context.choices.some(choice=>speciesKey(choice.p)===key))return;
+ finalEvaluationTargets.set(context.source.item.id,key);
+ try{sessionStorage.setItem(FINAL_EVALUATION_TARGET_KEY,JSON.stringify(Object.fromEntries(finalEvaluationTargets)))}catch{}
+ const source={...context.source.item};
+ for(const [selector,field] of [['.psg-food-eval-level','foodEvaluationLevel'],['.psg-berry-level','berryEvaluationLevel'],['.psg-skill-eval-level','skillEvaluationLevel'],['.psg-composition-level','foodCompositionEvaluationLevel']]){const level=host.querySelector(selector);if(level?.value&&Number.isFinite(Number(level.value)))source[field]=Number(level.value)}
+ host.innerHTML=renderIndividualEvaluation(source,context.source.p);
+ bindIndividualEvaluation(host,source,context.source.p);
+ if(!evaluationPage&&typeof refreshBoxGrowthEvolution==='function')refreshBoxGrowthEvolution(source,context.source.p);
+}

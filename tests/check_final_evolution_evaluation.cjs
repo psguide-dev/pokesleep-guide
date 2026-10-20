@@ -45,3 +45,19 @@ ctx.bindIndividualEvaluation(host,{...rendered.item,skillEvaluationLevel:80},ren
 assert.equal(nodes.get('individualEvaluationTitle').textContent,'デンリュウの評価','async level refresh retains evaluated title');
 assert.equal(JSON.stringify(base),before,'title and target changes do not modify the registered record');
 console.log('Final evolution evaluation: projected yield/carry, original data, no reused current forecast, async levels, all species, eight branches, regional forms and cycles passed.');
+
+vm.runInContext(read('templates/box/06-growth.html'),ctx);
+ctx.evaluationPage=false;ctx.state.selected=eevee;
+host.querySelector=s=>s==='.psg-final-evaluation-target'?targetNode:s==='.psg-skill-eval-level'?{value:'70'}:null;
+const branchSelect={value:'0134_default'},card={outerHTML:''};
+nodes.set('boxGrowth',{querySelector:s=>s==='.psg-evolution-target-select'?branchSelect:s==='.psg-evolution-milestone'?card:null});
+nodes.set('boxEvaluation',host);
+ctx.bindBoxGrowthEvolution(catalog.pokemon[133]);branchSelect.onchange();
+assert.equal(ctx.finalEvaluationContext(eevee,catalog.pokemon[133]).p.no,134,'evolution card changes the evaluated branch');
+assert.equal(rendered.item.skillEvaluationLevel,70,'branch changes retain the chosen evaluation level');
+assert.match(card.outerHTML,/value="0134_default" selected/);
+select.value='0197_default';select.onchange();
+assert.match(card.outerHTML,/value="0197_default" selected/,'evaluation selector updates evolution face and conditions');
+assert.equal(ctx.finalEvaluationContext({...eevee,id:'other-eevee'},catalog.pokemon[133]).p.no,134,'branch selections are individual-specific');
+assert.equal(JSON.stringify(base),before);
+console.log('Evolution card and evaluation share branch selection without changing registered individuals.');
