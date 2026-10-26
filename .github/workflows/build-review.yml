@@ -78,6 +78,7 @@ jobs:
           node tests/check_fragment_assembly.cjs
           node tests/check_rankings.cjs
           node tests/check_three_modes.cjs
+          node tests/check_compact_info_controls.cjs
           node tests/check_muuma.cjs
           node tests/check_home_calendar.cjs
           node tests/check_detail_routing.cjs

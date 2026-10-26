@@ -11,7 +11,7 @@
    const option=document.createElement('button');option.type='button';option.className='filter-option psg-recipe-filter-option';
    option.setAttribute('aria-label',name);option.setAttribute('aria-pressed',String(name===selectedIngredient));option.title=name;
    option.append(icon(name));const caption=document.createElement('span');caption.textContent=name;option.append(caption);
-   option.onclick=e=>{e.stopPropagation();selectedIngredient=selectedIngredient===name?'':name;ingredientButton.classList.toggle('active',!!selectedIngredient);ingredientButton.firstChild.textContent=selectedIngredient||'食材';ingredientOptions.parentElement.classList.remove('open');ingredientButton.setAttribute('aria-expanded','false');ingredientChoices();render()};
+   option.onclick=e=>{e.stopPropagation();selectedIngredient=selectedIngredient===name?'':name;ingredientButton.classList.toggle('active',!!selectedIngredient);ingredientButton.firstChild.textContent='食材';ingredientButton.title=selectedIngredient||'食材を選択';ingredientOptions.parentElement.classList.remove('open');ingredientButton.setAttribute('aria-expanded','false');ingredientChoices();render()};
    ingredientOptions.append(option);
   }
  }

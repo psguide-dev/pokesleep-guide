@@ -5,6 +5,7 @@
 const screens=[...document.querySelectorAll('.screen')],tabs=[...document.querySelectorAll('nav button')];
 
 function go(id,push=true){
+ if(id==='rankingPage')id='typeRankingPage';
  if(id!=='boxDetail'&&state.boxEvolutionPreview)resetBoxEvolutionPreview();
  if(window.PS_EVALUATION_PAGE&&id!=='individualEvaluationPage'){const target=new URL('review.html',location.href);target.searchParams.set('screen',id==='boxDetail'?'box':id);location.assign(target.href);return;}
  if(window.PS_POKEMON_PAGE&&id!=='dexDetail'){window.PS_DEX_ROUTE.returnToApp(id);return;}

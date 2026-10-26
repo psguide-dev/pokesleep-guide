@@ -1,6 +1,7 @@
  const evaluationSort=document.getElementById('recipeEvaluationSort');
  const burdenOption=document.createElement('option');burdenOption.value='burden';burdenOption.textContent='専任収集負担が小さい順';evaluationSort.append(burdenOption);
  const modeButtons=[...document.querySelectorAll('[data-recipe-mode]')];
+ document.getElementById('recipeModeSelect').addEventListener('change',event=>modeButtons.find(button=>button.dataset.recipeMode===event.target.value)?.click());
  function recipeMetrics(recipe){
   const total=recipe.energy?.max?.value;
   const quantity=recipe.ingredients.reduce((sum,item)=>sum+item.qty,0);
@@ -44,7 +45,7 @@
   for(const item of modeButtons){const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active))}
   const evaluation=recipeMode==='evaluation';
   document.getElementById('recipePage').classList.toggle('psg-evaluation-mode',evaluation);
-  sort.hidden=evaluation;evaluationSort.hidden=!evaluation;
+  sort.hidden=false;evaluationSort.hidden=true;document.getElementById('recipeModeSelect').value=recipeMode;
   document.getElementById('recipeCompareControls').hidden=true;
   document.getElementById('recipeEvaluationNote').hidden=!evaluation;
   document.getElementById('recipeSupplyControls').hidden=!evaluation;

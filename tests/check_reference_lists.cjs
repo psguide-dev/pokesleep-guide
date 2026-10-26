@@ -6,6 +6,7 @@ class Element {
  replaceChildren(...nodes){this.children=nodes}
 }
 const hosts={berryReference:new Element('div'),natureReference:new Element('div')};
+for(const id of ['natureUpPriority','natureDownPriority']){const n=hosts[id]=new Element('select');n.value='';n.append(new Element('option'));Object.defineProperty(n,'options',{get:()=>n.children})}
 const context={window:{},console,document:{createElement:tag=>new Element(tag),getElementById:id=>hosts[id]}};
 vm.createContext(context);
 for(const marker of ['window.PS_IMAGE_FILES = {','window.PS_CATALOG=','window.PS_SPECIALTY_IMAGES=', 'const c=window.PS_CATALOG,ref=c.infoReference'])vm.runInContext(scripts.find(s=>s.includes(marker)),context);
@@ -21,3 +22,14 @@ assert.equal(natureRows.filter(tr=>tr.children.some(td=>td.textContent==='補正
 const receipt=JSON.parse(fs.readFileSync('data-import/reference-v544/ui-receipt.json'));
 for(const [kind,key] of Object.entries(receipt.sharedSpecialties))assert.equal(context.window.PS_SPECIALTY_IMAGES[kind],context.window.PS_IMAGE_FILES.ui[key]);
 console.log('18 berry rows, 25 nature rows, repeat rendering, artwork and all 4 specialty bindings verified');
+
+for(const up of ['',...context.window.PS_CATALOG.natures.axes])for(const down of ['',...context.window.PS_CATALOG.natures.axes]){
+ hosts.natureUpPriority.value=up;hosts.natureDownPriority.value=down;hosts.natureUpPriority.onchange();
+ const rows=find(find(hosts.natureReference,'table')[0],'tbody')[0].children;assert.equal(rows.length,25);
+ const names=rows.map(r=>r.children[0].textContent);assert.equal(new Set(names).size,25);
+ const axes=context.window.PS_CATALOG.natures.axes,grid=context.window.PS_CATALOG.natures.rows;
+ const score=name=>{let result;grid.forEach((row,y)=>row.forEach((n,x)=>{if(n===name)result=(x!==y&&up&&axes[y]===up?2:0)+(x!==y&&down&&axes[x]===down?1:0)}));return result};
+ for(let i=1;i<names.length;i++)assert(score(names[i-1])>=score(names[i]));
+ assert.equal(hosts.natureUpPriority.options.length,6);assert.equal(hosts.natureDownPriority.options.length,6);
+}
+console.log('All 36 nature priority combinations retain all 25 natures and sort matches first.');

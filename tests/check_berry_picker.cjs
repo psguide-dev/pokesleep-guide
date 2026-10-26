@@ -38,7 +38,7 @@ console.log('Berry-only refresh skips spawn/gallery/encounter/ranking work; full
 assert(!html.includes('id="fieldWeekLabel"'));assert(!html.includes('id="fieldBerryPickerStatus"'));
 assert(html.includes('<details id="fieldBerryDetails"'));assert(html.includes('class="psg-field-percent"><label for="fieldAreaBonus">FB</label>'));
 assert.equal(nodes.fieldBerrySlots.children[0].children[1].className,'psg-berry-slot-art');
-assert(html.includes('.psg-berry-slot{box-sizing:border-box;height:88px;min-height:88px;border-width:2px}'));
+assert(html.includes('.psg-berry-slot>strong{grid-column:1;grid-row:1;'));assert(html.includes('.psg-berry-slot>.psg-berry-slot-art{grid-column:2;grid-row:1/3;'));
 // The static details container survives all selection redraws and stays closed.
 const detailNode=nodes.fieldBerryDetails;detailNode.open=false;ctx.fieldProfile.selectedFieldId='greengrass';ctx.renderFavoriteBerryPicker();ctx.chooseFavoriteBerry('B');assert.equal(detailNode.open,false);
 nodes.fieldBerrySlots.children[0].onclick();assert.equal(detailNode.open,true);

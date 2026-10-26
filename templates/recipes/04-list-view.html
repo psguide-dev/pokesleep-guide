@@ -2,7 +2,7 @@
   const categoryRecipes=recipes.filter(r=>r.category===selectedCategory);
   const filtered=categoryRecipes.filter(r=>!selectedIngredient||r.ingredients.some(i=>i.name===selectedIngredient));
   filtered.sort((a,b)=>{
-   if(recipeMode==='evaluation')return compareEvaluation(a,b);
+   if(sort.value==='pot')return b.ingredients.reduce((n,i)=>n+i.qty,0)-a.ingredients.reduce((n,i)=>n+i.qty,0)||a.name.localeCompare(b.name,'ja');
    if(sort.value==='name')return a.name.localeCompare(b.name,'ja');
    const av=energyAtLevel(a)?.value,bv=energyAtLevel(b)?.value;
    if(!Number.isFinite(av)||!Number.isFinite(bv))return Number.isFinite(av)?-1:Number.isFinite(bv)?1:a.name.localeCompare(b.name,'ja');

@@ -1,6 +1,6 @@
  function renderDailyTiers(){
   const openNames=new Set([...tiersView.querySelectorAll(':scope > details[open]')].map(el=>el.dataset.ingredient));
-  const query=normalizeIngredient(ingredientSearch.value);
+  const query='';
   const entries=ingredientNames.filter(name=>normalizeIngredient(name).includes(query)).map(name=>({name,food:catalog.ingredientAssets[name],row:currentSupply().tiers[dailyLevel.value]?.[name]}));
   entries.sort((a,b)=>{
    if(ingredientSort.value==='name')return a.name.localeCompare(b.name,'ja');

@@ -13,7 +13,7 @@ html.psg-recipe-page main>.screen:not(#recipePage),html.psg-ingredient-page main
  function capture(){
   const ps=window.PS;if(!ps)return;
   const data=read(),controls={};
-  for(const id of ['dexSearch','boxSearch','recipeSort','recipeSupplyScenario','ingredientSearch','ingredientIndexSort','ingredientSupplyLevel','ingredientSupplyScenario']){const node=document.getElementById(id);if(node)controls[id]=node.value}
+  for(const id of ['dexSearch','boxSearch','recipeSort','recipeModeSelect','natureUpPriority','natureDownPriority','recipeSupplyScenario','ingredientSearch','ingredientIndexSort','ingredientSupplyLevel','ingredientSupplyScenario']){const node=document.getElementById(id);if(node)controls[id]=node.value}
   const filters={};for(const kind of ['filters','boxFilters']){filters[kind]={};for(const [key,values] of Object.entries(ps.state[kind]))filters[kind][key]=[...values]}
   data[ps.state.screen]={controls,filters,cooking:window.PS_COOKING_VIEW_STATE?.get(),history:[...ps.state.history],scroll:window.scrollY||0,category:document.querySelector('[data-recipe-category].active')?.dataset.recipeCategory,mode:document.querySelector('[data-recipe-mode].active')?.dataset.recipeMode,openRecipes:[...document.querySelectorAll('.psg-recipe-entry[open]')].map(n=>n.dataset.recipeId),openIngredients:[...document.querySelectorAll('.psg-supply-tier[open]')].map(n=>n.dataset.ingredient)};
   write(data);

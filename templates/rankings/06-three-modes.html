@@ -27,7 +27,11 @@
       const tr=node(body,'tr');node(tr,'td',entry.rank);const cell=node(tr,'td');
       const button=node(cell,'button',entry.name+(entry.provisional?'（暫定）':''));button.type='button';button.className='psg-supply-provider';button.onclick=()=>window.openPokemonDetail?.(entry.speciesId);
       const info=details(cell,kind==='food'?`食材構成 ${entry.pattern}`:'個体条件');
-      node(info,'p',entry.ingredients.join('／'));node(info,'p',`${entry.nature}・${entry.subskills.length?entry.subskills.join('／'):'サブスキル補正なし'}・スキルLv.${entry.skillLevel}`);
+      const art=node(info,'div');art.className='psg-ranking-conditions';
+      function conditionIcon(name,src){if(!src){node(art,'span',name);return}const img=node(art,'img');img.src=src;img.alt=name;img.title=name;img.width=28;img.height=28;img.loading='lazy'}
+      for(const name of entry.ingredients)conditionIcon(name,window.PS_IMAGE_FILES?.ingredients?.[name]||window.PS_CATALOG?.ingredientAssets?.[name]?.image);
+      for(const name of entry.subskills)conditionIcon(name,window.PS_IMAGE_FILES?.subskills?.[name]);
+      node(info,'p',`${entry.nature}・スキルLv.${entry.skillLevel}${entry.subskills.length?'':'・サブスキル補正なし'}`);
       node(tr,'td',window.PS_NUMBERS.display(entry.value));
      }
      if(!table.rows.length)node(results,'p','計算対応の候補はありません。');

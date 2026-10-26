@@ -18,7 +18,14 @@
   const host=document.getElementById('natureReference');host.replaceChildren();
   const labels={speed:'おてつだいスピード',energy:'げんき回復量',food:'食材おてつだい確率',skill:'メインスキル発生確率',exp:'EXP獲得量'};
   const body=table(host,['性格','能力↑','能力↓']);
-  c.natures.rows.forEach((row,y)=>row.forEach((name,x)=>{const tr=el('tr'),th=el('th',name);th.scope='row';tr.append(th);if(x===y){const td=el('td','補正なし');td.colSpan=2;tr.append(td)}else tr.append(el('td',labels[c.natures.axes[y]]),el('td',labels[c.natures.axes[x]]));body.append(tr)}));
+  const up=document.getElementById('natureUpPriority'),down=document.getElementById('natureDownPriority');
+  const short={speed:'スピード',energy:'げんき',food:'食材',skill:'スキル',exp:'EXP'};
+  for(const control of [up,down])if(control.options.length===1)for(const axis of c.natures.axes){const option=el('option',short[axis]+(control===up?'↑':'↓'));option.value=axis;control.append(option)}
+  const entries=c.natures.rows.flatMap((row,y)=>row.map((name,x)=>({name,x,y,up:x===y?'':c.natures.axes[y],down:x===y?'':c.natures.axes[x]})));
+  const priority=row=>(up.value&&row.up===up.value?2:0)+(down.value&&row.down===down.value?1:0);
+  entries.sort((a,b)=>priority(b)-priority(a));
+  entries.forEach(row=>{const tr=el('tr'),th=el('th',row.name);th.scope='row';tr.append(th);if(row.x===row.y){const td=el('td','補正なし');td.colSpan=2;tr.append(td)}else tr.append(el('td',labels[row.up]),el('td',labels[row.down]));body.append(tr)});
+  up.onchange=down.onchange=window.PS_PAGE_RENDERERS.naturePage;
   const detail=el('details');detail.className='card';detail.append(el('summary','能力補正の倍率'));
   const factors=table(detail,['対象','↑','↓']);
   c.natures.axes.forEach(axis=>{const f=c.natures.factors[axis],tr=el('tr');tr.append(el('th',f.meaning+(f.status==='estimated'?'（推定）':'')),el('td','×'+f.up.toFixed(f.up===1.075?3:2)),el('td','×'+f.down.toFixed(f.down===1.075?3:2)));factors.append(tr)});

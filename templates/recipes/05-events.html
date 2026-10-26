@@ -17,7 +17,7 @@
  let recipeListReady=false;
  window.PS_COOKING_VIEW_STATE={
   get:()=>({selectedIngredient}),
-  restore(value){selectedIngredient=recipes.some(r=>r.ingredients.some(i=>i.name===value?.selectedIngredient))?value.selectedIngredient:'';ingredientButton.firstChild.textContent=selectedIngredient||'食材';ingredientButton.classList.toggle('active',!!selectedIngredient);ingredientChoices();if(window.PS_INFO_PAGE==='recipePage')render();}
+  restore(value){selectedIngredient=recipes.some(r=>r.ingredients.some(i=>i.name===value?.selectedIngredient))?value.selectedIngredient:'';ingredientButton.firstChild.textContent='食材';ingredientButton.title=selectedIngredient||'食材を選択';ingredientButton.classList.toggle('active',!!selectedIngredient);ingredientChoices();if(window.PS_INFO_PAGE==='recipePage')render();}
  };
  window.PS_PAGE_RENDERERS.recipePage=()=>{if(!recipeListReady){ingredientChoices();render();recipeListReady=true}};
 })();

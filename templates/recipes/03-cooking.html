@@ -14,7 +14,7 @@
  function updateLevelFacts(){
   const row=selectedLevel(),next=row['次Lvまでの必要EXP'];
   document.getElementById('recipeLevelFacts').textContent=`×${row['倍率']}・${next===null?'Lv上限':`次Lv ${next.toLocaleString()} EXP`}`;
-  for(const option of sort.options)if(option.value!=='name')option.textContent=`Lv.${row['レベル']}エナジーが${option.value==='energy-desc'?'多い':'少ない'}順`;
+
  }
  levelSelect.addEventListener('change',()=>{
   const openId=list.querySelector('details[open]')?.dataset.recipeId;

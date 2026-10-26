@@ -11,6 +11,8 @@ class N{
 const nodes={},node=id=>nodes[id]??=new N('div'),events={},pages=['typeRankingPage','skillEnergyRankingPage','sameSkillRankingPage','ingredientRankingPage'];let camp=true,fetches=0;
 for(const id of pages)node(id).basis={value:'ideal'};
 const ctx={window:{PS_PAGE_RENDERERS:{},PS:{getGoodCamp:()=>camp},PS_NUMBERS:{display:String},addEventListener:(id,fn)=>events[id]=fn},document:{getElementById:node,createElement:t=>new N(t)},fetch:async()=>{fetches++;return {ok:true,json:async()=>data}}};vm.createContext(ctx);
+const assetCtx={window:{},document:{addEventListener(){}}};vm.createContext(assetCtx);const scripts=[...fs.readFileSync('review.html','utf8').matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);for(const marker of ['window.PS_IMAGE_FILES = {','window.PS_CATALOG='])vm.runInContext(scripts.find(s=>s.includes(marker)),assetCtx);
+ctx.window.PS_IMAGE_FILES=assetCtx.window.PS_IMAGE_FILES;ctx.window.PS_CATALOG=assetCtx.window.PS_CATALOG;
 vm.runInContext(fs.readFileSync('templates/rankings/06-three-modes.html','utf8').replace(/<\/?script[^>]*>/g,''),ctx);
 const walk=n=>[n,...n.children.flatMap(walk)];
 (async()=>{
@@ -21,6 +23,7 @@ const walk=n=>[n,...n.children.flatMap(walk)];
    for(const group of data.groups[kind]){select.value=group;select.onchange();const body=walk(node(host)).find(n=>n.tagName==='TBODY'),table=data.tables.find(t=>t.kind===kind&&t.group===group&&t.mode===mode&&t.camp===c);assert.equal(body.children.length,table.rows.length);if(body.children.length)assert.equal(body.children[0].children[2].textContent,String(table.rows[0].value));renders++}
   }
  }
+ const images=walk(node('ingredientRankingContent')).filter(n=>n.tagName==='IMG');assert(images.length);for(const img of images){assert(img.alt);assert(fs.existsSync(img.src),img.src)}
  assert.equal(renders,552);assert.equal(fetches,1);
  // Switching basis/camp while loading discards obsolete render completion.
  camp=true;node('typeRankingPage').basis.value='ideal';const stale=ctx.window.PS_PAGE_RENDERERS.typeRankingPage();camp=false;node('typeRankingPage').basis.value='median';const current=ctx.window.PS_PAGE_RENDERERS.typeRankingPage();await Promise.all([stale,current]);assert(walk(node('typeRankingContent')).some(n=>String(n.textContent).includes('中央値')));
