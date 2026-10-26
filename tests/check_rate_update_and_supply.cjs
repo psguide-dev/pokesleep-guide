@@ -1,0 +1,10 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const {ctx,catalog}=require('./skill_model_runtime.cjs').createRuntime(process.cwd());ctx.speciesKey=ctx.window.PS_SPECIES_CATALOG.key;
+vm.runInContext(fs.readFileSync('templates/core/15-food-role.html','utf8'),ctx);
+const p=catalog.pokemon[94];assert.equal(p.foodRate,16.6);assert.equal(ctx.foodRoleEvaluation({},p).status,'pending');assert.match(ctx.foodRoleEvaluation({},p).text,/再計算中/);
+let camp=false;const off={tiers:{30:{test:1}},burdens:{}};
+const ui={catalog:{dailySupply:{scenarios:{collect3h_meals0:off}}},document:{getElementById:()=>({})},window:{PS:{getGoodCamp:()=>camp}}};vm.createContext(ui);
+vm.runInContext(fs.readFileSync('templates/recipes/03-daily-supply.html','utf8').split('\n').slice(0,3).join('\n'),ui);
+assert.equal(vm.runInContext('currentSupply()',ui),off);camp=true;assert.equal(vm.runInContext('currentSupply().pending',ui),true);assert.equal(Object.keys(vm.runInContext('currentSupply().tiers',ui)).length,0);camp=false;assert.equal(vm.runInContext('currentSupply()',ui),off);
+const source=fs.readFileSync('templates/06-ingredients.html','utf8');assert(source.indexOf('id="ingredientDailyTiers"')<source.indexOf('id="ingredientSupplyBasis"'));
+console.log('Updated rate, stale Gengar reference rejection, OFF/ON supply isolation and bottom basis verified.');

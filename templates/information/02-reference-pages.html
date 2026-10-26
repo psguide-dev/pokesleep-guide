@@ -31,7 +31,12 @@
  }
  window.PS_PAGE_RENDERERS.typeRankingPage=()=>{
   const host=document.getElementById('typeRankingContent');if(host.childElementCount)return;host.replaceChildren();rankConditions(host,false);
-  for(const group of rankings.types){const section=document.createElement('details');section.className='psg-bookshelf-section';const title=document.createElement('summary');title.textContent=group.type+' 上位5体';section.append(title);rankTable(section,group.entries);host.append(section)}
+  const label=document.createElement('label');label.textContent='タイプ ';
+  const select=document.createElement('select');select.setAttribute('aria-label','ランキングのタイプ');
+  for(const group of rankings.types){const option=document.createElement('option');option.value=group.type;option.textContent=group.type;select.append(option)}
+  label.append(select);const results=document.createElement('div');host.append(label,results);
+  const render=()=>{results.replaceChildren();const group=rankings.types.find(g=>g.type===select.value);if(!group)return;const heading=document.createElement('h3');heading.textContent=group.type+' 上位5体';results.append(heading);rankTable(results,group.entries)};
+  select.onchange=render;render();
  };
  window.PS_RENDER_FIELD_RANKING=(id,target)=>{
   const host=target||document.getElementById('fieldRankingContent');if(!host)return;host.replaceChildren();

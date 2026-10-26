@@ -1,5 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict'),root=path.resolve(__dirname,'..');
 const {ctx,catalog}=require('./skill_model_runtime.cjs').createRuntime(root);
+require('./historical_food_catalog.cjs')(catalog);
 ctx.speciesKey=p=>ctx.window.PS_SPECIES_CATALOG.key(p);ctx.renderIndividualEvaluation=()=>'<p>legacy</p>';ctx.bindIndividualEvaluation=()=>{};ctx.evaluationPageMarkup=html=>html;
 for(const file of ['13-role-model-helpers','15-food-role','15-food-role-details','15-food-role-view','15-food-role-controller'])vm.runInContext(fs.readFileSync(root+'/templates/core/'+file+'.html','utf8'),ctx);
 const parts=['food_direct_v3','food_recovery_v4'].flatMap(group=>[60,70,80].map(level=>JSON.parse(fs.readFileSync(root+'/assets/evaluation/'+group+'_'+level+'.json'))));

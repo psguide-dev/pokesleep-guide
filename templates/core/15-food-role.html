@@ -31,8 +31,10 @@ function loadFoodRoleReferences(){
  return store.loads.get('food');
 }
 function foodRoleEvaluation(item,p){
- const references=activeFoodRoleReferences(),level=foodRoleLevel(item),pending=text=>({status:'pending',text,level});
+ const level=foodRoleLevel(item),pending=text=>({status:'pending',text,level});
  if(!foodRoleSupported(p))return pending('この種類の食材評価は準備中です');
+ if(p.foodEvaluationReferencePending)return pending('食材確率の更新に伴い評価基準を再計算中です');
+ const references=activeFoodRoleReferences();
  const ingredients={...item.ingredients};
  for(const slot of p.ingredientSlots||[]){
   if(!ingredients[slot.unlock]&&slot.candidates.length===1)ingredients[slot.unlock]=slot.candidates[0].name;

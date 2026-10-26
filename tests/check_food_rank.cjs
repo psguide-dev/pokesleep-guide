@@ -1,5 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path'),root=path.resolve(__dirname,'..');
 const {ctx,catalog}=require('./skill_model_runtime.cjs').createRuntime(root,false);
+require('./historical_food_catalog.cjs')(catalog);
 ctx.speciesKey=p=>ctx.window.PS_SPECIES_CATALOG.key(p);ctx.renderIndividualEvaluation=()=>'';ctx.bindIndividualEvaluation=()=>{};ctx.evaluationPageMarkup=html=>html;ctx.evaluationPage=false;
 for(const file of ['13-role-model-helpers','15-food-role','15-food-rank','15-food-role-details','15-food-role-view','15-food-role-controller'])vm.runInContext(fs.readFileSync(`${root}/templates/core/${file}.html`,'utf8'),ctx);
 const read=file=>JSON.parse(fs.readFileSync(`${root}/${file}`)),manifest=read('assets/evaluation/food_rank_v2/manifest.json'),beforeCatalog=JSON.stringify(catalog);

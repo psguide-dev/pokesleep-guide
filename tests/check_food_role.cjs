@@ -1,5 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),root=require('node:path').resolve(__dirname,'..');
 const {ctx,catalog}=require('./skill_model_runtime.cjs').createRuntime(root);
+require('./historical_food_catalog.cjs')(catalog);
 ctx.speciesKey=p=>ctx.window.PS_SPECIES_CATALOG.key(p);
 ctx.renderIndividualEvaluation=()=>'<p>legacy</p>';ctx.bindIndividualEvaluation=()=>{};ctx.evaluationPageMarkup=html=>html;
 vm.runInContext(fs.readFileSync(root+'/templates/core/13-role-model-helpers.html','utf8'),ctx);

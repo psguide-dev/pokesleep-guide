@@ -1,6 +1,6 @@
  const supply=catalog.dailySupply,supplyLevel=document.getElementById('recipeSupplyLevel'),supplyMeals=document.getElementById('recipeSupplyMeals');
  let supplyScenario='collect3h_meals0';
- const currentSupply=()=>supply.scenarios?.[supplyScenario]||supply;
+ const currentSupply=()=>window.PS.getGoodCamp()?{tiers:{},burdens:{},pending:true}:(supply.scenarios?.[supplyScenario]||supply);
  const scenarioControls=[];
  for(const [parentId,id] of [['recipeSupplyControls','recipeSupplyScenario'],['ingredientSupplyConditions','ingredientSupplyScenario']]){
   const parent=document.getElementById(parentId),label=document.createElement('label'),select=document.createElement('select');label.textContent=parentId==='ingredientSupplyConditions'?'':'収集条件 ';select.id=id;select.setAttribute('aria-label',parentId==='recipeSupplyControls'?'料理収集の比較条件':'食材日産量の比較条件');select.style.maxWidth='100%';

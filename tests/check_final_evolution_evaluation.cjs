@@ -2,7 +2,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const {createRuntime}=require('./skill_model_runtime.cjs'),root=path.resolve(__dirname,'..'),{catalog,ctx}=createRuntime(root);
 ctx.speciesKey=ctx.window.PS_SPECIES_CATALOG.key;
 const nodes=new Map();ctx.document={getElementById:id=>{if(!nodes.has(id))nodes.set(id,{});return nodes.get(id)}};
-ctx.evaluationPage=false;ctx.state={box:[]};ctx.sessionStorage={getItem:()=>null,setItem(){}};
+ctx.evaluationCampLabel=()=>'';ctx.evaluationPage=false;ctx.state={box:[]};ctx.sessionStorage={getItem:()=>null,setItem(){}};
 const read=f=>fs.readFileSync(path.join(root,f),'utf8').replace(/<\/?script[^>]*>/g,'');
 vm.runInContext(read('templates/box/08-evolution-preview.html'),ctx);
 let rendered,bound;

@@ -48,3 +48,5 @@ camp=true;events['psg-camp-change']();assert.equal(ui.window.PS_FOOD_ENVIRONMENT
 const noRows=build([],names,{capacity:81});// Render missing recipe data with a separate fixture.
 const viewSource=fs.readFileSync('templates/ingredients/00-environment.html','utf8');const emptyUI={...ui,window:{...ui.window,PS_FOOD_ENVIRONMENT:{current:()=>noRows}}};vm.createContext(emptyUI);vm.runInContext(viewSource,emptyUI);const emptyView=vm.runInContext("ingredientEnvironmentView('ワカクサ大豆')",emptyUI);assert.equal(walk(emptyView).filter(e=>e.tagName==='meter').length,0);assert.match(emptyView.textContent,/未評価/);
 console.log('Food environment: 19×3×2 canonical coverage, pot round-half-up/boundaries, missing data/null, ties, raw A/B/C weights, immutable recipes, camp cache/UI state and recipe links passed');
+
+require('./check_rate_update_and_supply.cjs');

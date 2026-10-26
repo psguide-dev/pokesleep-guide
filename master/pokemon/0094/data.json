@@ -8,7 +8,7 @@
   "berryQty": 1,
   "help": 2200,
   "carry": 28,
-  "foodRate": 16.1,
+  "foodRate": 16.6,
   "skillRate": 2.4,
   "rateStatus": "推定",
   "mainSkillId": "energy_charge_s_variable",
@@ -97,5 +97,8 @@
     "checkedAt": "2026-10-01",
     "status": "攻略・検証Wiki記載値（ゲーム内全件照合未実施）",
     "transferCandyStatus": "資料確認"
-  }
+  },
+  "foodEvaluationReferencePending": true,
+  "foodRateUpdatedAt": "2026-10-26",
+  "foodRateUpdateSource": "ユーザー指定"
 }

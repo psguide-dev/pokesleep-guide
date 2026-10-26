@@ -12,3 +12,7 @@ for(const no of ['0590','0591']){const m=JSON.parse(fs.readFileSync(`master/poke
 console.log('Ranking hub, independent island selector, egg correction, estimated rates and no fabricated sleep IDs passed');
 
 const bookshelf=h.match(/<section id="bookshelfPage"[\s\S]*?<\/section>/)[0];assert(bookshelf.includes('EXフィールドの参考予想'));assert.equal((h.match(/<summary>EXフィールドの参考予想<\/summary>/g)||[]).length,1);
+c.window.PS_PAGE_RENDERERS.typeRankingPage();
+const typeSelect=walk(hosts.typeRankingContent).find(n=>n.tagName==='SELECT');assert.equal(typeSelect.children.length,18);
+for(const group of c.window.PS_BERRY_RANKINGS.types){typeSelect.value=group.type;typeSelect.onchange();const tables=walk(hosts.typeRankingContent).filter(n=>n.tagName==='TABLE');assert.equal(tables.length,1);assert.equal(walk(tables[0]).filter(n=>n.tagName==='TBODY')[0].children.length,group.entries.length)}
+console.log('All 18 type choices render one matching ranking table.');

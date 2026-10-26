@@ -41,7 +41,7 @@ renderIndividualEvaluation=function(item,p,options={}){
  const context=finalEvaluationContext(item,p),heading=renderFinalEvaluationTarget(context);
  if(!context.ready)return heading;
  // A supplied member belongs to the currently displayed species, so recalculate for evaluation.
- return heading+renderBeforeFinalEvolution(context.item,context.p,{...options,member:undefined});
+ return heading+renderBeforeFinalEvolution(context.item,context.p,{...options,member:undefined}).replaceAll(evaluationCampLabel()+'・','');
 };
 bindIndividualEvaluation=function(host,item,p){
  const context=finalEvaluationContext(item,p);if(!context.ready)return;

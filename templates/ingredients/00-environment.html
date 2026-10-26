@@ -8,7 +8,7 @@
   const data=currentFoodEnvironment(),target=document.getElementById('ingredientEnvironmentBasis');if(!target)return;
   const wasOpen=target.querySelector('details')?.open===true;target.replaceChildren();
   const heading=document.createElement('h3');heading.textContent='料理環境への適性（試作）';
-  const condition=document.createElement('p');condition.className='note';condition.setAttribute('role','status');condition.textContent=`キャンチケ：${data.condition.goodCamp?'あり':'なし'} ／ 通常最大鍋 ${data.condition.baseCapacity??'未確認'} → ${data.condition.capacity??'未確認'}個。鍋に入る登録料理から、Lv70エナジー順に各カテゴリ上位5品を選びます。`;
+  const condition=document.createElement('p');condition.className='note';condition.setAttribute('role','status');condition.textContent=`通常最大鍋 ${data.condition.baseCapacity??'未確認'} → ${data.condition.capacity??'未確認'}個。鍋に入る登録料理から、Lv70エナジー順に各カテゴリ上位5品を選びます。`;
   const basis=document.createElement('details');basis.className='psg-cooking-reference';basis.open=wasOpen;
   const summary=document.createElement('summary');summary.textContent='選定料理と評価の前提';basis.append(summary);
   const note=document.createElement('p');note.className='note';note.textContent='使用する料理数／選定した料理数を表示。5品未満は実数を分母にし、0品なら未評価です。0/5品でも他の料理では使えます。収集量・3食の供給・編成の完成可否は含めません。日曜・スキル・イベントの鍋拡張、手持ちの鍋強化段階は加味しません。Lv70未登録・必要数未確認の料理は除外。同点は料理ID順。登録値には参考値・推定を含みます。通常最大鍋は登録マスター（2026/10/01確認）に基づき、鍋容量の端数は四捨五入します。';basis.append(note);
