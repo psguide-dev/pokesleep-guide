@@ -142,3 +142,6 @@ main:has(#boxDetail.active){background:var(--box-page-bg,#eaf7ed);min-height:cal
  #dexDetail.active,#boxDetail.active{padding-bottom:86px}
  #dexDetail>.psg-dex-sticky{background:var(--type-bg,#f1f7ff)!important}
 }
+
+/* Hidden provisional rates leave one full-width capacity cell. */
+#dexDetail .psg-detail-stats>.psg-detail-stat:only-child,#boxStats>.psg-detail-stat:only-child{grid-column:span 12}

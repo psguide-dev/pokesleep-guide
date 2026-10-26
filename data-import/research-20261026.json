@@ -1,0 +1,36 @@
+{
+  "release": "v667",
+  "receivedDate": "2026-10-26",
+  "sources": [
+    {
+      "file": "PSN_Enigma_daily_supply_camp_v2_20261026.zip",
+      "sha256": "94a4f3268344738f19dff6d07b69d018ee6fe9667511ff5723dc55cd9a26f793"
+    },
+    {
+      "file": "PSN_Enigma_priorities2_3_camp_gengar_20261026.zip",
+      "sha256": "10f1fef54e4d197b696a7d9c59ef719a05918ad7d8fee3cb073aa05253b6c965"
+    },
+    {
+      "file": "PSN_common_three_modes_Lv60_20261026.zip",
+      "sha256": "e9062968159f86932df1063a782e832d00795d79377ccc67f9c2015074a0e63d"
+    },
+    {
+      "file": "PSN_ghost_images_20261026.zip",
+      "sha256": "5da87fc28c4464dbd30e0d5ec824e0c6513522a2f93633335eb353201563e487"
+    },
+    {
+      "file": "PSN_muuma_provisional_three_modes_20261026.zip",
+      "sha256": "30024e63f16d1407a31bd6ff4eb667a68468c1d543cd2f18afb1a1d7a0d01aeb"
+    },
+    {
+      "file": "PSN_type_rankings_three_modes_20261026.zip",
+      "sha256": "a0f0b40eacd81b2daa72e8a1061be8d423519fbc0dfd6835f92b3ba999afc368"
+    }
+  ],
+  "scope": {
+    "rankings": "552 precomputed Lv60 tables, 3 modes, both camp states",
+    "supply": "schema v2, 12 explicit camp/scenario combinations, original candidate scope",
+    "gengar": "16.6%, species-scoped ideals and distributions; original global references preserved",
+    "muuma": "User FP16/20 and stars1/2/3; internal provisional rates are hidden; sleep names, conditions and expType unknown"
+  }
+}

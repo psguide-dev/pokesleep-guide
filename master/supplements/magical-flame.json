@@ -1,0 +1,52 @@
+{
+  "id": "magical_flame_s",
+  "name": "マジカルフレイムS",
+  "effectType": "cooking_advance",
+  "maxLevel": 7,
+  "source": "ユーザー提供／2026-10-26",
+  "levels": {
+    "1": {
+      "capacity": 7,
+      "criticalChanceAddPercentagePoints": 1,
+      "description": "次回の料理でなべの容量を7個増やし、大成功確率を1ポイント上げる"
+    },
+    "2": {
+      "capacity": 10,
+      "criticalChanceAddPercentagePoints": 2,
+      "description": "次回の料理でなべの容量を10個増やし、大成功確率を2ポイント上げる"
+    },
+    "3": {
+      "capacity": 12,
+      "criticalChanceAddPercentagePoints": 2,
+      "description": "次回の料理でなべの容量を12個増やし、大成功確率を2ポイント上げる"
+    },
+    "4": {
+      "capacity": 17,
+      "criticalChanceAddPercentagePoints": 3,
+      "description": "次回の料理でなべの容量を17個増やし、大成功確率を3ポイント上げる"
+    },
+    "5": {
+      "capacity": 22,
+      "criticalChanceAddPercentagePoints": 3,
+      "description": "次回の料理でなべの容量を22個増やし、大成功確率を3ポイント上げる"
+    },
+    "6": {
+      "capacity": 27,
+      "criticalChanceAddPercentagePoints": 4,
+      "description": "次回の料理でなべの容量を27個増やし、大成功確率を4ポイント上げる"
+    },
+    "7": {
+      "capacity": 31,
+      "criticalChanceAddPercentagePoints": 5,
+      "description": "次回の料理でなべの容量を31個増やし、大成功確率を5ポイント上げる"
+    }
+  },
+  "semantics": "capacity applies to the next meal; critical chance increment is percentage points; no cumulative success probability computed",
+  "gameEffectTemplate": "次回の料理でなべの容量を{capacity}個増やし、大成功確率を{criticalChanceAddPercentagePoints}ポイント上げる",
+  "tags": [
+    "料理",
+    "なべ容量",
+    "大成功"
+  ],
+  "calculationNote": "鍋上限による発動停止・大成功確率の累積・料理への連動は未算定"
+}

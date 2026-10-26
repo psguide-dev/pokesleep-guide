@@ -40,6 +40,7 @@
   if(!x)return '効果未確認';
   const value=(v,kind,unit='')=>`<span class="skill-var effect-${kind}">${detailEsc(typeof v==='number'?v.toLocaleString():v)}${unit}</span>`;
   const type=s.effectType||'';
+  if(type==='cooking_advance')return value(x.capacity,'zone','個')+' ／ 大成功＋'+value(x.criticalChanceAddPercentagePoints,'skill','ポイント');
   if(type==='reference_only')return skillDescription(s,x);
   if(type==='conditional_ingredient_select')return value(x.amount,'food','個')+(x.shardsSmall!=null?' ／ '+value(x.shardsSmall+'／'+x.shardsLarge,'shards','個'):' ／ 追加 '+value(x.bonusAmount,'food','個'));
 

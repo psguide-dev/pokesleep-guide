@@ -20,13 +20,13 @@ let changeListener;const switched=[];
 vm.runInNewContext(fs.readFileSync('templates/20-core-initialize.html','utf8').split('\n').find(l=>l.startsWith("document.addEventListener('change',")),{document:{addEventListener:(type,fn)=>changeListener=fn},window:{PS_INFO_ROUTE:{open:id=>switched.push(id)}}});
 for(const page of ['typeRankingPage','islandRankingPage','skillEnergyRankingPage','sameSkillRankingPage','ingredientRankingPage'])changeListener({target:{matches:selector=>selector==='[data-ranking-switch]',value:page}});
 assert.equal(switched.length,5);changeListener({target:{matches:()=>false,value:'unrelated'}});assert.equal(switched.length,5);
-// Switching comparison mode keeps unavailable data separate and survives page changes.
+// Shared basis defaults to ideal and survives page changes.
 const modeStore=new Map(),modePages=Array.from({length:6},()=>({dataset:{},status:{textContent:''},querySelector(){return this.status}}));
 const modeControls=modePages.map(page=>({value:'',closest:()=>page}));let modeChange;
-const modeCtx={document:{querySelectorAll:()=>modeControls,addEventListener:(_type,fn)=>modeChange=fn},sessionStorage:{getItem:k=>modeStore.get(k),setItem:(k,v)=>modeStore.set(k,v)},window:{PS_INFO_ROUTE:{open(){}}}};
+const modeCtx={document:{querySelectorAll:()=>modeControls,addEventListener:(_type,fn)=>modeChange=fn},sessionStorage:{getItem:k=>modeStore.get(k),setItem:(k,v)=>modeStore.set(k,v)},window:{PS_INFO_ROUTE:{open(){}},dispatchEvent(){}},Event:class{}};
 vm.createContext(modeCtx);const initSource=fs.readFileSync('templates/20-core-initialize.html','utf8'),modeSource=initSource.slice(initSource.indexOf('function syncRankingBasis('),initSource.indexOf('window.PS={'));
-vm.runInContext(modeSource,modeCtx);assert(modeControls.every(c=>c.value==='neutral'));
-for(const mode of ['ideal','median']){modeChange({target:{value:mode,matches:s=>s==='[data-ranking-basis]'}});assert(modePages.every(p=>p.dataset.rankingBasisMode===mode));assert(modePages.every(p=>p.status.textContent.includes('準備中')));assert.equal(modeStore.get('psn-ranking-basis'),mode)}
+vm.runInContext(modeSource,modeCtx);assert(modeControls.every(c=>c.value==='ideal'));
+for(const mode of ['ideal','median']){modeChange({target:{value:mode,matches:s=>s==='[data-ranking-basis]'}});assert(modePages.every(p=>p.dataset.rankingBasisMode===mode));assert(modePages.every(p=>p.status.textContent===''));assert.equal(modeStore.get('psn-ranking-basis'),mode)}
 vm.runInNewContext(modeSource,{...modeCtx});assert(modeControls.every(c=>c.value==='median'));
-modeCtx.syncRankingBasis('invalid');assert(modeControls.every(c=>c.value==='neutral'));
+modeCtx.syncRankingBasis('invalid');assert(modeControls.every(c=>c.value==='ideal'));
 assert(!ranking.includes('data-info-page="typeRankingPage"'),'hub buttons have been removed');

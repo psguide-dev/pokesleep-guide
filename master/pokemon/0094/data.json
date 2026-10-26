@@ -98,7 +98,8 @@
     "status": "攻略・検証Wiki記載値（ゲーム内全件照合未実施）",
     "transferCandyStatus": "資料確認"
   },
-  "foodEvaluationReferencePending": true,
+  "foodEvaluationReferencePending": false,
   "foodRateUpdatedAt": "2026-10-26",
-  "foodRateUpdateSource": "ユーザー指定"
+  "foodRateUpdateSource": "ユーザー指定",
+  "foodEvaluationReferenceVersion": "gengar-166"
 }

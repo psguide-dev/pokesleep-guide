@@ -17,10 +17,10 @@ function boxDailySkillForecast(estimate,totalsOnly=false){
  const {result,member}=estimate;
  if(!member||member.missing||!Number.isFinite(member.stats?.skill)||!member.skillName)return totalsOnly?'<small>１日効果量合計</small><b>未計算</b>':'<small>１日発動予想</small><strong>未確認</strong>';
  if(!totalsOnly)return `<small>１日発動予想</small><strong>約${window.PS_NUMBERS.display(member.skillTriggers)}回</strong>`;
- const item=state.box.find(x=>x.id===member.id),display=dailySkillDisplay(member,item,window.PS_CATALOG);
+ const item=state.box.find(x=>x.id===member.id),display={...dailySkillDisplay(member,item,window.PS_CATALOG),...cookingSkillDisplay(member,window.PS_CATALOG)};
  if(display.countOnly)return '';
  if(display.select)return `<small>１回の候補</small><b>${boxEsc(dailySkillSelectText(display))}</b>${display.candidates.length?dailySkillCandidateTiles(display).outerHTML:'<small>候補未確認</small>'}`;
- if(display.potAmount!==null)return `<small>１回の効果</small><b>${boxEsc(member.specialBasicText||`鍋＋${display.potAmount}個`)}</b>`;
+ if(display.potAmount!==null)return `<small>１回の効果</small><b>${boxEsc(display.effectText||member.specialBasicText||`鍋＋${display.potAmount}個`)}</b>`;
  const n=member.skillTriggers,totals=[];
  const add=(label,value,unit='')=>{if(Number.isFinite(value))totals.push(`<span><small>${label}</small><b>約${window.PS_NUMBERS.display(value)}${unit}</b></span>`)};
  if(member.specialResult){

@@ -75,7 +75,7 @@ body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 .screen .psg-subpage-head:has([data-ranking-basis]){gap:4px}
 [data-ranking-switch]{flex:1 1 0;width:0;min-width:0;font-size:12px}
 [data-ranking-basis]{flex:0 0 26%;min-width:0;height:36px;font-size:12px;font-weight:700}
-section[data-ranking-basis-mode="ideal"]>.card,section[data-ranking-basis-mode="median"]>.card{display:none}
+section[data-ranking-basis-mode="ideal"]:not([data-three-mode-ready])>.card,section[data-ranking-basis-mode="median"]:not([data-three-mode-ready])>.card{display:none}
 /* Weekly field selection and editable FB stay in the same header row. */
 #fieldPage .psg-weekly-field-sticky>.psg-subpage-head{gap:4px}
 #fieldPage .psg-weekly-field-sticky #fieldSelect{flex:1 1 0;width:0;min-width:0;font-size:12px}

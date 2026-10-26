@@ -41,15 +41,15 @@ function refreshAssetViews(){
  if(state.screen==='home')renderTeam();
 }
 function syncRankingBasis(mode){
- if(!['ideal','median','neutral'].includes(mode))mode='neutral';
+ if(!['ideal','median','neutral'].includes(mode))mode='ideal';
  for(const select of document.querySelectorAll('[data-ranking-basis]')){
   select.value=mode;const page=select.closest('section');page.dataset.rankingBasisMode=mode;
-  const status=page.querySelector('[data-ranking-basis-status]');if(status)status.textContent=mode==='neutral'?'現行の参考資料です。ムウマ系を含む3基準の新ランキングは準備中です。':'この基準のランキングは準備中です。';
+  const status=page.querySelector('[data-ranking-basis-status]');if(status)status.textContent=page.id==='islandRankingPage'?'島別は従来条件の参考資料です。3基準の新ランキングは未対応です。':'';
  }
 }
-let savedRankingBasis='neutral';try{savedRankingBasis=sessionStorage.getItem('psn-ranking-basis')||'neutral'}catch{}
+let savedRankingBasis='ideal';try{savedRankingBasis=sessionStorage.getItem('psn-ranking-basis')||'ideal'}catch{}
 syncRankingBasis(savedRankingBasis);
-document.addEventListener('change',event=>{const select=event.target;if(select.matches?.('[data-ranking-switch]'))window.PS_INFO_ROUTE.open(select.value);if(select.matches?.('[data-ranking-basis]')){try{sessionStorage.setItem('psn-ranking-basis',select.value)}catch{}syncRankingBasis(select.value)}});
+document.addEventListener('change',event=>{const select=event.target;if(select.matches?.('[data-ranking-switch]'))window.PS_INFO_ROUTE.open(select.value);if(select.matches?.('[data-ranking-basis]')){try{sessionStorage.setItem('psn-ranking-basis',select.value)}catch{}syncRankingBasis(select.value);window.dispatchEvent(new Event('psg-ranking-basis-change'))}});
 window.PS={openBoxRegistration,recipeCollectionPanel,dailyResult:(...args)=>window.PS_NUMBERS.finalValues(dailyBaseline(...args)),whistleResult:(...args)=>window.PS_NUMBERS.finalValues(whistleEstimate(...args)),refreshAssetViews,state,master,go,renderDex,refreshDexSleep,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,getGoodCamp:()=>teamGoodCamp,setGoodCamp};
 })();
 </script>

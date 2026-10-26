@@ -94,6 +94,6 @@
  function renderStats(m){
    document.getElementById("dexSpeed").innerHTML=`<div class="psg-detail-stat"><small><span class="v45-stat-icon">⏱</span><span class="v45-stat-text">おてつだい時間</span></small><b>${m.help?.toLocaleString()||"—"}秒</b></div>`;
    stats.innerHTML=`<div class="psg-detail-stat"><small><span class="v45-stat-icon">🎒</span><span class="v45-stat-text">最大所持数</span></small><b>${m.carry??"未確認"}</b></div>
-   <div class="psg-detail-stat"><small><span class="v45-stat-icon">🥕</span><span class="v45-stat-text">食材確率${m.detailPreviewOnly&&m.rateStatus==='推定'?'（推定）':''}</span></small><b>${m.foodRate??"—"}%</b></div>
-   <div class="psg-detail-stat"><small><span class="v45-stat-icon">✨</span><span class="v45-stat-text">スキル発動確率${m.detailPreviewOnly&&m.rateStatus==='推定'?'（推定）':''}</span></small><b>${m.skillRate??"—"}%</b></div>`;
+   ${m.hideFoodRate?'':`<div class="psg-detail-stat"><small><span class="v45-stat-icon">🥕</span><span class="v45-stat-text">食材確率${m.detailPreviewOnly&&m.rateStatus==='推定'?'（推定）':''}</span></small><b>${m.foodRate??"—"}%</b></div>`}
+   ${m.hideSkillRate?'':`<div class="psg-detail-stat"><small><span class="v45-stat-icon">✨</span><span class="v45-stat-text">スキル発動確率${m.detailPreviewOnly&&m.rateStatus==='推定'?'（推定）':''}</span></small><b>${m.skillRate??"—"}%</b></div>`}`;
  }

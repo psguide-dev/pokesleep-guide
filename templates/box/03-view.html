@@ -124,7 +124,7 @@ function syncLevel({refreshEditor=true}={}){
  const fields=[['おてつだい時間',calc.speed,'秒','speed'],['最大所持数',calc.carry,'','carry'],['食材確率',calc.food,'%','food'],['スキル発動確率',calc.skill,'%','skill']];
  const renderStat=([title,value,unit,kind])=>`<button type="button" class="psg-detail-stat" data-stat-kind="${kind}" aria-label="${title}：タップして補正の詳細を表示" aria-haspopup="dialog" aria-controls="boxStatPopover" aria-expanded="false"><small>${title}</small><strong>${value==null?'未確認':window.PS_NUMBERS.display(value)+unit}</strong></button>`;
  document.getElementById('boxSpeed').innerHTML=renderStat(fields[0]);
- document.getElementById('boxStats').innerHTML=fields.slice(1).map(renderStat).join('');
+ document.getElementById('boxStats').innerHTML=fields.slice(1).filter(field=>!(field[3]==='food'&&p.hideFoodRate)&&!(field[3]==='skill'&&p.hideSkillRate)).map(renderStat).join('');
  for(const stat of document.querySelectorAll('#boxDetail .psg-detail-stat')){
   stat.onclick=()=>openBoxStatPopover(stat,item,p,calc,stat.dataset.statKind,fields.find(field=>field[3]===stat.dataset.statKind)[0]);
  }

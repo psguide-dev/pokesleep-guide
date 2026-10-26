@@ -8,7 +8,7 @@ const production=createRuntime(root,false).ctx;production.speciesKey=production.
 for(const level of [1,50,62,70,80]){const item={level},before=JSON.stringify(item);assert.equal(ctx.skillRoleLevel(item),80);assert.equal(JSON.stringify(item),before)}
 for(const level of [50,60,70,80])assert.equal(ctx.skillRoleLevel({level:1,skillEvaluationLevel:level}),level);
 let checks=0;
-assert.deepEqual(Object.keys(data.species).sort(),Array.from(ctx.window.PS_SPECIES_CATALOG.all()).filter(p=>p.specialty==='スキル'&&p.boxEligible!==false).map(ctx.speciesKey).sort());checks++;
+assert.deepEqual(Object.keys(data.species).sort(),Array.from(ctx.window.PS_SPECIES_CATALOG.all()).filter(p=>p.specialty==='スキル'&&p.boxEligible!==false&&p.dataStatus!=='provisional_calculated').map(ctx.speciesKey).sort());checks++;
 ctx.individualIdealCandidates=()=>{throw Error('Population enumeration must stay offline')};
 for(const [key,r] of Object.entries(data.entries)){
  const speciesId=JSON.parse(key)[0],p=ctx.window.PS_SPECIES({no:r.no,speciesId}),ideal=r.idealRecord,item={id:'test',no:r.no,speciesId,level:35,skillEvaluationLevel:r.level,skillLevel:7,ribbonHours:2000,...ideal,ingredients:Object.fromEntries([1,30,60].map((l,i)=>[l,ideal.ingredients[i]]).filter(([l,n])=>n))},before=JSON.stringify(item);

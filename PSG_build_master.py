@@ -125,17 +125,16 @@ def catalog_and_images():
     validate_cooking(catalog['cooking'])
     catalog['recipeEvaluation'] = json.loads((MASTER / 'cooking/evaluation.json').read_text())
     catalog['dailySupply'] = json.loads((MASTER / 'cooking/daily-supply.json').read_text())
-    assert set(catalog['dailySupply']['scenarios']) == {f'collect{h}h_meals{m}' for h in (1,3,6) for m in (0,1)}
-    for scenario in catalog['dailySupply']['scenarios'].values():
-        for level in ('30','60'):
-            assert len(scenario['tiers'][level]) == 19 and len(scenario['burdens'][level]) == 78
-    for level in ('30', '60'):
-        assert len(catalog['dailySupply']['tiers'][level]) == 19
-        assert len(catalog['dailySupply']['burdens'][level]) == 78
-        for row in catalog['dailySupply']['tiers'][level].values():
-            assert row['daily'] > 0 and row['tier'] in 'SABCD' and row['top']
-        for row in catalog['dailySupply']['burdens'][level].values():
-            assert 0 < row['relaxed'] <= row['dedicated'] + 1e-7
+    assert catalog['dailySupply']['schemaVersion'] == 2
+    assert set(catalog['dailySupply']['camps']) == {'off','on'}
+    for camp_key, camp in catalog['dailySupply']['camps'].items():
+        assert camp['camp'] is (camp_key == 'on')
+        assert set(camp['scenarios']) == {f'collect{h}h_meals{m}' for h in (1,3,6) for m in (0,1)}
+        for scenario in camp['scenarios'].values():
+            for level in ('30','60'):
+                assert len(scenario['tiers'][level]) == 19 and len(scenario['burdens'][level]) == 78
+                assert all(row['daily'] > 0 and row['tier'] in 'SABCD' and row['top'] for row in scenario['tiers'][level].values())
+                assert all(0 < row['relaxed'] <= row['dedicated'] + 1e-7 for row in scenario['burdens'][level].values())
     for kind in ('specialties', 'sleepTypes'):
         catalog[kind] = {}
         for key, (obj, folder) in records(kind).items():
@@ -331,6 +330,8 @@ def catalog_and_images():
         if full or face: images['pokemonBySpecies'][sid] = full or face
     catalog['forms'] = forms
     catalog['pendingNationalNos'] = [n for n in data.get('pendingNationalNos',[]) if str(n) not in catalog['pokemon']]
+    from PSG_20261026_assets import supplement
+    supplement(catalog, images)
     return catalog, images
 
 
@@ -423,7 +424,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v666') == 2
+    assert source.count('Review v667') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'

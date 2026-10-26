@@ -18,13 +18,14 @@ async function loadFoodRoleReferenceGroup(group,camp=evaluationGoodCamp()){
  if(Object.keys(data.entries).length!==group.count)throw Error('food reference count');
  return data;
 }
-function activeFoodRoleReferences(){return foodRoleReferences?.conditions?.camp===evaluationGoodCamp()?foodRoleReferences:campReferenceStore().values.food||null}
+function activeFoodRoleReferences(p){const data=foodRoleReferences?.conditions?.camp===evaluationGoodCamp()?foodRoleReferences:campReferenceStore().values.food||null;return typeof usesGengar166==='function'&&usesGengar166(p)?data?.gengar||null:data}
 function loadFoodRoleReferences(){
  const camp=evaluationGoodCamp(),store=campReferenceStore(camp),existing=activeFoodRoleReferences();
  if(existing)return Promise.resolve(existing);
- if(!store.loads.has('food'))store.loads.set('food',Promise.all(FOOD_ROLE_REFERENCE_GROUPS.map(group=>loadFoodRoleReferenceGroup(group,camp))).then(groups=>{
+ if(!store.loads.has('food'))store.loads.set('food',Promise.all([...FOOD_ROLE_REFERENCE_GROUPS.map(group=>loadFoodRoleReferenceGroup(group,camp)),...(typeof usesGengar166==='function'&&usesGengar166(window.PS_CATALOG.pokemon[94])?[loadGengarIdeals(camp)]:[])]).then(parts=>{
+  const groups=parts.slice(0,2),gengar=parts[2];
   if(groups.some(group=>group.engineFingerprint!==groups[0].engineFingerprint))throw Error('food reference engine');
-  const data={...groups[0],version:4,scope:{...groups[0].scope,implemented:FOOD_ROLE_SPECIES.size,recoveryPending:0},species:Object.assign({},...groups.map(group=>group.species)),entries:Object.assign({},...groups.map(group=>group.entries))};
+  const data={...groups[0],gengar,version:4,scope:{...groups[0].scope,implemented:FOOD_ROLE_SPECIES.size,recoveryPending:0},species:Object.assign({},...groups.map(group=>group.species)),entries:Object.assign({},...groups.map(group=>group.entries))};
   store.values.food=data;store.errors.delete('food');
   if(camp===evaluationGoodCamp()){foodRoleReferences=data;foodRoleError=null}return data;
  }).catch(error=>{store.loads.delete('food');store.errors.set('food',error);if(camp===evaluationGoodCamp()){foodRoleLoading=null;foodRoleError=error}throw error}));
@@ -34,7 +35,7 @@ function foodRoleEvaluation(item,p){
  const level=foodRoleLevel(item),pending=text=>({status:'pending',text,level});
  if(!foodRoleSupported(p))return pending('この種類の食材評価は準備中です');
  if(p.foodEvaluationReferencePending)return pending('食材確率の更新に伴い評価基準を再計算中です');
- const references=activeFoodRoleReferences();
+ const references=activeFoodRoleReferences(p);
  const ingredients={...item.ingredients};
  for(const slot of p.ingredientSlots||[]){
   if(!ingredients[slot.unlock]&&slot.candidates.length===1)ingredients[slot.unlock]=slot.candidates[0].name;

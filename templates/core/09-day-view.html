@@ -1,3 +1,8 @@
+// Show cooking effects per activation; cumulative recipe effects are not simulated.
+function cookingSkillDisplay(member,catalog){
+ const skill=catalog.skills?.[member.skillId],row=skill?.levels?.[Math.min(member.skillLevel,skill.maxLevel)];
+ return skill?.effectType==='cooking_advance'&&row?{potAmount:row.capacity,effectText:`鍋＋${row.capacity}個・大成功＋${row.criticalChanceAddPercentagePoints}ポイント`}:{};
+}
 function dailyCurrentForecast(ids=team){
  return dailyBaseline(ids,state.box,window.PS_CATALOG,Number(document.getElementById('teamCollectionInterval').value),teamInitialEnergy,teamGoodCamp,teamMeals,activeFieldBerries(),fieldProfile.areaBonuses[fieldProfile.selectedFieldId]||0,activeBerryZones(),undefined,{},dailyExContext());
 }
@@ -52,13 +57,13 @@ function renderTeamDay(){
     const source=window.PS_IMAGE_FILES?.skills?.[skill?.id]||skill?.image;
     if(source){const icon=document.createElement('img');icon.className='psg-day-member-icon';icon.src=source;icon.alt=member.skillName;skillColumn.append(icon)}
     metric(skillColumn,'スキル',`約${window.PS_NUMBERS.display(member.skillTriggers)}回`);
-    const display=dailySkillDisplay(member,individual,window.PS_CATALOG);
+    const display={...dailySkillDisplay(member,individual,window.PS_CATALOG),...cookingSkillDisplay(member,window.PS_CATALOG)};
     const effect=document.createElement('div');effect.className='psg-day-member-effect';
     const effectText=member.skillEffectType==='random_ingredients'&&Number.isFinite(member.skillAmount)?`（ランダム食材 約${window.PS_NUMBERS.display((member.skillTriggers*member.skillAmount))}個）`:['fixed_energy','variable_energy','fixed_dream_shards_energy'].includes(member.skillEffectType)&&Number.isFinite(member.skillEnergy)?`（エナジー 約${window.PS_NUMBERS.display(member.skillTriggers*member.skillEnergy*result.areaFactor)}）`:member.skillEffectType==='team_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（チーム各匹＋${member.skillRecovery}）`:member.skillEffectType==='self_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（自分のげんき＋${member.skillRecovery}）`:member.skillEffectType==='ally_energy_recovery'&&Number.isFinite(member.skillRecovery)?`（1匹のげんき＋${member.skillRecovery}）`:member.boost&&Number.isFinite(member.skillHelps)?`（同タイプ${member.boost.unique}種・各${member.skillHelps}回／回）`:member.skillEffectType==='extra_help'&&Number.isFinite(member.skillHelps)?`（即時おてつだい約${window.PS_NUMBERS.display((member.skillTriggers*member.skillHelps))}回）`:'';
     const specialText=member.specialResult?[member.specialEnergy>0?`効果エナジー 約${window.PS_NUMBERS.display(member.specialEnergy)}`:'',member.randomIngredients>0?`ランダム食材 約${window.PS_NUMBERS.display(member.randomIngredients)}個`:'',member.specialCandy>0?`アメ 約${window.PS_NUMBERS.display(member.specialCandy)}個`:'',member.specialInstantHelps>0?`即時おてつだい 約${window.PS_NUMBERS.display(member.specialInstantHelps)}回`:''].filter(Boolean).join('・'):'';
     effect.textContent=[specialText||effectText||member.skillName,member.specialBasicText].filter(Boolean).join('・');effect.title=member.skillName;
     if(display.select){effect.textContent=dailySkillSelectText(display,'個数未確認');skillColumn.append(effect);if(display.candidates.length)skillColumn.append(dailySkillCandidateTiles(display));else{const p=document.createElement('small');p.textContent='候補未確認';skillColumn.append(p)}}
-    else if(!display.countOnly){if(display.potAmount!==null)effect.textContent=member.specialBasicText||`鍋＋${display.potAmount}個`;skillColumn.append(effect)}
+    else if(!display.countOnly){if(display.potAmount!==null)effect.textContent=display.effectText||member.specialBasicText||`鍋＋${display.potAmount}個`;skillColumn.append(effect)}
    }
    if(member.foods.size)row.append(foodTiles(member.foods));
   }

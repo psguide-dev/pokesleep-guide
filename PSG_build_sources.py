@@ -53,6 +53,7 @@ TEMPLATE_NAMES = (
     'core/13-role-model-helpers.html',
     'core/14-berry-role.html',
     'core/15-skill-role.html',
+    'core/15-gengar-reference.html',
     'core/15-food-role.html',
     'core/15-food-rank.html',
     'core/15-food-role-details.html',
@@ -143,6 +144,7 @@ TEMPLATE_NAMES = (
     'rankings/01-same-skill-controls.html',
     'rankings/02-same-skill-results.html',
     'rankings/03-same-skill-events.html',
+    'rankings/06-three-modes.html',
 )
 
 STYLE_NAMES = (

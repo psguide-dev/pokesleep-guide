@@ -1,7 +1,7 @@
 // All 83 ordinary food specialists. Distribution files contain both camp conditions.
 const FOOD_RANK_FILE_CACHE=new WeakMap(),FOOD_RANK_DISTRIBUTIONS=new WeakMap();
 function foodRankSupported(p,level){return foodRoleSupported(p)&&[60,70,80].includes(level)}
-function foodRankKey(p,level){return `food-rank:${speciesKey(p)}:${level}`}
+function foodRankKey(p,level){return `food-rank:${speciesKey(p)}:${level}${p.foodEvaluationReferenceVersion?':'+p.foodEvaluationReferenceVersion:''}`}
 function foodRankFileCache(){
  const catalog=window.PS_CATALOG;if(!FOOD_RANK_FILE_CACHE.has(catalog))FOOD_RANK_FILE_CACHE.set(catalog,{manifest:null,files:new Map()});return FOOD_RANK_FILE_CACHE.get(catalog);
 }
@@ -51,6 +51,7 @@ async function loadFoodRankManifest(){
 }
 function loadFoodRankReferences(p,level){
  if(!foodRankSupported(p,level))return Promise.reject(Error('unsupported food rank'));
+ if(typeof usesGengar166==='function'&&usesGengar166(p))return loadGengarRankReferences(p,level);
  const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key=foodRankKey(p,level),cache=foodRankFileCache();
  if(store.values[key])return Promise.resolve(store.values[key].data);
  if(!store.loads.has(key))store.loads.set(key,Promise.all([loadFoodRoleReferences(),loadFoodRankManifest()]).then(async([references,manifest])=>{
@@ -67,7 +68,7 @@ function foodRankEvaluation(e,p){
  if(e.status!=='ready')return pending('食材収集力の計算条件を確認してください。');
  const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key=foodRankKey(p,e.level),loaded=store.values[key];
  if(!loaded)return pending(store.errors.has(key)?'基準を読み込めませんでした。':'ランク基準を読み込んでいます…');
- const {data,manifest}=loaded,id=speciesKey(p),row=data.entries[JSON.stringify([id,e.level,camp,e.pattern])],references=activeFoodRoleReferences(),reference=references?.entries[JSON.stringify([id,e.level,e.pattern])];
+ const {data,manifest}=loaded,id=speciesKey(p),row=data.entries[JSON.stringify([id,e.level,camp,e.pattern])],references=activeFoodRoleReferences(p),reference=references?.entries[JSON.stringify([id,e.level,e.pattern])];
  if(e.camp!==camp||manifest.engineFingerprint!==references?.engineFingerprint||!row||e.skillLevel!==reference?.skillLevel||!Number.isFinite(e.value)||e.value<0||Math.abs(e.ideal-row.ideal)>1e-9||e.value>row.ideal+1e-8)return pending('同じ条件のランク基準を確認できませんでした。');
  const compiled=compileFoodRankDistribution(row);if(!compiled)return pending('ランク分布を確認できませんでした。');
  const {values,prefix}=compiled;let lo=0,hi=values.length;

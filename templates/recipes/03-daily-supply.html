@@ -1,6 +1,6 @@
  const supply=catalog.dailySupply,supplyLevel=document.getElementById('recipeSupplyLevel'),supplyMeals=document.getElementById('recipeSupplyMeals');
  let supplyScenario='collect3h_meals0';
- const currentSupply=()=>window.PS.getGoodCamp()?{tiers:{},burdens:{},pending:true}:(supply.scenarios?.[supplyScenario]||supply);
+ const currentSupply=()=>supply.camps[window.PS.getGoodCamp()?'on':'off'].scenarios[supplyScenario];
  const scenarioControls=[];
  for(const [parentId,id] of [['recipeSupplyControls','recipeSupplyScenario'],['ingredientSupplyConditions','ingredientSupplyScenario']]){
   const parent=document.getElementById(parentId),label=document.createElement('label'),select=document.createElement('select');label.textContent=parentId==='ingredientSupplyConditions'?'':'収集条件 ';select.id=id;select.setAttribute('aria-label',parentId==='recipeSupplyControls'?'料理収集の比較条件':'食材日産量の比較条件');select.style.maxWidth='100%';
@@ -47,7 +47,7 @@
  const supplyNote=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;referenceContent.append(p)};
  function openSupplyReference(){window.PS_BOOKSHELF.openReference('dailySupplyReference')}
  supplyNote('共通条件の独自モデルによる推定。ポケモンLv30／60、無補正の性格・サブスキル・リボンなし、起床げんき100、睡眠8時間半。日中3時間ごと＋就寝直前と起床時に回収（例8:00起床・23:30就寝）。');
- supplyNote('料理・スキル回復なし。スキル由来の食材も含めません。キャンプ・イベント・EXなし。種族の初期所持数による満杯・超過分破棄を反映、バッグ容量の制限・元の在庫は含みません。解放食材枠の均等抽選は推定です。ホームの日産予想と条件が異なります。');
+ supplyNote('料理・スキル回復なし。スキル由来の食材も含めません。キャンチケは上部の切替に対応。イベント・EXなし。種族の初期所持数による満杯・超過分破棄を反映、バッグ容量の制限・元の在庫は含みません。解放食材枠の均等抽選は推定です。ホームの日産予想と条件が異なります。');
  supplyNote('日産ティアは最良担当の期待個数を基準にした独自の暫定閾値：S≥60、A≥45、B≥30、C≥15、D<15個/日。候補なしは未対応。担当の選択肢の多さを示す入手ティアとは別指標です。');
  supplyNote('専任収集負担＝食材ごとの必要数÷最良担当日産量を合計。1匹・日は、この条件で1匹を1日編成する収集力の単位です。共有の理論下限は、実在する食材構成の供給ベクトルを線形計画で配分した参考値。分数・同種複数・別構成を許すため、実際の必要枠数・Box交代時間・5匹で作れるかの判定には使いません。');
  supplyNote('調査候補には現行図鑑未収録の種族を含みます。期間限定・衣装、個体状態未指定のミュウ・ダークライは除外。比較Lvを超える進化条件の種族は育成経由の候補から除外。低Lvの進化後直接捕獲や厳選負担は評価しません。上位3系統は別々の選択肢であり、1匹の量として合算しません。');
@@ -56,6 +56,8 @@
  const ingredientLink=document.createElement('button');ingredientLink.type='button';ingredientLink.className='btn';ingredientLink.textContent='食材の一覧を見る';ingredientLink.addEventListener('click',()=>window.PS?.go('ingredientPage'));referenceContent.append(ingredientLink);
  const sensitivity=document.createElement('details');sensitivity.className='psg-cooking-reference';const caption=document.createElement('summary');caption.textContent='回収・料理回復を変えた場合の参考比較';sensitivity.append(caption);
  const explanation=document.createElement('p');explanation.className='note';explanation.textContent='以下は基準（回収3時間・料理回復なし）から日産ティアが変わる食材数。料理回復ありは何らかの料理を3食食べる条件で、目標料理を3食作れる保証ではありません。基準は変更していません。';sensitivity.append(explanation);
- for(const row of supply.sensitivitySummary['集計']){const p=document.createElement('p');p.className='note';const match=/collect(\d)h_meals(\d)/.exec(row['シナリオ']);p.textContent=`回収${match[1]}時間・料理回復${match[2]==='1'?'あり':'なし'}・Lv${row['Lv']}：ティア変化 ${row['ティア変化食材数']}/19食材`;sensitivity.append(p)}
+ explanation.textContent='回収1／3／6時間と料理回復なし／ありを切り替えて比較できます。上部のキャンチケ切替も反映します。料理回復ありは3食を食べる仮定で、目標料理を3食作れる保証ではありません。';
  referenceContent.append(sensitivity);
- supplyNote(`資料確認日 ${supply.conditions['確認日']}。独自計算の検算であり、ゲーム内実測ではありません。`);
+ supplyNote(`資料確認日 ${supply.generatedDateJST}。独自計算の検算であり、ゲーム内実測ではありません。`);
+
+ window.addEventListener('psg-camp-change',()=>preserveRecipeDetails(()=>{}));

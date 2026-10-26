@@ -1,0 +1,33 @@
+// Species-scoped replacement: never relabel the archived engine fingerprint.
+const GENGAR_REFERENCE_FINGERPRINT='c92bb0025e35cc094b66b2030188e2ee716701b12b8dd6e604e9b00ff6ae4029';
+const GENGAR_REFERENCE_COMMIT='140ee8422853f8b77007049107ea3cf2887d5fa1';
+function usesGengar166(p){return p?.no===94&&p.foodEvaluationReferenceVersion==='gengar-166'}
+async function loadGengarJSON(name){const response=await fetch(`assets/evaluation/gengar-166/${name}.json?v=667`);if(!response.ok)throw Error('Gengar reference load');return response.json()}
+function validateGengarMetadata(data){
+ if(data.engineFingerprint!==GENGAR_REFERENCE_FINGERPRINT||data.sourceCommit!==GENGAR_REFERENCE_COMMIT||data.foodRate!==16.6)throw Error('Gengar reference provenance');
+ for(const [key,value] of Object.entries({collectionHours:4,awakeHours:16,sleepHours:8,startEnergy:100,meals:3,ribbonHours:0,fieldBonus:0,externalTeam:0}))if(data.conditions?.[key]!==value)throw Error('Gengar reference condition');
+ return data;
+}
+async function loadGengarIdeals(camp){
+ const parts=await Promise.all([60,70,80].map(level=>loadGengarJSON(`food_direct_v3${camp?'':'_off'}_${level}_gengar`).then(data=>{
+  validateGengarMetadata(data);if(data.version!==3||data.axis!=='normalFoodsFixedPattern'||data.level!==level||data.conditions.camp!==camp||Object.keys(data.entries).length!==6)throw Error('Gengar ideal mismatch');return data;
+ })));
+ return {...parts[0],entries:Object.assign({},...parts.map(p=>p.entries))};
+}
+async function loadGengarRankReferences(p,level){
+ const camp=evaluationGoodCamp(),store=campReferenceStore(camp),key=foodRankKey(p,level),cache=foodRankFileCache();
+ if(store.values[key])return store.values[key].data;
+ if(!store.loads.has(key))store.loads.set(key,Promise.all([loadFoodRoleReferences(),(async()=>{
+  const fileKey=`gengar-166:${level}`;if(!cache.files.has(fileKey))cache.files.set(fileKey,loadGengarJSON(`0094_default_${level}`).catch(e=>{cache.files.delete(fileKey);throw e}));return cache.files.get(fileKey);
+ })()]).then(([all,data])=>{
+  validateGengarMetadata(data);const refs=all.gengar,count=({60:17000,70:59500,80:154700})[level];
+  if(!refs||data.version!==2||data.axis!=='normalFoodsFixedPatternRank'||data.speciesId!=='0094_default'||data.level!==level||data.count!==count||data.prediction!==(level===80)||Object.keys(data.entries).length!==12)throw Error('Gengar distribution mismatch');
+  for(const pattern of foodRankPatterns(p))for(const condition of [false,true]){
+   const row=data.entries[JSON.stringify(['0094_default',level,condition,pattern])];
+   if(!row||row.count!==count||row.camp!==condition||row.pattern!==pattern||!compileFoodRankDistribution(row))throw Error('Gengar distribution invalid');
+   if(condition===camp){const ideal=refs.entries[JSON.stringify(['0094_default',level,pattern])];if(!ideal||ideal.fullConfigurations!==count||ideal.evaluated!==row.evaluatedSignatures||data.skillLevel!==ideal.skillLevel||Math.abs(row.ideal-ideal.ideal.value)>1e-9)throw Error('Gengar ideal/distribution mismatch')}
+  }
+  store.values[key]={data,manifest:{engineFingerprint:refs.engineFingerprint}};store.errors.delete(key);return data;
+ }).catch(e=>{store.loads.delete(key);store.errors.set(key,e);throw e}));
+ return store.loads.get(key);
+}
