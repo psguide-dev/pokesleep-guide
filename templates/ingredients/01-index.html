@@ -2,4 +2,3 @@
  const ingredientSort=document.getElementById('ingredientIndexSort');
  const dailyLevel=document.getElementById('ingredientSupplyLevel'),tiersView=document.getElementById('ingredientDailyTiers');
  const ingredientNames=Object.keys(catalog.ingredientAssets);
- const normalizeIngredient=text=>String(text).normalize('NFKC').replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-96)).toLowerCase().trim();

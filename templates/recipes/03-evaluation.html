@@ -1,7 +1,3 @@
- const evaluationSort=document.getElementById('recipeEvaluationSort');
- const burdenOption=document.createElement('option');burdenOption.value='burden';burdenOption.textContent='専任収集負担が小さい順';evaluationSort.append(burdenOption);
- const modeButtons=[...document.querySelectorAll('[data-recipe-mode]')];
- document.getElementById('recipeModeSelect').addEventListener('change',event=>modeButtons.find(button=>button.dataset.recipeMode===event.target.value)?.click());
  function recipeMetrics(recipe){
   const total=recipe.energy?.max?.value;
   const quantity=recipe.ingredients.reduce((sum,item)=>sum+item.qty,0);
@@ -9,26 +5,10 @@
   for(const item of recipe.ingredients){const value=catalog.ingredientAssets[item.name]?.baseEnergy;if(!Number.isFinite(value)||value<=0)return {total,quantity,base:null,efficiency:null,amplification:null};base+=item.qty*value}
   return {total,quantity,base,efficiency:Number.isFinite(total)&&quantity>0?total/quantity:null,amplification:Number.isFinite(total)&&base>0?total/base:null};
  }
- function evaluationRatio(recipe){
-  const data=recipeMetrics(recipe),key=evaluationSort.value;
-  return {numerator:data.total,denominator:key==='efficiency'?data.quantity:key==='amplification'?data.base:1};
- }
- function compareEvaluation(a,b){
-  if(evaluationSort.value==='burden'){
-   const av=supplyBurden(a).dedicated,bv=supplyBurden(b).dedicated;
-   if(!Number.isFinite(av)||!Number.isFinite(bv))return Number.isFinite(av)?-1:Number.isFinite(bv)?1:a.name.localeCompare(b.name,'ja');
-   return av-bv||a.name.localeCompare(b.name,'ja');
-  }
-  const av=evaluationRatio(a),bv=evaluationRatio(b);
-  const valid=v=>Number.isFinite(v.numerator)&&Number.isFinite(v.denominator)&&v.denominator>0;
-  if(!valid(av)||!valid(bv))return valid(av)?-1:valid(bv)?1:a.name.localeCompare(b.name,'ja');
-  // Compare unrounded ratios; displayed decimal values never determine order.
-  return bv.numerator*av.denominator-av.numerator*bv.denominator||a.name.localeCompare(b.name,'ja');
- }
  function evaluationSummary(recipe){
   const data=recipeMetrics(recipe),row=document.createElement('span');row.className='psg-recipe-metrics';
   for(const [key,label,digits,suffix] of [['total','総エナジー',0,''],['efficiency','1個あたり',2,''],['amplification','増幅率',4,'倍']]){
-   const cell=document.createElement('span');cell.className='psg-recipe-metric';cell.classList.toggle('active',evaluationSort.value===key);
+   const cell=document.createElement('span');cell.className='psg-recipe-metric';cell.classList.toggle('active',key==='total');
    const caption=document.createElement('small');caption.textContent=label;
    const value=document.createElement('b');value.textContent=Number.isFinite(data[key])?`${window.PS_NUMBERS.display(data[key])}${suffix}`:'未確定';
    cell.append(caption,value);row.append(cell);
@@ -40,18 +20,16 @@
   action();render();
   if(openId)[...list.children].find(item=>item.dataset.recipeId===openId)?.setAttribute('open','');
  }
- for(const button of modeButtons)button.addEventListener('click',()=>preserveRecipeDetails(()=>{
-  recipeMode=button.dataset.recipeMode;
-  for(const item of modeButtons){const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active))}
+ const modeSelect=document.getElementById('recipeModeSelect');
+ modeSelect.addEventListener('change',()=>preserveRecipeDetails(()=>{
+  recipeMode=modeSelect.value;
   const evaluation=recipeMode==='evaluation';
   document.getElementById('recipePage').classList.toggle('psg-evaluation-mode',evaluation);
-  sort.hidden=false;evaluationSort.hidden=true;document.getElementById('recipeModeSelect').value=recipeMode;
   document.getElementById('recipeCompareControls').hidden=true;
   document.getElementById('recipeEvaluationNote').hidden=!evaluation;
   document.getElementById('recipeSupplyControls').hidden=!evaluation;
   updateLevelFacts();
  }));
- evaluationSort.addEventListener('change',()=>preserveRecipeDetails(()=>{}));
  document.getElementById('recipeEvaluationBasisLink').addEventListener('click',()=>{
   window.PS_BOOKSHELF.openReference('recipeEvaluationBasis');
  });
@@ -59,7 +37,7 @@
  const basisText=text=>{const p=document.createElement('p');p.className='note';p.textContent=text;basis.append(p)};
  basisText('比較条件：料理Lv70固定、追加食材0、フィールドボーナス0、イベント倍率1、大成功倍率1。Lv70掲載参考値を使った推定です。');
  for(const [name,formula] of Object.entries(catalog.recipeEvaluation.definitions).filter(([name])=>name!=='料理による増加エナジー'))basisText(`${name}：${formula}`);
- basisText('並び順は丸め前の分数で比較。表示は1個あたりを小数2桁、増幅率を小数4桁に四捨五入。同値は名前順です。');
+ basisText('並び順はエナジー順・鍋容量順・名前順。エナジーは丸め前で比較します。');
  basisText('3指標を別々に比較し、総合点・S〜Dティアは付けません。食材の収集速度・鍋上限・在庫は評価に含みません。ごちゃまぜ料理は固定の必要食材がないため対象外です。');
  const differences=Object.values(catalog.recipeEvaluation.rounding).filter(item=>item.difference!==0).length;
  basisText(`Lv70の掲載値と四捨五入の参考式に${differences}件の差があります。掲載値を保持し、端数処理は未確定とします。近い値の順位は端数処理によって変わる可能性があります。`);

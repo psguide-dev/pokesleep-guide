@@ -22,14 +22,13 @@
  }
  function ingredientEnvironmentView(name,expanded=false){
   const data=currentFoodEnvironment(),view=document.createElement('div');view.className='psg-food-environment'+(expanded?'':' psg-food-environment-summary');
-  if(expanded){const heading=document.createElement('h3');heading.textContent='上位料理での使用（1食分）';view.append(heading)}
+  if(expanded){const heading=document.createElement('h3');heading.textContent='上位料理での使用数';view.append(heading);const note=document.createElement('p');note.className='note';note.textContent='エナジー上位5品のうち、この食材を使う料理（鍋に入る料理が対象）。';view.append(note)}
   const labels=['カレー','サラダ','デザート'];
   data.categories.forEach((category,index)=>{
    const row=data.ingredients[name][category],line=document.createElement('div');line.className='psg-food-environment-row';
    const label=document.createElement('span');label.textContent=labels[index];const count=document.createElement('strong');count.textContent=row.total?`${row.count}/${row.total}品`:'未評価';
    line.append(label);
-   if(row.total){const meter=document.createElement('meter');meter.min=0;meter.max=row.total;meter.value=row.count;meter.setAttribute('aria-label',`${category}：上位${row.total}品中${row.count}品で使用`);line.append(meter)}
-   line.append(count);view.append(line);
+   line.append(count);line.setAttribute('aria-label',`${category}：上位${row.total}品中${row.count}品で使用`);view.append(line);
    if(expanded&&row.matches.length){const links=document.createElement('div');links.className='psg-ingredient-recipes';for(const recipe of row.matches)links.append(environmentRecipeButton(recipe,`${recipe.rank}位 ${recipe.name} ×${recipe.quantity}`));view.append(links)}
   });
   return view;

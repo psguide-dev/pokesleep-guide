@@ -23,10 +23,10 @@ function setup(file,screen){
  vm.createContext(ctx);vm.runInContext(docs.review.match(/<script id="psg-info-routing">([\s\S]*?)<\/script>/)[1],ctx);return {ctx,window,document,nodes,state,assigned,route:window.PS_INFO_ROUTE};
 }
 const main=setup('review.html','info');main.route.open('ingredientPage');assert(main.assigned[0].includes('/ingredients.html?screen=ingredientPage'));
-const ingredients=setup('ingredients.html','ingredientPage');ingredients.route.restore();ingredients.document.getElementById('ingredientSearch').value='ミツ';ingredients.route.open('recipePage',{recipe:'baby_honey_curry'});assert(ingredients.assigned[0].includes('/recipes.html?screen=recipePage&restore=info&recipe=baby_honey_curry'));
+const ingredients=setup('ingredients.html','ingredientPage');ingredients.route.restore();ingredients.document.getElementById('ingredientIndexSort').value='daily';ingredients.route.open('recipePage',{recipe:'baby_honey_curry'});assert(ingredients.assigned[0].includes('/recipes.html?screen=recipePage&restore=info&recipe=baby_honey_curry'));
 const recipes=setup('recipes.html','recipePage');recipes.route.restore();assert.deepEqual([...recipes.state.history],['info','info','ingredientPage']);
 recipes.state.history.pop();recipes.route.open('ingredientPage',{push:false});
-const restored=setup('ingredients.html','ingredientPage');restored.route.restore();assert.equal(restored.nodes.ingredientSearch.value,'ミツ');assert.equal(restored.window.scrollY,500);
+const restored=setup('ingredients.html','ingredientPage');restored.route.restore();assert.equal(restored.nodes.ingredientIndexSort.value,'daily');assert.equal(restored.window.scrollY,500);
 assert.equal(restored.route.path('dex'),'review.html');assert.equal(restored.route.path('fieldPage'),'fields.html');
 assert(fs.readFileSync('.github/workflows/build-review.yml','utf8').includes('cp recipes.html ingredients.html public/'));
 console.log('Shared cooking package matches canonical data; isolated assets, syntax, ingredient/recipe links, filters, scroll and return stack passed');

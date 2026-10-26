@@ -23,3 +23,13 @@ const recipeHeader=html.match(/<section id="recipePage"[\s\S]*?<\/div>\n/)[0];fo
 assert(html.includes('<option value="pot">鍋容量順</option>'));
 assert(fs.readFileSync('templates/core/05-navigation-and-filters.html','utf8').includes("if(id==='rankingPage')id='typeRankingPage'"));
 console.log('Both recipe views: all three sorts, categories and ingredient filter; information icons and compact controls passed.');
+// Padding correction applies to face renders only, retaining manual image loading.
+const shell=fs.readFileSync('templates/01-shell-head.html','utf8');
+let allowed=true;const faceContext={window:{PS_IMAGE_LOADING:{allowed:()=>allowed,attrs:src=>`src="${src}"`}},console};vm.createContext(faceContext);
+vm.runInContext(shell.slice(shell.indexOf('window.PS_DEV_ASSETS = {'),shell.indexOf("document.addEventListener('error'")),faceContext);
+for(const no of [200,429]){const path=`assets/pokemon/ghost-20261026/${no}/face.webp`;const face=faceContext.window.PS_DEV_ASSETS.image(path,'pokemon',no,'face','');assert(face.includes('viewBox="45 45 166 166"'));assert(face.includes(path));assert(!faceContext.window.PS_DEV_ASSETS.image(path,'pokemon',no,'full','').includes('<svg'));}
+allowed=false;assert(faceContext.window.PS_DEV_ASSETS.image('face.webp','pokemon',200,'face','').includes('psg-manual-image'));
+assert(!html.includes('id="recipeEvaluationSort"'));assert(!html.includes('data-recipe-mode='));
+const choices=fs.readFileSync('templates/recipes/02-ingredient-filter.html','utf8');assert(!choices.includes('caption.textContent'));assert(choices.includes("option.setAttribute('aria-label',name)"));
+const environment=fs.readFileSync('templates/ingredients/00-environment.html','utf8');assert(!environment.includes("createElement('meter')"));assert(environment.includes('上位料理での使用数'));
+console.log('Face padding, manual loading, icon-only picker, plain recipe counts and removal of obsolete recipe controls passed.');
