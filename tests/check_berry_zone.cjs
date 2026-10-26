@@ -39,3 +39,4 @@ console.log('Berry zone: mixed berries, favorite/field stacking, overflow, food/
  controls.daySettings.exWeeklyEffect='skill';controls.fieldProfile.selectedFieldId='normal';controls.localStorage.setItem=()=>{throw Error('quota')};controls.syncExEffectControls();assert.equal(nodes.teamExEffect.value,'');assert.match(nodes.teamDaySaveStatus.textContent,/保存できません/);
  console.log('EX controls: reset persists on ordinary islands, preserves other conditions, stays unset on return and handles storage failure.');
 }
+assert.equal(ctx.normalizeFieldProfile({...raw,selectedFieldId:''}).selectedFieldId,'','explicit unselected field survives normalization');

@@ -17,7 +17,7 @@ function currentFieldWeek(now=new Date()){
  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 }
 function normalizeFieldProfile(raw){
- const selectedFieldId=knownFieldIds.has(raw?.selectedFieldId)?raw.selectedFieldId:(knownFieldIds.has('greengrass')?'greengrass':[...knownFieldIds][0]||'');
+ const selectedFieldId=raw?.selectedFieldId===''?'':knownFieldIds.has(raw?.selectedFieldId)?raw.selectedFieldId:(knownFieldIds.has('greengrass')?'greengrass':[...knownFieldIds][0]||'');
  const areaBonuses={};
  for(const [id,value] of Object.entries(raw?.areaBonuses||{})){
   if(knownFieldIds.has(id)&&Number.isFinite(Number(value)))areaBonuses[id]=Math.max(0,Math.min(200,Number(value)));

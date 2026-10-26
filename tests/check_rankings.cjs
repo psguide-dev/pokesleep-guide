@@ -16,3 +16,7 @@ c.window.PS_PAGE_RENDERERS.typeRankingPage();
 const typeSelect=walk(hosts.typeRankingContent).find(n=>n.tagName==='SELECT');assert.equal(typeSelect.children.length,18);
 for(const group of c.window.PS_BERRY_RANKINGS.types){typeSelect.value=group.type;typeSelect.onchange();const tables=walk(hosts.typeRankingContent).filter(n=>n.tagName==='TABLE');assert.equal(tables.length,1);assert.equal(walk(tables[0]).filter(n=>n.tagName==='TBODY')[0].children.length,group.entries.length)}
 console.log('All 18 type choices render one matching ranking table.');
+let changeListener;const switched=[];
+vm.runInNewContext(fs.readFileSync('templates/20-core-initialize.html','utf8').split('\n').find(l=>l.startsWith("document.addEventListener('change',")),{document:{addEventListener:(type,fn)=>changeListener=fn},window:{PS_INFO_ROUTE:{open:id=>switched.push(id)}}});
+for(const page of ['typeRankingPage','islandRankingPage','skillEnergyRankingPage','sameSkillRankingPage','ingredientRankingPage'])changeListener({target:{matches:()=>true,value:page}});
+assert.equal(switched.length,5);changeListener({target:{matches:()=>false,value:'unrelated'}});assert.equal(switched.length,5);

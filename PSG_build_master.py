@@ -206,7 +206,7 @@ def catalog_and_images():
         if key in received_skills:
             obj = {**obj, 'iconAsset': received_skills[key]}
         catalog['skills'][key] = obj
-        icon = obj.get('iconAsset') or image_path(ROOT, folder, 'icon')
+        icon = obj.get('iconAsset') or image_path(ROOT, folder, 'icon') or 'assets/skill-icons/main_skill_placeholder.webp'
         if obj.get('iconAsset'):
             assert icon.startswith(('assets/skill-icons/', 'assets/received-v506/skills/')) and (ROOT/icon).is_file(), key
         if icon:
@@ -423,7 +423,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v664') == 2
+    assert source.count('Review v665') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'

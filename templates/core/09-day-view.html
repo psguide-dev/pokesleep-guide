@@ -74,7 +74,6 @@ function renderTeamDay(){
 }
 document.getElementById('teamCollectionInterval').onchange=saveDaySettings;
 document.getElementById('teamExEffect').onchange=()=>{if(!document.getElementById('teamExEffect').disabled)saveDaySettings()};
-document.getElementById('teamGoodCamp').onclick=()=>setGoodCamp(!teamGoodCamp);
 document.getElementById('teamMeals').onchange=event=>{teamMeals=Number(event.currentTarget.value);saveDaySettings()};
 document.getElementById('teamInitialEnergyRange').oninput=event=>{teamInitialEnergy=Number(event.currentTarget.value);saveDaySettings()};
 document.getElementById('teamInitialEnergy').onchange=event=>{

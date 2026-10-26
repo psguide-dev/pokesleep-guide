@@ -22,7 +22,7 @@ function renderFieldDetail(){
  }
  const ids=new Set((field.encounters||[]).map(x=>x.sleepStyleId)),found=readSleepBackup();
  const discovered=[...ids].filter(id=>found[id]).length,summary=document.getElementById('fieldDetailSleepSummary');
- summary.textContent=`寝顔 ${discovered} / ${ids.size}`;summary.setAttribute('aria-label',`寝顔：発見済み${discovered}種類／収録${ids.size}種類`);
+ summary.replaceChildren();const caption=document.createElement('small');caption.textContent='寝顔';const count=document.createElement('b');count.textContent=`${discovered} / ${ids.size}`;summary.append(caption,count);summary.setAttribute('aria-label',`寝顔：発見済み${discovered}種類／収録${ids.size}種類`);
  renderFieldSpawn();renderFieldEncounters(field);window.PS_RENDER_FIELD_RANKING?.(fieldDetailId);
 }
 function saveFieldDetailBonus(value){

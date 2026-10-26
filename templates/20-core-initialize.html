@@ -40,6 +40,7 @@ function refreshAssetViews(){
  if(state.screen==='box')renderBox();
  if(state.screen==='home')renderTeam();
 }
+document.addEventListener('change',event=>{const select=event.target;if(select.matches?.('[data-ranking-switch]'))window.PS_INFO_ROUTE.open(select.value)});
 window.PS={openBoxRegistration,recipeCollectionPanel,dailyResult:(...args)=>window.PS_NUMBERS.finalValues(dailyBaseline(...args)),whistleResult:(...args)=>window.PS_NUMBERS.finalValues(whistleEstimate(...args)),refreshAssetViews,state,master,go,renderDex,refreshDexSleep,renderFilters,renderBox,refreshBoxDetail:syncLevel,teamContext,cookingContext,saveCookingSettings,calculatePotCapacity,getGoodCamp:()=>teamGoodCamp,setGoodCamp};
 })();
 </script>

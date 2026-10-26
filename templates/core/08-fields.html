@@ -55,7 +55,7 @@ function syncDayControls(){
  document.getElementById('teamInitialEnergyRange').value=String(teamInitialEnergy);
  syncExEffectControls();
  const camp=document.getElementById('teamGoodCamp'),campText=`いいキャンプ：${teamGoodCamp?'ON':'OFF'}`;
- camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;
+ if(camp){camp.setAttribute('aria-pressed',String(teamGoodCamp));camp.setAttribute('aria-label',campText);camp.title=campText;}
  syncCommonCampControls();
  document.querySelectorAll('.psg-day-energy-options button').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.energy)===teamInitialEnergy)));
 }
@@ -80,6 +80,7 @@ for(const select of berryChoices){
 }
 const fieldSelect=document.getElementById('fieldSelect');
 const homeFieldSelect=document.getElementById('homeFieldSelect');
+homeFieldSelect.add(new Option('今週のフィールド',''));
 const homeMealSelect=document.getElementById('homeMealSelect');
 function activeMealCategory(){return fieldProfile.meal?.weekKey===currentFieldWeek()?fieldProfile.meal.category:''}
 homeMealSelect.onchange=()=>{fieldProfile.meal=homeMealSelect.value?{weekKey:currentFieldWeek(),category:homeMealSelect.value}:null;saveFieldProfile()};

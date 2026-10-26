@@ -96,7 +96,7 @@
 .psg-home-fb #teamFieldSummary{flex:0 0 auto;gap:0;white-space:nowrap}
 .psg-home-berries{display:flex;justify-content:center;align-items:center;gap:4px;min-width:0;font-size:11px}
 .psg-home-berries img{width:24px;height:24px;object-fit:contain}
-.psg-home-image-toggles{grid-column:1 / 3;grid-row:4 / 6;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;min-width:0}
+.psg-home-image-toggles{grid-column:1 / 3;grid-row:4 / 6;display:grid;grid-template-columns:minmax(0,1fr);gap:3px;min-width:0}
 .psg-home-image-toggles button{display:grid;place-items:center;width:100%;height:100%;min-height:0;padding:0}
 :is(.psg-home-image-toggles button,.psg-camp-toggle){border:1px solid var(--line);border-radius:8px;background:#fff}
 :is(.psg-home-image-toggles button,.psg-camp-toggle)[aria-pressed="false"] img{opacity:.45}
@@ -572,7 +572,7 @@
 .psg-team-card-strip:not(.is-expanded) .psg-subskill-card-grid,.psg-team-card-strip:not(.is-expanded) .psg-team-identity{display:none!important}
 
 #teamManagerToggle{grid-column:auto;min-width:0;padding:0 2px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#111;font-size:11px;font-weight:700;cursor:pointer}
-.psg-team-strip-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:4px;height:var(--psg-ui-unit);margin-top:2px}
+.psg-team-strip-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr);align-items:center;gap:4px;height:var(--psg-ui-unit);margin-top:2px}
 .psg-team-strip-controls #savedTeamSelect{grid-column:auto;width:100%;height:100%;padding:0 2px;font-size:11px;text-overflow:ellipsis}
 .psg-team-strip-controls .psg-specialty-icon{width:16px;height:16px}
 .psg-team-strip-controls .psg-team-composition>span{font-size:10px}
@@ -588,3 +588,10 @@
 .psg-day-condition-details[open]>summary::after{content:" ▴"}
 .psg-day-condition-controls>.psg-day-setting{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:var(--psg-ui-unit);width:50%;gap:4px}
 .psg-day-condition-controls>.psg-day-energy{margin-top:6px}
+
+.psg-home-image-toggles #savedTeamSelect{width:100%;height:100%;min-width:0;padding:0 3px;font-size:12px;font-weight:700;text-overflow:ellipsis}
+.psg-day-header .section-title>span{margin-right:auto}
+#nightcapToggle{display:inline-flex;align-items:center;justify-content:center;flex:none;width:28px;height:28px;padding:0;border:1px solid var(--line);border-radius:6px;background:#fff}
+#nightcapToggle img{width:24px;height:24px;object-fit:contain}
+#nightcapToggle[aria-pressed="false"] img{opacity:.45}
+#nightcapToggle[aria-pressed="true"]{border-color:var(--green);background:#dff2e6}
