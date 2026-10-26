@@ -1,0 +1,27 @@
+{
+  "source": "ユーザー指定",
+  "checkedAt": "2026-10-26",
+  "status": "種族マスター追加時に反映",
+  "records": [
+    {
+      "no": 200,
+      "name": "ムウマ",
+      "friendPoints": 16,
+      "sleepStars": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "no": 429,
+      "name": "ムウマージ",
+      "friendPoints": 20,
+      "sleepStars": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

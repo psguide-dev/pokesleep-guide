@@ -7,7 +7,7 @@ const islandSelect=walk(hosts.islandRankingContent).find(n=>n.tagName==='SELECT'
 for(const id of ['cyan','taupe','snowdrop','lapis','old_gold','amber']){islandSelect.value=id;islandSelect.onchange();openAll(hosts.islandRankingContent);assert.equal(walk(hosts.islandRankingContent).filter(n=>n.tagName==='TABLE').length,2);assert.equal(hosts.fieldRankingContent.children,originalField)}
 for(const id of ['greengrass','greengrass_ex','cyan_ex']){islandSelect.value=id;islandSelect.onchange();assert.equal(walk(hosts.islandRankingContent).filter(n=>n.tagName==='TABLE').length,0)}
 assert.equal(d.metadata.configurations,1970);const egg=d.food.groups.find(g=>g.ingredient==='とくせんエッグ');for(const mode of ['normalTop5','skillTop5','foodSpecialtyTop5']){assert.equal(egg[mode][4].name,'モロバレル');assert.equal(egg[mode][4].pattern,'ABB');assert.equal(egg[mode][4].rank,5)}
-const info=h.match(/<section id="info"[\s\S]*?<\/section>/)[0],ranking=h.match(/<section id="rankingPage"[\s\S]*?<\/section>/)[0];assert(info.includes('data-info-page="rankingPage"'));for(const page of ['typeRankingPage','islandRankingPage','skillEnergyRankingPage','ingredientRankingPage']){assert(ranking.includes(`data-info-page="${page}"`));assert(!info.includes(`data-info-page="${page}"`))}
+const info=h.match(/<section id="info"[\s\S]*?<\/section>/)[0],ranking=h.match(/<section id="rankingPage"[\s\S]*?<\/section>/)[0];assert(info.includes('data-info-page="rankingPage"'));for(const page of ['typeRankingPage','islandRankingPage','skillEnergyRankingPage','ingredientRankingPage']){assert(ranking.includes(`value="${page}"`));assert(!info.includes(`data-info-page="${page}"`))}
 for(const no of ['0590','0591']){const m=JSON.parse(fs.readFileSync(`master/pokemon/${no}/data.json`));assert.equal(m.rateStatus,'推定');assert(m.skillRate>0&&m.foodRate>0);assert.equal(m.sleepNameReferences.length,4);assert(m.sleepNameReferences.every(r=>r.sleepStyleId===null&&r.image===null&&r.requiredDrowsyPower===null));assert.equal(m.sleepStyles.length,0)}
 console.log('Ranking hub, independent island selector, egg correction, estimated rates and no fabricated sleep IDs passed');
 
@@ -18,5 +18,15 @@ for(const group of c.window.PS_BERRY_RANKINGS.types){typeSelect.value=group.type
 console.log('All 18 type choices render one matching ranking table.');
 let changeListener;const switched=[];
 vm.runInNewContext(fs.readFileSync('templates/20-core-initialize.html','utf8').split('\n').find(l=>l.startsWith("document.addEventListener('change',")),{document:{addEventListener:(type,fn)=>changeListener=fn},window:{PS_INFO_ROUTE:{open:id=>switched.push(id)}}});
-for(const page of ['typeRankingPage','islandRankingPage','skillEnergyRankingPage','sameSkillRankingPage','ingredientRankingPage'])changeListener({target:{matches:()=>true,value:page}});
+for(const page of ['typeRankingPage','islandRankingPage','skillEnergyRankingPage','sameSkillRankingPage','ingredientRankingPage'])changeListener({target:{matches:selector=>selector==='[data-ranking-switch]',value:page}});
 assert.equal(switched.length,5);changeListener({target:{matches:()=>false,value:'unrelated'}});assert.equal(switched.length,5);
+// Switching comparison mode keeps unavailable data separate and survives page changes.
+const modeStore=new Map(),modePages=Array.from({length:6},()=>({dataset:{},status:{textContent:''},querySelector(){return this.status}}));
+const modeControls=modePages.map(page=>({value:'',closest:()=>page}));let modeChange;
+const modeCtx={document:{querySelectorAll:()=>modeControls,addEventListener:(_type,fn)=>modeChange=fn},sessionStorage:{getItem:k=>modeStore.get(k),setItem:(k,v)=>modeStore.set(k,v)},window:{PS_INFO_ROUTE:{open(){}}}};
+vm.createContext(modeCtx);const initSource=fs.readFileSync('templates/20-core-initialize.html','utf8'),modeSource=initSource.slice(initSource.indexOf('function syncRankingBasis('),initSource.indexOf('window.PS={'));
+vm.runInContext(modeSource,modeCtx);assert(modeControls.every(c=>c.value==='neutral'));
+for(const mode of ['ideal','median']){modeChange({target:{value:mode,matches:s=>s==='[data-ranking-basis]'}});assert(modePages.every(p=>p.dataset.rankingBasisMode===mode));assert(modePages.every(p=>p.status.textContent.includes('準備中')));assert.equal(modeStore.get('psn-ranking-basis'),mode)}
+vm.runInNewContext(modeSource,{...modeCtx});assert(modeControls.every(c=>c.value==='median'));
+modeCtx.syncRankingBasis('invalid');assert(modeControls.every(c=>c.value==='neutral'));
+assert(!ranking.includes('data-info-page="typeRankingPage"'),'hub buttons have been removed');

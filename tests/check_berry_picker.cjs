@@ -11,10 +11,10 @@ assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.str
 nodes.fieldBerrySlots.children[1].onclick();ctx.chooseFavoriteBerry('D');assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','D','C']));
 ctx.chooseFavoriteBerry('A');assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['','D','C']),'second tap clears only its slot');ctx.chooseFavoriteBerry('A');assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','D','C']),'third tap selects the empty slot');
 ctx.chooseFavoriteBerry('unknown');assert.equal(ctx.fieldProfile.weekly.greengrass.berries[0],'A');
-const reload=setup(JSON.parse(JSON.stringify(ctx.fieldProfile)));assert.equal(reload.nodes.fieldBerrySlots.children[1].attrs['aria-label'],'②：D。この枠を変更');
+const reload=setup(JSON.parse(JSON.stringify(ctx.fieldProfile)));assert.equal(reload.nodes.fieldBerrySlots.children[1].attrs['aria-label'],'メイン：D。この枠を変更');
 for(const id of ['greengrass_ex','cyan_ex']){ctx.fieldProfile.selectedFieldId=id;ctx.renderFavoriteBerryPicker();assert(nodes.fieldBerrySlots.children[0].attrs['aria-label'].includes('メイン'));ctx.chooseFavoriteBerry('B');ctx.chooseFavoriteBerry('A');ctx.chooseFavoriteBerry('D');assert.equal(JSON.stringify(ctx.fieldProfile.weekly[id].berries),JSON.stringify(['B','A','D']));}
 assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','D','C']),'per-field values retained');
-ctx.fieldProfile.selectedFieldId='cyan';ctx.renderFavoriteBerryPicker();assert.equal(nodes.fieldBerryPicker.hidden,true);assert.equal(nodes.fieldBerrySelects.hidden,false);
+ctx.fieldProfile.selectedFieldId='cyan';ctx.renderFavoriteBerryPicker();assert.equal(nodes.fieldBerryPicker.hidden,false);assert.equal(nodes.fieldBerrySelects.hidden,true);
 const stale=setup({selectedFieldId:'greengrass_ex',weekly:{greengrass_ex:{weekKey:'2026-09-28',berries:['A','B','C']}}});stale.ctx.chooseFavoriteBerry('D');assert.equal(JSON.stringify(stale.ctx.fieldProfile.weekly.greengrass_ex.berries),JSON.stringify(['D','','']));
 const html=fs.readFileSync('review.html','utf8');assert(html.includes('id="fieldBerryPicker"'));assert(html.includes('#fieldBerrySelects[hidden]{display:none}'));
 console.log('Berry picker: ordered selection, replacement, no duplicates, per-field records, reload, weekly rollover, EX main/sub labels and fixed-field controls passed');
@@ -43,3 +43,6 @@ assert(html.includes('.psg-berry-slot{box-sizing:border-box;height:88px;min-heig
 const detailNode=nodes.fieldBerryDetails;detailNode.open=false;ctx.fieldProfile.selectedFieldId='greengrass';ctx.renderFavoriteBerryPicker();ctx.chooseFavoriteBerry('B');assert.equal(detailNode.open,false);
 nodes.fieldBerrySlots.children[0].onclick();assert.equal(detailNode.open,true);
 console.log('Compact FB, removed helper text, constant slot image space and collapsible list state passed');
+ctx.fieldProfile.selectedFieldId='cyan';ctx.renderFavoriteBerryPicker();assert.deepEqual(nodes.fieldBerrySlots.children.map(n=>n.children[0].textContent),['メイン','メイン','メイン']);
+ctx.fieldProfile.selectedFieldId='greengrass_ex';ctx.renderFavoriteBerryPicker();assert.deepEqual(nodes.fieldBerrySlots.children.map(n=>n.children[0].textContent),['メイン','サブ','サブ']);
+assert(!html.includes('今週の好物きのみ'));assert(!html.includes('class="card psg-field-settings"'));

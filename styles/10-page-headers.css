@@ -70,3 +70,22 @@ body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 #fieldPage .psg-field-selection-row{grid-template-columns:minmax(0,1fr);justify-items:end}
 #fieldPage .psg-field-bonus{width:80px}
 [data-ranking-switch]{width:100%;min-width:0;height:36px;font-size:14px;font-weight:700}
+
+/* Ranking controls use the remaining width beside the back button. */
+.screen .psg-subpage-head:has([data-ranking-basis]){gap:4px}
+[data-ranking-switch]{flex:1 1 0;width:0;min-width:0;font-size:12px}
+[data-ranking-basis]{flex:0 0 26%;min-width:0;height:36px;font-size:12px;font-weight:700}
+section[data-ranking-basis-mode="ideal"]>.card,section[data-ranking-basis-mode="median"]>.card{display:none}
+/* Weekly field selection and editable FB stay in the same header row. */
+#fieldPage .psg-weekly-field-sticky>.psg-subpage-head{gap:4px}
+#fieldPage .psg-weekly-field-sticky #fieldSelect{flex:1 1 0;width:0;min-width:0;font-size:12px}
+#fieldPage .psg-weekly-field-sticky .psg-subpage-head>.psg-field-bonus{flex:0 0 76px;width:76px}
+#fieldPage .psg-field-settings{border:0;border-radius:0;box-shadow:none;background:transparent;padding:0;margin:0}
+#fieldPage .psg-field-berries{margin-top:0}
+#fieldBerryDetails{position:relative;margin:0}
+#fieldBerryDetails>summary{text-align:right}
+#fieldBerryDetails[open]>#fieldBerryOptions{position:absolute;top:100%;left:0;right:0;z-index:90;box-sizing:border-box;max-height:45vh;overflow-y:auto;grid-template-columns:repeat(3,minmax(0,1fr));padding:8px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 12px #0002;margin:0}
+#fieldBerryOptions .psg-berry-option{flex-direction:row;min-height:40px;padding:4px 2px;gap:3px}
+#fieldBerryOptions .psg-berry-option img{width:24px;height:24px;object-fit:contain}
+#fieldBerryOptions .psg-berry-option span{font-size:10px}
+#fieldBerryOptions .psg-berry-order{font-size:8px}
