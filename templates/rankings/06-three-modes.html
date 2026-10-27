@@ -2,7 +2,7 @@
 (()=>{
  const pages={typeRankingPage:['berry','typeRankingContent'],skillEnergyRankingPage:['total','skillEnergyRankingContent'],sameSkillRankingPage:['skill','sameSkillRankingContent'],ingredientRankingPage:['food','ingredientRankingContent']};
  const selections=new Map(),tokens=new Map();let loading;
- const load=()=>loading??=(fetch('assets/rankings/three-modes-lv80.json?v=673').then(r=>{if(!r.ok)throw Error('ランキングを読み込めませんでした。');return r.json()}).then(data=>{if(data.schemaVersion!==2||data.level!==80||data.subskillSlots!==5||data.tables.length!==552)throw Error('ランキングの形式を確認できませんでした。');return data}).catch(e=>{loading=null;throw e}));
+ const load=()=>loading??=(fetch('assets/rankings/three-modes-lv80.json?v=674').then(r=>{if(!r.ok)throw Error('ランキングを読み込めませんでした。');return r.json()}).then(data=>{if(data.schemaVersion!==2||data.level!==80||data.subskillSlots!==5||data.tables.length!==552)throw Error('ランキングの形式を確認できませんでした。');return data}).catch(e=>{loading=null;throw e}));
  function node(parent,tag,text){const n=document.createElement(tag);if(text!=null)n.textContent=text;parent.append(n);return n}
  function details(parent,title){const n=node(parent,'details');node(n,'summary',title);return n}
  const labels={ideal:'理想値',median:'中央値',neutral:'無補正'};

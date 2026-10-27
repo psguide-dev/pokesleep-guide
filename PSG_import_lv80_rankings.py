@@ -27,6 +27,9 @@ def import_rankings(source):
     eligible = json.loads((source / 'eligibility.json').read_text())['included']
     refs = json.loads((source / 'species_references.json').read_text())
     supported = {(r['speciesId'], r['axis']) for r in refs}
+    species_ideal = {(r['speciesId'], r['axis'], r['camp']): r['metrics']['ideal']['value'] for r in refs}
+    patterns = json.loads((source / 'pattern_references.json').read_text())
+    pattern_ideal = {(r['speciesId'], r['axis'], r['camp'], r['pattern']): r['metrics']['ideal']['value'] for r in patterns}
     tables = []
     mapping = {'berryEnergy': 'berry', 'totalEnergy': 'total', 'skill': 'skill', 'food': 'food'}
     for table in json.loads((source / 'rankings.json').read_text()):
@@ -48,6 +51,11 @@ def import_rankings(source):
                        nature=record['nature'], subskills=[order[str(level)] for level in (10, 25, 50, 70, 80)] if order else record['subskills'],
                        skillLevel=record['skillLevel'], orderedSubskills=bool(order),
                        speciesIdealPercent=entry.get('speciesIdealPercent'), patternIdealPercent=entry.get('patternIdealPercent'))
+            if kind == 'food':
+                key = (entry['speciesId'], 'food:' + group, table['camp'])
+                species_max, pattern_max = species_ideal[key], pattern_ideal[(*key, entry['pattern'])]
+                row['speciesIdealPercent'] = 100 * row['value'] / species_max if species_max > 0 else None
+                row['patternIdealPercent'] = 100 * row['value'] / pattern_max if pattern_max > 0 else None
             assert 0 <= row['value'] and len(row['subskills']) in (0, 5)
             rows.append(row)
         tables.append(dict(kind=kind, group=skills[group] if kind == 'skill' else group,
