@@ -1,5 +1,5 @@
 #ingredientPage .psg-ingredient-sticky{position:sticky;top:var(--psg-header-height);z-index:69;margin-inline:-12px;padding-inline:12px;background:#fff;border-bottom:1px solid var(--line)}
-#ingredientPage .psg-ingredient-header{display:grid;grid-template-columns:25% 36px minmax(0,1fr) 56px minmax(0,1.1fr);gap:4px;box-shadow:none}
+#ingredientPage .psg-ingredient-header{display:grid;grid-template-columns:70px 36px minmax(66px,1fr) 54px minmax(60px,1fr);gap:4px;box-shadow:none}
 #ingredientPage .psg-ingredient-header>[data-back]{width:100%!important}
 #ingredientIndexCount,#recipeCount,#skillIndexCount{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 #ingredientPage .psg-ingredient-header select{box-sizing:border-box;min-width:0;width:100%;height:var(--psg-ui-unit);padding:0 2px;font-size:11px;border:1px solid var(--line);border-radius:8px;background:#fff}
@@ -33,3 +33,5 @@
 .psg-food-environment-row{display:grid;grid-template-columns:auto auto;align-items:center;gap:5px;font-size:11px;min-width:0}
 .psg-food-environment-row strong{white-space:nowrap}
 .psg-ingredient-details .psg-food-environment-row{grid-template-columns:65px auto;justify-content:start;margin:8px 0}
+
+@media(max-width:355px){#ingredientPage .psg-ingredient-header{gap:2px}#ingredientPage .psg-ingredient-header select{font-size:9.5px!important}}

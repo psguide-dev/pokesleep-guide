@@ -10,3 +10,8 @@
 #berryReference>p,#natureReference p{line-height:1.6}
 
 #natureReference>.psg-reference-scroll thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+#berryPage>.psg-subpage-head{position:sticky;top:var(--psg-header-height);z-index:66}
+#berryReference>.psg-reference-scroll{overflow:visible;margin-top:0}
+#berryReference .psg-reference-table thead{position:sticky;top:calc(var(--psg-header-height) + var(--psg-page-header-height));z-index:65}
+#berryReference .psg-reference-table thead th{background:#edf5f1}

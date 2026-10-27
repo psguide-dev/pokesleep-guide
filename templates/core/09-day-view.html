@@ -89,3 +89,9 @@ document.getElementById('teamInitialEnergy').onchange=event=>{
 document.querySelectorAll('.psg-day-energy-options button').forEach(button=>button.onclick=()=>{
  teamInitialEnergy=Number(button.dataset.energy);saveDaySettings();
 });
+
+const daySettingsToggle=document.getElementById('teamDaySettingsToggle');
+daySettingsToggle.onclick=()=>{
+ const settings=document.getElementById('teamDayConditionDetails');settings.hidden=!settings.hidden;
+ daySettingsToggle.setAttribute('aria-expanded',String(!settings.hidden));
+};

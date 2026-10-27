@@ -22,7 +22,14 @@ document.getElementById('whistleToggle').onclick=()=>{
  const button=document.getElementById('whistleToggle'),panel=document.getElementById('teamWhistlePanel');
  const open=panel.hidden;panel.hidden=!open;button.setAttribute('aria-expanded',String(open));
  button.setAttribute('aria-label',`ホイッスル1回分の獲得予想を${open?'非表示':'表示'}`);
- if(open)renderTeamWhistle();
+ if(open){
+  renderTeamWhistle();
+  requestAnimationFrame(()=>{
+   const sticky=document.getElementById('homeStickyHeading'),header=document.querySelector('.psg-app-header');
+   panel.style.scrollMarginTop=`${(sticky?.getBoundingClientRect().height||0)+(header?.getBoundingClientRect().height||0)+8}px`;
+   panel.scrollIntoView({block:'start',behavior:'smooth'});
+  });
+ }
 };
 
 function renderWhistleRecommendation(catalog,options){

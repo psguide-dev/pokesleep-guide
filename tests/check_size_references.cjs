@@ -18,7 +18,7 @@ for(const no of [710,711]){
 }
 // Regional and costume identities must remain separate in reference lists.
 for(const no of [25,37,38,133,194,849])assert.equal(reference.filter(p=>p.no===no).length,all.filter(p=>p.no===no).length);
-const settings=html.match(/<details class="psg-day-condition-details"[\s\S]*?<\/details>/)[0];
+const settings=html.slice(html.indexOf('<div class="psg-day-condition-details"'),html.indexOf('<p id="teamDaySaveStatus"'));
 for(const id of ['teamCollectionInterval','teamInitialEnergy','teamInitialEnergyRange','teamMeals','teamBerryZoneBerry','teamBerryZone']){
  assert(settings.includes(`id="${id}"`));assert.equal((html.match(new RegExp(`id="${id}"`,'g'))||[]).length,1);
 }
