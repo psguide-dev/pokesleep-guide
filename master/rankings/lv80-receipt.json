@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 2,
+  "level": 80,
+  "tableCount": 552,
+  "payloadSHA256": "0f4a3a8c8784048f9fda003c519db04a560a5c1403f3d52c6324ad5cf7a04c64",
+  "sourceRankingSHA256": "167e672148f0b3286c8f4c4156b949166b6eec302543f13ec2c7969b4cd650a8",
+  "sourceValidation": {
+    "speciesTotal": 252,
+    "calculated": 250,
+    "pending": 2,
+    "totalEnergySpecies": 143,
+    "patternAxisReferences": 16338,
+    "speciesAxisReferences": 3256,
+    "rankingTables": 552,
+    "fastVersusFullChecks": 217616,
+    "level": 80,
+    "subskillSlots": 5,
+    "populationPerPattern": 154700,
+    "sourceDate": "2026-10-27",
+    "notDeployed": true,
+    "medianDefinition": "lower weighted median representative",
+    "medianDistribution": "equal weight nature and unordered five subskills; constrained forms use allowed natures; not capture frequency",
+    "skillLevelPolicy": "evolution stage+1 plus active skill-level subskills; no seeds"
+  },
+  "displayOverride": "ムウマ系確率・寝顔名：ユーザー確認 2026-10-28",
+  "sourceArchive": "PSN_Enigma_Lv80_20261027.zip"
+}

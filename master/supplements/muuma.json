@@ -20,10 +20,10 @@
         "itemCount": 1
       },
       "speciesId": "0200_default",
-      "hideFoodRate": true,
-      "hideSkillRate": true,
-      "rateDisplay": false,
-      "dataStatus": "provisional_calculated",
+      "hideFoodRate": false,
+      "hideSkillRate": false,
+      "rateDisplay": true,
+      "dataStatus": "confirmed_rates",
       "ingredientSlots": [
         {
           "unlock": 1,
@@ -68,29 +68,30 @@
       "mainSkillName": "料理パワーアップS",
       "foodRate": 15.0,
       "skillRate": 4.7,
-      "rateStatus": "推定",
+      "rateStatus": "確認済み",
       "dexVisible": true,
       "boxEligible": true,
       "friendPoints": 16,
       "sleepStyleCount": 3,
-      "rateSource": "ユーザー提供の暫定計算入力／2026-10-26",
+      "rateSource": "ユーザー確定指定／2026-10-28",
       "sleepStyles": [
         {
           "id": "0200_01",
-          "name": "★1（名称未確認）",
+          "name": "かみなびき寝",
           "stars": 1
         },
         {
           "id": "0200_02",
-          "name": "★2（名称未確認）",
+          "name": "ふゆう寝",
           "stars": 2
         },
         {
           "id": "0200_03",
-          "name": "★3（名称未確認）",
+          "name": "おどろかし寝",
           "stars": 3
         }
-      ]
+      ],
+      "skillModelReferencePending": true
     },
     {
       "no": 429,
@@ -104,10 +105,10 @@
       "carry": 17,
       "mainSkillId": "magical_flame_s",
       "speciesId": "0429_default",
-      "hideFoodRate": true,
-      "hideSkillRate": true,
-      "rateDisplay": false,
-      "dataStatus": "provisional_calculated",
+      "hideFoodRate": false,
+      "hideSkillRate": false,
+      "rateDisplay": true,
+      "dataStatus": "confirmed_rates",
       "ingredientSlots": [
         {
           "unlock": 1,
@@ -153,29 +154,30 @@
       "skillEffectAmountsStatus": "user_supplied",
       "foodRate": 14.2,
       "skillRate": 3.6,
-      "rateStatus": "推定",
+      "rateStatus": "確認済み",
       "dexVisible": true,
       "boxEligible": true,
       "friendPoints": 20,
       "sleepStyleCount": 3,
-      "rateSource": "ユーザー提供の暫定計算入力／2026-10-26",
+      "rateSource": "ユーザー確定指定／2026-10-28",
       "sleepStyles": [
         {
           "id": "0429_01",
-          "name": "★1（名称未確認）",
+          "name": "かたむきふゆう寝",
           "stars": 1
         },
         {
           "id": "0429_02",
-          "name": "★2（名称未確認）",
+          "name": "ふゆう寝",
           "stars": 2
         },
         {
           "id": "0429_03",
-          "name": "★3（名称未確認）",
+          "name": "じゅもんとなえ寝",
           "stars": 3
         }
-      ]
+      ],
+      "skillModelReferencePending": true
     }
   ]
 }

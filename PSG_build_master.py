@@ -1,5 +1,7 @@
 """Validate master folders and produce the GitHub Pages review with external image assets."""
 import json
+import base64
+import gzip
 import hashlib
 import re
 from pathlib import Path
@@ -395,6 +397,15 @@ def build():
     restore_trim_assets(ROOT)  # Verify received pack hashes before applying artwork.
     restore_additional_trim_assets(ROOT)
     received = restore_received_art(ROOT)
+    # The research export is stored compactly; publish only its bounded UI contract.
+    rank_raw = gzip.decompress(base64.b64decode((MASTER / 'rankings/three-modes-lv80.json.gz.b64').read_text()))
+    rank_receipt = json.loads((MASTER / 'rankings/lv80-receipt.json').read_text())
+    assert hashlib.sha256(rank_raw).hexdigest() == rank_receipt['payloadSHA256']
+    rank_data = json.loads(rank_raw)
+    assert rank_data['schemaVersion'] == 2 and rank_data['level'] == 80 and len(rank_data['tables']) == 552
+    rank_path = ROOT / 'assets/rankings/three-modes-lv80.json'
+    rank_path.parent.mkdir(parents=True, exist_ok=True)
+    rank_path.write_bytes(rank_raw)
     catalog, images = catalog_and_images()
     restore_standard_art(ROOT, catalog, images)
     restore_biblo_assets(ROOT, catalog, images)
@@ -424,7 +435,7 @@ def build():
     if not TEMPLATE.exists() or TEMPLATE.read_text() != source:
         TEMPLATE.write_text(source)  # Compatibility copy; edit templates/*.html instead.
     assert source.count(MARKER) == source.count('/* PSG_BUILD_STYLES */') == source.count('/* PSG_BUILD_SPECIALTY_IMAGES */') == source.count('/* PSG_BUILD_FACE_SCRIPT */') == 1
-    assert source.count('Review v672') == 2
+    assert source.count('Review v673') == 2
     serialize = lambda value: json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')
     field_data = serialize({'fields': catalog['fields'], 'fieldSpawnCounts': catalog['fieldSpawnCounts']})
     field_asset = 'fields-' + hashlib.sha256(field_data.encode()).hexdigest()[:12] + '.js'

@@ -12,6 +12,8 @@ on:
       - 'vendor/enigma-standard/**'
       - 'PSG_face_sheet.js'
       - 'PSG_build_master.py'
+      - 'PSG_import_lv80_rankings.py'
+      - 'PSG_20261026_assets.py'
       - 'PSG_food_rank_assets.py'
       - 'PSG_special_rank_assets.py'
       - 'research/special4-rank/data/**'

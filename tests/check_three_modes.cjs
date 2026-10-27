@@ -1,7 +1,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const data=JSON.parse(fs.readFileSync('assets/rankings/three-modes-v1.json','utf8')),seen=new Set();
-assert.equal(data.tables.length,552);
-for(const t of data.tables){const key=JSON.stringify([t.kind,t.group,t.mode,t.camp]);assert(!seen.has(key));seen.add(key);assert(['ideal','median','neutral'].includes(t.mode));assert.equal(typeof t.camp,'boolean');assert(t.rows.length<=10);assert(Array.isArray(t.pending));for(const [i,r] of t.rows.entries()){assert(Number.isFinite(r.value)&&r.value>=0);if(i)assert(t.rows[i-1].value>=r.value);assert(!('foodRate'in r)&&!('skillRate'in r));assert(r.speciesId!=='0200_default');if(['0200_default','0429_default'].includes(r.speciesId))assert(r.provisional)}}
+const data=JSON.parse(fs.readFileSync('assets/rankings/three-modes-lv80.json','utf8')),seen=new Set();
+assert.equal(data.level,80);assert.equal(data.subskillSlots,5);assert.equal(data.tables.length,552);
+for(const t of data.tables){const key=JSON.stringify([t.kind,t.group,t.mode,t.camp]);assert(!seen.has(key));seen.add(key);assert(['ideal','median','neutral'].includes(t.mode));assert.equal(typeof t.camp,'boolean');assert(t.rows.length<=10);assert(Array.isArray(t.pending));for(const [i,r] of t.rows.entries()){assert(Number.isFinite(r.value)&&r.value>=0);if(i)assert(t.rows[i-1].value>=r.value);assert(!('foodRate'in r)&&!('skillRate'in r));assert(r.speciesId!=='0200_default');assert(!r.provisional);assert([0,5].includes(r.subskills.length))}}
 class N{
  constructor(tag){this.tagName=tag.toUpperCase();this.children=[];this.dataset={};this.value='';this.textContent='';this.classList={contains:()=>true}}
  append(n){this.children.push(n);if(this.tagName==='SELECT'&&!this.value)this.value=n.value}
@@ -27,5 +27,5 @@ const walk=n=>[n,...n.children.flatMap(walk)];
  assert.equal(renders,552);assert.equal(fetches,1);
  // Switching basis/camp while loading discards obsolete render completion.
  camp=true;node('typeRankingPage').basis.value='ideal';const stale=ctx.window.PS_PAGE_RENDERERS.typeRankingPage();camp=false;node('typeRankingPage').basis.value='median';const current=ctx.window.PS_PAGE_RENDERERS.typeRankingPage();await Promise.all([stale,current]);assert(walk(node('typeRankingContent')).some(n=>String(n.textContent).includes('中央値')));
- console.log('All 552 ranking views render the matching mode, camp and group; partial lists, bounded rows, hidden rates and stale-render isolation passed.');
+ console.log('All 552 ranking views render the matching mode, camp and group; partial lists, bounded rows, confirmed rates, five-slot builds and stale-render isolation passed.');
 })().catch(e=>{console.error(e);process.exitCode=1});

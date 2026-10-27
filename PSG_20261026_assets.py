@@ -1,4 +1,4 @@
-"""User-supplied ghost species; provisional rates are calculation inputs only."""
+"""User-confirmed ghost species rates and sleep names (2026-10-28)."""
 import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent

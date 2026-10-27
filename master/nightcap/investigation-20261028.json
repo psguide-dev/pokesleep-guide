@@ -1,0 +1,21 @@
+{
+  "checkedDateJST": "2026-10-28",
+  "decision": "do_not_apply_unverified_probabilities",
+  "productionCalculationEnabled": false,
+  "sources": [
+    {
+      "url": "https://wiki.pokesleep.com/ja/go-plus-plus",
+      "claim": "3-8 berry66.67/apple33.33; 9-18 berry66.67/apple22.22/cacao11.11; 19-20 berry58.33/apple20.83/cacao12.50/honey8.33"
+    },
+    {
+      "url": "https://wikiwiki.jp/poke_sleep/Pok%C3%A9monGOPlus%2B",
+      "claim": "Ver1.10.0説明ではミツ解放時リンゴとカカオの確率は下がらない。旧329回サンプルは合計食材確率約33％で個別確率を確定できない。"
+    },
+    {
+      "url": "https://pks.raenonx.cc/ja/gpp/production",
+      "claim": "一次モデルの詳細を取得できず個別確率は未照合"
+    }
+  ],
+  "reason": "上記確率表は解放時の個別確率の維持と整合しない。表の率をそのまま採用せず、元のprobabilities:nullを維持。",
+  "next": "検証元のモデル・各段階の抽選比率・補正適用を照合してから収量計算へ接続"
+}
