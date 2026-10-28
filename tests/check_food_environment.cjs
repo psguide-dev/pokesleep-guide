@@ -41,7 +41,7 @@ ui.ingredientSort.value='energy';ui.dailyLevel.value='30';vm.createContext(ui);
 for(const file of ['00-environment','02-details','03-list-view','04-events'])vm.runInContext(fs.readFileSync(`templates/ingredients/${file}.html`,'utf8'),ui);
 assert.equal(ui.tiersView.children.length,19);assert.match(node('ingredientEnvironmentBasis').textContent,/通常最大鍋 81 → 122個/);assert.equal(ui.window.PS_FOOD_ENVIRONMENT_DATA.condition.goodCamp,true);
 assert(!fs.readFileSync('templates/06-ingredients.html','utf8').includes('ingredientSearch'));assert.equal(ui.tiersView.children.length,19);
-const card=ui.tiersView.children[0];card.open=true;card.events.toggle();assert.match(card.textContent,/上位料理での使用/);
+const card=ui.tiersView.children[0];card.open=true;card.events.toggle();assert.match(card.textContent,/全料理での使用/);
 const walk=el=>[el,...el.children.flatMap(walk)];const links=walk(card).filter(el=>el.dataset.ingredientRecipe);assert(links.length);links[0].events.click();assert.equal(opened[0],links[0].dataset.ingredientRecipe);
 const onData=ui.window.PS_FOOD_ENVIRONMENT_DATA;camp=false;events['psg-camp-change']();assert.equal(ui.ingredientSort.value,'energy');assert.equal(ui.tiersView.children.length,19);assert.equal(ui.tiersView.children[0].open,true);assert.match(node('ingredientEnvironmentBasis').textContent,/通常最大鍋 81 → 81個/);assert.equal(ui.window.PS_FOOD_ENVIRONMENT_DATA.condition.goodCamp,false);
 camp=true;events['psg-camp-change']();assert.equal(ui.window.PS_FOOD_ENVIRONMENT_DATA,onData,'condition cache never mixes ON/OFF');
@@ -50,3 +50,8 @@ const viewSource=fs.readFileSync('templates/ingredients/00-environment.html','ut
 console.log('Food environment: 19×3×2 canonical coverage, pot round-half-up/boundaries, missing data/null, ties, raw A/B/C weights, immutable recipes, camp cache/UI state and recipe links passed');
 
 require('./check_rate_update_and_supply.cjs');
+
+// The ingredient index includes every recipe, separately from the top-five role model.
+const all=build(recipes,names,{capacity:1,allRecipes:true});
+for(const cat of cats){assert.equal(all.top[cat].length,recipes.filter(r=>r.category===cat).length);for(const name of names){assert.equal(all.ingredients[name][cat].count,recipes.filter(r=>r.category===cat&&r.ingredients.some(i=>i.name===name)).length)}}
+assert.equal(all.metric,'all_recipe_coverage');assert.equal(results.true.metric,'top5_recipe_coverage');assert(all.top[cats[0]].length>5);

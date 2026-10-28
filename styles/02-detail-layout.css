@@ -199,7 +199,6 @@
 .psg-field-percent:focus-within{outline:2px solid #438463;outline-offset:2px}
 #fieldAreaBonus:focus,#fieldDetailBonus:focus{outline:none}
 .psg-field-settings .psg-day-field{margin:8px 0}.psg-field-settings .psg-day-berries{margin-bottom:0}
-.psg-field-reset{margin-top:8px;color:#316caa}.psg-field-reset[hidden]{display:none}
 .psg-field-encounters{margin-top:12px}
 .psg-field-rank-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:800;margin:12px 0}
 .psg-field-rank-label select{font:inherit;max-width:55%;min-height:40px;border:1px solid #d7e0da;border-radius:10px;background:#fff;color:#111;padding:6px}
@@ -481,8 +480,6 @@
 .psg-screen-toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;align-items:center}
 .psg-screen-title,.psg-list-sticky .toolbar .psg-screen-title{display:flex;align-items:center;justify-content:center;text-align:center;min-width:0;height:var(--psg-ui-unit);margin:0;font-size:clamp(12px,3.6vw,18px);line-height:1;white-space:nowrap}
 .psg-screen-toolbar input,.psg-dex-toolbar.psg-screen-toolbar #dexSearch{grid-column:span 2;width:100%;max-width:none;min-width:0}
-.psg-screen-toolbar #dexCount{text-align:center;font-size:10px}
-#info>.psg-screen-title{width:calc((100% - 12px) / 4);margin-bottom:8px}
 
 #teamDayEstimate .psg-day-energy-total{height:var(--psg-ui-unit);display:flex;flex-direction:column;justify-content:center;margin:6px 0}
 #teamDayEstimate .psg-day-energy-amount{font-size:16px;line-height:1.2}

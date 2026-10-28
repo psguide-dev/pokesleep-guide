@@ -5,7 +5,7 @@ function setup(profile={selectedFieldId:'greengrass',weekly:{}}){
  const nodes={},ctx={fieldProfile:profile,currentFieldWeek:()=> '2026-10-05',knownBerryNames:new Set(['A','B','C','D']),window:{PS_CATALOG:{fields:{greengrass:{favoriteMode:'weekly_random',mode:'normal'},greengrass_ex:{favoriteMode:'weekly_random',mode:'expert'},cyan_ex:{favoriteMode:'weekly_random',mode:'expert'},cyan:{favoriteMode:'fixed',mode:'normal'}},pokemon:{1:{berry:'A',type:'くさ'},2:{berry:'B',type:'みず'},3:{berry:'C',type:'ほのお'},4:{berry:'D',type:'でんき'}}}},document:{getElementById:id=>nodes[id]??=new Node(),createElement:()=>new Node()},berryIcon:name=>name?{image:name}:null,activeFieldBerries:()=>{const p=ctx.fieldProfile;return p.weekly[p.selectedFieldId]?.weekKey==='2026-10-05'?p.weekly[p.selectedFieldId].berries:[]},saveFieldProfile:()=>ctx.renderFavoriteBerryPicker()};
  vm.createContext(ctx);vm.runInContext('let favoriteBerrySlot='+source,ctx);ctx.renderFavoriteBerryPicker();return {ctx,nodes};
 }
-const {ctx,nodes}=setup();assert.equal(nodes.fieldBerryPicker.hidden,false);assert.equal(nodes.fieldBerrySelects.hidden,true);
+const {ctx,nodes}=setup();assert.equal(nodes.fieldBerryPicker.hidden,false);
 ctx.chooseFavoriteBerry('A');ctx.chooseFavoriteBerry('B');ctx.chooseFavoriteBerry('C');
 assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','B','C']));
 nodes.fieldBerrySlots.children[1].onclick();ctx.chooseFavoriteBerry('D');assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','D','C']));
@@ -14,9 +14,9 @@ ctx.chooseFavoriteBerry('unknown');assert.equal(ctx.fieldProfile.weekly.greengra
 const reload=setup(JSON.parse(JSON.stringify(ctx.fieldProfile)));assert.equal(reload.nodes.fieldBerrySlots.children[1].attrs['aria-label'],'メイン：D。この枠を変更');
 for(const id of ['greengrass_ex','cyan_ex']){ctx.fieldProfile.selectedFieldId=id;ctx.renderFavoriteBerryPicker();assert(nodes.fieldBerrySlots.children[0].attrs['aria-label'].includes('メイン'));ctx.chooseFavoriteBerry('B');ctx.chooseFavoriteBerry('A');ctx.chooseFavoriteBerry('D');assert.equal(JSON.stringify(ctx.fieldProfile.weekly[id].berries),JSON.stringify(['B','A','D']));}
 assert.equal(JSON.stringify(ctx.fieldProfile.weekly.greengrass.berries),JSON.stringify(['A','D','C']),'per-field values retained');
-ctx.fieldProfile.selectedFieldId='cyan';ctx.renderFavoriteBerryPicker();assert.equal(nodes.fieldBerryPicker.hidden,false);assert.equal(nodes.fieldBerrySelects.hidden,true);
+ctx.fieldProfile.selectedFieldId='cyan';ctx.renderFavoriteBerryPicker();assert.equal(nodes.fieldBerryPicker.hidden,false);
 const stale=setup({selectedFieldId:'greengrass_ex',weekly:{greengrass_ex:{weekKey:'2026-09-28',berries:['A','B','C']}}});stale.ctx.chooseFavoriteBerry('D');assert.equal(JSON.stringify(stale.ctx.fieldProfile.weekly.greengrass_ex.berries),JSON.stringify(['D','','']));
-const html=fs.readFileSync('review.html','utf8');assert(html.includes('id="fieldBerryPicker"'));assert(html.includes('#fieldBerrySelects[hidden]{display:none}'));
+const html=fs.readFileSync('review.html','utf8');assert(html.includes('id="fieldBerryPicker"'));assert(!html.includes('id="fieldBerrySelects"'));assert(!html.includes('id="fieldFavoriteReset"'));
 console.log('Berry picker: ordered selection, replacement, no duplicates, per-field records, reload, weekly rollover, EX main/sub labels and fixed-field controls passed');
 
 // Execute the real save path: hidden team calculations are deferred and the
@@ -31,17 +31,17 @@ fail=true;perf.state.screen='fieldPage';assert.equal(perf.saveFieldProfile({berr
 assert(html.includes('.psg-berry-options{display:grid;grid-template-columns:repeat(5,'));
 console.log('Toggle on/off and deferred hidden-team calculation with storage rollback passed');
 const fieldSource=fs.readFileSync('templates/core/08-fields.html','utf8');const controlSource=fieldSource.slice(fieldSource.indexOf('function renderFieldControls('),fieldSource.indexOf('function selectField('));
-let heavy=0;const controlNodes={};const controls={state:{screen:'fieldPage'},fieldProfile:{selectedFieldId:'greengrass',weekly:{},areaBonuses:{}},window:{PS_CATALOG:{fields:{greengrass:{favoriteMode:'weekly_random'}}},PS_RENDER_FIELD_RANKING:()=>heavy++},document:{getElementById:id=>controlNodes[id]??=new Node(),createElement:()=>new Node(),createTextNode:x=>x},fieldSelect:{},homeFieldSelect:{},homeMealSelect:{},areaBonusInput:{},berryChoices:[{},{},{}],syncExEffectControls:()=>{},activeBerryZones:()=>({}),renderFieldSpawn:()=>heavy++,renderFieldGallery:()=>heavy++,renderFieldEncounters:()=>heavy++,activeMealCategory:()=>'',activeFieldBerries:()=>['A','B','C'],renderFavoriteBerryPicker:()=>{},currentFieldWeek:()=> '2026-10-05',berryIcon:()=>null};
+let heavy=0;const controlNodes={};const controls={state:{screen:'fieldPage'},fieldProfile:{selectedFieldId:'greengrass',weekly:{},areaBonuses:{}},window:{PS_CATALOG:{fields:{greengrass:{favoriteMode:'weekly_random'}}},PS_RENDER_FIELD_RANKING:()=>heavy++},document:{getElementById:id=>controlNodes[id]??=new Node(),createElement:()=>new Node(),createTextNode:x=>x},fieldSelect:{},homeFieldSelect:{},homeMealSelect:{},areaBonusInput:{},syncExEffectControls:()=>{},activeBerryZones:()=>({}),renderFieldSpawn:()=>heavy++,renderFieldGallery:()=>heavy++,renderFieldEncounters:()=>heavy++,activeMealCategory:()=>'',activeFieldBerries:()=>['A','B','C'],renderFavoriteBerryPicker:()=>{},currentFieldWeek:()=> '2026-10-05',berryIcon:()=>null};
 vm.createContext(controls);vm.runInContext(controlSource,controls);controls.renderFieldControls({berryOnly:true});assert.equal(heavy,0);controls.renderFieldControls();assert.equal(heavy,1);
 console.log('Berry-only refresh skips spawn/gallery/encounter/ranking work; full field refresh retains it');
 
 assert(!html.includes('id="fieldWeekLabel"'));assert(!html.includes('id="fieldBerryPickerStatus"'));
-assert(html.includes('<details id="fieldBerryDetails"'));assert(html.includes('class="psg-field-percent"><label for="fieldAreaBonus">FB</label>'));
+assert(html.includes('<div id="fieldBerryDetails"'));assert(!html.includes('きのみを選択 ▾'));assert(html.includes('class="psg-field-percent"><label for="fieldAreaBonus">FB</label>'));
 assert.equal(nodes.fieldBerrySlots.children[0].children[1].className,'psg-berry-slot-art');
 assert(html.includes('.psg-berry-slot>strong{grid-column:1;grid-row:1;'));assert(html.includes('.psg-berry-slot>.psg-berry-slot-art{grid-column:2;grid-row:1/3;'));
 // The static details container survives all selection redraws and stays closed.
-const detailNode=nodes.fieldBerryDetails;detailNode.open=false;ctx.fieldProfile.selectedFieldId='greengrass';ctx.renderFavoriteBerryPicker();ctx.chooseFavoriteBerry('B');assert.equal(detailNode.open,false);
-nodes.fieldBerrySlots.children[0].onclick();assert.equal(detailNode.open,true);
+const detailNode=nodes.fieldBerryDetails;detailNode.hidden=true;ctx.fieldProfile.selectedFieldId='greengrass';ctx.renderFavoriteBerryPicker();ctx.chooseFavoriteBerry('B');assert.equal(detailNode.hidden,true);
+nodes.fieldBerrySlots.children[0].onclick();assert.equal(detailNode.hidden,false);
 console.log('Compact FB, removed helper text, constant slot image space and collapsible list state passed');
 ctx.fieldProfile.selectedFieldId='cyan';ctx.renderFavoriteBerryPicker();assert.deepEqual(nodes.fieldBerrySlots.children.map(n=>n.children[0].textContent),['メイン','メイン','メイン']);
 ctx.fieldProfile.selectedFieldId='greengrass_ex';ctx.renderFavoriteBerryPicker();assert.deepEqual(nodes.fieldBerrySlots.children.map(n=>n.children[0].textContent),['メイン','サブ','サブ']);

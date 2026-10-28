@@ -263,7 +263,6 @@ nav button{border:0;background:#fff;color:#718079;font-weight:800;font-size:11px
 
 .psg-dex-title{display:flex;align-items:baseline;gap:5px;min-width:0;flex:1;white-space:nowrap}
 .psg-dex-title h2{font-size:clamp(15px,4.4vw,19px)}
-.psg-dex-title #dexCount{font-size:10px;line-height:1.2}
 .psg-dex-toolbar #dexSearch{flex:0 1 150px;width:clamp(80px,27vw,150px);min-width:0}
 
 nav button{display:flex;align-items:center;justify-content:center;min-width:0;padding:4px;border-radius:12px}

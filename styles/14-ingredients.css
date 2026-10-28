@@ -8,13 +8,14 @@
 #ingredientSupplyConditions select{min-width:0;padding:0 4px;font-size:12px}
 .psg-ingredient-note{font-size:11px;margin:5px 0}
 #ingredientSupplyBasis{border:0;background:transparent;color:#35694c;text-decoration:underline;font-size:11px;padding:3px}
-#ingredientPage .psg-supply-tier{margin:8px 0;padding:10px;border-radius:12px;background:#fff}
-#ingredientPage .psg-supply-tier>summary{display:grid;grid-template-columns:40px minmax(0,1fr) auto;column-gap:8px;row-gap:4px;align-items:center;min-height:calc(1.5 * var(--psg-ui-unit));list-style:none}
+#ingredientPage .psg-supply-tier{margin:8px 0;padding:4px 6px;border-radius:12px;background:#fff}
+#ingredientPage .psg-supply-tier>summary{display:grid;grid-template-columns:50px minmax(0,1fr);grid-template-rows:1fr 1fr;column-gap:5px;row-gap:2px;align-items:center;height:calc(1.5 * var(--psg-ui-unit));min-height:54px;list-style:none}
 #ingredientPage .psg-supply-tier>summary::-webkit-details-marker{display:none}
-#ingredientPage .psg-supply-tier summary img{width:36px;height:36px;object-fit:contain;grid-row:1/3}
-.psg-ingredient-name{grid-column:2;grid-row:1;text-align:left;font-size:14px;line-height:1.3}
-.psg-ingredient-base{grid-column:2;grid-row:2;text-align:left;font-size:11px;color:#53665a;font-weight:400}
-#ingredientPage .psg-supply-daily{grid-column:3;grid-row:1/3;text-align:right;font-size:12px;margin-left:0}
+#ingredientPage .psg-supply-tier summary>img{width:48px;height:48px;object-fit:contain;grid-column:1;grid-row:1/3}
+.psg-ingredient-headline{grid-column:2;grid-row:1;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:4px;min-width:0}
+.psg-ingredient-name{text-align:left;font-size:12px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.psg-ingredient-base{text-align:left;font-size:9px;color:#53665a;font-weight:400;white-space:nowrap}
+#ingredientPage .psg-supply-daily{text-align:right;font-size:10px;margin-left:0;white-space:nowrap}
 .psg-ingredient-details{font-size:12px;border-top:1px solid #dce4df;margin-top:6px;padding-top:5px}
 .psg-ingredient-details h3{font-size:12px;margin:5px 0}
 .psg-ingredient-details .note{font-size:11px;margin:5px 0;overflow-wrap:anywhere}
@@ -29,9 +30,11 @@
 .psg-food-environment-basis h4{font-size:13px;margin:12px 0 6px}
 .psg-food-environment-basis .note{line-height:1.65}
 .psg-food-environment{min-width:0}
-.psg-food-environment-summary{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-top:7px;border-top:1px solid var(--line)}
-.psg-food-environment-row{display:grid;grid-template-columns:auto auto;align-items:center;gap:5px;font-size:11px;min-width:0}
+.psg-food-environment-summary{grid-column:2;grid-row:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;padding:0;border:0}
+.psg-food-environment-row{display:grid;grid-template-columns:auto auto;align-items:center;gap:2px;font-size:9px;min-width:0}
 .psg-food-environment-row strong{white-space:nowrap}
 .psg-ingredient-details .psg-food-environment-row{grid-template-columns:65px auto;justify-content:start;margin:8px 0}
 
 @media(max-width:355px){#ingredientPage .psg-ingredient-header{gap:2px}#ingredientPage .psg-ingredient-header select{font-size:9.5px!important}}
+
+@media(max-width:355px){.psg-ingredient-name{font-size:10px}.psg-ingredient-base{font-size:8px}#ingredientPage .psg-supply-daily{font-size:9px}.psg-food-environment-row{font-size:8px}}

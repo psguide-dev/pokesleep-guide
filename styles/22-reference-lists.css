@@ -13,5 +13,12 @@
 
 #berryPage>.psg-subpage-head{position:sticky;top:var(--psg-header-height);z-index:66}
 #berryReference>.psg-reference-scroll{overflow:visible;margin-top:0}
-#berryReference .psg-reference-table thead{position:sticky;top:calc(var(--psg-header-height) + var(--psg-page-header-height));z-index:65}
-#berryReference .psg-reference-table thead th{background:#edf5f1}
+#berryReference .psg-reference-table{table-layout:fixed}
+#berryReference .psg-reference-table th,#berryReference .psg-reference-table td{box-sizing:border-box}
+#berryReference .psg-reference-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+#berryReference .psg-reference-table tbody th{width:45%;box-sizing:border-box}
+#berryReference .psg-reference-table tbody td:nth-child(2){width:25%}
+#berryReference .psg-reference-table tbody td:nth-child(n+3){width:15%;min-width:0}
+#berryPage>.psg-berry-head{display:grid;grid-template-columns:45% 25% 15% 15%;gap:0;align-items:center;text-align:center;font-size:12px;font-weight:700}
+.psg-berry-back{display:flex;align-items:center;gap:5px;min-width:0}
+#berryPage .psg-berry-back>[data-back]{width:70px!important;flex:0 0 70px!important}

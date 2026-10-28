@@ -4,9 +4,9 @@
   const categories=Object.freeze(['カレー・シチュー','サラダ','デザート・ドリンク']);
   const potSize=recipe=>Array.isArray(recipe.ingredients)&&recipe.ingredients.length&&recipe.ingredients.every(i=>typeof i.name==='string'&&Number.isFinite(i.qty)&&i.qty>0)?recipe.ingredients.reduce((sum,i)=>sum+i.qty,0):null;
   function build(recipeRows,names,condition){
-   const capacity=condition?.capacity,validCapacity=Number.isInteger(capacity)&&capacity>0;
-   const eligible=recipeRows.filter(r=>{const size=potSize(r);return validCapacity&&size!==null&&size<=capacity&&r.energy?.max?.level===70&&Number.isFinite(r.energy.max.value)&&r.energy.max.value>0});
-   const top=Object.fromEntries(categories.map(category=>[category,eligible.filter(r=>r.category===category).sort((a,b)=>b.energy.max.value-a.energy.max.value||a.id.localeCompare(b.id)).slice(0,5)]));
+   const allRecipes=condition?.allRecipes===true,capacity=condition?.capacity,validCapacity=Number.isInteger(capacity)&&capacity>0;
+   const eligible=recipeRows.filter(r=>{const size=potSize(r);return (allRecipes||(validCapacity&&size<=capacity))&&size!==null&&r.energy?.max?.level===70&&Number.isFinite(r.energy.max.value)&&r.energy.max.value>0});
+   const top=Object.fromEntries(categories.map(category=>[category,eligible.filter(r=>r.category===category).sort((a,b)=>b.energy.max.value-a.energy.max.value||a.id.localeCompare(b.id)).slice(0,allRecipes?undefined:5)]));
    const ingredients=Object.fromEntries(names.map(name=>[name,Object.fromEntries(categories.map(category=>{
     const selected=top[category],matches=selected.flatMap((r,index)=>{
      const quantity=r.ingredients.filter(i=>i.name===name).reduce((sum,i)=>sum+i.qty,0);
@@ -14,7 +14,7 @@
     });
     return [category,{count:matches.length,total:selected.length,coverage:selected.length?100*matches.length/selected.length:null,meanQuantity:selected.length?matches.reduce((sum,r)=>sum+r.quantity,0)/selected.length:null,matches}];
    }))]));
-   return {version:2,metric:'top5_recipe_coverage',recipeLevel:70,condition:{...condition,capacity:validCapacity?capacity:null},categories,top,ingredients};
+   return {version:2,metric:allRecipes?'all_recipe_coverage':'top5_recipe_coverage',recipeLevel:70,condition:{...condition,capacity:validCapacity?capacity:null},categories,top,ingredients};
   }
   function composition(environment,slots){
    if(!Array.isArray(slots)||!slots.length||slots.some(i=>!environment.ingredients[i.name]||!Number.isFinite(i.qty)||i.qty<=0))return null;
@@ -36,12 +36,12 @@
    }));
   }
   const cache=new WeakMap();
-  function current(catalog,goodCamp,calculatePotCapacity){
+  function current(catalog,goodCamp,calculatePotCapacity,options={}){
    const capacities=(catalog.cooking?.pot?.['拡張表']||[]).map(row=>row['容量']).filter(n=>Number.isInteger(n)&&n>0);
    const baseCapacity=capacities.length?Math.max(...capacities):null,capacity=calculatePotCapacity(baseCapacity,1,0,false,goodCamp);
-   const key=JSON.stringify([goodCamp,baseCapacity,capacity]);
+   const key=JSON.stringify([goodCamp,baseCapacity,capacity,options.allRecipes===true]);
    if(!cache.has(catalog))cache.set(catalog,new Map());const conditions=cache.get(catalog);
-   if(!conditions.has(key))conditions.set(key,build(Object.values(catalog.recipes||{}),Object.keys(catalog.ingredientAssets||{}),{goodCamp,baseCapacity,capacity}));
+   if(!conditions.has(key))conditions.set(key,build(Object.values(catalog.recipes||{}),Object.keys(catalog.ingredientAssets||{}),{goodCamp,baseCapacity,capacity,allRecipes:options.allRecipes===true}));
    return conditions.get(key);
   }
   return Object.freeze({build,composition,matchRecipes,current});

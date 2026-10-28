@@ -16,7 +16,7 @@ body:has(:is(#dex,#box,#home).active)>.psg-app-header{
 }
 .screen .psg-subpage-head{gap:8px}
 .screen .psg-subpage-head h2{min-width:0;font-size:clamp(12px,3.6vw,18px);line-height:1.2}
-.screen .psg-subpage-head>.psg-screen-title{height:auto}
+.screen .psg-subpage-head>.psg-screen-title{height:var(--psg-ui-unit);font-size:clamp(12px,3.6vw,18px)}
 /* Back controls retain a 1.5-by-1 hit area around a compact centered frame. */
 .screen .psg-subpage-head,.screen .detail-head{container-type:inline-size}
 .screen [data-back],.screen .psg-field-detail-back{
@@ -56,6 +56,7 @@ body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 
 /* Keep account settings beside the information title while scrolling. */
 #info>.psg-info-header{position:sticky;top:var(--psg-header-height);z-index:65;justify-content:space-between}
+#info .psg-info-header>.psg-screen-title{width:calc((100% - 12px)/4);flex:none;justify-content:center;text-align:center}
 #info .psg-info-account{display:flex;align-items:center;justify-content:center;gap:5px;height:var(--psg-ui-unit);padding:0 9px;background:#fff;white-space:nowrap;font-size:14px}
 #info .psg-info-account img{width:28px;height:28px;object-fit:contain}
 
@@ -67,11 +68,10 @@ body:has(#fieldDetail.active) .psg-app-header{margin-bottom:0!important}
 #fieldPage .psg-weekly-field-sticky #fieldSelect{min-width:0;width:100%;height:36px;font-size:14px;font-weight:700}
 #fieldPage .psg-field-selection-row{grid-template-columns:minmax(0,1fr);justify-items:end}
 #fieldPage .psg-field-bonus{width:80px}
-[data-ranking-switch]{width:100%;min-width:0;height:36px;font-size:14px;font-weight:700}
 
 /* Ranking controls use the remaining width beside the back button. */
 .screen .psg-subpage-head:has([data-ranking-basis]){gap:4px}
-[data-ranking-switch]{flex:1 1 0;width:0;min-width:0;font-size:12px}
+[data-ranking-switch]{flex:1 1 0;width:0;min-width:0;height:36px;font-size:12px;font-weight:700}
 [data-ranking-basis]{flex:0 0 26%;min-width:0;height:36px;font-size:12px;font-weight:700}
 section[data-ranking-basis-mode="ideal"]:not([data-three-mode-ready])>.card,section[data-ranking-basis-mode="median"]:not([data-three-mode-ready])>.card{display:none}
 /* Weekly field selection and editable FB stay in the same header row. */
@@ -111,8 +111,8 @@ section[data-ranking-basis-mode="ideal"]:not([data-three-mode-ready])>.card,sect
 .psg-ranking-list th:nth-child(1){width:22px;font-size:10px}
 .psg-ranking-list th:nth-child(2){width:50px;font-size:10px}
 .psg-ranking-list th:nth-child(4){width:76px;font-size:10px;overflow-wrap:anywhere}
-.psg-ranking-list td:nth-child(1){font-size:12px}
-.psg-ranking-list td:nth-child(3){text-align:left;min-width:0;overflow-wrap:anywhere}
+.psg-ranking-list td:nth-child(1){font-size:16px;font-weight:700}
+.psg-ranking-list td:nth-child(3){text-align:left;min-width:0;overflow-wrap:anywhere;padding-left:9px}
 .psg-ranking-face{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:48px;height:52px;min-height:44px;padding:0;border:0;border-radius:8px;background:transparent;color:inherit;font-size:9px;cursor:pointer}
 .psg-ranking-face>img,.psg-ranking-face>svg{width:48px;height:48px;object-fit:contain}
 .psg-ranking-face>.psg-face-sprite{width:48px;max-height:48px}
@@ -137,3 +137,13 @@ section[data-ranking-basis-mode="ideal"]:not([data-three-mode-ready])>.card,sect
 }
 
 :is(#recipeModeSelect,#recipeSort,#ingredientIndexSort,#ingredientSupplyLevel,#ingredientSupplyScenario){appearance:none;-webkit-appearance:none;box-sizing:border-box;padding:0 15px 0 3px!important;font-size:11px!important;font-weight:600!important;line-height:1.2;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8'%3E%3Cpath d='m1 2 4 4 4-4' fill='none' stroke='%23444' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 3px center}
+
+.psg-ranking-selector-row{display:flex;align-items:center;gap:6px;min-height:36px;flex-wrap:wrap}
+.psg-ranking-level{font-size:12px;margin-left:auto;white-space:nowrap}
+.psg-ranking-picker{display:flex;align-items:center;gap:5px;min-width:48px;height:36px;padding:2px 6px;background:#fff;border:1px solid var(--line);border-radius:8px}
+.psg-ranking-picker img{width:28px;height:28px;object-fit:contain}
+.psg-ranking-picker-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding:6px 0}
+.psg-ranking-picker-options[hidden]{display:none}
+.psg-ranking-picker-options button{display:grid;place-items:center;min-height:44px;padding:4px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.psg-ranking-picker-options img{width:32px;height:32px;object-fit:contain}
+.psg-ranking-picker-options [aria-pressed="true"]{background:#dcefe4;border-color:#438463}

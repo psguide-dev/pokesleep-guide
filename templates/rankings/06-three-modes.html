@@ -5,7 +5,6 @@
  const load=()=>loading??=(fetch('assets/rankings/three-modes-lv80.json?v=674').then(r=>{if(!r.ok)throw Error('ランキングを読み込めませんでした。');return r.json()}).then(data=>{if(data.schemaVersion!==2||data.level!==80||data.subskillSlots!==5||data.tables.length!==552)throw Error('ランキングの形式を確認できませんでした。');return data}).catch(e=>{loading=null;throw e}));
  function node(parent,tag,text){const n=document.createElement(tag);if(text!=null)n.textContent=text;parent.append(n);return n}
  function details(parent,title){const n=node(parent,'details');node(n,'summary',title);return n}
- const labels={ideal:'理想値',median:'中央値',neutral:'無補正'};
  for(const [pageId,[kind,hostId]] of Object.entries(pages)){
   const page=document.getElementById(pageId);page.dataset.threeModeReady='true';
   window.PS_PAGE_RENDERERS[pageId]=async()=>{
@@ -15,14 +14,28 @@
     host.replaceChildren();
     const label=node(host,'label',kind==='skill'?'スキル ':kind==='food'?'食材 ':'タイプ '),select=node(label,'select');select.setAttribute('aria-label',kind==='skill'?'ランキングのスキル':kind==='food'?'ランキングの食材':'ランキングのタイプ');
     for(const name of data.groups[kind]){const option=node(select,'option',name);option.value=name}
-    select.value=selections.get(kind)||data.groups[kind][0];const results=node(host,'div');
+    select.value=selections.get(kind)||data.groups[kind][0];
+    label.className='psg-ranking-selector-row';
+    if(kind!=='skill'){
+     select.hidden=true;
+     const picker=node(label,'button');picker.type='button';picker.className='psg-ranking-picker';picker.setAttribute('aria-label',kind==='food'?'ランキングの食材を選ぶ':'ランキングのタイプを選ぶ');picker.setAttribute('aria-expanded','false');
+     const panel=node(host,'div');panel.className='psg-ranking-picker-options';panel.hidden=true;panel.setAttribute('role','group');panel.setAttribute('aria-label',kind==='food'?'食材アイコン一覧':'タイプアイコン一覧');
+     const buttons=[];
+     function pickerImage(parent,name){const src=kind==='food'?window.PS_IMAGE_FILES?.ingredients?.[name]:window.PS_IMAGE_FILES?.types?.[name];if(src){const img=node(parent,'img');img.src=src;img.alt=name;img.width=28;img.height=28}else node(parent,'span',name)}
+     function syncPicker(){picker.replaceChildren();pickerImage(picker,select.value);node(picker,'span','▾');for(const [button,name]of buttons)button.setAttribute('aria-pressed',String(name===select.value))}
+     for(const name of data.groups[kind]){const button=node(panel,'button');button.type='button';button.setAttribute('aria-label',name);button.title=name;pickerImage(button,name);buttons.push([button,name]);button.onclick=()=>{select.value=name;panel.hidden=true;picker.setAttribute('aria-expanded','false');syncPicker();render()}}
+     picker.onclick=()=>{panel.hidden=!panel.hidden;picker.setAttribute('aria-expanded',String(!panel.hidden))};syncPicker();
+     select.onchange=()=>{syncPicker();render()};
+    }
+    node(label,'span',`Lv.${data.level}・上位10件`).className='psg-ranking-level';
+    const results=node(host,'div');
     function render(){
      selections.set(kind,select.value);results.replaceChildren();
      const table=data.tables.find(t=>t.kind===kind&&t.group===select.value&&t.mode===mode&&t.camp===camp);
      if(!table){node(results,'p','この条件の資料は未登録です。');return}
-     node(results,'p',`Lv.${data.level}・${labels[mode]}・上位10件`);
+
      if(table.partial)node(results,'p','換算に対応した種類のみの暫定順位です。未算定の種類は順位に含めていません。');
-     const wrap=node(results,'div');wrap.className='psg-cooking-table-wrap';const grid=node(wrap,'table');grid.className='psg-cooking-table psg-ranking-list';const head=node(grid,'thead'),hr=node(head,'tr');for(const title of ['順位','顔','個体条件',table.unit])node(hr,'th',title).scope='col';const body=node(grid,'tbody');
+     const wrap=node(results,'div');wrap.className='psg-cooking-table-wrap';const grid=node(wrap,'table');grid.className='psg-cooking-table psg-ranking-list';const head=node(grid,'thead'),hr=node(head,'tr');for(const title of ['順位','','',table.unit])node(hr,'th',title).scope='col';const body=node(grid,'tbody');
      for(const entry of table.rows){
       const tr=node(body,'tr');node(tr,'td',entry.rank);
       const portraitCell=node(tr,'td'),face=node(portraitCell,'button');face.type='button';face.className='psg-ranking-face';face.setAttribute('aria-label',entry.name);face.title=entry.name+'の詳細';face.onclick=()=>window.openPokemonDetail?.(entry.speciesId);
@@ -55,7 +68,7 @@
      for(const note of data.notes)node(conditions,'p',note);
      node(conditions,'p','理想値は同じ個体条件で最大値、中央値は（姿ごとの性格制限を含む）性格と重複なしのサブスキル5種を等重みで比較した下側50％分位です。捕獲時の出現頻度を表す分布ではありません。無補正は性格・サブスキルの補正なし。キャンチケは上部の切替を反映します。');
     }
-    select.onchange=render;render();
+    if(kind==='skill')select.onchange=render;render();
    }catch(e){if(tokens.get(pageId)!==token)return;host.replaceChildren();node(host,'p',e.message);const retry=node(host,'button','再読み込み');retry.type='button';retry.className='btn';retry.onclick=window.PS_PAGE_RENDERERS[pageId]}
   };
  }

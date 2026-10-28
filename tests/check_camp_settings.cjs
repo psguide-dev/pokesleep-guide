@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const source=fs.readFileSync('templates/core/08-fields.html','utf8').split('const berryChoices=')[0];
+const source=fs.readFileSync('templates/core/08-fields.html','utf8').split('const fieldSelect=')[0];
 const camp=fs.readFileSync('templates/core/08-camp-settings.html','utf8');
 function fixture(initial,fail=false){
  const storage=new Map(initial),nodes=new Map(),calls=[],events={};
