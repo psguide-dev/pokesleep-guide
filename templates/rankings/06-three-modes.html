@@ -22,18 +22,32 @@
      if(!table){node(results,'p','この条件の資料は未登録です。');return}
      node(results,'p',`Lv.${data.level}・${labels[mode]}・上位10件`);
      if(table.partial)node(results,'p','換算に対応した種類のみの暫定順位です。未算定の種類は順位に含めていません。');
-     const wrap=node(results,'div');wrap.className='psg-cooking-table-wrap';const grid=node(wrap,'table');grid.className='psg-cooking-table';const head=node(grid,'thead'),hr=node(head,'tr');for(const title of ['順位','ポケモン',table.unit])node(hr,'th',title).scope='col';const body=node(grid,'tbody');
+     const wrap=node(results,'div');wrap.className='psg-cooking-table-wrap';const grid=node(wrap,'table');grid.className='psg-cooking-table psg-ranking-list';const head=node(grid,'thead'),hr=node(head,'tr');for(const title of ['順位','顔','個体条件',table.unit])node(hr,'th',title).scope='col';const body=node(grid,'tbody');
      for(const entry of table.rows){
-      const tr=node(body,'tr');node(tr,'td',entry.rank);const cell=node(tr,'td');
-      const button=node(cell,'button',entry.name+(entry.provisional?'（暫定）':''));button.type='button';button.className='psg-supply-provider';button.onclick=()=>window.openPokemonDetail?.(entry.speciesId);
-      const info=details(cell,kind==='food'?`食材構成 ${entry.pattern}`:'個体条件');
-      const art=node(info,'div');art.className='psg-ranking-conditions';
-      function conditionIcon(name,src){if(!src){node(art,'span',name);return}const img=node(art,'img');img.src=src;img.alt=name;img.title=name;img.width=28;img.height=28;img.loading='lazy'}
-      for(const name of entry.ingredients)conditionIcon(name,window.PS_IMAGE_FILES?.ingredients?.[name]||window.PS_CATALOG?.ingredientAssets?.[name]?.image);
-      for(const [i,name] of entry.subskills.entries())conditionIcon(entry.orderedSubskills?`Lv.${[10,25,50,70,80][i]} ${name}`:name,window.PS_IMAGE_FILES?.subskills?.[name]);
-      node(info,'p',`${entry.nature}・スキルLv.${entry.skillLevel}${entry.subskills.length?'':'・サブスキル補正なし'}`);
-      if(kind==='food'&&entry.speciesIdealPercent!=null&&entry.patternIdealPercent!=null)node(info,'p',`種族理想比 ${entry.speciesIdealPercent.toFixed(1)}％・構成内理想比 ${entry.patternIdealPercent.toFixed(1)}％`);
-      node(tr,'td',window.PS_NUMBERS.display(entry.value));
+      const tr=node(body,'tr');node(tr,'td',entry.rank);
+      const portraitCell=node(tr,'td'),face=node(portraitCell,'button');face.type='button';face.className='psg-ranking-face';face.setAttribute('aria-label',entry.name);face.title=entry.name+'の詳細';face.onclick=()=>window.openPokemonDetail?.(entry.speciesId);
+      const no=Number(entry.speciesId.split('_')[0]),species=window.PS_FORMS?.resolve(entry.speciesId)||window.PS_CATALOG?.pokemon?.[no],images=window.PS_IMAGE_FILES;
+      const portrait=images?.pokemonFacesBySpecies?.[entry.speciesId]||species?.faceImage||(entry.speciesId.endsWith('_default')?images?.pokemonFaces?.[no]:null)||images?.pokemonBySpecies?.[entry.speciesId]||species?.image;
+      if(portrait){
+       if(window.PS_DEV_ASSETS?.image)face.innerHTML=window.PS_DEV_ASSETS.image(portrait,'pokemon',entry.speciesId.endsWith('_default')?no:entry.speciesId,'face',entry.name);
+       else{const img=node(face,'img');img.src=portrait;img.alt=entry.name;img.width=48;img.height=48;img.loading='lazy'}
+      }else node(face,'span','画像未登録');
+      const cell=node(tr,'td');node(cell,'strong',entry.name).className='psg-ranking-name';
+      const foodRow=node(cell,'div');foodRow.className='psg-ranking-foods';foodRow.setAttribute('aria-label','食材構成 '+entry.pattern);
+      function conditionIcon(host,name,src,level){
+       const badge=node(host,'span');badge.className='psg-ranking-badge';
+       if(src){const img=node(badge,'img');img.src=src;img.alt=level?`Lv.${level} ${name}`:name;img.title=img.alt;img.width=22;img.height=22;img.loading='lazy'}
+       else node(badge,'span',name);
+       if(level)node(badge,'small',level);
+      }
+      for(const name of entry.ingredients)conditionIcon(foodRow,name,images?.ingredients?.[name]||window.PS_CATALOG?.ingredientAssets?.[name]?.image);
+      node(foodRow,'small',entry.pattern).className='psg-ranking-pattern';
+      const subRow=node(cell,'div');subRow.className='psg-ranking-subskills';subRow.setAttribute('aria-label','サブスキル');
+      for(const [i,name] of entry.subskills.entries())conditionIcon(subRow,name,images?.subskills?.[name],entry.orderedSubskills?[10,25,50,70,80][i]:null);
+      if(!entry.subskills.length)node(subRow,'small','サブスキル補正なし');
+      node(cell,'div',`${entry.nature}・スキルLv.${entry.skillLevel}`).className='psg-ranking-meta';
+      if(kind==='food'&&entry.speciesIdealPercent!=null&&entry.patternIdealPercent!=null)node(cell,'div',`種族 ${entry.speciesIdealPercent.toFixed(1)}％／構成 ${entry.patternIdealPercent.toFixed(1)}％`).className='psg-ranking-ratios';
+      node(tr,'td',window.PS_NUMBERS.display(entry.value)).className='psg-ranking-value';
      }
      if(!table.rows.length)node(results,'p','計算対応の候補はありません。');
      if(table.pending.length){const pending=details(results,`未算定 ${table.pending.length}件`);for(const row of table.pending)node(pending,'p',typeof row==='string'?row:row.name+(row.reason?'：'+row.reason:''))}
